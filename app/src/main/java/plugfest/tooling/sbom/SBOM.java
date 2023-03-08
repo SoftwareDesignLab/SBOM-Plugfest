@@ -1,4 +1,4 @@
-package sbom;
+package plugfest.tooling.sbom;
 
 public class SBOM {
 }
