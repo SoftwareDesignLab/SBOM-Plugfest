@@ -2,7 +2,9 @@ package plugfest.tooling.sbom;
 
 import com.google.common.collect.Multimap;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * File: SBOM.java
@@ -13,8 +15,8 @@ import java.util.HashMap;
 public class SBOM {
 
     // Items from SBOM header
-    // Organized as [Key: Value(1) ... Value(n)]
-    Multimap<String, String> header;
+    // Organized as [Value(1) ... Value(n)]
+    HashSet<String> header;
 
     // Components from the SBOM
     // Organized as [Unique Identifier : Component Object]
@@ -24,14 +26,21 @@ public class SBOM {
     // Organized as [Unique Identifier : Unique Identifier(1) ... Unique Identifier(n)]
     Multimap<String, String> relationships;
 
+    // Error log for any conflicts or other issues detected
+    // Organized as [Error(1) ... Error(n)]
+    HashSet<String> errors;
+
     public SBOM() {
     }
 
     public void addToHeader(String key, String value) {
-        header.put(key, value);
+        header.add(value);
     }
 
     public void addComponent(String key, Component component) {
+        if(components.containsKey(key)) {
+            errors.add("Duplicate Component with ID " + key + " found.");
+        }
         components.put(key, component);
     }
 
