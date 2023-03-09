@@ -2,6 +2,8 @@ package plugfest.tooling.sbom;
 
 import com.google.common.collect.Multimap;
 
+import java.util.HashSet;
+
 /**
  * File: Component.java
  * Hold's relevant data for a component in an SBOM
@@ -10,13 +12,13 @@ import com.google.common.collect.Multimap;
  */
 public class Component {
 
-    Multimap<String, String> component_information;
+    HashSet<String> component_information;
 
     public Component() {
     }
 
-    public void addInformation(String key, String value) {
-        component_information.put(key, value);
+    public void addInformation(String value) {
+        component_information.add(value);
     }
 
 }

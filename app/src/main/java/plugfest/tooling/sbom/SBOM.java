@@ -24,7 +24,7 @@ public class SBOM {
 
     // Relationships between each Component
     // Organized as [Unique Identifier : Unique Identifier(1) ... Unique Identifier(n)]
-    Multimap<String, String> relationships;
+    HashSet<String> relationships;
 
     // Error log for any conflicts or other issues detected
     // Organized as [Error(1) ... Error(n)]
@@ -33,7 +33,7 @@ public class SBOM {
     public SBOM() {
     }
 
-    public void addToHeader(String key, String value) {
+    public void addToHeader(String value) {
         header.add(value);
     }
 
@@ -45,7 +45,7 @@ public class SBOM {
     }
 
     public void addRelationship(String key, String value) {
-        relationships.put(key, value);
+        relationships.add(value);
     }
 
 }
