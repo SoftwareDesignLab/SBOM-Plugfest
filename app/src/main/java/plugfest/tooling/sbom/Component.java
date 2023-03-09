@@ -1,8 +1,7 @@
 package plugfest.tooling.sbom;
 
-import com.google.common.collect.Multimap;
-
 import java.util.HashSet;
+
 
 /**
  * File: Component.java
@@ -12,9 +11,15 @@ import java.util.HashSet;
  */
 public class Component {
 
+    String identifier;
+
     HashSet<String> component_information;
 
     public Component() {
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public void addInformation(String value) {

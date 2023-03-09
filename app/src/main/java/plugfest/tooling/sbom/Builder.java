@@ -32,6 +32,29 @@ public class Builder {
 
         }
 
+        // Process Unpackaged Components
+        while (current_line != null && !current_line.contains(PACKAGE_TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
+            if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
+
+            if (current_line.contains(UNPACKAGED_TAG)) {
+
+                Component component = new Component();
+
+
+                while (!(current_line = br.readLine()).contains(TAG) && !current_line.isEmpty()) {
+
+                    if(current_line.contains("SPDXID:")) {
+                        component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
+                    }
+
+                    component.addInformation(current_line);
+                }
+
+            } else {
+                current_line = br.readLine();
+            }
+        }
+
         return sbom;
     }
 
