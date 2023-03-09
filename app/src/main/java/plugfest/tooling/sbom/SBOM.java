@@ -12,10 +12,16 @@ import java.util.HashMap;
  */
 public class SBOM {
 
+    // Items from SBOM header
+    // Organized as [Key: Value(1) ... Value(n)]
     Multimap<String, String> header;
 
+    // Components from the SBOM
+    // Organized as [Unique Identifier : Component Object]
     HashMap<String, Component> components;
 
+    // Relationships between each Component
+    // Organized as [Unique Identifier : Unique Identifier(1) ... Unique Identifier(n)]
     Multimap<String, String> relationships;
 
     public SBOM() {
