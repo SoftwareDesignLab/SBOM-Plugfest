@@ -14,6 +14,10 @@ import java.util.HashSet;
  */
 public class SBOM {
 
+    // Raw data from SBOM
+    // Organized as [Data(1) ... Data(n)]
+    HashSet<String> data;
+
     // Items from SBOM header
     // Organized as [Value(1) ... Value(n)]
     HashSet<String> header;
@@ -31,6 +35,10 @@ public class SBOM {
     HashSet<String> errors;
 
     public SBOM() {
+    }
+
+    public void addData(String line) {
+        data.add(line);
     }
 
     public void addToHeader(String value) {
