@@ -22,6 +22,10 @@ public class Component {
         this.identifier = identifier;
     }
 
+    public String getIdentifier() {
+        return this.identifier;
+    }
+
     public void addInformation(String value) {
         component_information.add(value);
     }
