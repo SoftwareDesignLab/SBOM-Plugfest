@@ -1,10 +1,11 @@
 package plugfest.tooling.sbom;
 
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * File: SBOM.java
@@ -35,25 +36,29 @@ public class SBOM {
     HashSet<String> errors;
 
     public SBOM() {
+        this.data = new HashSet<>();
+        this.header = new HashSet<>();
+        this.components = new HashMap<>();
+        this.relationships = ArrayListMultimap.create();
     }
 
     public void addData(String line) {
-        data.add(line);
+        this.data.add(line);
     }
 
     public void addToHeader(String value) {
-        header.add(value);
+        this.header.add(value);
     }
 
     public void addComponent(String key, Component component) {
         if(components.containsKey(key)) {
-            errors.add("Duplicate Component with ID " + key + " found.");
+            this.errors.add("Duplicate Component with ID " + key + " found.");
         }
-        components.put(key, component);
+        this.components.put(key, component);
     }
 
     public void addRelationship(String key, String value) {
-        relationships.put(key, value);
+        this.relationships.put(key, value);
     }
 
 }

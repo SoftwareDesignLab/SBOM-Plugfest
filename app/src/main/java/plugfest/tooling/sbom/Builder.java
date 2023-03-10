@@ -17,7 +17,7 @@ public class Builder {
     private static final String PACKAGE_TAG = "##### Package";
 
     private static final String RELATIONSHIP_TAG = "##### Relationships";
-    public SBOM builder(String file_path) throws IOException {
+    public static SBOM builder(String file_path) throws IOException {
 
         SBOM sbom = new SBOM();
 
@@ -73,7 +73,6 @@ public class Builder {
 
                 // While in the same package/component
                 while (!(current_line = br.readLine()).contains(TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
-                    // If line isn't blank split it on separator and store into component collect as key:value
                     if (current_line.contains(": ")) {
                         if(current_line.contains("SPDXID:")) {
                             component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
@@ -86,12 +85,11 @@ public class Builder {
 
 
             } else {
-                // if no package/component is found, get next line
                 current_line = br.readLine();
             }
         }
 
-        //
+        // Parse through relationships
         while(current_line != null) {
 
             if(current_line.contains("Relationship: ")) {

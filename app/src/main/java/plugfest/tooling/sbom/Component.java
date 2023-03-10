@@ -16,6 +16,7 @@ public class Component {
     HashSet<String> component_information;
 
     public Component() {
+        this.component_information = new HashSet<>();
     }
 
     public void setIdentifier(String identifier) {
