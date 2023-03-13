@@ -17,6 +17,8 @@ public class Builder {
     private static final String PACKAGE_TAG = "##### Package";
 
     private static final String RELATIONSHIP_TAG = "##### Relationships";
+
+    private static final String RELATIONSHIP_KEY = "Relationship: ";
     public static SBOM builder(String file_path) throws IOException {
 
         SBOM sbom = new SBOM();
@@ -29,22 +31,30 @@ public class Builder {
         String current_line;
 
         // Process header information
-        while ((current_line = br.readLine()) != null && !current_line.contains(UNPACKAGED_TAG) && !current_line.contains(PACKAGE_TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
-
+        while ((current_line = br.readLine()) != null
+                && !current_line.contains(UNPACKAGED_TAG)
+                && !current_line.contains(PACKAGE_TAG)
+                && !current_line.contains(RELATIONSHIP_TAG)
+                && !current_line.contains(RELATIONSHIP_KEY)
+        ) {
+            sbom.addData(current_line);
             sbom.addToHeader(current_line);
-
         }
 
         // Process Unpackaged Components
-        while (current_line != null && !current_line.contains(PACKAGE_TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
+        while (current_line != null
+                && !current_line.contains(PACKAGE_TAG)
+                && !current_line.contains(RELATIONSHIP_TAG)
+                && !current_line.contains(RELATIONSHIP_KEY)
+        ) {
             if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
-
             if (current_line.contains(UNPACKAGED_TAG)) {
 
                 Component component = new Component();
-
+                sbom.addData(current_line);
 
                 while (!(current_line = br.readLine()).contains(TAG) && !current_line.isEmpty()) {
+                    sbom.addData(current_line);
 
                     if(current_line.contains("SPDXID:")) {
                         component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
@@ -58,11 +68,16 @@ public class Builder {
 
             } else {
                 current_line = br.readLine();
+                sbom.addData(current_line);
             }
         }
 
         // Parse through packaged components
-        while (current_line != null && !current_line.contains(RELATIONSHIP_TAG)) {
+        while (current_line != null
+                && !current_line.contains(RELATIONSHIP_TAG)
+                && !current_line.contains(RELATIONSHIP_KEY)
+        ) {
+            sbom.addData(current_line);
             if (current_line.contains(RELATIONSHIP_TAG)) break;
 
             // Temporary component collection of materials
@@ -73,6 +88,7 @@ public class Builder {
 
                 // While in the same package/component
                 while (!(current_line = br.readLine()).contains(TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
+                    sbom.addData(current_line);
                     if (current_line.contains(": ")) {
                         if(current_line.contains("SPDXID:")) {
                             component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
@@ -86,11 +102,13 @@ public class Builder {
 
             } else {
                 current_line = br.readLine();
+                sbom.addData(current_line);
             }
         }
 
         // Parse through relationships
         while(current_line != null) {
+            sbom.addData(current_line);
 
             if(current_line.contains("Relationship: ")) {
 
@@ -118,6 +136,8 @@ public class Builder {
                     );
                 }
             }
+
+            current_line = br.readLine();
 
         }
 

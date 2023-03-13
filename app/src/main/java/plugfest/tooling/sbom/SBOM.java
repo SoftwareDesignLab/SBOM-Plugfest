@@ -3,9 +3,7 @@ package plugfest.tooling.sbom;
 import com.google.common.collect.*;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * File: SBOM.java
@@ -17,11 +15,11 @@ public class SBOM {
 
     // Raw data from SBOM
     // Organized as [Data(1) ... Data(n)]
-    HashSet<String> data;
+    List<String> data;
 
     // Items from SBOM header
     // Organized as [Value(1) ... Value(n)]
-    HashSet<String> header;
+    LinkedHashSet<String> header;
 
     // Components from the SBOM
     // Organized as [Unique Identifier : Component Object]
@@ -33,11 +31,11 @@ public class SBOM {
 
     // Error log for any conflicts or other issues detected
     // Organized as [Error(1) ... Error(n)]
-    HashSet<String> errors;
+    LinkedHashSet<String> errors;
 
     public SBOM() {
-        this.data = new HashSet<>();
-        this.header = new HashSet<>();
+        this.data = new ArrayList<>();
+        this.header = new LinkedHashSet<>();
         this.components = new HashMap<>();
         this.relationships = ArrayListMultimap.create();
     }
