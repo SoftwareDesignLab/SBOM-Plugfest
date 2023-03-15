@@ -97,4 +97,8 @@ public class Metrics {
         CompareSpdxDocs.main(compareArgs);
     }
 
+    public void verify(String sbom){
+        String[] sboms = {sbom};
+        Verify.main(sboms);
+    }
 }
