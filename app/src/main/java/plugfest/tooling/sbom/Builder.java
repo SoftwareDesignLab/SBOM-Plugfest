@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 
 
 public class Builder {
@@ -28,17 +25,20 @@ public class Builder {
 
         // Initialize BufferedReader along with current line
         BufferedReader br = new BufferedReader(new FileReader(file));
-        String current_line;
+        String current_line = br.readLine();
+        sbom.addData(current_line);
 
         // Process header information
-        while ((current_line = br.readLine()) != null
+        while ((current_line) != null
                 && !current_line.contains(UNPACKAGED_TAG)
                 && !current_line.contains(PACKAGE_TAG)
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
+            current_line = br.readLine();
             sbom.addData(current_line);
             sbom.addToHeader(current_line);
+
         }
 
         // Process Unpackaged Components
@@ -49,18 +49,18 @@ public class Builder {
         ) {
             if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
             if (current_line.contains(UNPACKAGED_TAG)) {
-
-                Component component = new Component();
+                current_line = br.readLine();
                 sbom.addData(current_line);
-
-                while (!(current_line = br.readLine()).contains(TAG) && !current_line.isEmpty()) {
-                    sbom.addData(current_line);
+                Component component = new Component();
+                while (!(current_line).contains(TAG) && !current_line.isEmpty()) {
 
                     if(current_line.contains("SPDXID:")) {
                         component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
                     }
 
                     component.addInformation(current_line);
+                    current_line = br.readLine();
+                    sbom.addData(current_line);
                 }
 
                 sbom.addComponent(component.getIdentifier(), component);
@@ -77,7 +77,6 @@ public class Builder {
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
-            sbom.addData(current_line);
             if (current_line.contains(RELATIONSHIP_TAG)) break;
 
             // Temporary component collection of materials
@@ -85,16 +84,18 @@ public class Builder {
 
             // If new package/component is found
             if (current_line.contains(PACKAGE_TAG)) {
-
+                current_line = br.readLine();
+                sbom.addData(current_line);
                 // While in the same package/component
-                while (!(current_line = br.readLine()).contains(TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
-                    sbom.addData(current_line);
+                while (!(current_line).contains(TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
                     if (current_line.contains(": ")) {
                         if(current_line.contains("SPDXID:")) {
                             component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
                         }
                         component.addInformation(current_line);
                     }
+                    current_line = br.readLine();
+                    sbom.addData(current_line);
                 }
 
                 sbom.addComponent(component.getIdentifier(), component);
@@ -108,7 +109,6 @@ public class Builder {
 
         // Parse through relationships
         while(current_line != null) {
-            sbom.addData(current_line);
 
             if(current_line.contains("Relationship: ")) {
 
@@ -134,10 +134,19 @@ public class Builder {
                             relationship.split(" OTHER ")[1],
                             relationship.split(" OTHER ")[0]
                     );
+
+                } else if (current_line.contains("DESCRIBES")) {
+
+                    sbom.addRelationship(
+                            relationship.split(" DESCRIBES ") [0],
+                            relationship.split(" DESCRIBES ") [1]
+                    );
+
                 }
             }
 
             current_line = br.readLine();
+            sbom.addData(current_line);
 
         }
 
