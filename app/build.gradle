@@ -23,7 +23,7 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
 
-    //SPDX-TOOL
+    // SPDX-TOOL Dependency
     implementation 'org.spdx:tools-java:1.1.5'
 }
 
