@@ -31,4 +31,8 @@ public class Component {
         component_information.add(value);
     }
 
+    public HashSet<String> getInformation() {
+        return this.component_information;
+    }
+
 }

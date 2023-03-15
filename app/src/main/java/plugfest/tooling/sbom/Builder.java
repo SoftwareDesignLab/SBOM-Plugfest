@@ -112,37 +112,8 @@ public class Builder {
 
             if(current_line.contains("Relationship: ")) {
 
-                String relationship = current_line.split("Relationship: ", 2)[1];
+                sbom.addRelationship(current_line.split("Relationship: ", 2)[1]);
 
-                if(current_line.contains("CONTAINS")) {
-
-                    sbom.addRelationship(
-                            relationship.split(" CONTAINS ")[0],
-                            relationship.split(" CONTAINS ")[1]
-                    );
-
-                } else if (current_line.contains("DEPENDENCY_OF")) {
-
-                    sbom.addRelationship(
-                            relationship.split(" DEPENDENCY_OF ")[1],
-                            relationship.split(" DEPENDENCY_OF ")[0]
-                    );
-
-                } else if (current_line.contains("OTHER")) {
-
-                    sbom.addRelationship(
-                            relationship.split(" OTHER ")[1],
-                            relationship.split(" OTHER ")[0]
-                    );
-
-                } else if (current_line.contains("DESCRIBES")) {
-
-                    sbom.addRelationship(
-                            relationship.split(" DESCRIBES ") [0],
-                            relationship.split(" DESCRIBES ") [1]
-                    );
-
-                }
             }
 
             current_line = br.readLine();
@@ -151,6 +122,7 @@ public class Builder {
         }
 
         return sbom;
+
     }
 
 }
