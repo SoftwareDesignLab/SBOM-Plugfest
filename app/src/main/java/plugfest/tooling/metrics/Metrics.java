@@ -85,20 +85,23 @@ public class Metrics {
     }
 
     public void compare(String sbom1, String sbom2) {
+        System.out.println("Running Comparison on SBOM Files: "+sbom1+" , "+sbom2);
         Date date = new Date();
         long timestamp = date.getTime();
         String sbom_path1 = (this.filepath+"/"+sbom1);
         String sbom_path2 = (this.filepath+"/"+sbom2);
         String outputFile = "comparison_"+String.valueOf(timestamp)+".xlsx";
-        System.out.println("SBOM File#1: "+sbom_path1);
-        System.out.println("SBOM File#2: "+sbom_path2);
-        System.out.println("Output File: "+outputFile);
+        //System.out.println("SBOM File#1: "+sbom_path1);
+        //System.out.println("SBOM File#2: "+sbom_path2);
+        //System.out.println("Output File: "+outputFile);
         String[] compareArgs = {outputFile, sbom_path1, sbom_path2};
         CompareSpdxDocs.main(compareArgs);
     }
 
     public void verify(String sbom){
-        String[] sboms = {sbom};
+        System.out.println("Running Verification on SBOM File: "+sbom);
+        String sbom_path = (this.filepath+"/"+sbom);
+        String[] sboms = {sbom_path};
         Verify.main(sboms);
     }
 }
