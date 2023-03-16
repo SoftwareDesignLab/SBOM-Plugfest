@@ -1,0 +1,10 @@
+SPDXVersion: SPDX-2.2
+DataLicense: CC0-1.0
+DocumentNamespace: https://anchore.com/syft/image/python-f4c4d529-4d66-4eef-b6b3-7ad88a04c9ed
+DocumentName: python
+SPDXID: SPDXRef-DOCUMENT
+
+## Creation Information
+Creator: Organization: Anchore, Inc
+Creator: Tool: syft-0.69.1
+Created: 2023-02-21T13:52:11Z-pliu
