@@ -90,7 +90,10 @@ public class Builder {
                 current_line = br.readLine();
                 sbom.addData(current_line);
                 // While in the same package/component
-                while (!(current_line).contains(TAG) && !current_line.contains(RELATIONSHIP_TAG)) {
+                while (!(current_line).contains(TAG)
+                        && !current_line.contains(RELATIONSHIP_TAG)
+                        && !current_line.contains(RELATIONSHIP_KEY)) {
+
                     if (current_line.contains(": ")) {
                         if(current_line.contains("SPDXID:")) {
                             component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
