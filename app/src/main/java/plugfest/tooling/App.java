@@ -15,9 +15,10 @@ public class App {
 
         //System.out.println("\nMetrics Test\n");
         // Creates New Metrics Object
-        //Metrics metrics = new Metrics("PATH TO SBOM DIRECTORY");
+        //Metrics metrics = new Metrics(" PATH TO SPDX FILES ");
         // COMPARISON METHOD TEST
-        //metrics.compare("example.sbom.alpine.spdx", "example.sbom.python.spdx");
+        //String[] sbom_args = {"example.sbom.alpine.spdx", "example.sbom.python.spdx"};
+        //metrics.compare(sbom_args);
         // VERIFY METHOD TEST
         //metrics.verify("example.sbom.python.spdx");
     }
