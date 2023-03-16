@@ -5,8 +5,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-
-public class Builder {
+/**
+ * FileName: SPDXParser
+ * Receives an SPDX SBOM and parses through the file while building
+ * a SBOM Map Object at the same time.
+ * Compatible with versions:
+ *      - SPDX 2.2
+ *      - SPDX 2.3
+ *
+ * @author Tyler Drake
+ */
+public class SPDXParser {
     private static final String TAG = "#####";
 
     private static final String UNPACKAGED_TAG = "##### Unpackaged files";
@@ -17,7 +26,16 @@ public class Builder {
 
     private static final String RELATIONSHIP_KEY = "Relationship: ";
 
-    public static SBOM builder(String file_path) throws IOException {
+    /**
+     * Name: parse
+     * Receive a file path to an SPDX SBOM and parse through it while
+     * storing data into the SBOM Map Object.
+     *
+     * @param file_path
+     * @return
+     * @throws IOException
+     */
+    public static SBOM parse(String file_path) throws IOException {
 
         SBOM sbom = new SBOM();
 
@@ -33,7 +51,7 @@ public class Builder {
         sbom.addData(current_line);
 
         // Process header information
-        while ( (current_line = readSBOM(sbom, br) ) != null
+        while ( (current_line = readSBOMLine(sbom, br) ) != null
                 && !current_line.contains(UNPACKAGED_TAG)
                 && !current_line.contains(PACKAGE_TAG)
                 && !current_line.contains(RELATIONSHIP_TAG)
@@ -41,16 +59,16 @@ public class Builder {
         ) { sbom.addToHeader(current_line); }
 
         // Process Unpackaged Components
-        while ( (current_line = readSBOM(sbom, br) ) != null
+        while ( (current_line = readSBOMLine(sbom, br) ) != null
                 && !current_line.contains(PACKAGE_TAG)
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
             if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
             if (current_line.isEmpty()) {
-                readSBOM(sbom, br);
+                readSBOMLine(sbom, br);
                 Component component = new Component();
-                while ( (current_line = readSBOM(sbom, br) ) != null
+                while ( (current_line = readSBOMLine(sbom, br) ) != null
                         && !current_line.contains(TAG)
                         && !current_line.isEmpty())
                 {
@@ -70,7 +88,7 @@ public class Builder {
         }
 
         // Parse through packaged components
-        while ( (current_line = readSBOM(sbom, br) ) != null
+        while ( (current_line = readSBOMLine(sbom, br) ) != null
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
@@ -81,9 +99,9 @@ public class Builder {
 
             // If new package/component is found
             if (current_line.contains(PACKAGE_TAG)) {
-                readSBOM(sbom, br);
+                readSBOMLine(sbom, br);
                 // While in the same package/component
-                while (!(current_line = readSBOM(sbom, br)).contains(TAG)
+                while (!(current_line = readSBOMLine(sbom, br)).contains(TAG)
                         && !current_line.contains(RELATIONSHIP_TAG)
                         && !current_line.contains(RELATIONSHIP_KEY)) {
 
@@ -105,7 +123,7 @@ public class Builder {
         }
 
         // Parse through relationships
-        while( (current_line = readSBOM(sbom, br) ) != null) {
+        while( (current_line = readSBOMLine(sbom, br) ) != null) {
 
             if(current_line.contains("Relationship: ")) {
 
@@ -119,7 +137,17 @@ public class Builder {
 
     }
 
-    public static String readSBOM(SBOM sbom, BufferedReader br) throws IOException {
+    /**
+     * Name: readSBOMLine
+     * Does the same as BufferedReader's readLine(), except it adds
+     * raw data from the new line to SBOM Map Object.
+     *
+     * @param sbom
+     * @param br
+     * @return
+     * @throws IOException
+     */
+    public static String readSBOMLine(SBOM sbom, BufferedReader br) throws IOException {
         String next_line = br.readLine();
         sbom.addData(next_line);
         return next_line;
