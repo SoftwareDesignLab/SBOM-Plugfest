@@ -16,6 +16,7 @@ public class Builder {
     private static final String RELATIONSHIP_TAG = "##### Relationships";
 
     private static final String RELATIONSHIP_KEY = "Relationship: ";
+
     public static SBOM builder(String file_path) throws IOException {
 
         SBOM sbom = new SBOM();
@@ -32,51 +33,44 @@ public class Builder {
         sbom.addData(current_line);
 
         // Process header information
-        while ((current_line) != null
+        while ( (current_line = readSBOM(sbom, br) ) != null
                 && !current_line.contains(UNPACKAGED_TAG)
                 && !current_line.contains(PACKAGE_TAG)
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
-        ) {
-            current_line = br.readLine();
-            sbom.addData(current_line);
-            sbom.addToHeader(current_line);
-
-        }
+        ) { sbom.addToHeader(current_line); }
 
         // Process Unpackaged Components
-        while (current_line != null
+        while ( (current_line = readSBOM(sbom, br) ) != null
                 && !current_line.contains(PACKAGE_TAG)
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
             if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
             if (current_line.isEmpty()) {
-                current_line = br.readLine();
-                sbom.addData(current_line);
+                readSBOM(sbom, br);
                 Component component = new Component();
-                while (!(current_line).contains(TAG) && !current_line.isEmpty()) {
+                while ( (current_line = readSBOM(sbom, br) ) != null
+                        && !current_line.contains(TAG)
+                        && !current_line.isEmpty())
+                {
 
                     if(current_line.contains("SPDXID:")) {
                         component.setIdentifier(current_line.split("SPDXID: ", 2)[1]);
                     }
 
                     component.addInformation(current_line);
-                    current_line = br.readLine();
-                    sbom.addData(current_line);
+
                 }
 
-                sbom.addComponent(component.getIdentifier(), component);
-
-
-            } else {
-                current_line = br.readLine();
-                sbom.addData(current_line);
+                if( component.component_information.size() > 0 ) {
+                    sbom.addComponent(component.getIdentifier(), component);
+                }
             }
         }
 
         // Parse through packaged components
-        while (current_line != null
+        while ( (current_line = readSBOM(sbom, br) ) != null
                 && !current_line.contains(RELATIONSHIP_TAG)
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
@@ -87,10 +81,9 @@ public class Builder {
 
             // If new package/component is found
             if (current_line.contains(PACKAGE_TAG)) {
-                current_line = br.readLine();
-                sbom.addData(current_line);
+                readSBOM(sbom, br);
                 // While in the same package/component
-                while (!(current_line).contains(TAG)
+                while (!(current_line = readSBOM(sbom, br)).contains(TAG)
                         && !current_line.contains(RELATIONSHIP_TAG)
                         && !current_line.contains(RELATIONSHIP_KEY)) {
 
@@ -100,21 +93,19 @@ public class Builder {
                         }
                         component.addInformation(current_line);
                     }
-                    current_line = br.readLine();
-                    sbom.addData(current_line);
+
                 }
 
-                sbom.addComponent(component.getIdentifier(), component);
+                if ( component.component_information.size() > 0 ) {
+                    sbom.addComponent(component.getIdentifier(), component);
+                }
 
-
-            } else {
-                current_line = br.readLine();
-                sbom.addData(current_line);
             }
+
         }
 
         // Parse through relationships
-        while(current_line != null) {
+        while( (current_line = readSBOM(sbom, br) ) != null) {
 
             if(current_line.contains("Relationship: ")) {
 
@@ -122,13 +113,16 @@ public class Builder {
 
             }
 
-            current_line = br.readLine();
-            sbom.addData(current_line);
-
         }
 
         return sbom;
 
+    }
+
+    public static String readSBOM(SBOM sbom, BufferedReader br) throws IOException {
+        String next_line = br.readLine();
+        sbom.addData(next_line);
+        return next_line;
     }
 
 }
