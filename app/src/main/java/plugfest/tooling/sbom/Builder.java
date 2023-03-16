@@ -23,6 +23,9 @@ public class Builder {
         // Get spdx file
         File file = new File(file_path);
 
+        // If file doesn't exist, return a null object
+        if(!file.exists()) { return null; }
+
         // Initialize BufferedReader along with current line
         BufferedReader br = new BufferedReader(new FileReader(file));
         String current_line = br.readLine();
@@ -48,7 +51,7 @@ public class Builder {
                 && !current_line.contains(RELATIONSHIP_KEY)
         ) {
             if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
-            if (current_line.contains(UNPACKAGED_TAG)) {
+            if (current_line.isEmpty()) {
                 current_line = br.readLine();
                 sbom.addData(current_line);
                 Component component = new Component();
