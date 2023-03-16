@@ -37,6 +37,7 @@ public class SBOM {
         this.header = new LinkedHashSet<>();
         this.components = new HashMap<>();
         this.relationships = new ArrayList<>();
+        this.errors = new LinkedHashSet<>();
     }
 
     public void addData(String line) {
@@ -54,6 +55,11 @@ public class SBOM {
         this.components.put(key, component);
     }
 
-    public void addRelationship(String value) { this.relationships.add(value); }
+    public void addRelationship(String value) {
+        if(relationships.contains(value)) {
+            this.errors.add("Duplicate relationship found : " + value);
+        }
+        this.relationships.add(value);
+    }
 
 }
