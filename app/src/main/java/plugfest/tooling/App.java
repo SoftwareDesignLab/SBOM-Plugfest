@@ -3,12 +3,26 @@
  */
 package plugfest.tooling;
 
+import java.util.*;
+import plugfest.tooling.differ.*;
+
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        
+        if(args.length != 2) {
+            System.out.println("(Only) 2 files required");
+            System.exit(0);
+        }
+   
+        FullDiff fd = new FullDiff(new ReadFile(args[0]),  new ReadFile(args[1]));
+        fd.diff().print();
+
+        //System.out.println(new App().getGreeting());
+        
     }
 }
