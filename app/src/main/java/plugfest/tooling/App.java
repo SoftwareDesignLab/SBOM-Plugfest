@@ -3,7 +3,10 @@
  */
 package plugfest.tooling;
 
+import java.util.*;
+import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
+
 
 public class App {
     public String getGreeting() {
@@ -11,6 +14,14 @@ public class App {
     }
 
     public static void main(String[] args) {
+        if(args.length != 2) {
+            System.out.println("(Only) 2 files required");
+            System.exit(0);
+        }
+   
+        FullDiff fd = new FullDiff(new ReadFile(args[0]),  new ReadFile(args[1]));
+        fd.diff().print();
+
         System.out.println(new App().getGreeting());
 
         //System.out.println("\nMetrics Test\n");
@@ -21,5 +32,6 @@ public class App {
         //metrics.compare(sbom_args);
         // VERIFY METHOD TEST
         //metrics.verify("example.sbom.python.spdx");
+
     }
 }

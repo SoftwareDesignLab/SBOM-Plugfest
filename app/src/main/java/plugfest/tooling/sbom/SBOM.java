@@ -2,7 +2,7 @@ package plugfest.tooling.sbom;
 
 import com.google.common.collect.*;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
+
 import java.util.*;
 
 /**
@@ -25,9 +25,8 @@ public class SBOM {
     // Organized as [Unique Identifier : Component Object]
     HashMap<String, Component> components;
 
-    // Relationships between each Component
-    // Organized as [Unique Identifier : Unique Identifier(1) ... Unique Identifier(n)]
-    Multimap<String, String> relationships;
+    // All other relationships between components/items in sbom
+    List<String> relationships;
 
     // Error log for any conflicts or other issues detected
     // Organized as [Error(1) ... Error(n)]
@@ -37,7 +36,8 @@ public class SBOM {
         this.data = new ArrayList<>();
         this.header = new LinkedHashSet<>();
         this.components = new HashMap<>();
-        this.relationships = ArrayListMultimap.create();
+        this.relationships = new ArrayList<>();
+        this.errors = new LinkedHashSet<>();
     }
 
     public void addData(String line) {
@@ -55,8 +55,11 @@ public class SBOM {
         this.components.put(key, component);
     }
 
-    public void addRelationship(String key, String value) {
-        this.relationships.put(key, value);
+    public void addRelationship(String value) {
+        if(relationships.contains(value)) {
+            this.errors.add("Duplicate relationship found : " + value);
+        }
+        this.relationships.add(value);
     }
 
 }
