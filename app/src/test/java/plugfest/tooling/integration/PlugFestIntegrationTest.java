@@ -1,8 +1,6 @@
 package plugfest.tooling.integration;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import plugfest.tooling.differ.DiffReport;
 import plugfest.tooling.differ.FullDiff;
 import plugfest.tooling.sbom.SBOM;
 import plugfest.tooling.sbom.SPDXParser;
@@ -11,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class PlugFestIntegrationTest {

@@ -2,7 +2,6 @@ package plugfest.tooling.differ;
 
 import plugfest.tooling.sbom.SBOM;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

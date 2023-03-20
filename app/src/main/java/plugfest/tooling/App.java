@@ -4,7 +4,6 @@
 package plugfest.tooling;
 
 import java.io.IOException;
-import java.util.*;
 import plugfest.tooling.differ.*;
 import plugfest.tooling.sbom.*;
 
