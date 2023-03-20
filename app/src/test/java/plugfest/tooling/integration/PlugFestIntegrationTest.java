@@ -38,21 +38,25 @@ public class PlugFestIntegrationTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
-    @BeforeEach
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-    }
     @Test
     public void full_diff_report_from_SPDX_SBOM() throws IOException {
 
+        // Create first SBOM
         SBOM test_sbom_one = SPDXParser.parse(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_one);
 
+        // Create second SBOM
         SBOM test_sbom_two = SPDXParser.parse(TEST_SPDX_v2_3_DIFF_BOM);
         assertNotNull(test_sbom_two);
 
+        // Setup PrintStream
+        System.setOut(new PrintStream(outContent));
+
+        // Create report and print out diff report to console
         FullDiff test_report = new FullDiff(test_sbom_one, test_sbom_two);
         test_report.diff().print();
+
+        // Check if console output is correct
         assert(EXPECTED_CONSOLE_PRINT.contains(outContent.toString()));
     }
 
