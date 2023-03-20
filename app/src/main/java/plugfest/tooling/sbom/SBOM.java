@@ -13,6 +13,8 @@ import java.util.*;
  */
 public class SBOM {
 
+    String name;
+
     // Raw data from SBOM
     // Organized as [Data(1) ... Data(n)]
     List<String> data;
@@ -40,8 +42,20 @@ public class SBOM {
         this.errors = new LinkedHashSet<>();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
     public void addData(String line) {
         this.data.add(line);
+    }
+
+    public List<String> getData() {
+        return this.data;
     }
 
     public void addToHeader(String value) {
