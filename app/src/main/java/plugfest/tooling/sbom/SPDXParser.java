@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * FileName: SPDXParser
@@ -38,6 +39,8 @@ public class SPDXParser {
     public static SBOM parse(String file_path) throws IOException {
 
         SBOM sbom = new SBOM();
+
+        sbom.setName(Paths.get(file_path).getFileName().toString());
 
         // Get spdx file
         File file = new File(file_path);

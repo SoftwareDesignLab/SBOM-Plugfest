@@ -3,35 +3,33 @@
  */
 package plugfest.tooling;
 
-import java.util.*;
+import java.io.IOException;
 import plugfest.tooling.differ.*;
-import plugfest.tooling.metrics.*;
+import plugfest.tooling.sbom.*;
 
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        
         if(args.length != 2) {
             System.out.println("(Only) 2 files required");
             System.exit(0);
         }
-   
-        FullDiff fd = new FullDiff(new ReadFile(args[0]),  new ReadFile(args[1]));
+
+        // QA Pipeline code here
+        //
+        // if ( we have a file ) : then check schema
+        //      if ( file is invalid schema ) : dont continue
+        //      else : continue
+        //
+        // End QA Pipeline
+
+        SBOM sbom_one = SPDXParser.parse(args[0]);
+        SBOM sbom_two = SPDXParser.parse(args[1]);
+
+        FullDiff fd = new FullDiff(sbom_one,  sbom_two);
         fd.diff().print();
-
-        System.out.println(new App().getGreeting());
-
-        //System.out.println("\nMetrics Test\n");
-        // Creates New Metrics Object
-        //Metrics metrics = new Metrics(" PATH TO SPDX FILES ");
-        // COMPARISON METHOD TEST
-        //String[] sbom_args = {"example.sbom.alpine.spdx", "example.sbom.python.spdx"};
-        //metrics.compare(sbom_args);
-        // VERIFY METHOD TEST
-        //metrics.verify("example.sbom.python.spdx");
-
+        
     }
 }
