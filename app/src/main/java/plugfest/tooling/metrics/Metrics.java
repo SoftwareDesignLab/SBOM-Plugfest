@@ -94,11 +94,7 @@ public class Metrics {
         for(int i = 0; i < sbom_files.length; i++) {
             compareArgs[i+1] = this.filepath+"/"+sbom_files[i];
         }
-        // PRINT STATEMENTS FOR VERBOSE OUTPUT & DEBUGGING
-        //System.out.println("Output File: "+outputFile);
-        //for(int i = 1; i < compareArgs.length; i++) {
-        //    System.out.println("SBOM File#"+String.valueOf(i)+": "+compareArgs[i]);
-        //} 
+
         CompareSpdxDocs.main(compareArgs);
     }
 
