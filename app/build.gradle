@@ -25,6 +25,9 @@ dependencies {
 
     // SPDX-TOOL Dependency
     implementation 'org.spdx:tools-java:1.1.5'
+
+    // CDX Tool Dependency
+    implementation 'org.cyclonedx:cyclonedx-core-java:7.3.2'
 }
 
 application {
