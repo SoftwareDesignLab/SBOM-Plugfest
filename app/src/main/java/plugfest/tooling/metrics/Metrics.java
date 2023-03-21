@@ -100,7 +100,7 @@ public class Metrics {
 
     public void verify(String sbom){
         System.out.println("Running Verification on SBOM File: "+sbom);
-        String sbom_path = (this.filepath+"/"+sbom);
+        String sbom_path = (sbom);
         String[] sboms = {sbom_path};
         Verify.main(sboms);
     }
