@@ -1,6 +1,12 @@
 package plugfest.tooling.metrics;
 
 /**
+ * Imports Java Native Libraries
+ */
+import java.util.List;
+import java.util.HashMap;
+
+/**
  * Imports from CycloneDX Java Core Libraries
  */
 import org.cyclonedx.BomGeneratorFactory;
@@ -126,4 +132,49 @@ import org.cyclonedx.util.mixin.MixInBomReference;
 
 public class CDXMetrics {
     
+    private String filepath;
+
+    public CDXMetrics(String _filepath) {
+        this.filepath = _filepath;
+    }
+
+    public String getFilepath() {
+        return this.filepath;
+    }
+
+    public void setFilepath(String _filepath) {
+        this.filepath = _filepath;
+    }
+
+    public HashMap<CycloneDxSchema.Version, Boolean> verify(String sbom) {
+        System.out.println("Running Verification on CDX SBOM File: "+sbom);
+        String sbom_file = (this.filepath+"/"+sbom);
+        HashMap<CycloneDxSchema.Version, Boolean> verificationMap = new HashMap<CycloneDxSchema.Version, Boolean>();
+        if(sbom_file.substring(sbom_file.length()-5).equals(".json") == true) {
+            System.out.println("Valid File: "+sbom_file);
+            verificationMap.put(CycloneDxSchema.Version.VERSION_10, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_11, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_12, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_13, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_14, BomUtils.validateUriString(sbom_file));
+        }
+        else if(sbom_file.substring(sbom_file.length()-4).equals(".xml") == true) {
+            System.out.println("Valid File: "+sbom_file);
+            verificationMap.put(CycloneDxSchema.Version.VERSION_10, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_11, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_12, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_13, BomUtils.validateUriString(sbom_file));
+            verificationMap.put(CycloneDxSchema.Version.VERSION_14, BomUtils.validateUriString(sbom_file));
+        }
+        else {
+            System.out.println("Invalid File Type");
+            return null;
+        }
+        return verificationMap;
+    }
+
+    //public List<Hash> calculateHashes() {
+    //    System.out.println("");
+    //}
+
 }

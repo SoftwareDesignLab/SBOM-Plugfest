@@ -99,9 +99,9 @@ public class SPDXMetrics {
     }
 
     public void verify(String sbom){
-        System.out.println("Running Verification on SBOM File: "+sbom);
-        String sbom_path = (this.filepath+"/"+sbom);
-        String[] sboms = {sbom_path};
+        System.out.println("Running Verification on SPDX SBOM File: "+sbom);
+        String sbom_file = (this.filepath+"/"+sbom);
+        String[] sboms = { sbom_file };
         Verify.main(sboms);
     }
 }

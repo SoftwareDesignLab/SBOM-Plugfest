@@ -4,7 +4,12 @@
 package plugfest.tooling;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import org.cyclonedx.CycloneDxSchema;
+
 import plugfest.tooling.differ.*;
+import plugfest.tooling.metrics.*;
 import plugfest.tooling.sbom.*;
 
 
@@ -30,6 +35,10 @@ public class App {
 
         FullDiff fd = new FullDiff(sbom_one,  sbom_two);
         fd.diff().print();
-        
+    
+        // CDX METRICS TEST
+        //CDXMetrics cdxMetricsTest = new CDXMetrics("/home/dupeman99/Desktop/CISA_Project_Files/SBOM/plugfest-tooling/test_sboms");
+        //HashMap<CycloneDxSchema.Version, Boolean> testVerifyMap = cdxMetricsTest.verify("Test.xml");
+    
     }
 }
