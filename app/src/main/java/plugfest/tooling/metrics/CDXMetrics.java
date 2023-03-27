@@ -40,6 +40,15 @@ public class CDXMetrics {
         this.filepath = _filepath;
     }
 
+    /**
+     * Method that verifies whether a provided CDX SBOM file
+     * is valid according to the CycloneDX SBOM file format schema.
+     * 
+     * <p>Returns a HashMap with verification results depending on schema version.
+     * 
+     * @param sbom the SBOM file to be verified.
+     * @return a HashMap using the verification schema version as the key, and the verification results as a boolean as the value.
+     */
     public HashMap<CycloneDxSchema.Version, Boolean> verify(String sbom) {
         System.out.println("Running Verification on CDX SBOM File: "+sbom);
         String sbom_file = (this.filepath+"/"+sbom);
@@ -67,6 +76,14 @@ public class CDXMetrics {
         return verificationMap;
     }
 
+    /**
+     * Method for calculating hash values for CDX SBOM Files.
+     * 
+     * <p>Returns a HashMap with calculated hash values depending on schema version.
+     * 
+     * @param sbom the SBOM file to get hash value.
+     * @return a HashMap using the CDX SBOM file schema version as the key, and the calculated hashes as the value.
+     */
     public HashMap<CycloneDxSchema.Version, List<Hash>> calculateHashes(String sbom) {
         System.out.println("Calculating Hashes of CDX SBOM File: "+sbom);
         String sbom_file = (this.filepath+"/"+sbom);
