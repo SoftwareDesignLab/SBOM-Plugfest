@@ -24,6 +24,9 @@ import org.cyclonedx.model.Hash;
 import org.cyclonedx.util.BomUtils;
 
 
+/**
+ * Class for CDX SBOM Metrics
+ */
 public class CDXMetrics {
     
     private String filepath;

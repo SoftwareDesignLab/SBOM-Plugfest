@@ -12,7 +12,7 @@ import org.spdx.tools.Verify;
 import java.util.Date;
 
 /**
- * Class for Verifying SPDX Files
+ * Class for SPDX SBOM Metrics
  */
 public class SPDXMetrics {
     
