@@ -39,6 +39,6 @@ public class App {
         // CDX METRICS TEST
         //CDXMetrics cdxMetricsTest = new CDXMetrics("/home/dupeman99/Desktop/CISA_Project_Files/SBOM/plugfest-tooling/test_sboms");
         //HashMap<CycloneDxSchema.Version, Boolean> testVerifyMap = cdxMetricsTest.verify("Test.xml");
-    
+        
     }
 }
