@@ -29,6 +29,8 @@ import org.cyclonedx.util.BomUtils;
  */
 public class CDXMetrics extends Metric{
 
+    private int score;
+    public int getScore() { return this.score; }
     private String filepath;
 
     public CDXMetrics(String _filepath) {
@@ -123,5 +125,13 @@ public class CDXMetrics extends Metric{
     @Override
     protected int testMetric() {
         return 0;
+    }
+    protected int testMetric(String sbom) {
+        //Runs verify and calculateHashes and increments score if they are valid
+        verify(sbom);
+        score += 1;
+        calculateHashes(sbom);
+        score += 1;
+        return score;
     }
 }
