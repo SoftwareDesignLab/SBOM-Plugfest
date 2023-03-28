@@ -28,6 +28,9 @@ dependencies {
 
     // CDX Tool Dependency
     implementation 'org.cyclonedx:cyclonedx-core-java:7.3.2'
+
+    implementation 'org.glassfish.hk2:hk2-locator:3.0.3'
+    implementation 'org.glassfish.hk2:hk2-utils:3.0.3'
 }
 
 application {
