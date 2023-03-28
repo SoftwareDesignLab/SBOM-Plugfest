@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * Class for SPDX SBOM Metrics
  */
-public class SPDXMetrics {
+public class SPDXMetrics extends Metric{
     
     private String filepath;
 
@@ -53,5 +53,10 @@ public class SPDXMetrics {
         //if verify passes
         score += 1;
         return score;
+    }
+
+    @Override
+    protected int testMetric() {
+        return 0;
     }
 }
