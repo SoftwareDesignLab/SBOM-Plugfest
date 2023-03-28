@@ -126,9 +126,11 @@ public class CDXMetrics extends Metric{
     }
     protected void testMetric(String sbom) {
         //Runs verify and calculateHashes and increments score if they are valid
-        verify(sbom);
-        addScore(1);
-        calculateHashes(sbom);
-        addScore(1);
+        if (verify(sbom) != null) {
+            addScore(1);
+        }
+        if (calculateHashes(sbom) != null) {
+            addScore(1);
+        }
     }
 }
