@@ -12,6 +12,8 @@ import org.cyclonedx.CycloneDxSchema;
 import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
 import plugfest.tooling.sbom.*;
+import plugfest.tooling.translator.TranslatorCDX;
+import plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -31,9 +33,8 @@ public class App {
      *  -d : A diff comparison (for two files only)
      *
      * @param args
-     * @throws IOException
      */
-    public static void main(String[] args) throws IOException, ParserConfigurationException {
+    public static void main(String[] args) {
         
         if(args.length < MIN_ARGS) {
             System.out.println(
@@ -52,7 +53,8 @@ public class App {
             System.exit(0);
         }
 
-        // Start of pipeline
+
+
 
         if(args[0].contains("-q")) {
             // QA Pipeline code here
@@ -63,8 +65,8 @@ public class App {
             //
             // End QA Pipeline
         } else if (args[0].contains("-m")) {
-            //Metrics metrics = new Metrics(args[1]);
-            //metrics.verify(args[1]);
+//            Metrics metrics = new Metrics(args[1]);
+//            metrics.verify(args[1]);
 
         } else if (args[0].contains("-d")) {
             if(!new File(args[2]).exists()) {
@@ -72,22 +74,28 @@ public class App {
                 System.exit(0);
             }
 
-            SBOM sbom_one;
-            SBOM sbom_two;
+            // Process first sbom
+            try {
+                SBOM sbomOne;
+                if (args[1].toLowerCase().endsWith(".xml")) {
+                    sbomOne = TranslatorCDX.translatorCDX(args[1]);
+                } else {
+                    sbomOne = TranslatorSPDX.translatorSPDX(args[1]);
+                }
 
-            if(args[0].endsWith(".spdx")) {
-                sbom_one = TranslatorSPDX.translatorSPDX(args[0]);
-            } else if(args[0].endsWith(".xml")) {
-                sbom_one = TranslatorCDX.translatorCDX(args[0]);
+                SBOM sbomTwo;
+                if (args[2].toLowerCase().endsWith(".xml")) {
+                    sbomTwo = TranslatorCDX.translatorCDX(args[2]);
+                } else {
+                    sbomTwo = TranslatorSPDX.translatorSPDX(args[2]);
+                }
+
+                DiffReport report = Comparer.generateReport(sbomOne, sbomTwo);
+                System.out.println(report.toString());
             }
-            if(args[1].endsWith(".spdx")) {
-                sbom_one = TranslatorSPDX.translatorSPDX(args[1]);
-            } else if(args[1].endsWith(".xml")) {
-                sbom_two = TranslatorCDX.translatorCDX(args[1]);
+            catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
-
-            // Do the diff here
-
         } else {
             System.out.println("Invalid command given. Should be '-q' for quality check, '-m' for metrics, or 'd' for diff.");
         }
