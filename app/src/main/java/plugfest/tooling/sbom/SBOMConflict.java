@@ -56,38 +56,38 @@ public class SBOMConflict {
         String conflictString = "";
         switch (conflictType) {
             case SUPPLIER_MISMATCH:
-                conflictString = "Supplier Mismatch";
+                conflictString = "Supplier Mismatch\n";
                 // TODO supplier currently not implemented
 //                conflictString += "\n+ " + aSBOM.getSupplier();
                 break;
             case AUTHOR_MISMATCH:
                 // TODO author currently not implemented
-                conflictString = "Author Mismatch";
+                conflictString = "Author Mismatch\n";
                 break;
             case TIMESTAMP_MISMATCH:
-                conflictString = "Timestamp Mismatch:";
-                conflictString += "\n+ " + aSBOM.getTimestamp();
-                conflictString += "\n- " + bSBOM.getTimestamp();
+                conflictString = "Timestamp Mismatch:\n";
+                conflictString += "+ " + aSBOM.getTimestamp() + "\n";
+                conflictString += "- " + bSBOM.getTimestamp() + "\n";
                 break;
             case ORIGIN_FORMAT_MISMATCH:
-                conflictString = "Origin Format Mismatch:";
-                conflictString += "\n+ " + aSBOM.getOriginFormat();
-                conflictString += "\n- " + bSBOM.getOriginFormat();
+                conflictString = "Origin Format Mismatch:\n";
+                conflictString += "+ " + aSBOM.getOriginFormat() + "\n";
+                conflictString += "- " + bSBOM.getOriginFormat() + "\n";
                 break;
             case SCHEMA_VERSION_MISMATCH:
-                conflictString = "Schema Version Mismatch:";
-                conflictString += "\n+ " + aSBOM.getSpecVersion();
-                conflictString += "\n- " + bSBOM.getSpecVersion();
+                conflictString = "Schema Version Mismatch:\n";
+                conflictString += "+ " + aSBOM.getSpecVersion() + "\n";
+                conflictString += "- " + bSBOM.getSpecVersion() + "\n";
                 break;
             case SBOM_VERSION_MISMATCH:
-                conflictString = "SBOM Version Mismatch:";
-                conflictString += "\n+ " + aSBOM.getSbomVersion();
-                conflictString += "\n- " + bSBOM.getSbomVersion();
+                conflictString = "SBOM Version Mismatch:\n";
+                conflictString += "+ " + aSBOM.getSbomVersion() + "\n";
+                conflictString += "- " + bSBOM.getSbomVersion() + "\n";
                 break;
             case SERIAL_NUMBER_MISMATCH:
-                conflictString = "Serial Number Mismatch:";
-                conflictString += "\n+ " + aSBOM.getSerialNumber();
-                conflictString += "\n- " + bSBOM.getSerialNumber();
+                conflictString = "Serial Number Mismatch:\n";
+                conflictString += "+ " + aSBOM.getSerialNumber() + "\n";
+                conflictString += "- " + bSBOM.getSerialNumber() + "\n";
                 break;
         }
 
