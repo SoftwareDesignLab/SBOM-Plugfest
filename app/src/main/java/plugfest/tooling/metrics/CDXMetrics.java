@@ -27,8 +27,8 @@ import org.cyclonedx.util.BomUtils;
 /**
  * Class for CDX SBOM Metrics
  */
-public class CDXMetrics {
-    
+public class CDXMetrics extends Metric{
+
     private String filepath;
 
     public CDXMetrics(String _filepath) {
@@ -120,4 +120,8 @@ public class CDXMetrics {
         return hashesMap;
     }
 
+    @Override
+    protected int testMetric() {
+        return 0;
+    }
 }
