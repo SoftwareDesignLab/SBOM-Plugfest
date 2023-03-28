@@ -15,7 +15,10 @@ import java.util.Date;
  * Class for SPDX SBOM Metrics
  */
 public class SPDXMetrics extends Metric{
-    
+
+    private int score;
+    public int getScore() { return this.score; }
+
     private String filepath;
 
     public SPDXMetrics(String _filepath) {
@@ -44,19 +47,23 @@ public class SPDXMetrics extends Metric{
         CompareSpdxDocs.main(compareArgs);
     }
 
-    public int verify(String sbom){
+    public void verify(String sbom){
         int score = 0;
         System.out.println("Running Verification on SPDX SBOM File: "+sbom);
         String sbom_file = (this.filepath+"/"+sbom);
         String[] sboms = { sbom_file };
         Verify.main(sboms);
-        //if verify passes
-        score += 1;
-        return score;
     }
 
     @Override
     protected int testMetric() {
         return 0;
+    }
+
+    protected int testMetric(String sbom) {
+        verify(sbom);
+        //Have a console reader verify and return 1 or 0 depending on results
+        score += 1;
+        return score;
     }
 }
