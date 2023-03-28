@@ -69,7 +69,7 @@ public class ComponentConflict {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_LICENSE_MISMATCH);
         }
         if (componentConflictTypes.isEmpty() && !falsePositive) {
-            componentConflictTypes.add(ComponentConflictType.COMPONENT_UNKNOWN_MISMATCH);
+//            componentConflictTypes.add(ComponentConflictType.COMPONENT_UNKNOWN_MISMATCH);
         }
 
     }
@@ -127,16 +127,39 @@ public class ComponentConflict {
     public String toString() {
         StringBuilder conflictString = new StringBuilder();
         // Check if we are only showing stuff that isn't in the component string
-        boolean printEquals = (!componentConflictTypes.contains(ComponentConflictType.COMPONENT_PUBLISHER_MISMATCH))
-                && (!componentConflictTypes.contains(ComponentConflictType.COMPONENT_NAME_MISMATCH))
-                && (!componentConflictTypes.contains(ComponentConflictType.COMPONENT_VERSION_MISMATCH));
+        boolean printEquals = true;
+
+        // Check publisher equivalence
+        if (componentA.getPublisher() != null) {
+            printEquals = componentA.getPublisher().equals(componentB.getPublisher());
+        }
+        else {
+            printEquals = componentB.getPublisher() == null;
+        }
+
+        if (componentA.getName() != null) {
+            printEquals = componentA.getName().equals(componentB.getName());
+        }
+        else {
+            printEquals = componentB.getName() == null;
+        }
+        if (componentA.getVersion() != null) {
+            printEquals = componentA.getVersion().equals(componentB.getVersion());
+        }
+        else {
+            printEquals = componentB.getVersion() == null;
+        }
+
         if (printEquals) {
             // This means we only are showing internal component differences
-            conflictString.append("= ").append(componentA.toString());
+            // Only do this if there are conflicts
+            if (componentConflictTypes.size() > 0) {
+                conflictString.append("  = ").append(componentA.toString()).append("\n");
+            }
         }
         else {
             // Need to print a plus
-            conflictString.append("+ ").append(componentA.toString());
+            conflictString.append("  + ").append(componentA.toString()).append("\n");
         }
 
         // Print internal conflicts if they exist
@@ -151,7 +174,7 @@ public class ComponentConflict {
             // Otherwise we need to print the conflict that occurs
             switch (conflictType) {
                 case COMPONENT_CPE_MISMATCH:
-                    conflictString.append(" CPE:\n");
+                    conflictString.append("    CPE:\n");
                     // Get differences
                     Set<String> cpeA = new HashSet<>(componentA.getCPE());
                     Set<String> cpeB = new HashSet<>(componentB.getCPE());
@@ -159,16 +182,16 @@ public class ComponentConflict {
                     cpeB.removeAll(componentA.getCPE());
 
                     for (String cpe : cpeA) {
-                        conflictString.append("+ ").append(cpe).append("\n");
+                        conflictString.append("      + ").append(cpe).append("\n");
                     }
 
                     for (String cpe : cpeB) {
-                        conflictString.append("- ").append(cpe).append("\n");
+                        conflictString.append("      - ").append(cpe).append("\n");
                     }
 
                     break;
                 case COMPONENT_PURL_MISMATCH:
-                    conflictString.append(" PURL:\n");
+                    conflictString.append("    PURL:\n");
                     // Get differences
                     Set<String> purlA = new HashSet<>(componentA.getPURL());
                     Set<String> purlB = new HashSet<>(componentB.getPURL());
@@ -176,16 +199,16 @@ public class ComponentConflict {
                     purlB.removeAll(componentA.getPURL());
 
                     for (String purl : purlA) {
-                        conflictString.append("+ ").append(purl).append("\n");
+                        conflictString.append("      + ").append(purl).append("\n");
                     }
 
                     for (String purl : purlB) {
-                        conflictString.append("- ").append(purl).append("\n");
+                        conflictString.append("      - ").append(purl).append("\n");
                     }
 
                     break;
                 case COMPONENT_SWID_MISMATCH:
-                    conflictString.append(" SWID:\n");
+                    conflictString.append("    SWID:\n");
                     // Get differences
                     Set<String> swidA = new HashSet<>(componentA.getSWID());
                     Set<String> swidB = new HashSet<>(componentB.getSWID());
@@ -194,11 +217,11 @@ public class ComponentConflict {
                     swidB.removeAll(componentA.getSWID());
 
                     for (String swid : swidA) {
-                        conflictString.append("+ ").append(swid).append("\n");
+                        conflictString.append("      + ").append(swid).append("\n");
                     }
 
                     for (String swid : swidB) {
-                        conflictString.append("- ").append(swid).append("\n");
+                        conflictString.append("      - ").append(swid).append("\n");
                     }
                     break;
                 case COMPONENT_SPDXID_MISMATCH:
@@ -206,7 +229,7 @@ public class ComponentConflict {
 //                    conflictString.append(" SPDXID: ").append(componentA.getSPDXID()).append(" vs ").append(componentB.getSPDXID());
                     break;
                 case COMPONENT_LICENSE_MISMATCH:
-                    conflictString.append(" License:\n");
+                    conflictString.append("    License:\n");
                     // Get differences
                     Set<String> licenseA = new HashSet<>(componentA.getLicenses());
                     Set<String> licenseB = new HashSet<>(componentB.getLicenses());
@@ -215,15 +238,15 @@ public class ComponentConflict {
                     licenseB.removeAll(componentA.getLicenses());
 
                     for (String license : licenseA) {
-                        conflictString.append("+ ").append(license).append("\n");
+                        conflictString.append("      + ").append(license).append("\n");
                     }
 
                     for (String license : licenseB) {
-                        conflictString.append("- ").append(license).append("\n");
+                        conflictString.append("      - ").append(license).append("\n");
                     }
                     break;
                 case COMPONENT_UNKNOWN_MISMATCH:
-                    conflictString.append(" Other conflicts not displayed\n");
+                    conflictString.append("    Other conflicts not displayed\n");
                     break;
                 default:
                     break;
@@ -232,7 +255,7 @@ public class ComponentConflict {
 
         // Print the component B if it exists or if they are not equal
         if (componentB != null && !printEquals) {
-            conflictString.append("- ").append(componentB.toString());
+            conflictString.append("  - ").append(componentB.toString()).append("\n");
         }
 
         return conflictString.toString();
