@@ -44,10 +44,14 @@ public class SPDXMetrics {
         CompareSpdxDocs.main(compareArgs);
     }
 
-    public void verify(String sbom){
+    public int verify(String sbom){
+        int score = 0;
         System.out.println("Running Verification on SPDX SBOM File: "+sbom);
         String sbom_file = (this.filepath+"/"+sbom);
         String[] sboms = { sbom_file };
         Verify.main(sboms);
+        //if verify passes
+        score += 1;
+        return score;
     }
 }
