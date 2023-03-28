@@ -124,12 +124,11 @@ public class CDXMetrics extends Metric{
     protected int testMetric() {
         return 0;
     }
-    protected int testMetric(String sbom) {
+    protected void testMetric(String sbom) {
         //Runs verify and calculateHashes and increments score if they are valid
         verify(sbom);
-        score += 1;
+        addScore(1);
         calculateHashes(sbom);
-        score += 1;
-        return score;
+        addScore(1);
     }
 }
