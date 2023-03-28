@@ -58,10 +58,9 @@ public class SPDXMetrics extends Metric{
         return 0;
     }
 
-    protected int testMetric(String sbom) {
+    protected void testMetric(String sbom) {
         verify(sbom);
         //Have a console reader verify and return 1 or 0 depending on results
-        score += 1;
-        return score;
+        addScore(1);
     }
 }
