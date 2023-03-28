@@ -62,8 +62,8 @@ public class App {
             //
             // End QA Pipeline
         } else if (args[0].contains("-m")) {
-            Metrics metrics = new Metrics(args[1]);
-            metrics.verify(args[1]);
+            //Metrics metrics = new Metrics(args[1]);
+            //metrics.verify(args[1]);
 
         } else if (args[0].contains("-d")) {
             if(!new File(args[2]).exists()) {
