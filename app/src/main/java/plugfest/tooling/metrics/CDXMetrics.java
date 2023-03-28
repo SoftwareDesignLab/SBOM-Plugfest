@@ -29,8 +29,6 @@ import org.cyclonedx.util.BomUtils;
  */
 public class CDXMetrics extends Metric{
 
-    private int score;
-    public int getScore() { return this.score; }
     private String filepath;
 
     public CDXMetrics(String _filepath) {

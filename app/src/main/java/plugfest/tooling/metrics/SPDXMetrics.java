@@ -15,9 +15,7 @@ import java.util.Date;
  * Class for SPDX SBOM Metrics
  */
 public class SPDXMetrics extends Metric{
-
-    private int score;
-    public int getScore() { return this.score; }
+    
 
     private String filepath;
 
