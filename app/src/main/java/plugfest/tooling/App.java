@@ -5,6 +5,10 @@ package plugfest.tooling;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+
+import org.cyclonedx.CycloneDxSchema;
+
 import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
 import plugfest.tooling.sbom.*;
@@ -48,6 +52,7 @@ public class App {
 
 
 
+
         if(args[0].contains("-q")) {
             // QA Pipeline code here
             //
@@ -74,6 +79,7 @@ public class App {
         } else {
             System.out.println("Invalid command given. Should be '-q' for quality check, '-m' for metrics, or 'd' for diff.");
         }
+
         
     }
 }
