@@ -1,5 +1,6 @@
 package plugfest.tooling.qa;
 
+import plugfest.tooling.metrics.timestampConsistencyMetric;
 import plugfest.tooling.sbom.SBOM;
 
 public class QAPipeline {
@@ -12,6 +13,7 @@ public class QAPipeline {
 
 
     public void process(SBOM sbom){
-        sbom.getTimestamp();
+        // todo add other metrics
+        sbom.addMetric(new timestampConsistencyMetric(sbom.getTimestamp()));
     }
 }

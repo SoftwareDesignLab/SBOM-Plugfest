@@ -11,6 +11,7 @@ import org.cyclonedx.CycloneDxSchema;
 
 import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
+import plugfest.tooling.qa.QAPipeline;
 import plugfest.tooling.sbom.*;
 import plugfest.tooling.translator.TranslatorCDX;
 import plugfest.tooling.translator.TranslatorSPDX;
@@ -53,8 +54,21 @@ public class App {
             System.exit(0);
         }
 
+        /*
+        1. new translator t
+        2. SBOM[] sboms = t.parse("path/to/sboms/dir");
+        3. QAPipeline qaPipeline = new QAPipeline();
+        4.
+            for( sbom : sboms )
+                qaPipeline.process(sbom);   // apply metrics
+        // not sure if this is how the next part works, but rough idea
+        5. Differ diff = new Differ();
+        6. diff.compare(sboms); // generate conflict objects
+        7. return new Report(sboms);    // use SBOM data to turn into a report to be exported via file/used by front end
+         */
 
 
+        // todo remove below
         /**
         if(args[0].contains("-q")) {
             // QA Pipeline code here
