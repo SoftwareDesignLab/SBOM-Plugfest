@@ -3,25 +3,14 @@ package plugfest.tooling.metrics;
 /**
  * Imports Java Native Libraries
  */
-import java.util.List;
-import java.util.HashMap;
-import java.io.File;
 
-/**
- * Imports from CycloneDX Java Core Libraries
- */
 import org.cyclonedx.CycloneDxSchema;
-
-/**
- * Import from CycloneDX Java Model Libraries
- */
 import org.cyclonedx.model.Hash;
-
-
-/**
- * Import from CycloneDX Java Utility Libraries
- */
 import org.cyclonedx.util.BomUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -30,9 +19,11 @@ import org.cyclonedx.util.BomUtils;
 public class CDXMetrics extends Metric{
 
     private String filepath;
+    private final String sbom;
 
-    public CDXMetrics(String _filepath) {
+    public CDXMetrics(String _filepath, String _sbom) {
         this.filepath = _filepath;
+        this.sbom = _sbom;
     }
 
     public String getFilepath() {
@@ -122,15 +113,12 @@ public class CDXMetrics extends Metric{
 
     @Override
     protected int testMetric() {
-        return 0;
-    }
-    protected void testMetric(String sbom) {
+        int score = 0;
+
         //Runs verify and calculateHashes and increments score if they are valid
-        if (verify(sbom) != null) {
-            addScore(1);
-        }
-        if (calculateHashes(sbom) != null) {
-            addScore(1);
-        }
+        if (verify(this.sbom) != null) score++;
+        if (calculateHashes(this.sbom) != null) score++;
+
+        return score;
     }
 }

@@ -3,12 +3,10 @@ package plugfest.tooling.metrics;
 /**
  * Imports SPDX Tools
  */
+
 import org.spdx.tools.CompareSpdxDocs;
 import org.spdx.tools.Verify;
 
-/**
- * Imports Native Java Libraries
- */
 import java.util.Date;
 
 /**
@@ -18,9 +16,12 @@ public class SPDXMetrics extends Metric{
     
 
     private String filepath;
+    private final String sbom;
 
-    public SPDXMetrics(String _filepath) {
+    public SPDXMetrics(String _filepath, String _sbom) {
         this.filepath = _filepath;
+        this.sbom = _sbom;
+        this.score += this.testMetric();
     }
 
     public String getFilepath() {
@@ -32,7 +33,7 @@ public class SPDXMetrics extends Metric{
     }
 
     public void compare(String[] sbom_files) {
-        System.out.println("Running Comparison on SBOM Files: "+sbom_files);
+        System.out.println("Running Comparison on SBOM Files: "+ sbom_files);
         Date date = new Date();
         long timestamp = date.getTime();
         String[] compareArgs = new String[(sbom_files.length+1)];
@@ -45,22 +46,12 @@ public class SPDXMetrics extends Metric{
         CompareSpdxDocs.main(compareArgs);
     }
 
-    public void verify(String sbom){
-        int score = 0;
-        System.out.println("Running Verification on SPDX SBOM File: "+sbom);
-        String sbom_file = (this.filepath+"/"+sbom);
-        String[] sboms = { sbom_file };
-        Verify.main(sboms);
-    }
-
     @Override
     protected int testMetric() {
-        return 0;
-    }
-
-    protected void testMetric(String sbom) {
-        verify(sbom);
+        final String fullPath = this.filepath + "/" + this.sbom;
+        System.out.println("Running Verification on SPDX SBOM File: " + this.filepath);
+        Verify.main(new String[]{ fullPath });
         //Have a console reader verify and return 1 or 0 depending on results
-        addScore(1);
+        return 1;
     }
 }
