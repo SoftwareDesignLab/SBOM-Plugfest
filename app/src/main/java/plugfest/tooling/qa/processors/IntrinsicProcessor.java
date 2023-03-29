@@ -6,6 +6,7 @@ import plugfest.tooling.sbom.SBOM;
 public class IntrinsicProcessor implements AttributeProcessor{
 
     private int accuracyTest(SBOM sbom){
+        // test sbom fields for accuracy
         return 0;
     }
 
