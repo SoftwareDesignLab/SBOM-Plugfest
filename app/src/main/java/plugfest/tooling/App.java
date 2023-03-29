@@ -13,6 +13,8 @@ import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
 import plugfest.tooling.sbom.*;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 
 public class App {
 
@@ -31,7 +33,7 @@ public class App {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException {
         
         if(args.length < MIN_ARGS) {
             System.out.println(
@@ -50,8 +52,7 @@ public class App {
             System.exit(0);
         }
 
-
-
+        // Start of pipeline
 
         if(args[0].contains("-q")) {
             // QA Pipeline code here
@@ -71,11 +72,22 @@ public class App {
                 System.exit(0);
             }
 
-            SBOM sbom_one = SPDXParser.parse(args[1]);
-            SBOM sbom_two = SPDXParser.parse(args[2]);
+            SBOM sbom_one;
+            SBOM sbom_two;
 
-            FullDiff fd = new FullDiff(sbom_one, sbom_two);
-            fd.diff().print();
+            if(args[0].endsWith(".spdx")) {
+                sbom_one = TranslatorSPDX.translatorSPDX(args[0]);
+            } else if(args[0].endsWith(".xml")) {
+                sbom_one = TranslatorCDX.translatorCDX(args[0]);
+            }
+            if(args[1].endsWith(".spdx")) {
+                sbom_one = TranslatorSPDX.translatorSPDX(args[1]);
+            } else if(args[1].endsWith(".xml")) {
+                sbom_two = TranslatorCDX.translatorCDX(args[1]);
+            }
+
+            // Do the diff here
+
         } else {
             System.out.println("Invalid command given. Should be '-q' for quality check, '-m' for metrics, or 'd' for diff.");
         }

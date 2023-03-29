@@ -7,13 +7,14 @@ package plugfest.tooling;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AppTest {
     @Test
-    public void appHasAGreeting() throws IOException {
+    public void appHasAGreeting() throws IOException, ParserConfigurationException {
         App classUnderTest = new App();
         String[] args = {"-m", "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx"};
         App.main(args);

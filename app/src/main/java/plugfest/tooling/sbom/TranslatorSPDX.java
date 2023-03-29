@@ -53,6 +53,8 @@ public class TranslatorSPDX {
      */
     public static SBOM translatorSPDX(String file_path) throws IOException {
 
+        if(!new File(file_path).exists()) { return null; }
+
         // Create a new SBOM object
         SBOM sbom;
 
