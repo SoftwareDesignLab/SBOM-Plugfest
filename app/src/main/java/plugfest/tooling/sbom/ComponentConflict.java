@@ -129,6 +129,15 @@ public class ComponentConflict {
         // Check if we are only showing stuff that isn't in the component string
         boolean printEquals = true;
 
+        if (componentA == null) {
+            // This means the component only exists in B
+            return "  - " + componentB.toString() + "\n";
+        }
+        else if (componentB == null) {
+            // Component only exists in A
+            return "  + " + componentA.toString() + "\n";
+        }
+
         // Check publisher equivalence
         if (componentA.getPublisher() != null) {
             printEquals = componentA.getPublisher().equals(componentB.getPublisher());
@@ -153,7 +162,7 @@ public class ComponentConflict {
         if (printEquals) {
             // This means we only are showing internal component differences
             // Only do this if there are conflicts
-            if (componentConflictTypes.size() > 0) {
+            if (componentConflictTypes.size() > 0 && componentConflictTypes.containsAll(Arrays.asList(ComponentConflictType.COMPONENT_NOT_FOUND))) {
                 conflictString.append("  = ").append(componentA.toString()).append("\n");
             }
         }
