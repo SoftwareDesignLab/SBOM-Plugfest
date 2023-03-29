@@ -3,14 +3,25 @@ package plugfest.tooling.metrics;
 /**
  * Imports Java Native Libraries
  */
-
-import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.Hash;
-import org.cyclonedx.util.BomUtils;
-
-import java.io.File;
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
+import java.io.File;
+
+/**
+ * Imports from CycloneDX Java Core Libraries
+ */
+import org.cyclonedx.CycloneDxSchema;
+
+/**
+ * Import from CycloneDX Java Model Libraries
+ */
+import org.cyclonedx.model.Hash;
+
+
+/**
+ * Import from CycloneDX Java Utility Libraries
+ */
+import org.cyclonedx.util.BomUtils;
 
 
 /**
