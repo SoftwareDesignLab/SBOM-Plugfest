@@ -2,8 +2,12 @@ package plugfest.tooling.sbom;
 
 import java.util.HashSet;
 import java.util.Set;
-import plugfest.tooling.sbom.SBOMConflictType;
 
+/**
+ * Conflict between two SBOMs and their trivial information
+ *
+ * @author Matt London
+ */
 public class SBOMConflict {
     /** Snapshot of the two SBOMs that have a conflict */
     private SBOM aSBOM;

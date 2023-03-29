@@ -10,7 +10,19 @@ import java.util.HashSet;
 
 import java.util.Set;
 
+/**
+ * Class to generate the difference report between two SBOMs
+ *
+ * @author Matt London
+ */
 public class Comparer {
+    /**
+     * Generate a report of the differences between two SBOMs
+     *
+     * @param aSBOM SBOM to compare to
+     * @param bSBOM SBOM to compare
+     * @return Report of the differences between the two SBOMs
+     */
     public static DiffReport generateReport(SBOM aSBOM, SBOM bSBOM) {
         Set<ComponentConflict> componentConflicts = new HashSet<>();
 
