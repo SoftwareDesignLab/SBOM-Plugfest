@@ -20,7 +20,7 @@ public class ContextualProcessor implements AttributeProcessor{
         // Check accuracy of supplier name
         // Regex101: https://regex101.com/r/KNxGCb/3
         // Checks if name is in form: "Person: First Last <email@mail.com>"
-        if(!Pattern.compile("^Person: ([\\w äöüÄÖÜß]*) <(.*)>").matcher(c.getPublisher().strip()).matches())
+        if(!Pattern.compile("^Person: ([\\w äöüÄÖÜß]*) <(.*)>", Pattern.MULTILINE).matcher(c.getPublisher().strip()).matches())
             testResult.append(String.format("FAILED: Component %s Publisher Name is Not Complete", UUIDShort));
 
         // Check accuracy of component name
@@ -33,7 +33,7 @@ public class ContextualProcessor implements AttributeProcessor{
         // Check accuracy of component version
         // Regex101: https://regex101.com/r/wzJeIq/1
         // Checks if version is in form: "1.*" | "1:*", version format varies a lot
-        if(!Pattern.compile("^([0-9](?:.|:).*)").matcher(c.getVersion().strip()).matches()) {
+        if(!Pattern.compile("^([0-9](?:.|:).*)", Pattern.MULTILINE).matcher(c.getVersion().strip()).matches()) {
             // Add separator if not first check to fail
             if(!testResult.isEmpty()) testResult.append("\n");
             testResult.append(String.format("FAILED: Component %s Version is Not Complete", UUIDShort));
