@@ -21,9 +21,6 @@ public class ComponentConflict {
      * Determine the type of conflict between the two components
      */
     private void assignConflictType() {
-        // To be set to true if we hit a situation where one component is a subset of the other
-        boolean falsePositive = false;
-
         // Compare the components and find the difference, then add it to the list of conflicts
         if (componentA.getName() != null && !componentA.getName().equals(componentB.getName())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_NAME_MISMATCH);
@@ -35,30 +32,18 @@ public class ComponentConflict {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_VERSION_MISMATCH);
         }
         if (componentA.getCPE() != null && !componentA.getCPE().equals(componentB.getCPE())) {
-            // Check if one set contains all items from the other
-            if (componentA.getCPE().containsAll(componentB.getCPE()) || componentB.getCPE().containsAll(componentA.getCPE())) {
-                // Then this isn't really a conflict
-                falsePositive = true;
-            }
-            else {
+            // Check if one set doesn't contain all items from the other
+            if (!(componentA.getCPE().containsAll(componentB.getCPE()) || componentB.getCPE().containsAll(componentA.getCPE()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
         if (componentA.getPURL() != null && !componentA.getPURL().equals(componentB.getPURL())) {
-            if (componentA.getPURL().containsAll(componentB.getPURL()) || componentB.getPURL().containsAll(componentA.getPURL())) {
-                // Then this isn't really a conflict
-            }
-            else {
+            if (!(componentA.getPURL().containsAll(componentB.getPURL()) || componentB.getPURL().containsAll(componentA.getPURL()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_PURL_MISMATCH);
             }
         }
         if (componentA.getSWID() != null && !componentA.getSWID().equals(componentB.getSWID())) {
-            if (componentA.getSWID().containsAll(componentB.getSWID()) || componentB.getSWID().containsAll(componentA.getSWID())) {
-                // Then this isn't really a conflict
-                falsePositive = true;
-
-            }
-            else {
+            if (!(componentA.getSWID().containsAll(componentB.getSWID()) || componentB.getSWID().containsAll(componentA.getSWID()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_SWID_MISMATCH);
             }
         }
@@ -68,7 +53,7 @@ public class ComponentConflict {
         if (componentA.getLicenses() != null && !componentA.getLicenses().equals(componentB.getLicenses())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_LICENSE_MISMATCH);
         }
-        if (componentConflictTypes.isEmpty() && !falsePositive) {
+        if (componentConflictTypes.isEmpty()) {
 //            componentConflictTypes.add(ComponentConflictType.COMPONENT_UNKNOWN_MISMATCH);
         }
 
