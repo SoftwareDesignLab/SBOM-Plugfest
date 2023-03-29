@@ -31,9 +31,9 @@ public class ContextualProcessor implements AttributeProcessor{
         }
 
         // Check accuracy of component version
-        // Regex101: https://regex101.com/r/wzJeIq/1
+        // Regex101: https://regex101.com/r/wzJeIq/2
         // Checks if version is in form: "1.*" | "1:*", version format varies a lot
-        if(!Pattern.compile("^([0-9](?:.|:).*)", Pattern.MULTILINE).matcher(c.getVersion().strip()).matches()) {
+        if(!Pattern.compile("^([0-9]+(?:\\.|:).*)", Pattern.MULTILINE).matcher(c.getVersion().strip()).matches()) {
             // Add separator if not first check to fail
             if(!testResult.isEmpty()) testResult.append("\n");
             testResult.append(String.format("FAILED: Component %s Version is Not Complete", UUIDShort));
