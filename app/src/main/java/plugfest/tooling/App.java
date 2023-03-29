@@ -12,6 +12,7 @@ import org.cyclonedx.CycloneDxSchema;
 import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
 import plugfest.tooling.sbom.*;
+import plugfest.tooling.translator.Translator;
 import plugfest.tooling.translator.TranslatorCDX;
 import plugfest.tooling.translator.TranslatorSPDX;
 
@@ -75,27 +76,17 @@ public class App {
             }
 
             // Process first sbom
-            try {
-                SBOM sbomOne;
-                if (args[1].toLowerCase().endsWith(".xml")) {
-                    sbomOne = TranslatorCDX.translatorCDX(args[1]);
-                } else {
-                    sbomOne = TranslatorSPDX.translatorSPDX(args[1]);
-                }
+            SBOM sbomOne = Translator.translate(args[1]);
+            SBOM sbomTwo = Translator.translate(args[2]);
 
-                SBOM sbomTwo;
-                if (args[2].toLowerCase().endsWith(".xml")) {
-                    sbomTwo = TranslatorCDX.translatorCDX(args[2]);
-                } else {
-                    sbomTwo = TranslatorSPDX.translatorSPDX(args[2]);
-                }
-
+            if (sbomOne == null || sbomTwo == null) {
+                System.err.println("One or more of the SBOMs could not be parsed. Exiting...");
+            }
+            else {
                 DiffReport report = Comparer.generateReport(sbomOne, sbomTwo);
-                System.out.println(report.toString());
+                System.out.println(report);
             }
-            catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+
         } else {
             System.out.println("Invalid command given. Should be '-q' for quality check, '-m' for metrics, or 'd' for diff.");
         }
