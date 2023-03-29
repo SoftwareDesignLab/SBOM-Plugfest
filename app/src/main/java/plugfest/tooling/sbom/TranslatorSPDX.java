@@ -1,6 +1,7 @@
 package plugfest.tooling.sbom;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 
 import java.io.BufferedReader;
@@ -72,7 +73,7 @@ public class TranslatorSPDX {
 
         // Collection for dependencies, contains every single component, and what it relies on, if any
         // Key (SPDX_ID) = Component, Values (SPDX_ID) = Components it needs
-        Multimap<String, String> dependencies = ArrayListMultimap.create();
+        ArrayListMultimap<String, String> dependencies = ArrayListMultimap.create();
 
         // Collection of packages, used  for adding head components to top component if in the header (SPDXRef-DOCUMENT)
         // Value (SPDX_ID)
@@ -375,11 +376,10 @@ public class TranslatorSPDX {
 
         // Get the parent's dependencies as a list
         String parent_id = parent.getSPDXID();
-        List<String> children_SPDX = (List<String>) dependencies.get(parent_id);
-        dependencies.removeAll(parent_id);
+        Collection<Object> children_SPDX = dependencies.get(parent_id);
 
         // Cycle through each dependency the parent component has
-        for (String child_SPDX : children_SPDX) {
+        for (Object child_SPDX : children_SPDX) {
             // Retrieve the component the parent has a dependency for
             Component child = (Component) components.get(child_SPDX);
 
