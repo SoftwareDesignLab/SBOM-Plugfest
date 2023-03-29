@@ -5,6 +5,7 @@ import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOMConflict;
 import plugfest.tooling.sbom.ComponentConflict;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import java.util.Set;
@@ -16,15 +17,45 @@ public class Comparer {
         Set<Component> aComponents = aSBOM.getAllComponents();
         Set<Component> bComponents = bSBOM.getAllComponents();
 
-        // Loop through and compare all components that have the same name and grab any conflicts
+        Set<String> aComponentNames = new HashSet<>();
+        Set<String> bComponentNames = new HashSet<>();
+
         for (Component aComponent : aComponents) {
-            for (Component bComponent : bComponents) {
-                if (aComponent.getName().equals(bComponent.getName())) {
-                    ComponentConflict conflict = new ComponentConflict(aComponent, bComponent);
-                    if (conflict.getConflictTypes().size() > 0) {
-                        componentConflicts.add(conflict);
-                    }
+            aComponentNames.add(aComponent.getName());
+        }
+
+        for (Component bComponent : bComponents) {
+            bComponentNames.add(bComponent.getName());
+        }
+
+        // Add all acomponents to a map
+        HashMap<String, Component> aComponentMap = new HashMap<>();
+        for (Component aComponent : aComponents) {
+            aComponentMap.put(aComponent.getName(), aComponent);
+        }
+
+        // Now loop through and check if all b components are there
+        for (Component bComponent : bComponents) {
+            if (!aComponentMap.containsKey(bComponent.getName())) {
+                // Add a new component conflict
+                ComponentConflict conflict = new ComponentConflict(null, bComponent);
+                componentConflicts.add(conflict);
+            }
+            else {
+                // Compare the two
+                ComponentConflict conflict = new ComponentConflict(aComponentMap.get(bComponent.getName()), bComponent);
+                if (conflict.getConflictTypes().size() > 0) {
+                    componentConflicts.add(conflict);
                 }
+            }
+        }
+
+        // Now look for components that exist in a but not b
+        for (String aComponent : aComponentNames) {
+            if (!bComponentNames.contains(aComponent)) {
+                // Then we have a component in a that is not in b
+                ComponentConflict conflict = new ComponentConflict(aComponentMap.get(aComponent), null);
+                componentConflicts.add(conflict);
             }
         }
 
