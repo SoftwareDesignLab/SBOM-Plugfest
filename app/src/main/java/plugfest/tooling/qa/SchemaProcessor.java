@@ -1,4 +1,4 @@
 package plugfest.tooling.qa;
 
-public class SchemaProcessor {
+public class SchemaProcessor implements AttributeProcessor{
 }

@@ -1,4 +1,4 @@
 package plugfest.tooling.qa;
 
-public class CompletenessProcessor {
+public class CompletenessProcessor implements AttributeProcessor{
 }

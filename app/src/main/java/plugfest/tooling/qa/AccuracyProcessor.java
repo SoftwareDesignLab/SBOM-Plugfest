@@ -1,4 +1,4 @@
 package plugfest.tooling.qa;
 
-public class AccuracyProcessor {
+public class AccuracyProcessor implements AttributeProcessor{
 }
