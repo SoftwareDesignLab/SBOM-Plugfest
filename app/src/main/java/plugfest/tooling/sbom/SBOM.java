@@ -1,5 +1,8 @@
 package plugfest.tooling.sbom;
 
+import plugfest.tooling.metrics.Metric;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,6 +49,27 @@ public class SBOM {
      * Signatures on the SBOM
      */
     private Set<Signature> signature;
+
+    // START Metrics testing Section
+    // todo properly integrate w/ sbom before merge
+    private Set<Metric> metrics = new HashSet<>();
+
+    public Set<Metric> getMetrics() {
+        return metrics;
+    }
+
+    public void addMetric(Metric metric) {
+        this.metrics.add(metric);
+    }
+
+    public double score(){
+        double score = 0;
+        for( Metric m : this.metrics )
+            score += m.getScore();
+        return score / this.metrics.size();
+    }
+
+    // END Metrics testing Section
 
     /**
      * Constructor to take all parameters except for DependencyTree
