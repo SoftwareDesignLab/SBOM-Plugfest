@@ -51,7 +51,7 @@ public class TranslatorCDX {
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-        documentBuilderFactory.setValidating(true);
+//        documentBuilderFactory.setValidating(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
         // Get parsed XML SBOM file and normalize
@@ -61,6 +61,7 @@ public class TranslatorCDX {
             sbom_xml_file = documentBuilder.parse(new File(file_path));
         } catch (SAXException saxException) {
             System.err.println("Error: SAXException found. File must be a properly formatted Cyclone-DX XML file: " + file_path);
+            System.err.println(saxException.getMessage());
             return null;
         } catch (IOException ioException) {
             System.err.println("Error: IOException found. File information could not be found in: " + file_path);
