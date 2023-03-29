@@ -1,4 +1,4 @@
-package plugfest.tooling.qa;
+package plugfest.tooling.qa.processors;
 
 public class ContextProcessor implements AttributeProcessor{
 }
