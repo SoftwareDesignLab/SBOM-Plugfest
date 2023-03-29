@@ -6,7 +6,13 @@ package plugfest.tooling.metrics;
 
 import org.spdx.tools.CompareSpdxDocs;
 import org.spdx.tools.Verify;
+import org.spdx.tools.SpdxToolsHelper;
 
+/**
+ * Imports Java Native Libraries
+ */
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -46,12 +52,57 @@ public class SPDXMetrics extends Metric{
         CompareSpdxDocs.main(compareArgs);
     }
 
+    public ArrayList<String> verifySPDX() {
+        final String fullPath = this.filepath + "/" + this.sbom;
+        System.out.println("Running Verification on SPDX SBOM File: " + fullPath);
+        ArrayList<String> verificationResults = new ArrayList<String>();
+        try {
+            if(fullPath.substring(fullPath.length()-5).equals(".json") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.JSON);
+            }
+            else if(fullPath.substring(fullPath.length()-8).equals(".rdf.xml") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
+            }
+            else if(fullPath.substring(fullPath.length()-4).equals(".rdf") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
+            }
+            else if(fullPath.substring(fullPath.length()-4).equals(".xml") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XML);
+            }
+            else if(fullPath.substring(fullPath.length()-4).equals(".xls") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLS);
+            }
+            else if(fullPath.substring(fullPath.length()-5).equals(".xlsx") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLSX);
+            }
+            else if(fullPath.substring(fullPath.length()-5).equals(".yaml") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.YAML);
+            }
+            else if(fullPath.substring(fullPath.length()-4).equals(".tag") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
+            }
+            else if(fullPath.substring(fullPath.length()-5).equals(".spdx") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
+            }
+            else if(fullPath.substring(fullPath.length()-8).equals(".rdf.ttl") == true) {
+                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFTTL);
+            }
+        }
+        catch(Exception ex) {
+            System.out.println("EXCEPTION: "+ex);
+            return null;
+        }
+        return verificationResults;
+    }
+
     @Override
     protected int testMetric() {
         final String fullPath = this.filepath + "/" + this.sbom;
-        System.out.println("Running Verification on SPDX SBOM File: " + this.filepath);
-        Verify.main(new String[]{ fullPath });
+                
+        //System.out.println("Running Verification on SPDX SBOM File: " + this.filepath);
+        //Verify.main(new String[]{ fullPath });
         //Have a console reader verify and return 1 or 0 depending on results
+
         return 1;
     }
 }
