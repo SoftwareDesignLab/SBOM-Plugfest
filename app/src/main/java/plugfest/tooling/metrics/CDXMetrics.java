@@ -124,12 +124,12 @@ public class CDXMetrics extends Metric{
 
     @Override
     protected int testMetric() {
-        int score = 0;
+        int result = 0;
 
         //Runs verify and calculateHashes and increments score if they are valid
-        if (verify(this.sbom) != null) score++;
-        if (calculateHashes(this.sbom) != null) score++;
+        if (verify(this.sbom) != null) result++;
+        if (calculateHashes(this.sbom) != null) result++;
 
-        return score;
+        return result;
     }
 }

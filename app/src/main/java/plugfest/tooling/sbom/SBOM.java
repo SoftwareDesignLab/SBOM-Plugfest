@@ -1,6 +1,7 @@
 package plugfest.tooling.sbom;
 
 import plugfest.tooling.metrics.Metric;
+import plugfest.tooling.qa.QualityReport;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,22 +53,22 @@ public class SBOM {
 
     // START Metrics testing Section
     // todo properly integrate w/ sbom before merge
-    private Set<Metric> metrics = new HashSet<>();
+    private Set<QualityReport> metrics = new HashSet<>();
 
-    public Set<Metric> getMetrics() {
+    public Set<QualityReport> getQualityReports() {
         return metrics;
     }
 
-    public void addMetric(Metric metric) {
+    public void addQualityReport(QualityReport metric) {
         this.metrics.add(metric);
     }
 
-    public double score(){
-        double score = 0;
-        for( Metric m : this.metrics )
-            score += m.getScore();
-        return score / this.metrics.size();
-    }
+//    public double score(){
+//        double score = 0;
+//        for( QualityReport m : this.metrics )
+//            score += m.getScore();
+//        return score / this.metrics.size();
+//    }
 
     // END Metrics testing Section
 

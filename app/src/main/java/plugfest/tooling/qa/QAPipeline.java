@@ -13,7 +13,14 @@ public class QAPipeline {
 
 
     public void process(SBOM sbom){
-        // todo add other metrics
-        sbom.addMetric(new timestampConsistencyMetric(sbom.getTimestamp()));
+        /*
+         todo implement processors
+         check SBOM and init all relevant processors
+         for p : processors
+            QualityReport qr = p.process(sbom);
+            sbom.add QR(qr);
+         */
+
+
     }
 }
