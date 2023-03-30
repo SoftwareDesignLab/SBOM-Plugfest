@@ -73,6 +73,8 @@ public class ComponentConflict {
         if (componentA != null) {
             this.componentA = new Component();
             this.componentA.copyFrom(componentA);
+
+            componentCleanup(this.componentA);
         }
         else {
             this.componentA = null;
@@ -82,6 +84,8 @@ public class ComponentConflict {
         if (componentB != null) {
             this.componentB = new Component();
             this.componentB.copyFrom(componentB);
+
+            componentCleanup(this.componentB);
         }
         else {
             this.componentB = null;
@@ -93,6 +97,18 @@ public class ComponentConflict {
             // In this case we know both components exist
             // Now we need to determine what the conflict is
             assignConflictType();
+        }
+    }
+
+    /**
+     * Cleanup a component, set unknowns to null and such
+     *
+     * @param component Component to clean up
+     */
+    private void componentCleanup(Component component) {
+        // Set unknowns to null
+        if (component.getPublisher() != null && component.getPublisher().equals("Unknown")) {
+            component.setPublisher(null);
         }
     }
 
