@@ -12,7 +12,9 @@ import org.cyclonedx.CycloneDxSchema;
 import plugfest.tooling.differ.*;
 import plugfest.tooling.metrics.*;
 import plugfest.tooling.qa.QAPipeline;
+import plugfest.tooling.qa.QualityReport;
 import plugfest.tooling.sbom.*;
+import plugfest.tooling.translator.Translator;
 import plugfest.tooling.translator.TranslatorCDX;
 import plugfest.tooling.translator.TranslatorSPDX;
 
@@ -52,6 +54,22 @@ public class App {
         if(!new File(args[1]).exists()) {
             System.out.println("Second file can not be found. Exiting...");
             System.exit(0);
+        }
+
+        try {
+            // Parse SBOM object from file
+            SBOM sbom = TranslatorSPDX.translatorSPDX("path/to/sboms/dir");
+
+            // Instantiate QA Pipeline
+            QAPipeline qa = new QAPipeline();
+            QualityReport qualityReport = qa.process(sbom);
+
+            // Display QualityReport
+            System.out.println(qualityReport);
+
+        } catch (IOException ignored) {
+            System.out.println("Error translating file.");
+            System.exit(-1);
         }
 
         /*

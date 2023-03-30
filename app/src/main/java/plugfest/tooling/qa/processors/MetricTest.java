@@ -2,11 +2,13 @@ package plugfest.tooling.qa.processors;
 
 import plugfest.tooling.sbom.Component;
 
+import java.util.ArrayList;
+
 public abstract class MetricTest {
     //#region Attributes
 
     private final String name;
-    private final StringBuilder testResults;
+    private final ArrayList<String> testResults;
 
     //#endregion
 
@@ -14,14 +16,14 @@ public abstract class MetricTest {
 
     protected MetricTest(String name) {
         this.name = name;
-        this.testResults = new StringBuilder();
+        this.testResults = new ArrayList<>();
     }
 
     //#endregion
 
     //#region Abstract Methods
 
-    public abstract String test(Component c);
+    public abstract ArrayList<String> test(Component c);
 
     //#endregion
 
@@ -34,7 +36,7 @@ public abstract class MetricTest {
 
     //#region Setters
 
-    public void addTestResult(String result) { testResults.append(result); }
+    public void addTestResult(ArrayList<String> result) { testResults.addAll(result); }
 
     //#endregion
 
