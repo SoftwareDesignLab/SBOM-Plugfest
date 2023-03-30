@@ -158,7 +158,9 @@ public class Component {
         return publisher;
     }
 
-    public void setPublisher(String publisher) { this.publisher = publisher; }
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
     public String getVersion() {
         return version;
