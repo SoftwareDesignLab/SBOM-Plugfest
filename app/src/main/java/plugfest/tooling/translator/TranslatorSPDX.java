@@ -1,6 +1,7 @@
 package plugfest.tooling.translator;
 
-import org.jvnet.hk2.component.MultiMap;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOM;
 
@@ -54,6 +55,8 @@ public class TranslatorSPDX {
      */
     public static SBOM translatorSPDX(String file_path) throws IOException {
 
+        if(!new File(file_path).exists()) { return null; }
+
         // Create a new SBOM object
         SBOM sbom;
 
@@ -71,7 +74,7 @@ public class TranslatorSPDX {
 
         // Collection for dependencies, contains every single component, and what it relies on, if any
         // Key (SPDX_ID) = Component, Values (SPDX_ID) = Components it needs
-        MultiMap<String, String> dependencies = new MultiMap<>();
+        ArrayListMultimap<String, String> dependencies = ArrayListMultimap.create();
 
         // Collection of packages, used  for adding head components to top component if in the header (SPDXRef-DOCUMENT)
         // Value (SPDX_ID)
@@ -124,23 +127,6 @@ public class TranslatorSPDX {
                 sbom_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
             }
 
-        }
-
-        // Create the new SBOM Object with top level data
-        try {
-            sbom = new SBOM(
-                    "spdx",
-                    sbom_materials.get("SPDXVersion"),
-                    sbom_materials.get("Creator"),
-                    sbom_materials.get("DocumentNamespace"),
-                    sbom_materials.get("Created"),
-                    null
-            );
-        } catch (Exception e) {
-            System.err.println("Could not create SBOM object. File: " + file_path);
-            e.printStackTrace();
-            br.close();
-            return null;
         }
 
 
@@ -294,28 +280,28 @@ public class TranslatorSPDX {
                 // Split dependency relationship and store into relationships map depends on relationship type
                 if(current_line.contains("CONTAINS")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" CONTAINS ")[0],
                             relationship.split(" CONTAINS ")[1]
                     );
 
                 } else if (current_line.contains("DEPENDS_ON")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" DEPENDS_ON ")[0],
                             relationship.split(" DEPENDS_ON ")[1]
                     );
 
                 } else if (current_line.contains("DEPENDENCY_OF")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" DEPENDENCY_OF ")[1],
                             relationship.split(" DEPENDENCY_OF ")[0]
                     );
 
                 } else if (current_line.contains("OTHER")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" OTHER ")[1],
                             relationship.split(" OTHER ")[0]
                     );
@@ -325,18 +311,15 @@ public class TranslatorSPDX {
                     // If document references itself as top component, make it the top component using sbom head information
                     // Otherwise, get the SPDXID for the component it references and make that the top component
                     top_component = relationship.split(" DESCRIBES ")[1].contains(DOCUMENT_REFERENCE_TAG)
-                            ? new Component(sbom_materials.get("DocumentName"), "N/A", "N/A", sbom_materials.get("SPDXID"))
+                            ? new Component(sbom_materials.get("DocumentName"), "N/A", "N/A", sbom_materials.get("SPDXID") )
                             : components.get(relationship.split(" DESCRIBES ")[1]);
 
                     // If top component exists, and if it is SPDXID: SPDXRef-DOCUMENT, add top level components as its dependencies
                     // Then, add it as the top level component of the dependency tree
                     if( top_component != null && top_component.getSPDXID().contains(DOCUMENT_REFERENCE_TAG) ) {
-                        dependencies.set(top_component.getSPDXID(), packages);
+                        dependencies.putAll(top_component.getSPDXID(), packages);
                         dependencies.remove(top_component.getSPDXID(), top_component.getSPDXID());
                     }
-
-                    sbom.addComponent(null, top_component);
-
                 }
             }
 
@@ -344,8 +327,32 @@ public class TranslatorSPDX {
 
         }
 
+        // Create the new SBOM Object with top level data
+        try {
+            sbom = new SBOM(
+                    "spdx",
+                    sbom_materials.get("SPDXVersion"),
+                    "1",
+                    top_component == null ? "N/A" : top_component.getPublisher(),
+                    sbom_materials.get("DocumentNamespace"),
+                    sbom_materials.get("Created"),
+                    null);
+        } catch (Exception e) {
+            System.err.println("Could not create SBOM object. File: " + file_path);
+            e.printStackTrace();
+            br.close();
+            return null;
+        }
+
+        if(top_component!=null) { sbom.addComponent(null, top_component); }
+
+        // Create the top level component
         // Build the dependency tree using dependencyBuilder
-        dependencyBuilder(dependencies, components, top_component, sbom, null);
+        try {
+            dependencyBuilder(dependencies, components, top_component, sbom, null);
+        } catch (Exception e) {
+            System.err.println("Error processing dependency tree.");
+        }
 
         br.close();
 
@@ -362,7 +369,7 @@ public class TranslatorSPDX {
      * @param parent        Parent component to have dependencies connected to
      * @param sbom          The SBOM object
      */
-    public static void dependencyBuilder(MultiMap dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
+    public static void dependencyBuilder(Multimap dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
 
         // If top component is null, return. There is nothing to process.
         if (parent == null) { return; }
@@ -373,11 +380,11 @@ public class TranslatorSPDX {
         }
 
         // Get the parent's dependencies as a list
-        List<String> children_SPDX = dependencies.get(parent.getSPDXID());
-        dependencies.remove(parent.getSPDXID());
+        String parent_id = parent.getSPDXID();
+        Collection<Object> children_SPDX = dependencies.get(parent_id);
 
         // Cycle through each dependency the parent component has
-        for (String child_SPDX : children_SPDX) {
+        for (Object child_SPDX : children_SPDX) {
             // Retrieve the component the parent has a dependency for
             Component child = (Component) components.get(child_SPDX);
 

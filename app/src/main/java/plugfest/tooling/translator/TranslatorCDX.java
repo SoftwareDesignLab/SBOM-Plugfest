@@ -132,10 +132,10 @@ public class TranslatorCDX {
                     "cyclonedx",
                     header_materials.get("xmlns"),
                     header_materials.get("version"),
+                    header_materials.get("manufacturer"),
                     header_materials.get("serialNumber"),
                     sbom_materials.get("timestamp"),
-                    null
-            );
+                    null);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Could not create SBOM object. File: " + file_path);
