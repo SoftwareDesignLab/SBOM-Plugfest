@@ -7,10 +7,23 @@ public class QualityReport {
     private final Map<String, String> testResults;
     private final String serialNumber;
 
-    // include data on what tests were run
+    /**
+     * Create new QualityReport object with the SBOM serialNumber.
+     * @param serialNumber the SBOM serialNumber
+     */
     public QualityReport(String serialNumber){
         this.testResults = new HashMap<>();
         this.serialNumber = serialNumber;
+    }
+
+    /**
+     * Create new QualityReport object without a serialNumber.
+     * This object should be intended to be combined with another
+     * that does have a valid serialNumber.
+     */
+    public QualityReport(){
+        this.testResults = new HashMap<>();
+        this.serialNumber = "INVALID_SN";
     }
 
     public void addTestResult(String testName, String testResult) {
