@@ -229,12 +229,17 @@ public class TranslatorSPDX {
                     }
                 }
 
+                final String pName = component_materials.get("PackageName");
+                final String pOriginator = component_materials.get("PackageOriginator");
+                final String pVersion = component_materials.get("PackageVersion");
+                final String spdxID = component_materials.get("SPDXID");
+
                 // Create new component from required information
                 Component component = new Component(
-                        component_materials.get("PackageName"),
-                        component_materials.get("PackageOriginator"),
-                        component_materials.get("PackageVersion"),
-                        component_materials.get("SPDXID")
+                        pName == null ? "Unknown" : pName,
+                        pOriginator == null ? "Unknown" : pOriginator,
+                        pVersion == null ? "Unknown" : pVersion,
+                        spdxID == null ? "Unknown" : spdxID
                 );
 
                 // Append CPEs and Purls

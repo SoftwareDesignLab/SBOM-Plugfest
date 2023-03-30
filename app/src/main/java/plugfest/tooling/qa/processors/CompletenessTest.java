@@ -48,20 +48,16 @@ public class CompletenessTest extends MetricTest {
 
         // Check completeness of publisher name
         if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
-            testResults.add(String.format("FAILED: Component %s Publisher Name is Not Complete", UUIDShort));
+            testResults.add(String.format("FAILED: Component %s Publisher Name is Not Complete: %s", UUIDShort, c.getPublisher()));
 
         // Check completeness of component name
         if(c.getName().isBlank()) {
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.add(String.format("FAILED: Component %s Name is Not Complete", UUIDShort));
+            testResults.add(String.format("FAILED: Component %s Name is Not Complete: %s", UUIDShort, c.getName()));
         }
 
         // Check completeness of component version
         if(!this.componentVersionRegex.matcher(c.getVersion().strip()).matches()) {
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.add(String.format("FAILED: Component %s Version is Not Complete", UUIDShort));
+            testResults.add(String.format("FAILED: Component %s Version is Not Complete: %s", UUIDShort, c.getVersion()));
         }
 
         int invalid;
@@ -69,16 +65,12 @@ public class CompletenessTest extends MetricTest {
         // Check CPEs and return a number of invalid CPEs per component
         invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
         if(invalid > 0) { // If there are invalid cpes, mark as failed
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
             testResults.add(String.format("FAILED: %d CPE(s) with Invalid Format", invalid));
         }
 
         // Check PURLs and return a number of invalid PURLs
         invalid = getNumInvalidStrings(c.getPURL(), purlRegex);
         if(invalid > 0) { // If there are invalid PURLs, mark as failed
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
             testResults.add(String.format("FAILED: %d PURL(s) with Invalid Format", invalid));
         }
 

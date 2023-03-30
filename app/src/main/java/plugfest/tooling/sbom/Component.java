@@ -93,7 +93,7 @@ public class Component {
         this();
         this.name = name;
         this.version = version;
-        this.publisher = null;
+        this.publisher = "Unknown";
     }
 
     /**

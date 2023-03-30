@@ -31,7 +31,7 @@ public abstract class AttributeProcessor {
             final Component[] components = sbom.getAllComponents().toArray(new Component[0]);
             for (int j = 0; j < components.length; j++) {
                 // Store current component in local variable
-                final Component c = components[i];
+                final Component c = components[j];
                 // Test and append results
                 mt.addTestResult(mt.test(c));
             }

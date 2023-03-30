@@ -30,7 +30,7 @@ public abstract class MetricTest {
     //#region Getters
 
     public String getName() { return this.name; }
-    public String getTestResults() { return this.testResults.toString(); }
+    public ArrayList<String> getTestResults() { return this.testResults; }
 
     //#endregion
 
