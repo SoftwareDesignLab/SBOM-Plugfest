@@ -15,7 +15,6 @@ public class CompletenessTest extends MetricTest {
      */
     private final Pattern cpe23Regex;
     private final Pattern purlRegex;
-    private final Pattern swidRegex;
 
     protected CompletenessTest() {
         super("Completeness Test");
@@ -39,7 +38,6 @@ public class CompletenessTest extends MetricTest {
         this.purlRegex = Pattern.compile("pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@(" +
                 "[a-zA-Z0-9-~._%]+))?(\\?(([a-zA-Z][a-zA-Z0-9_.-]*=.+)&)*([a-zA-Z][a-zA-Z0-9-~._%]*=.+))?(#(" +
                 "[a-zA-Z0-9-~._%]*\\/)+[a-zA-Z0-9-~._%]*)?", Pattern.MULTILINE);
-        this.swidRegex = Pattern.compile("", Pattern.MULTILINE);
     }
 
     @Override
@@ -82,14 +80,6 @@ public class CompletenessTest extends MetricTest {
             // Add separator if not first check to fail
             if(!testResults.isEmpty()) testResults.add("\n");
             testResults.add(String.format("FAILED: %d PURL(s) with Invalid Format", invalid));
-        }
-
-        // Check SWIDs and return a number of invalid SWIDs
-        invalid = getNumInvalidStrings(c.getSWID(), swidRegex);
-        if(invalid > 0) { // If there are invalid PURLs, mark as failed
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.add(String.format("FAILED: %d SWID(s) with Invalid Format", invalid));
         }
 
         // If no checks failed, mark test as passed
