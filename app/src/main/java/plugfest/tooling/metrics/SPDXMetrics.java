@@ -11,8 +11,8 @@ import org.spdx.tools.SpdxToolsHelper;
 /**
  * Imports Java Native Libraries
  */
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -39,7 +39,7 @@ public class SPDXMetrics extends Metric{
     }
 
     public void compare(String[] sbom_files) {
-        System.out.println("Running Comparison on SBOM Files: "+ sbom_files);
+        System.out.println("Running Comparison on SBOM Files: "+ Arrays.toString(sbom_files));
         Date date = new Date();
         long timestamp = date.getTime();
         String[] compareArgs = new String[(sbom_files.length+1)];
@@ -52,39 +52,39 @@ public class SPDXMetrics extends Metric{
         CompareSpdxDocs.main(compareArgs);
     }
 
-    public ArrayList<String> verifySPDX() {
+    public ArrayList verifySPDX() {
         final String fullPath = this.filepath + "/" + this.sbom;
         System.out.println("Running Verification on SPDX SBOM File: " + fullPath);
-        ArrayList<String> verificationResults = new ArrayList<String>();
+        ArrayList verificationResults = new ArrayList<String>();
         try {
-            if(fullPath.substring(fullPath.length()-5).equals(".json") == true) {
+            if(fullPath.endsWith(".json")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.JSON);
             }
-            else if(fullPath.substring(fullPath.length()-8).equals(".rdf.xml") == true) {
+            else if(fullPath.endsWith(".rdf.xml")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
             }
-            else if(fullPath.substring(fullPath.length()-4).equals(".rdf") == true) {
+            else if(fullPath.endsWith(".rdf")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
             }
-            else if(fullPath.substring(fullPath.length()-4).equals(".xml") == true) {
+            else if(fullPath.endsWith(".xml")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XML);
             }
-            else if(fullPath.substring(fullPath.length()-4).equals(".xls") == true) {
+            else if(fullPath.endsWith(".xls")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLS);
             }
-            else if(fullPath.substring(fullPath.length()-5).equals(".xlsx") == true) {
+            else if(fullPath.endsWith(".xlsx")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLSX);
             }
-            else if(fullPath.substring(fullPath.length()-5).equals(".yaml") == true) {
+            else if(fullPath.endsWith(".yaml")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.YAML);
             }
-            else if(fullPath.substring(fullPath.length()-4).equals(".tag") == true) {
+            else if(fullPath.endsWith(".tag")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
             }
-            else if(fullPath.substring(fullPath.length()-5).equals(".spdx") == true) {
+            else if(fullPath.endsWith(".spdx")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
             }
-            else if(fullPath.substring(fullPath.length()-8).equals(".rdf.ttl") == true) {
+            else if(fullPath.endsWith(".rdf.ttl")) {
                 verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFTTL);
             }
         }
@@ -97,12 +97,11 @@ public class SPDXMetrics extends Metric{
 
     @Override
     protected int testMetric() {
-        final String fullPath = this.filepath + "/" + this.sbom;
-                
-        //System.out.println("Running Verification on SPDX SBOM File: " + this.filepath);
-        //Verify.main(new String[]{ fullPath });
-        //Have a console reader verify and return 1 or 0 depending on results
-
-        return 1;
+        if(verifySPDX() != null){
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 }
