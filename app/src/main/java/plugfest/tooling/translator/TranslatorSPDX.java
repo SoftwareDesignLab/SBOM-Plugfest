@@ -1,7 +1,6 @@
 package plugfest.tooling.translator;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOM;
@@ -128,23 +127,6 @@ public class TranslatorSPDX {
                 sbom_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
             }
 
-        }
-
-        // Create the new SBOM Object with top level data
-        try {
-            sbom = new SBOM(
-                    "spdx",
-                    sbom_materials.get("SPDXVersion"),
-                    sbom_materials.get("Creator"),
-                    sbom_materials.get("DocumentNamespace"),
-                    sbom_materials.get("Created"),
-                    null
-            );
-        } catch (Exception e) {
-            System.err.println("Could not create SBOM object. File: " + file_path);
-            e.printStackTrace();
-            br.close();
-            return null;
         }
 
 
@@ -329,7 +311,7 @@ public class TranslatorSPDX {
                     // If document references itself as top component, make it the top component using sbom head information
                     // Otherwise, get the SPDXID for the component it references and make that the top component
                     top_component = relationship.split(" DESCRIBES ")[1].contains(DOCUMENT_REFERENCE_TAG)
-                            ? new Component(sbom_materials.get("DocumentName"), "N/A", "N/A", sbom_materials.get("SPDXID"))
+                            ? new Component(sbom_materials.get("DocumentName"), "N/A", "N/A", sbom_materials.get("SPDXID") )
                             : components.get(relationship.split(" DESCRIBES ")[1]);
 
                     // If top component exists, and if it is SPDXID: SPDXRef-DOCUMENT, add top level components as its dependencies
@@ -338,9 +320,6 @@ public class TranslatorSPDX {
                         dependencies.putAll(top_component.getSPDXID(), packages);
                         dependencies.remove(top_component.getSPDXID(), top_component.getSPDXID());
                     }
-
-                    sbom.addComponent(null, top_component);
-
                 }
             }
 
@@ -348,8 +327,32 @@ public class TranslatorSPDX {
 
         }
 
+        // Create the new SBOM Object with top level data
+        try {
+            sbom = new SBOM(
+                    "spdx",
+                    sbom_materials.get("SPDXVersion"),
+                    "1",
+                    top_component == null ? "N/A" : top_component.getPublisher(),
+                    sbom_materials.get("DocumentNamespace"),
+                    sbom_materials.get("Created"),
+                    null);
+        } catch (Exception e) {
+            System.err.println("Could not create SBOM object. File: " + file_path);
+            e.printStackTrace();
+            br.close();
+            return null;
+        }
+
+        if(top_component!=null) { sbom.addComponent(null, top_component); }
+
+        // Create the top level component
         // Build the dependency tree using dependencyBuilder
-        dependencyBuilder(dependencies, components, top_component, sbom, null);
+        try {
+            dependencyBuilder(dependencies, components, top_component, sbom, null);
+        } catch (Exception e) {
+            System.err.println("Error processing dependency tree.");
+        }
 
         br.close();
 
