@@ -52,40 +52,21 @@ public class SPDXMetrics extends Metric{
         CompareSpdxDocs.main(compareArgs);
     }
 
-    public ArrayList verifySPDX() {
+    public ArrayList<String> verifySPDX() {
         final String fullPath = this.filepath + "/" + this.sbom;
         System.out.println("Running Verification on SPDX SBOM File: " + fullPath);
-        ArrayList verificationResults = new ArrayList<String>();
+        ArrayList<String> verificationResults = new ArrayList<>();
+        final String extn = fullPath.substring(fullPath.indexOf('.'));
         try {
-            if(fullPath.endsWith(".json")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.JSON);
-            }
-            else if(fullPath.endsWith(".rdf.xml")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
-            }
-            else if(fullPath.endsWith(".rdf")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
-            }
-            else if(fullPath.endsWith(".xml")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XML);
-            }
-            else if(fullPath.endsWith(".xls")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLS);
-            }
-            else if(fullPath.endsWith(".xlsx")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLSX);
-            }
-            else if(fullPath.endsWith(".yaml")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.YAML);
-            }
-            else if(fullPath.endsWith(".tag")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
-            }
-            else if(fullPath.endsWith(".spdx")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
-            }
-            else if(fullPath.endsWith(".rdf.ttl")) {
-                verificationResults = (ArrayList)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFTTL);
+            switch (extn) {
+                case "json" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.JSON);
+                case "rdf.xml", "rdf" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
+                case "xml" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XML);
+                case "xls" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLS);
+                case "xlsx" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLSX);
+                case "yaml" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.YAML);
+                case "tag", "spdx" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
+                case "rdf.ttl" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFTTL);
             }
         }
         catch(Exception ex) {
