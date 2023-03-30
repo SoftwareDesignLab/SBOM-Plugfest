@@ -67,7 +67,7 @@ public class Component {
      * Represent the conflicts of the component with other components
      * Note: This should ONLY be used in the master SBOM and never in individual sboms
      */
-    private final Set<Conflict> conflicts;
+    private final Set<ComponentConflict> componentConflicts;
 
     /**
      * Constructs a component with no attributes
@@ -79,7 +79,7 @@ public class Component {
         this.CPE = new HashSet<>();
         this.PURL = new HashSet<>();
         this.SWID = new HashSet<>();
-        this.conflicts = new HashSet<>();
+        this.componentConflicts = new HashSet<>();
     }
 
     /**
@@ -241,17 +241,17 @@ public class Component {
         this.SPDXid = spdxid;
     }
 
-    public Set<Conflict> getConflicts() {
-        return conflicts;
+    public Set<ComponentConflict> getConflicts() {
+        return componentConflicts;
     }
 
     /**
      * Adds a conflict to the component
      *
-     * @param conflict Conflict to add
+     * @param componentConflict Conflict to add
      */
-    public void addConflict(Conflict conflict) {
-        conflicts.add(conflict);
+    public void addConflict(ComponentConflict componentConflict) {
+        componentConflicts.add(componentConflict);
     }
 
     /**
@@ -291,9 +291,7 @@ public class Component {
 
     @Override
     public String toString() {
-        return "Component{" +
-                "name='" + name + '\'' +
-                '}';
+        return this.publisher + " " + this.name + ":" + this.version;
     }
 
     @Override

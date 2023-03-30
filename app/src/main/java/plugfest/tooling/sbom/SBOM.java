@@ -104,6 +104,16 @@ public class SBOM {
     }
 
     /**
+     * Copy constructor for the SBOM (THIS DOES NOT COPY COMPONENTS)
+     *
+     * @param from SBOM to copy from
+     */
+    public SBOM(SBOM from) {
+        // This sets the dependencytree to null so it does not allow copying of dependencies
+        this(from.getOriginFormat(), from.getSpecVersion(), from.getSbomVersion(), from.getSerialNumber(), from.getTimestamp(), from.getSignature(), null);
+    }
+
+    /**
      * Get a set of all components in the project
      *
      * @return Set of components
