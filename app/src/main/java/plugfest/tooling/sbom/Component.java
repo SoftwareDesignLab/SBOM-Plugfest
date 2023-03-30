@@ -32,6 +32,11 @@ public class Component {
     private String publisher;
 
     /**
+     * If the component is unpackaged (not included in SPDX notation)
+     */
+    private boolean unpackaged;
+
+    /**
      * Unique identifiers of the component (ex: CDX uses purl and/or cpe)
      */
     private Set<String> CPE;
@@ -80,6 +85,7 @@ public class Component {
         this.PURL = new HashSet<>();
         this.SWID = new HashSet<>();
         this.componentConflicts = new HashSet<>();
+        this.unpackaged = false;
     }
 
     /**
@@ -189,6 +195,19 @@ public class Component {
                 .orElse(null);
     }
 
+    /**
+     * Set if the component is unpackaged or not
+     *
+     * @param unpackaged If component is unpackaged
+     */
+    public void setUnpackaged(boolean unpackaged) {
+        this.unpackaged = unpackaged;
+    }
+
+    public boolean isUnpackaged() {
+        return unpackaged;
+    }
+
     public void addChild(UUID child) {
         children.add(child);
     }
@@ -295,7 +314,19 @@ public class Component {
 
     @Override
     public String toString() {
-        return this.publisher + " " + this.name + ":" + this.version;
+        // Only add what is not null
+        StringBuilder sb = new StringBuilder();
+        if (this.publisher != null) {
+            sb.append(this.publisher).append(" ");
+        }
+        if (this.name != null) {
+            // This should never happen, but may as well guard against it
+            sb.append(this.name);
+        }
+        if (this.version != null) {
+            sb.append(":").append(this.version);
+        }
+        return sb.toString();
     }
 
     @Override
