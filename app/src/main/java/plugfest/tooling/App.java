@@ -4,19 +4,10 @@
 package plugfest.tooling;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.cyclonedx.CycloneDxSchema;
 
 import plugfest.tooling.differ.*;
-import plugfest.tooling.metrics.*;
 import plugfest.tooling.sbom.*;
-import plugfest.tooling.translator.Translator;
-import plugfest.tooling.translator.TranslatorCDX;
-import plugfest.tooling.translator.TranslatorSPDX;
-
-import javax.xml.parsers.ParserConfigurationException;
+import plugfest.tooling.translator.TranslatorSVIP;
 
 
 public class App {
@@ -76,8 +67,8 @@ public class App {
             }
 
             // Process first sbom
-            SBOM sbomOne = Translator.translate(args[1]);
-            SBOM sbomTwo = Translator.translate(args[2]);
+            SBOM sbomOne = TranslatorSVIP.translate(args[1]);
+            SBOM sbomTwo = TranslatorSVIP.translate(args[2]);
 
             if (sbomOne == null || sbomTwo == null) {
                 System.err.println("One or more of the SBOMs could not be parsed. Exiting...");

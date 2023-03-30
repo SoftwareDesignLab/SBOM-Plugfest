@@ -2,17 +2,6 @@ package plugfest.tooling.translator;
 
 import plugfest.tooling.sbom.SBOM;
 
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.stream.Stream;
-
 
 /**
  * file: Translator.java
@@ -21,7 +10,7 @@ import java.util.stream.Stream;
  * @author Tyler Drake
  * @author Matt London
  */
-public class Translator {
+public class TranslatorSVIP {
     /**
      * Parse an SBOM using the appropriate translator and return the object
      *

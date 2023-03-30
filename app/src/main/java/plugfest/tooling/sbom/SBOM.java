@@ -38,6 +38,11 @@ public class SBOM {
     private String serialNumber;
 
     /**
+     * The creator or manufacturer of the software the SBOM is about
+     */
+    private String supplier;
+
+    /**
      * Date and time of when the SBOM was created
      */
     private String timestamp;
@@ -50,32 +55,35 @@ public class SBOM {
     /**
      * Constructor to take all parameters except for DependencyTree
      *
-     * @param originFormat: original format SBOM was sent in
-     * @param specVersion:  Version of this Object
-     * @param sbomVersion:  Version of the SBOM
-     * @param serialNumber: Serial number of the SBOM
-     * @param timestamp:    Timestamp of when this SBOM was created
-     * @param signature:    signature to verify the SBOM
+     * @param originFormat : original format SBOM was sent in
+     * @param specVersion  :  Version of this Object
+     * @param sbomVersion  :  Version of the SBOM
+     * @param supplier
+     * @param serialNumber : Serial number of the SBOM
+     * @param timestamp    :    Timestamp of when this SBOM was created
+     * @param signature    :    signature to verify the SBOM
      */
-    public SBOM(String originFormat, String specVersion, String sbomVersion, String serialNumber, String timestamp, Set<Signature> signature) {
-        this(originFormat, specVersion, sbomVersion, serialNumber, timestamp, signature, new DependencyTree());
+    public SBOM(String originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber, String timestamp, Set<Signature> signature) {
+        this(originFormat, specVersion, sbomVersion, supplier, serialNumber, timestamp, signature, new DependencyTree());
     }
 
     /**
      * Takes all parameters, will be used when merging boms so the tree can be built manually
      *
-     * @param originFormat: original format SBOM was sent in
-     * @param specVersion:  Version of this Object
-     * @param sbomVersion:  Version of the SBOM
-     * @param serialNumber: Serial number of the SBOM
-     * @param timestamp:    Timestamp of when this SBOM was created
-     * @param signature:    signature to verify the SBOM
+     * @param originFormat : original format SBOM was sent in
+     * @param specVersion  : Version of this Object
+     * @param sbomVersion  : Version of the SBOM
+     * @param serialNumber : Serial number of the SBOM
+     * @param timestamp    : Timestamp of when this SBOM was created
+     * @param supplier     : Manufacturer of the software the SBOM is about
+     * @param signature    : signature to verify the SBOM
      */
     public SBOM(String originFormat, String specVersion, String sbomVersion, String serialNumber, String timestamp,
-                Set<Signature> signature, DependencyTree dependencyTree) {
+                String supplier, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = assignOriginFormat(originFormat);
         this.specVersion = specVersion;
         this.sbomVersion = sbomVersion;
+        this.supplier = supplier;
         this.dependencyTree = dependencyTree;
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
@@ -92,11 +100,12 @@ public class SBOM {
      * @param timestamp:    Timestamp of when this SBOM was created
      * @param signature:    signature to verify the SBOM
      */
-    public SBOM(SBOMType originFormat, String specVersion, String sbomVersion, String serialNumber, String timestamp,
-                Set<Signature> signature, DependencyTree dependencyTree) {
+    public SBOM(SBOMType originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber,
+                String timestamp, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = originFormat;
         this.specVersion = specVersion;
         this.sbomVersion = sbomVersion;
+        this.supplier = supplier;
         this.dependencyTree = dependencyTree;
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
@@ -110,7 +119,7 @@ public class SBOM {
      */
     public SBOM(SBOM from) {
         // This sets the dependencytree to null so it does not allow copying of dependencies
-        this(from.getOriginFormat(), from.getSpecVersion(), from.getSbomVersion(), from.getSerialNumber(), from.getTimestamp(), from.getSignature(), null);
+        this(from.getOriginFormat(), from.getSpecVersion(), from.getSbomVersion(), from.getSupplier(), from.getSerialNumber(), from.getTimestamp(), from.getSignature(), null);
     }
 
     /**
@@ -243,6 +252,10 @@ public class SBOM {
     public void setSbomVersion(String sbomVersion) {
         this.sbomVersion = sbomVersion;
     }
+
+    public String getSupplier() { return supplier; }
+
+    public void setSupplier(String supplier) { this.supplier = supplier; }
 
     public String getSerialNumber() {
         return serialNumber;

@@ -2,9 +2,8 @@ package plugfest.tooling.translator;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
-import plugfest.tooling.sbom.SBOM;
 import plugfest.tooling.sbom.Component;
+import plugfest.tooling.sbom.SBOM;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,7 +50,7 @@ public class TranslatorCDX {
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-//        documentBuilderFactory.setValidating(true);
+        documentBuilderFactory.setValidating(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
         // Get parsed XML SBOM file and normalize
@@ -132,10 +131,10 @@ public class TranslatorCDX {
                     "cyclonedx",
                     header_materials.get("xmlns"),
                     header_materials.get("version"),
+                    header_materials.get("manufacturer"),
                     header_materials.get("serialNumber"),
                     sbom_materials.get("timestamp"),
-                    null
-            );
+                    null);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Could not create SBOM object. File: " + file_path);
