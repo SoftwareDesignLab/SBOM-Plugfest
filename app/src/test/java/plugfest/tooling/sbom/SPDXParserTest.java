@@ -1,9 +1,8 @@
 package plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.Test;
+import plugfest.tooling.translator.TranslatorSPDX;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;

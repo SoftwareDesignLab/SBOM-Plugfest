@@ -2,9 +2,8 @@ package plugfest.tooling.translator;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
-import plugfest.tooling.sbom.SBOM;
 import plugfest.tooling.sbom.Component;
+import plugfest.tooling.sbom.SBOM;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,7 +50,7 @@ public class TranslatorCDX {
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-//        documentBuilderFactory.setValidating(true);
+        documentBuilderFactory.setValidating(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
         // Get parsed XML SBOM file and normalize

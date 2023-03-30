@@ -1,6 +1,8 @@
 package plugfest.tooling.translator;
 
-import org.jvnet.hk2.component.MultiMap;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOM;
 
@@ -54,6 +56,8 @@ public class TranslatorSPDX {
      */
     public static SBOM translatorSPDX(String file_path) throws IOException {
 
+        if(!new File(file_path).exists()) { return null; }
+
         // Create a new SBOM object
         SBOM sbom;
 
@@ -71,7 +75,7 @@ public class TranslatorSPDX {
 
         // Collection for dependencies, contains every single component, and what it relies on, if any
         // Key (SPDX_ID) = Component, Values (SPDX_ID) = Components it needs
-        MultiMap<String, String> dependencies = new MultiMap<>();
+        ArrayListMultimap<String, String> dependencies = ArrayListMultimap.create();
 
         // Collection of packages, used  for adding head components to top component if in the header (SPDXRef-DOCUMENT)
         // Value (SPDX_ID)
@@ -294,28 +298,28 @@ public class TranslatorSPDX {
                 // Split dependency relationship and store into relationships map depends on relationship type
                 if(current_line.contains("CONTAINS")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" CONTAINS ")[0],
                             relationship.split(" CONTAINS ")[1]
                     );
 
                 } else if (current_line.contains("DEPENDS_ON")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" DEPENDS_ON ")[0],
                             relationship.split(" DEPENDS_ON ")[1]
                     );
 
                 } else if (current_line.contains("DEPENDENCY_OF")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" DEPENDENCY_OF ")[1],
                             relationship.split(" DEPENDENCY_OF ")[0]
                     );
 
                 } else if (current_line.contains("OTHER")) {
 
-                    dependencies.add(
+                    dependencies.put(
                             relationship.split(" OTHER ")[1],
                             relationship.split(" OTHER ")[0]
                     );
@@ -331,7 +335,7 @@ public class TranslatorSPDX {
                     // If top component exists, and if it is SPDXID: SPDXRef-DOCUMENT, add top level components as its dependencies
                     // Then, add it as the top level component of the dependency tree
                     if( top_component != null && top_component.getSPDXID().contains(DOCUMENT_REFERENCE_TAG) ) {
-                        dependencies.set(top_component.getSPDXID(), packages);
+                        dependencies.putAll(top_component.getSPDXID(), packages);
                         dependencies.remove(top_component.getSPDXID(), top_component.getSPDXID());
                     }
 
@@ -362,7 +366,7 @@ public class TranslatorSPDX {
      * @param parent        Parent component to have dependencies connected to
      * @param sbom          The SBOM object
      */
-    public static void dependencyBuilder(MultiMap dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
+    public static void dependencyBuilder(Multimap dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
 
         // If top component is null, return. There is nothing to process.
         if (parent == null) { return; }
@@ -373,11 +377,11 @@ public class TranslatorSPDX {
         }
 
         // Get the parent's dependencies as a list
-        List<String> children_SPDX = dependencies.get(parent.getSPDXID());
-        dependencies.remove(parent.getSPDXID());
+        String parent_id = parent.getSPDXID();
+        Collection<Object> children_SPDX = dependencies.get(parent_id);
 
         // Cycle through each dependency the parent component has
-        for (String child_SPDX : children_SPDX) {
+        for (Object child_SPDX : children_SPDX) {
             // Retrieve the component the parent has a dependency for
             Component child = (Component) components.get(child_SPDX);
 
