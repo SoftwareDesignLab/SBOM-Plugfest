@@ -106,10 +106,27 @@ public class ComponentConflict {
      * @param component Component to clean up
      */
     private void componentCleanup(Component component) {
+        Set<String> emptyNames = new HashSet<>(Arrays.asList("", "Unknown", "N/A"));
         // Set unknowns to null
-        if (component.getPublisher() != null && component.getPublisher().equals("Unknown")) {
+        if (component.getPublisher() != null && emptyNames.contains(component.getPublisher())) {
             component.setPublisher(null);
         }
+
+        if (component.getName() != null && emptyNames.contains(component.getName())) {
+            // This should never really happen, but we will guard against it
+            component.setName(null);
+        }
+
+        if (component.getVersion() != null && emptyNames.contains(component.getVersion())) {
+            component.setVersion(null);
+        }
+
+        // TODO figure out a better way to handle situations like this
+        // Occasionally the SBOM will name a component's version with its hash
+        if (component.getVersion() != null && component.getVersion().length() > 32) {
+            component.setVersion(null);
+        }
+
     }
 
     public Component getComponentA() {
