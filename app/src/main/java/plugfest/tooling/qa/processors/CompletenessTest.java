@@ -65,13 +65,13 @@ public class CompletenessTest extends MetricTest {
         // Check CPEs and return a number of invalid CPEs per component
         invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
         if(invalid > 0) { // If there are invalid cpes, mark as failed
-            testResults.add(String.format("FAILED: %d CPE(s) with Invalid Format", invalid));
+            testResults.add(String.format("FAILED: Component %s had %d CPE(s) with Invalid Format", UUIDShort, invalid));
         }
 
         // Check PURLs and return a number of invalid PURLs
         invalid = getNumInvalidStrings(c.getPURL(), purlRegex);
         if(invalid > 0) { // If there are invalid PURLs, mark as failed
-            testResults.add(String.format("FAILED: %d PURL(s) with Invalid Format", invalid));
+            testResults.add(String.format("FAILED: Component %s had %d PURL(s) with Invalid Format", UUIDShort, invalid));
         }
 
         // If no checks failed, mark test as passed
