@@ -11,6 +11,7 @@ import org.spdx.tools.SpdxToolsHelper;
 /**
  * Imports Java Native Libraries
  */
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -55,34 +56,17 @@ public class SPDXMetrics extends Metric{
     public ArrayList<String> verifySPDX() {
         final String fullPath = this.filepath + "/" + this.sbom;
         System.out.println("Running Verification on SPDX SBOM File: " + fullPath);
-        ArrayList<String> verificationResults = new ArrayList<>();
-        final String extn = fullPath.substring(fullPath.indexOf('.'));
+        ArrayList<String> verificationResults = null;
         try {
-            switch (extn) {
-                case "json" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.JSON);
-                case "rdf.xml", "rdf" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFXML);
-                case "xml" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XML);
-                case "xls" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLS);
-                case "xlsx" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.XLSX);
-                case "yaml" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.YAML);
-                case "tag", "spdx" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.TAG);
-                case "rdf.ttl" -> verificationResults = (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.SerFileType.RDFTTL);
-            }
+            verificationResults =
+                (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.fileToFileType(new File(fullPath)));
         }
-        catch(Exception ex) {
-            System.out.println("EXCEPTION: "+ex);
-            return null;
-        }
+        catch(Exception ex) { System.out.println("Error Verifying SPDX: " + ex); }
         return verificationResults;
     }
 
     @Override
     protected int testMetric() {
-        if(verifySPDX() != null){
-            return 1;
-        }
-        else {
-            return 0;
-        }
+        return verifySPDX() != null ? 1 : 0;
     }
 }
