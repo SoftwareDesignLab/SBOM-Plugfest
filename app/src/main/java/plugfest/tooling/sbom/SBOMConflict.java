@@ -61,8 +61,8 @@ public class SBOMConflict {
         switch (conflictType) {
             case SUPPLIER_MISMATCH:
                 conflictString.append("Supplier Mismatch:\n");
-                // TODO supplier currently not implemented
-//                conflictString += "\n+ " + aSBOM.getSupplier();
+                conflictString.append("+ ").append(aSBOM.getSupplier()).append("\n");
+                conflictString.append("- ").append(bSBOM.getSupplier()).append("\n");
                 break;
             case AUTHOR_MISMATCH:
                 // TODO author currently not implemented

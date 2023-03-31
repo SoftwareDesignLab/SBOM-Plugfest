@@ -160,9 +160,10 @@ public class TranslatorSPDX {
                 Component unpackaged_component = new Component(
                         file_materials.get("FileName"),
                         "Unknown",
-                        file_materials.get("FileComment"),
+                        file_materials.get("PackageVersion"),
                         file_materials.get("SPDXID")
                 );
+                unpackaged_component.setUnpackaged(true);
 
                 // Add unpackaged file to components
                 components.put(unpackaged_component.getSPDXID(), unpackaged_component);
@@ -229,10 +230,18 @@ public class TranslatorSPDX {
                     }
                 }
 
+                // Cleanup package originator
+                // Sometimes it will list as Person: NAME <EMAIL>, we want to cut it off at the <
+                String packageOriginator = component_materials.get("PackageOriginator");
+                if (packageOriginator != null && packageOriginator.startsWith("Person: ") && packageOriginator.contains("<")) {
+                    // 8 is the point at which Person: ends in a string
+                    packageOriginator = packageOriginator.substring(8, packageOriginator.indexOf(" <"));
+                }
+
                 // Create new component from required information
                 Component component = new Component(
                         component_materials.get("PackageName"),
-                        component_materials.get("PackageOriginator"),
+                        packageOriginator,
                         component_materials.get("PackageVersion"),
                         component_materials.get("SPDXID")
                 );
