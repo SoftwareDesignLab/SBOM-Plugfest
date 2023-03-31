@@ -245,13 +245,17 @@ public class TranslatorSPDX {
                     }
                 }
 
+                // Cleanup package originator
                 String supplier = null;
-                if(component_materials.get("PackageOriginator") != null) {
-                    supplier = component_materials.get("PackageOriginator");
-                }
                 if(component_materials.get("PackageSupplier") != null) {
-                    supplier = component_materials.get("PackageSupplier");
+                        supplier = component_materials.get("PackageSupplier");
+                } else if(component_materials.get("PackageOriginator") != null) {
+                        supplier = component_materials.get("PackageOriginator");
                 }
+
+                supplier = supplier.contains("Person: ") && supplier.contains("<")
+                        ? supplier.substring(8, supplier.indexOf("<"))
+                        : supplier;
 
                 // Create new component from required information
                 Component component = new Component(
