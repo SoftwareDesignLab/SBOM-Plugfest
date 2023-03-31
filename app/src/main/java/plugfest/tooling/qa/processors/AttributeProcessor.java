@@ -29,7 +29,7 @@ public abstract class AttributeProcessor {
             for (int j = 0; j < components.length; j++) {
                 // Store current Component in local variable
                 final Component c = components[j];
-//                if(c.isUnpackaged()) continue; // TODO: Uncomment
+                if(c.isUnpackaged()) continue;
                 // Test and append results
                 final ArrayList<String> testResults = mt.test(c);
                 // If no checks failed, mark test as passed

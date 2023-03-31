@@ -42,14 +42,16 @@ public class AppropriateAmountTest extends MetricTest {
         /*
             Component publisher name length <= 80 chars
          */
-        if(c.getPublisher().strip().length() > maxLineLength) {
+        if(c.getPublisher() != null &&
+                c.getPublisher().strip().length() > maxLineLength) {
             testResults.add(String.format("FAILED: Component %s Publisher Name Length > 80", UUIDShort));
         }
 
         /*
             Component name length <= 80 chars
          */
-        if(c.getName().strip().length() > maxLineLength) {
+        if(c.getName() != null &&
+                c.getName().strip().length() > maxLineLength) {
             // Add separator if not first check to fail
             if(!testResults.isEmpty()) testResults.add("\n");
             testResults.add(String.format("FAILED: Component %s Name Length > 80", UUIDShort));
@@ -58,7 +60,8 @@ public class AppropriateAmountTest extends MetricTest {
         /*
             Component version length <= 80 chars
          */
-        if(c.getVersion().strip().length() > maxLineLength) {
+        if(c.getVersion() != null &&
+                c.getVersion().strip().length() > maxLineLength) {
             // Add separator if not first check to fail
             if(!testResults.isEmpty()) testResults.add("\n");
             testResults.add(String.format("FAILED: Component %s Version Length > 80", UUIDShort));

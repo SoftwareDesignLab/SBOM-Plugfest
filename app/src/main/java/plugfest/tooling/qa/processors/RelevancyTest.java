@@ -35,21 +35,20 @@ public class RelevancyTest extends MetricTest {
         final String UUIDShort = c.getUUID().toString().substring(0, 5);
 
         // Check if name makes sense / is english (looking)
-        String nameToLowerStripped = c.getName().strip().toLowerCase();
-        String publisherToLowerStripped = c.getPublisher().strip().toLowerCase();
 
         // Ensure BOTH component name and publisher name satisfy at least one of the following:
         //      Contains a "most common bigram"
         //      Contains a "most common trigram"
         //      Does not contain a "bigram that never occurs"
 
-        if(!testNames(nameToLowerStripped))
+        if(c.getName() != null &&
+                !testNames(c.getName().strip().toLowerCase()))
             testResults.add(String.format("FAILED: Component %s Name is likely not relevant", UUIDShort));
 
-        if(!testNames(publisherToLowerStripped)){
-            if(!testResults.isEmpty()) testResults.add("\n");
+        if(c.getPublisher() != null &&
+                !testNames(c.getPublisher().strip().toLowerCase()))
             testResults.add(String.format("FAILED: Component %s Publisher Name is likely not relevant", UUIDShort));
-        }
+        
 
         // If no checks failed, mark test as passed
         if(testResults.isEmpty()) testResults.add("PASSED");

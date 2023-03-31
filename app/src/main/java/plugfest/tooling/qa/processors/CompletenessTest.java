@@ -22,9 +22,9 @@ public class CompletenessTest extends MetricTest {
         // Checks if name is in form: "Person: First Last <email@mail.com>"
         this.publisherNameRegex = Pattern.compile("^Person: ([\\w äöüÄÖÜß]*) <(.*)>", Pattern.MULTILINE);
 
-        // Regex101: https://regex101.com/r/wzJeIq/3
+        // Regex101: https://regex101.com/r/wzJeIq/4
         // Checks if version is in form: "12.*" | "4:*", version format varies a lot
-        this.componentVersionRegex = Pattern.compile("^([0-9]+[\\.:].*)", Pattern.MULTILINE);
+        this.componentVersionRegex = Pattern.compile("^([0-9]+[\\.:\\-].*)", Pattern.MULTILINE);
 
         // TODO for these patterns: check if name, version, etc matches component name, version, etc. Make classes?
         // Official CPE Schema: https://csrc.nist.gov/schema/cpe/2.3/cpe-naming_2.3.xsd
@@ -71,21 +71,24 @@ public class CompletenessTest extends MetricTest {
 
     private String testPublisherName(Component c) {
         // Check completeness of publisher name
-        if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
+        if(c.getPublisher() != null &&
+                !this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
             return String.format("FAILED Component %s: Publisher Name is Not Complete: '%s'", c.getName(), c.getPublisher());
         return null;
     }
 
     private String testComponentName(Component c) {
         // Check completeness of component name
-        if(c.getName().isBlank())
+        if(c.getName() != null &&
+                c.getName().isBlank())
             return String.format("FAILED Component %s: Name is Not Complete: '%s'", c.getName(), c.getName());
         return null;
     }
 
     private String testComponentVersion(Component c) {
         // Check completeness of component version
-        if(!this.componentVersionRegex.matcher(c.getVersion().strip()).matches())
+        if(c.getVersion() != null &&
+                !this.componentVersionRegex.matcher(c.getVersion().strip()).matches())
             return String.format("FAILED Component %s: Version is Not Complete: '%s'", c.getName(), c.getVersion());
         return null;
     }
@@ -116,7 +119,8 @@ public class CompletenessTest extends MetricTest {
         int stringCounter = 0;
 
         for(String s : strings) { // Loop through all strings and match regex
-            if(!regex.matcher(s.strip()).matches())
+            if(s != null &&
+                    !regex.matcher(s.strip()).matches())
                 stringCounter++;
         }
         return stringCounter;
