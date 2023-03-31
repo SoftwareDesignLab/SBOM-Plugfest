@@ -22,9 +22,9 @@ public class CompletenessTest extends MetricTest {
         // Checks if name is in form: "Person: First Last <email@mail.com>"
         this.publisherNameRegex = Pattern.compile("^Person: ([\\w äöüÄÖÜß]*) <(.*)>", Pattern.MULTILINE);
 
-        // Regex101: https://regex101.com/r/wzJeIq/2
-        // Checks if version is in form: "1.*" | "1:*", version format varies a lot
-        this.componentVersionRegex = Pattern.compile("^([0-9]+(?:\\.|:).*)", Pattern.MULTILINE);
+        // Regex101: https://regex101.com/r/wzJeIq/3
+        // Checks if version is in form: "12.*" | "4:*", version format varies a lot
+        this.componentVersionRegex = Pattern.compile("^([0-9]+[\\.:].*)", Pattern.MULTILINE);
 
         // TODO for these patterns: check if name, version, etc matches component name, version, etc. Make classes?
         // Official CPE Schema: https://csrc.nist.gov/schema/cpe/2.3/cpe-naming_2.3.xsd
@@ -44,38 +44,66 @@ public class CompletenessTest extends MetricTest {
     public ArrayList<String> test(Component c){
         // Init StringBuilder
         final ArrayList<String> testResults = new ArrayList<>();
-        final String UUIDShort = c.getUUIDShort();
 
-        // Check completeness of publisher name
-        if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
-            testResults.add(String.format("Component %s FAILED: Publisher Name is Not Complete: '%s'", UUIDShort, c.getPublisher()));
+        // Test Publisher Name
+        final String pnResults = testPublisherName(c);
+        if(pnResults != null) testResults.add(pnResults);
 
-        // Check completeness of component name
-        if(c.getName().isBlank()) {
-            testResults.add(String.format("Component %s FAILED: Name is Not Complete: '%s'", UUIDShort, c.getName()));
-        }
+        // Test Component Name
+        final String cnResults = testComponentName(c);
+        if(cnResults != null) testResults.add(cnResults);
 
-        // Check completeness of component version
-        if(!this.componentVersionRegex.matcher(c.getVersion().strip()).matches()) {
-            testResults.add(String.format("Component %s FAILED: Version is Not Complete: '%s'", UUIDShort, c.getVersion()));
-        }
+        // Test Component Version
+        final String cvResults = testComponentVersion(c);
+        if(cvResults != null) testResults.add(cvResults);
 
-        int invalid;
+        // Test CPEs
+        final String cpeResults = testCPEs(c);
+        if(cpeResults != null) testResults.add(cpeResults);
 
-        // Check CPEs and return a number of invalid CPEs per component
-        invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
-        if(invalid > 0) { // If there are invalid cpes, mark as failed
-            testResults.add(String.format("Component %s FAILED: Had %d CPE(s) with Invalid Format", UUIDShort, invalid));
-        }
-
-        // Check PURLs and return a number of invalid PURLs
-        invalid = getNumInvalidStrings(c.getPURL(), purlRegex);
-        if(invalid > 0) { // If there are invalid PURLs, mark as failed
-            testResults.add(String.format("Component %s FAILED: Had %d PURL(s) with Invalid Format", UUIDShort, invalid));
-        }
+        // Test PURLs
+        final String purlResults = testPURLs(c);
+        if(purlResults != null) testResults.add(purlResults);
 
         // Return result
         return testResults;
+    }
+
+    private String testPublisherName(Component c) {
+        // Check completeness of publisher name
+        if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
+            return String.format("Component %s FAILED: Publisher Name is Not Complete: '%s'", c.getUUIDShort(), c.getPublisher());
+        return null;
+    }
+
+    private String testComponentName(Component c) {
+        // Check completeness of component name
+        if(c.getName().isBlank())
+            return String.format("Component %s FAILED: Name is Not Complete: '%s'", c.getUUIDShort(), c.getName());
+        return null;
+    }
+
+    private String testComponentVersion(Component c) {
+        // Check completeness of component version
+        if(!this.componentVersionRegex.matcher(c.getVersion().strip()).matches())
+            return String.format("Component %s FAILED: Version is Not Complete: '%s'", c.getUUIDShort(), c.getVersion());
+        return null;
+    }
+
+    private String testCPEs(Component c) {
+        // Check CPEs and return a number of invalid CPEs per component
+        final int invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
+        if(invalid > 0) // If there are invalid cpes, mark as failed
+            return String.format("Component %s FAILED: Had %d CPE(s) with Invalid Format", c.getUUIDShort(), invalid);
+        return null;
+    }
+
+    private String testPURLs(Component c) {
+        // Check PURLs and return a number of invalid PURLs
+        final int invalid = getNumInvalidStrings(c.getPURL(), purlRegex);
+        if(invalid > 0) // If there are invalid PURLs, mark as failed
+            return String.format("Component %s FAILED: Had %d PURL(s) with Invalid Format", c.getUUIDShort(), invalid);
+        return null;
     }
 
     /**
