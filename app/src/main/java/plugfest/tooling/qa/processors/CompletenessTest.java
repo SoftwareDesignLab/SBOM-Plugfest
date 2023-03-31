@@ -91,7 +91,7 @@ public class CompletenessTest extends MetricTest {
         int stringCounter = 0;
 
         for(String s : strings) { // Loop through all strings and match regex
-            if(!this.cpe23Regex.matcher(s.strip()).matches())
+            if(!regex.matcher(s.strip()).matches())
                 stringCounter++;
         }
         return stringCounter;
