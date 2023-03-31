@@ -1,8 +1,6 @@
 package plugfest.tooling.qa.processors;
 
-import org.apache.poi.ss.formula.functions.T;
 import plugfest.tooling.qa.test_results.Test;
-import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ public class AppropriateAmountTest extends MetricTest {
     /**
      * Test a component to check its attributes' maximum line lengths.
      *
+     * @param c The component to test
      * @return ArrayList of all generated test results
      */
     @Override
@@ -44,15 +43,16 @@ public class AppropriateAmountTest extends MetricTest {
         /*
             Component publisher name length <= 80 chars
          */
-        if(c.getPublisher().strip().length() > maxLineLength) {
+        if(c.getPublisher() != null &&
+                c.getPublisher().strip().length() > maxLineLength) {
             testResults.addTest(new Test(false, "Publisher Name Length > 80"));
-//            testResults.add(String.format("FAILED: Component %s Publisher Name Length > 80", UUIDShort));
         }
 
         /*
             Component name length <= 80 chars
          */
-        if(c.getName().strip().length() > maxLineLength) {
+        if(c.getName() != null &&
+                c.getName().strip().length() > maxLineLength) {
             // Add separator if not first check to fail
 //            if(!testResults.isEmpty()) testResults.add("\n");
             testResults.addTest(new Test(false, "Name Length > 80"));
@@ -62,7 +62,8 @@ public class AppropriateAmountTest extends MetricTest {
         /*
             Component version length <= 80 chars
          */
-        if(c.getVersion().strip().length() > maxLineLength) {
+        if(c.getVersion() != null &&
+                c.getVersion().strip().length() > maxLineLength) {
             // Add separator if not first check to fail
 //            if(!testResults.isEmpty()) testResults.add("\n");
             testResults.addTest(new Test(false, "Version Length > 80"));

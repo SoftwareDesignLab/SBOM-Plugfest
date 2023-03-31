@@ -24,9 +24,9 @@ public class CompletenessTest extends MetricTest {
         // Checks if name is in form: "Person: First Last <email@mail.com>"
         this.publisherNameRegex = Pattern.compile("^Person: ([\\w äöüÄÖÜß]*) <(.*)>", Pattern.MULTILINE);
 
-        // Regex101: https://regex101.com/r/wzJeIq/3
+        // Regex101: https://regex101.com/r/wzJeIq/4
         // Checks if version is in form: "12.*" | "4:*", version format varies a lot
-        this.componentVersionRegex = Pattern.compile("^([0-9]+[\\.:].*)", Pattern.MULTILINE);
+        this.componentVersionRegex = Pattern.compile("^([0-9]+[\\.:\\-].*)", Pattern.MULTILINE);
 
         // TODO for these patterns: check if name, version, etc matches component name, version, etc. Make classes?
         // Official CPE Schema: https://csrc.nist.gov/schema/cpe/2.3/cpe-naming_2.3.xsd
@@ -118,7 +118,8 @@ public class CompletenessTest extends MetricTest {
         int stringCounter = 0;
 
         for(String s : strings) { // Loop through all strings and match regex
-            if(!regex.matcher(s.strip()).matches())
+            if(s != null &&
+                    !regex.matcher(s.strip()).matches())
                 stringCounter++;
         }
         return stringCounter;
