@@ -42,22 +42,30 @@ public class RelevancyTest extends MetricTest {
         //      Contains a "most common trigram"
         //      Does not contain a "bigram that never occurs"
 
-        if(c.getName() != null &&
-                !testNames(c.getName().strip().toLowerCase())) {
-            testResults.addTest(new Test(false, "Name is likely not relevant"));
-        } else {
-            testResults.addTest(new Test(true, "Name is likely relevant"));
-        }
+        // Test Component Name
+        testResults.addTest(testComponentName(c));
 
-        if(c.getPublisher() != null &&
-                !testNames(c.getPublisher().strip().toLowerCase())) {
-            testResults.addTest(new Test(false, "Publisher Name is likely not relevant"));
-        } else {
-            testResults.addTest(new Test(true, "Publisher Name is likely relevant"));
-        }
+        // Test Publisher Name
+        testResults.addTest(testPublisherName(c));
 
         // Return result
         return testResults;
+    }
+
+    private Test testComponentName(Component c) {
+        if(c.getName() != null &&
+                !testNames(c.getName().strip().toLowerCase())) {
+            return new Test(false, "Component Name is Likely Not Relevant");
+        }
+        return new Test(true, "Component Name is Likely Relevant");
+    }
+
+    private Test testPublisherName(Component c) {
+        if(c.getPublisher() != null &&
+                !testNames(c.getPublisher().strip().toLowerCase())) {
+            return new Test(false, "Publisher Name is Likely Not Relevant");
+        }
+        return new Test(true, "Publisher Name is Likely Relevant");
     }
 
     // Test to perform on Component Name and Publisher Name

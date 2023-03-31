@@ -65,9 +65,9 @@ public class AppropriateAmountTest extends MetricTest {
     private Test testComponentName(Component c) {
         if(c.getName() != null &&
                 c.getName().strip().length() > maxLineLength) {
-            return new Test(false, "Name Length > 80");
+            return new Test(false, "Component Name Length > 80");
         }
-        return new Test(true, "Name Length <= 80");
+        return new Test(true, "Component Name Length <= 80");
     }
 
     private Test testComponentVersion(Component c) {

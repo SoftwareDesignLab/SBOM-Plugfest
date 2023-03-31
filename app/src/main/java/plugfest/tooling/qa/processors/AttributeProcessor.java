@@ -22,21 +22,21 @@ public abstract class AttributeProcessor {
         // Run all Components through each test individually
         final Component[] components = sbom.getAllComponents().toArray(new Component[0]);
 
-        for(Component c : components) {
-            if(c.isUnpackaged()) continue;
+        for(Component c : components) { // Loop through all components in SBOM
+            if(c.isUnpackaged()) continue; // Skip component if it's a local file
 
-            // Test each Component against all metric tests
+            // Get array of MetricTests to perform
             final MetricTest[] metricTests = this.tests.toArray(new MetricTest[0]);
 
-            // Store testresults for each component
+            // Store TestResults for each component
             TestResults results = new TestResults(c);
 
+            // Loop through all MetricTests
             for(MetricTest mt : metricTests){
-                results.addTests(mt.test(c));
-
+                results.addTests(mt.test(c)); // Add the TestResults from each metric to the component TestResults
             }
 
-            // Add test results
+            // Add test results to QualityReport
             qr.addTestResult(results);
         }
 

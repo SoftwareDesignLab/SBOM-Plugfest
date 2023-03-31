@@ -10,7 +10,6 @@ public abstract class MetricTest {
     //#region Attributes
 
     private final String name;
-    private final TestResults testResults;
 
     //#endregion
 
@@ -18,7 +17,6 @@ public abstract class MetricTest {
 
     protected MetricTest(String name) {
         this.name = name;
-        this.testResults = null; // TODO: Initialized in test
     }
 
     //#endregion
@@ -32,7 +30,6 @@ public abstract class MetricTest {
     //#region Getters
 
     public String getName() { return this.name; }
-    public TestResults getTestResults() { return this.testResults; }
 
     //#endregion
 

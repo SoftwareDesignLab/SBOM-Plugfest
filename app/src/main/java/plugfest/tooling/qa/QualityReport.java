@@ -30,14 +30,13 @@ public class QualityReport {
         this.serialNumber = "INVALID_SN";
     }
 
+    /**
+     * Add results from a TestResults instance to the QualityReport.
+     *
+     * @param testResults The TestResults to add
+     */
     public void addTestResult(TestResults testResults) {
-        // Insert the new test result
-        final boolean existingValue = this.testResults.add(testResults);
-
-        // TODO figure this out
-//        // If existingValue is false, this action overrode that value
-//        if(!existingValue)
-//            System.out.printf("Test %s already existed with value %s and has been overridden with value %s.", testName, existingValue, testResults);
+        this.testResults.add(testResults);
     }
 
     /**
@@ -59,6 +58,7 @@ public class QualityReport {
         sb.append(",\n");
         sb.append("testResults=[\n  ");
 
+        // Loop through all TestResults in the QualityReport
         for(TestResults result : testResults) {
             sb.append(result.toString());
         }
