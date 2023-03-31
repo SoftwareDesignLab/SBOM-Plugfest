@@ -253,10 +253,11 @@ public class TranslatorSPDX {
                         supplier = component_materials.get("PackageOriginator");
                 }
 
-                supplier = supplier.contains("Person: ") && supplier.contains("<")
-                        ? supplier.substring(8, supplier.indexOf("<"))
-                        : supplier;
-
+                if (supplier != null) {
+                    supplier = supplier.contains("Person: ") && supplier.contains("<")
+                            ? supplier.substring(8, supplier.indexOf("<"))
+                            : supplier;
+                }
                 // Create new component from required information
                 Component component = new Component(
                         component_materials.get("PackageName"),
