@@ -76,6 +76,7 @@ public class App {
             else {
                 DiffReport report = Comparer.generateReport(sbomOne, sbomTwo);
                 System.out.println(report);
+                report.writeToFile();  //remove this comment please
             }
 
         } else {

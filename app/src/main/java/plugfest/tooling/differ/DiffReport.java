@@ -1,8 +1,11 @@
 package plugfest.tooling.differ;
 
+import plugfest.tooling.Report;
 import plugfest.tooling.sbom.ComponentConflict;
 import plugfest.tooling.sbom.SBOMConflict;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -10,7 +13,7 @@ import java.util.Set;
  *
  * @author Matt London
  */
-public class DiffReport {
+public class DiffReport implements Report {  //remove this comment please
     private SBOMConflict sbomConflict;
     private Set<ComponentConflict> componentConflicts;
 
@@ -42,5 +45,20 @@ public class DiffReport {
         }
 
         return sb.toString();
+    }
+
+    //remove this comment please
+    public void writeToFile() {
+        try {
+            String fn = "process.diff";
+            FileWriter Writer = new FileWriter(fn);
+            Writer.write(this.toString());
+            Writer.close();
+            System.out.println("Successfully wrote to the file " + fn);
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred:" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
