@@ -42,6 +42,9 @@ public class TranslatorCDX {
         Component top_component;
         UUID top_component_uuid = null;
 
+        // Data for author
+        String author = "";
+
         // Top level SBOM materials
         HashMap<String, String> header_materials = new HashMap<>();
         HashMap<String, String> sbom_materials = new HashMap<>();
@@ -117,6 +120,9 @@ public class TranslatorCDX {
                         sbomMeta.item(b).getNodeName(),
                         sbomMeta.item(b).getTextContent()
                 );
+            } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
+                if(author != "") { author += " ~ "; }
+                author += sbomMeta.item(b).getTextContent();
             } else {
                 sbom_materials.put(
                         sbomMeta.item(b).getNodeName(),
@@ -131,7 +137,7 @@ public class TranslatorCDX {
                     "cyclonedx",
                     header_materials.get("xmlns"),
                     header_materials.get("version"),
-                    header_materials.get("manufacturer"),
+                    author == "" ? sbom_materials.get("vendor") : author,
                     header_materials.get("serialNumber"),
                     sbom_materials.get("timestamp"),
                     null);

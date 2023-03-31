@@ -58,13 +58,13 @@ public class SBOM {
      * @param originFormat : original format SBOM was sent in
      * @param specVersion  :  Version of this Object
      * @param sbomVersion  :  Version of the SBOM
-     * @param supplier
+     * @param author
      * @param serialNumber : Serial number of the SBOM
      * @param timestamp    :    Timestamp of when this SBOM was created
      * @param signature    :    signature to verify the SBOM
      */
-    public SBOM(String originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber, String timestamp, Set<Signature> signature) {
-        this(originFormat, specVersion, sbomVersion, supplier, serialNumber, timestamp, signature, new DependencyTree());
+    public SBOM(String originFormat, String specVersion, String sbomVersion, String author, String serialNumber, String timestamp, Set<Signature> signature) {
+        this(originFormat, specVersion, sbomVersion, author, serialNumber, timestamp, signature, new DependencyTree());
     }
 
     /**
@@ -78,8 +78,8 @@ public class SBOM {
      * @param supplier     : Manufacturer of the software the SBOM is about
      * @param signature    : signature to verify the SBOM
      */
-    public SBOM(String originFormat, String specVersion, String sbomVersion, String serialNumber, String timestamp,
-                String supplier, Set<Signature> signature, DependencyTree dependencyTree) {
+    public SBOM(String originFormat, String specVersion, String sbomVersion, String supplier,
+                String serialNumber, String timestamp, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = assignOriginFormat(originFormat);
         this.specVersion = specVersion;
         this.sbomVersion = sbomVersion;
