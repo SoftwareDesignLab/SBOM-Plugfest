@@ -38,6 +38,8 @@ public class TranslatorSPDX {
 
     private static final String DOCUMENT_NAMESPACE_TAG = "DocumentNamespace: ";
 
+    private static final String AUTHOR_TAG = "Creator: ";
+
 
     // Used as an identifier for main SBOM information. Sometimes used as reference in relationships to show header contains main component.
     private static final String DOCUMENT_REFERENCE_TAG = "SPDXRef-DOCUMENT";
@@ -67,6 +69,10 @@ public class TranslatorSPDX {
         // Collection for sbom materials
         // Key = Name , Value = Value
         HashMap<String, String> sbom_materials = new HashMap<>();
+
+        // Creator information
+        // Key = Name , Value = Value
+        String author = "";
 
         // Collection for components, packaged and unpackaged
         // Key = SPDXID , Value = Component
@@ -120,6 +126,15 @@ public class TranslatorSPDX {
 
                 // Add DocumentNamespace value to sbom materials collection
                 sbom_materials.put(current_line.split(": ", 2)[0], sbom_serial_number);
+
+            } else if (current_line.contains(AUTHOR_TAG)) {
+
+                String author_item = current_line.split(AUTHOR_TAG)[1];
+
+                if(author_item.contains(": ")) {
+                    if(author != "") { author += " ~ "; }
+                    author += author_item.split(": ", 2)[1];
+                }
 
             } else if (current_line.contains(": ")) {
 
@@ -231,17 +246,21 @@ public class TranslatorSPDX {
                 }
 
                 // Cleanup package originator
-                // Sometimes it will list as Person: NAME <EMAIL>, we want to cut it off at the <
-                String packageOriginator = component_materials.get("PackageOriginator");
-                if (packageOriginator != null && packageOriginator.startsWith("Person: ") && packageOriginator.contains("<")) {
-                    // 8 is the point at which Person: ends in a string
-                    packageOriginator = packageOriginator.substring(8, packageOriginator.indexOf(" <"));
+                String supplier = null;
+                if(component_materials.get("PackageSupplier") != null) {
+                        supplier = component_materials.get("PackageSupplier");
+                } else if(component_materials.get("PackageOriginator") != null) {
+                        supplier = component_materials.get("PackageOriginator");
                 }
+
+                supplier = supplier.contains("Person: ") && supplier.contains("<")
+                        ? supplier.substring(8, supplier.indexOf("<"))
+                        : supplier;
 
                 // Create new component from required information
                 Component component = new Component(
                         component_materials.get("PackageName"),
-                        packageOriginator,
+                        supplier,
                         component_materials.get("PackageVersion"),
                         component_materials.get("SPDXID")
                 );
@@ -342,7 +361,7 @@ public class TranslatorSPDX {
                     "spdx",
                     sbom_materials.get("SPDXVersion"),
                     "1",
-                    top_component == null ? "N/A" : top_component.getPublisher(),
+                    author == "" ? "Unknown" : author,
                     sbom_materials.get("DocumentNamespace"),
                     sbom_materials.get("Created"),
                     null);
