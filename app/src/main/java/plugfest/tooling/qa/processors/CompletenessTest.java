@@ -41,10 +41,10 @@ public class CompletenessTest extends MetricTest {
         super("Completeness Test"); // Test name
 
         /*
-            Regex101: https://regex101.com/r/KNxGCb/3
+            Regex101: https://regex101.com/r/lgUcTP/1
             Checks if name is in form: "Person: First Last <email@mail.com>"
          */
-        this.publisherNameRegex = Pattern.compile("^Person: ([\\w äöüÄÖÜß]*) <(.*)>", Pattern.MULTILINE);
+        this.publisherNameRegex = Pattern.compile("^Person: (\\S+ )+<\\S*@\\S*\\.\\S*>$", Pattern.MULTILINE);
 
         /*
             Regex101: https://regex101.com/r/wzJeIq/4
@@ -66,7 +66,7 @@ public class CompletenessTest extends MetricTest {
             Regex101: https://regex101.com/r/vp2Hk0/1 (i love writing regex!!!)
             Official PURL spec: https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst
          */
-        this.purlRegex = Pattern.compile("pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@(" +
+        this.purlRegex = Pattern.compile("^pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@(" +
                 "[a-zA-Z0-9-~._%]+))?(\\?(([a-zA-Z][a-zA-Z0-9_.-]*=.+)&)*([a-zA-Z][a-zA-Z0-9-~._%]*=.+))?(#(" +
                 "[a-zA-Z0-9-~._%]*\\/)+[a-zA-Z0-9-~._%]*)?", Pattern.MULTILINE);
     }
