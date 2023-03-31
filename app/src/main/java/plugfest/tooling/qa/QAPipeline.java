@@ -15,6 +15,7 @@ public class QAPipeline {
         // TODO: Move processors initialization App so they can be chosen there
         processors = new HashSet<>();
         processors.add(new ContextualProcessor());
+        processors.add(new SPDXProcessor());
         // Add new processor here
     }
 

@@ -29,10 +29,11 @@ public abstract class AttributeProcessor {
             for (int j = 0; j < components.length; j++) {
                 // Store current Component in local variable
                 final Component c = components[j];
+//                if(c.isUnpackaged()) continue; // TODO: Uncomment
                 // Test and append results
                 final ArrayList<String> testResults = mt.test(c);
                 // If no checks failed, mark test as passed
-                if(testResults.isEmpty()) testResults.add(String.format("Component %s PASSED", c.getUUIDShort()));
+                if(testResults.isEmpty()) testResults.add(String.format("PASSED Component %s", c.getName()));
                 mt.addTestResults(testResults);
             }
 

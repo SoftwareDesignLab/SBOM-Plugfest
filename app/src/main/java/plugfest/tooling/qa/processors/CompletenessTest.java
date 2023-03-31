@@ -72,29 +72,29 @@ public class CompletenessTest extends MetricTest {
     private String testPublisherName(Component c) {
         // Check completeness of publisher name
         if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
-            return String.format("Component %s FAILED: Publisher Name is Not Complete: '%s'", c.getUUIDShort(), c.getPublisher());
+            return String.format("FAILED Component %s: Publisher Name is Not Complete: '%s'", c.getName(), c.getPublisher());
         return null;
     }
 
     private String testComponentName(Component c) {
         // Check completeness of component name
         if(c.getName().isBlank())
-            return String.format("Component %s FAILED: Name is Not Complete: '%s'", c.getUUIDShort(), c.getName());
+            return String.format("FAILED Component %s: Name is Not Complete: '%s'", c.getName(), c.getName());
         return null;
     }
 
     private String testComponentVersion(Component c) {
         // Check completeness of component version
         if(!this.componentVersionRegex.matcher(c.getVersion().strip()).matches())
-            return String.format("Component %s FAILED: Version is Not Complete: '%s'", c.getUUIDShort(), c.getVersion());
+            return String.format("FAILED Component %s: Version is Not Complete: '%s'", c.getName(), c.getVersion());
         return null;
     }
 
     private String testCPEs(Component c) {
         // Check CPEs and return a number of invalid CPEs per component
         final int invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
-        if(invalid > 0) // If there are invalid cpes, mark as failed
-            return String.format("Component %s FAILED: Had %d CPE(s) with Invalid Format", c.getUUIDShort(), invalid);
+        if(invalid > 0) // If there are invalid CPEs, mark as failed
+            return String.format("FAILED Component %s: Had %d CPE(s) with Invalid Format", c.getName(), invalid);
         return null;
     }
 
@@ -102,7 +102,7 @@ public class CompletenessTest extends MetricTest {
         // Check PURLs and return a number of invalid PURLs
         final int invalid = getNumInvalidStrings(c.getPURL(), purlRegex);
         if(invalid > 0) // If there are invalid PURLs, mark as failed
-            return String.format("Component %s FAILED: Had %d PURL(s) with Invalid Format", c.getUUIDShort(), invalid);
+            return String.format("FAILED Component %s: Had %d PURL(s) with Invalid Format", c.getName(), invalid);
         return null;
     }
 
