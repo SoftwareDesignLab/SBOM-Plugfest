@@ -255,7 +255,7 @@ public class TranslatorSPDX {
 
                 if (supplier != null) {
                     supplier = supplier.contains("Person: ") && supplier.contains("<")
-                            ? supplier.substring(8, supplier.indexOf("<"))
+                            ? supplier.substring(8)
                             : supplier;
                 }
                 // Create new component from required information
