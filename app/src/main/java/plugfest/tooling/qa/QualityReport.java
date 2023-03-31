@@ -1,5 +1,6 @@
 package plugfest.tooling.qa;
 
+import plugfest.tooling.qa.test_results.Test;
 import plugfest.tooling.qa.test_results.TestResults;
 
 import java.util.ArrayList;
@@ -50,13 +51,27 @@ public class QualityReport {
         this.testResults.addAll(other.testResults);
     }
 
+    /**
+     * Get total number of passed components in the quality report.
+     *
+     * @return Total number of passed components in the quality report
+     */
+    public int getPassedComponents() {
+        int passed = 0;
+        for(TestResults tr : testResults) {
+            if(tr.finalStatus().equals("PASSED"))
+                passed++;
+        }
+        return passed;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("QualityReport{");
         sb.append("serialNumber=");
         sb.append(this.serialNumber);
-        sb.append(",\n");
-        sb.append("testResults=[\n  ");
+        sb.append(",\n\n");
+        sb.append(String.format("TEST RESULTS - TOTAL COMPONENTS PASSED: %d/%d\n\n", getPassedComponents(), testResults.size()));
 
         // Loop through all TestResults in the QualityReport
         for(TestResults result : testResults) {
