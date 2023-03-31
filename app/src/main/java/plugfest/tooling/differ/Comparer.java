@@ -32,22 +32,24 @@ public class Comparer {
         Set<String> aComponentNames = new HashSet<>();
         Set<String> bComponentNames = new HashSet<>();
 
-        for (Component aComponent : aComponents) {
-            aComponentNames.add(aComponent.getName());
-        }
-
-        for (Component bComponent : bComponents) {
-            bComponentNames.add(bComponent.getName());
-        }
-
         // Add all acomponents to a map
         HashMap<String, Component> aComponentMap = new HashMap<>();
         for (Component aComponent : aComponents) {
+            // Only look at packaged components
+            if (aComponent.isUnpackaged()) {
+                continue;
+            }
             aComponentMap.put(aComponent.getName(), aComponent);
+            aComponentNames.add(aComponent.getName());
         }
 
         // Now loop through and check if all b components are there
         for (Component bComponent : bComponents) {
+            // Only look at packaged
+            if (bComponent.isUnpackaged()) {
+                continue;
+            }
+            bComponentNames.add(bComponent.getName());
             if (!aComponentMap.containsKey(bComponent.getName())) {
                 // Add a new component conflict
                 ComponentConflict conflict = new ComponentConflict(null, bComponent);

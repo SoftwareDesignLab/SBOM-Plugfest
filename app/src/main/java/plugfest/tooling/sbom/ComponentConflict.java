@@ -73,6 +73,8 @@ public class ComponentConflict {
         if (componentA != null) {
             this.componentA = new Component();
             this.componentA.copyFrom(componentA);
+
+            componentCleanup(this.componentA);
         }
         else {
             this.componentA = null;
@@ -82,6 +84,8 @@ public class ComponentConflict {
         if (componentB != null) {
             this.componentB = new Component();
             this.componentB.copyFrom(componentB);
+
+            componentCleanup(this.componentB);
         }
         else {
             this.componentB = null;
@@ -94,6 +98,35 @@ public class ComponentConflict {
             // Now we need to determine what the conflict is
             assignConflictType();
         }
+    }
+
+    /**
+     * Cleanup a component, set unknowns to null and such
+     *
+     * @param component Component to clean up
+     */
+    private void componentCleanup(Component component) {
+        Set<String> emptyNames = new HashSet<>(Arrays.asList("", "Unknown", "N/A"));
+        // Set unknowns to null
+        if (component.getPublisher() != null && emptyNames.contains(component.getPublisher())) {
+            component.setPublisher(null);
+        }
+
+        if (component.getName() != null && emptyNames.contains(component.getName())) {
+            // This should never really happen, but we will guard against it
+            component.setName(null);
+        }
+
+        if (component.getVersion() != null && emptyNames.contains(component.getVersion())) {
+            component.setVersion(null);
+        }
+
+        // TODO figure out a better way to handle situations like this
+        // Occasionally the SBOM will name a component's version with its hash
+        if (component.getVersion() != null && component.getVersion().length() > 32) {
+            component.setVersion(null);
+        }
+
     }
 
     public Component getComponentA() {

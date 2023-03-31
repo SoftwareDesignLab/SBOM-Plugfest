@@ -175,9 +175,10 @@ public class TranslatorSPDX {
                 Component unpackaged_component = new Component(
                         file_materials.get("FileName"),
                         "Unknown",
-                        file_materials.get("FileComment"),
+                        file_materials.get("PackageVersion"),
                         file_materials.get("SPDXID")
                 );
+                unpackaged_component.setUnpackaged(true);
 
                 // Add unpackaged file to components
                 components.put(unpackaged_component.getSPDXID(), unpackaged_component);
