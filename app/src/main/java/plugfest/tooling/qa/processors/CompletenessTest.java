@@ -68,7 +68,8 @@ public class CompletenessTest extends MetricTest {
 
     private Test testPublisherName(Component c) {
         // Check completeness of publisher name
-        if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
+        if(c.getPublisher() == null ||
+                !this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
             return new Test(false, "Publisher Name is Not Complete '", c.getPublisher(), "'.");
 //            return String.format("FAILED Component %s: Publisher Name is Not Complete: '%s'", c.getName(), c.getPublisher());
         return new Test(true, "Publisher Name is Complete.");

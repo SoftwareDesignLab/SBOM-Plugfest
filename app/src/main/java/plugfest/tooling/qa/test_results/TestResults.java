@@ -62,7 +62,7 @@ public class TestResults {
                 component.getName(), finalStatus(), getSuccessfulTests(), tests.size()));
 
         for(Test t : tests) {
-            out.append(String.format("  %s %s\n", component.getName(), t.toString()));
+            out.append(String.format("  %s\n", t.toString()));
         }
         return out.toString();
     }

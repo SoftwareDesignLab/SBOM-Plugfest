@@ -30,7 +30,7 @@ public class QualityReport {
         this.serialNumber = "INVALID_SN";
     }
 
-    public void addTestResult(String testName, TestResults testResults) {
+    public void addTestResult(TestResults testResults) {
         // Insert the new test result
         final boolean existingValue = this.testResults.add(testResults);
 

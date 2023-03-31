@@ -34,7 +34,6 @@ public class RelevancyTest extends MetricTest {
     public TestResults test(Component c){
         // Init StringBuilder
         TestResults testResults = new TestResults(c);
-        final String UUIDShort = c.getUUID().toString().substring(0, 5);
 
         // Check if name makes sense / is english (looking)
 
@@ -44,12 +43,18 @@ public class RelevancyTest extends MetricTest {
         //      Does not contain a "bigram that never occurs"
 
         if(c.getName() != null &&
-                !testNames(c.getName().strip().toLowerCase()))
+                !testNames(c.getName().strip().toLowerCase())) {
             testResults.addTest(new Test(false, "Name is likely not relevant"));
+        } else {
+            testResults.addTest(new Test(true, "Name is likely relevant"));
+        }
 
         if(c.getPublisher() != null &&
-                !testNames(c.getPublisher().strip().toLowerCase()))
+                !testNames(c.getPublisher().strip().toLowerCase())) {
             testResults.addTest(new Test(false, "Publisher Name is likely not relevant"));
+        } else {
+            testResults.addTest(new Test(true, "Publisher Name is likely relevant"));
+        }
 
         // Return result
         return testResults;

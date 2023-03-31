@@ -1,6 +1,7 @@
 package plugfest.tooling.qa.processors;
 
 import plugfest.tooling.qa.test_results.Test;
+import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
@@ -38,39 +39,42 @@ public class AppropriateAmountTest extends MetricTest {
     public TestResults test(Component c) {
         // Init StringBuilder
         TestResults testResults = new TestResults(c);
-        final String UUIDShort = c.getUUID().toString().substring(0, 5);
 
-        /*
-            Component publisher name length <= 80 chars
-         */
-        if(c.getPublisher() != null &&
-                c.getPublisher().strip().length() > maxLineLength) {
-            testResults.addTest(new Test(false, "Publisher Name Length > 80"));
-        }
+        // Test publisher name
+        testResults.addTest(testPublisherName(c));
 
-        /*
-            Component name length <= 80 chars
-         */
-        if(c.getName() != null &&
-                c.getName().strip().length() > maxLineLength) {
-            // Add separator if not first check to fail
-//            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.addTest(new Test(false, "Name Length > 80"));
-//            testResults.add(String.format("FAILED: Component %s Name Length > 80", UUIDShort));
-        }
+        // Test component name
+        testResults.addTest(testComponentName(c));
 
-        /*
-            Component version length <= 80 chars
-         */
-        if(c.getVersion() != null &&
-                c.getVersion().strip().length() > maxLineLength) {
-            // Add separator if not first check to fail
-//            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.addTest(new Test(false, "Version Length > 80"));
-//            testResults.add(String.format("FAILED: Component %s Version Length > 80", UUIDShort));
-        }
+        // Test component version
+        testResults.addTest(testComponentVersion(c));
 
         // Return result
         return testResults;
+    }
+
+    private Test testPublisherName(Component c) {
+        if(c.getPublisher() != null &&
+                c.getPublisher().strip().length() > maxLineLength) {
+            return new Test(false, "Publisher Name Length > 80");
+        }
+
+        return new Test(true, "Publisher Name <= 80");
+    }
+
+    private Test testComponentName(Component c) {
+        if(c.getName() != null &&
+                c.getName().strip().length() > maxLineLength) {
+            return new Test(false, "Name Length > 80");
+        }
+        return new Test(true, "Name Length <= 80");
+    }
+
+    private Test testComponentVersion(Component c) {
+        if(c.getVersion() != null &&
+                c.getVersion().strip().length() > maxLineLength) {
+            new Test(false, "Version Length > 80");
+        }
+        return new Test(true, "Version Length <= 80");
     }
 }

@@ -28,10 +28,16 @@ public abstract class AttributeProcessor {
             // Test each Component against all metric tests
             final MetricTest[] metricTests = this.tests.toArray(new MetricTest[0]);
 
+            // Store testresults for each component
+            TestResults results = new TestResults(c);
+
             for(MetricTest mt : metricTests){
-                // Add test results
-                qr.addTestResult(mt.getName(), mt.test(c));
+                results.addTests(mt.test(c));
+
             }
+
+            // Add test results
+            qr.addTestResult(results);
         }
 
         // Return built QualityReport
