@@ -1,5 +1,7 @@
 package plugfest.tooling.qa.processors;
 
+import plugfest.tooling.qa.test_results.Test;
+import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
@@ -41,69 +43,69 @@ public class CompletenessTest extends MetricTest {
     }
 
     @Override
-    public ArrayList<String> test(Component c){
+    public TestResults test(Component c){
         // Init StringBuilder
-        final ArrayList<String> testResults = new ArrayList<>();
+        final TestResults testResults = new TestResults(c); // Init TestResults for this component
 
         // Test Publisher Name
-        final String pnResults = testPublisherName(c);
-        if(pnResults != null) testResults.add(pnResults);
+        testResults.addTest(testPublisherName(c));
 
         // Test Component Name
-        final String cnResults = testComponentName(c);
-        if(cnResults != null) testResults.add(cnResults);
+        testResults.addTest(testComponentName(c));
 
         // Test Component Version
-        final String cvResults = testComponentVersion(c);
-        if(cvResults != null) testResults.add(cvResults);
+        testResults.addTest(testComponentVersion(c));
 
         // Test CPEs
-        final String cpeResults = testCPEs(c);
-        if(cpeResults != null) testResults.add(cpeResults);
+        testResults.addTest(testCPEs(c));
 
         // Test PURLs
-        final String purlResults = testPURLs(c);
-        if(purlResults != null) testResults.add(purlResults);
+        testResults.addTest(testPURLs(c));
 
         // Return result
         return testResults;
     }
 
-    private String testPublisherName(Component c) {
+    private Test testPublisherName(Component c) {
         // Check completeness of publisher name
         if(!this.publisherNameRegex.matcher(c.getPublisher().strip()).matches())
-            return String.format("FAILED Component %s: Publisher Name is Not Complete: '%s'", c.getName(), c.getPublisher());
-        return null;
+            return new Test(false, "Publisher Name is Not Complete '", c.getPublisher(), "'.");
+//            return String.format("FAILED Component %s: Publisher Name is Not Complete: '%s'", c.getName(), c.getPublisher());
+        return new Test(true, "Publisher Name is Complete.");
     }
 
-    private String testComponentName(Component c) {
+    private Test testComponentName(Component c) {
         // Check completeness of component name
         if(c.getName().isBlank())
-            return String.format("FAILED Component %s: Name is Not Complete: '%s'", c.getName(), c.getName());
-        return null;
+            return new Test(false, "Name is Not Complete: '", c.getName(), "'.");
+//            return String.format("FAILED Component %s: Name is Not Complete: '%s'", c.getName(), c.getName());
+        return new Test(true, "Name is Complete.");
     }
 
-    private String testComponentVersion(Component c) {
+    private Test testComponentVersion(Component c) {
         // Check completeness of component version
         if(!this.componentVersionRegex.matcher(c.getVersion().strip()).matches())
-            return String.format("FAILED Component %s: Version is Not Complete: '%s'", c.getName(), c.getVersion());
-        return null;
+            return new Test(false, "Version is Not Complete: '", c.getVersion(), "'.");
+//            return String.format("FAILED Component %s: Version is Not Complete: '%s'", c.getName(), c.getVersion());
+        return new Test(true, "Version is Complete.");
     }
 
-    private String testCPEs(Component c) {
+    private Test testCPEs(Component c) {
         // Check CPEs and return a number of invalid CPEs per component
         final int invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
         if(invalid > 0) // If there are invalid CPEs, mark as failed
-            return String.format("FAILED Component %s: Had %d CPE(s) with Invalid Format", c.getName(), invalid);
-        return null;
+            return new Test(false, "Had ", Integer.toString(invalid), " CPE(s) with Invalid Format.");
+//            return String.format("FAILED Component %s: Had %d CPE(s) with Invalid Format", c.getName(), invalid);
+        return new Test(true, "CPE(s) have Valid Format.");
     }
 
-    private String testPURLs(Component c) {
+    private Test testPURLs(Component c) {
         // Check PURLs and return a number of invalid PURLs
         final int invalid = getNumInvalidStrings(c.getPURL(), purlRegex);
         if(invalid > 0) // If there are invalid PURLs, mark as failed
-            return String.format("FAILED Component %s: Had %d PURL(s) with Invalid Format", c.getName(), invalid);
-        return null;
+            return new Test(false, "Had ", Integer.toString(invalid), " PURL(s) with Invalid Format.");
+//            return String.format("FAILED Component %s: Had %d PURL(s) with Invalid Format", c.getName(), invalid);
+        return new Test(true, "PURL(s) have Valid Format.");
     }
 
     /**

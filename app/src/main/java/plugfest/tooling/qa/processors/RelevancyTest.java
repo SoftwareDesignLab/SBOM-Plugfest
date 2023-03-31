@@ -1,5 +1,7 @@
 package plugfest.tooling.qa.processors;
 
+import plugfest.tooling.qa.test_results.Test;
+import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
@@ -29,9 +31,9 @@ public class RelevancyTest extends MetricTest {
     }
 
     @Override
-    public ArrayList<String> test(Component c){
+    public TestResults test(Component c){
         // Init StringBuilder
-        final ArrayList<String> testResults = new ArrayList<>();
+        TestResults testResults = new TestResults(c);
         final String UUIDShort = c.getUUID().toString().substring(0, 5);
 
         // Check if name makes sense / is english (looking)
@@ -44,15 +46,11 @@ public class RelevancyTest extends MetricTest {
         //      Does not contain a "bigram that never occurs"
 
         if(!testNames(nameToLowerStripped))
-            testResults.add(String.format("FAILED: Component %s Name is likely not relevant", UUIDShort));
+            testResults.addTest(new Test(false, "Name is likely not relevant"));
 
         if(!testNames(publisherToLowerStripped)){
-            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.add(String.format("FAILED: Component %s Publisher Name is likely not relevant", UUIDShort));
+            testResults.addTest(new Test(false, "Publisher Name is likely not relevant"));
         }
-
-        // If no checks failed, mark test as passed
-        if(testResults.isEmpty()) testResults.add("PASSED");
 
         // Return result
         return testResults;

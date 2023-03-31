@@ -1,5 +1,7 @@
 package plugfest.tooling.qa.processors;
 
+import plugfest.tooling.qa.test_results.Test;
+import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ public abstract class MetricTest {
     //#region Attributes
 
     private final String name;
-    private final ArrayList<String> testResults;
+    private final TestResults testResults;
 
     //#endregion
 
@@ -16,27 +18,21 @@ public abstract class MetricTest {
 
     protected MetricTest(String name) {
         this.name = name;
-        this.testResults = new ArrayList<>();
+        this.testResults = null; // TODO: Initialized in test
     }
 
     //#endregion
 
     //#region Abstract Methods
 
-    public abstract ArrayList<String> test(Component c);
+    public abstract TestResults test(Component c);
 
     //#endregion
 
     //#region Getters
 
     public String getName() { return this.name; }
-    public ArrayList<String> getTestResults() { return this.testResults; }
-
-    //#endregion
-
-    //#region Setters
-
-    public void addTestResults(ArrayList<String> result) { testResults.addAll(result); }
+    public TestResults getTestResults() { return this.testResults; }
 
     //#endregion
 

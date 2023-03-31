@@ -2,6 +2,7 @@ package plugfest.tooling.qa;
 
 import plugfest.tooling.metrics.timestampConsistencyMetric;
 import plugfest.tooling.qa.processors.*;
+import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOM;
 
 import java.util.HashSet;
