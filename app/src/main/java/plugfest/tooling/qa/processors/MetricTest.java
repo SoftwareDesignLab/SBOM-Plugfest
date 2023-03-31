@@ -36,7 +36,7 @@ public abstract class MetricTest {
 
     //#region Setters
 
-    public void addTestResult(ArrayList<String> result) { testResults.addAll(result); }
+    public void addTestResults(ArrayList<String> result) { testResults.addAll(result); }
 
     //#endregion
 

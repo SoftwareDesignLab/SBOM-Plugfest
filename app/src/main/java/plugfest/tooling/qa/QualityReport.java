@@ -66,7 +66,7 @@ public class QualityReport {
             if(i + 1 < keySet.length) sb.append("\n  ");
         }
 
-        sb.append("\n]");
+        sb.append("]}");
 
         return sb.toString();
     }

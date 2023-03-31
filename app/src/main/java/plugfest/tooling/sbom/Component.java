@@ -20,6 +20,7 @@ public class Component {
      * Note: only used for assembling Dependency Tree
      */
     private UUID uuid = null;
+    private String UUIDShort = null;
 
     /**
      * Name of the component
@@ -144,7 +145,17 @@ public class Component {
 
     public UUID getUUID() { return uuid; }
 
-    protected void setUUID(UUID componentUUID) { this.uuid = componentUUID; }
+    public String getUUIDShort() { return this.UUIDShort; }
+
+    protected void setUUID(UUID componentUUID) {
+        // Set UUID
+        this.uuid = componentUUID;
+        // If null, print to console
+        if(componentUUID == null)
+            System.out.println("Component UUID set to null");
+        else // Set short UUID representation
+            this.UUIDShort = this.uuid.toString().substring(0, 5);
+    }
 
     public String getName() {
         return name;
