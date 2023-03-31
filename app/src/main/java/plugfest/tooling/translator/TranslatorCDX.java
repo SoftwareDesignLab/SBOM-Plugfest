@@ -2,9 +2,8 @@ package plugfest.tooling.translator;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
-import plugfest.tooling.sbom.SBOM;
 import plugfest.tooling.sbom.Component;
+import plugfest.tooling.sbom.SBOM;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

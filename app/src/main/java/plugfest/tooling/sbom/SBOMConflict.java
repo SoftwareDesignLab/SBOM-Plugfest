@@ -2,8 +2,12 @@ package plugfest.tooling.sbom;
 
 import java.util.HashSet;
 import java.util.Set;
-import plugfest.tooling.sbom.SBOMConflictType;
 
+/**
+ * Conflict between two SBOMs and their trivial information
+ *
+ * @author Matt London
+ */
 public class SBOMConflict {
     /** Snapshot of the two SBOMs that have a conflict */
     private SBOM aSBOM;
@@ -53,45 +57,46 @@ public class SBOMConflict {
     }
 
     public String getConflictString(SBOMConflictType conflictType) {
-        String conflictString = "";
+        StringBuilder conflictString = new StringBuilder();
         switch (conflictType) {
             case SUPPLIER_MISMATCH:
-                conflictString = "Supplier Mismatch\n";
-                // TODO supplier currently not implemented
-//                conflictString += "\n+ " + aSBOM.getSupplier();
+                conflictString.append("Supplier Mismatch:\n");
+                conflictString.append("+ ").append(aSBOM.getSupplier()).append("\n");
+                conflictString.append("- ").append(bSBOM.getSupplier()).append("\n");
                 break;
             case AUTHOR_MISMATCH:
                 // TODO author currently not implemented
-                conflictString = "Author Mismatch\n";
+                conflictString.append("Author Mismatch:\n");
+
                 break;
             case TIMESTAMP_MISMATCH:
-                conflictString = "Timestamp Mismatch:\n";
-                conflictString += "+ " + aSBOM.getTimestamp() + "\n";
-                conflictString += "- " + bSBOM.getTimestamp() + "\n";
+                conflictString.append("Timestamp Mismatch:\n");
+                conflictString.append("+ ").append(aSBOM.getTimestamp()).append("\n");
+                conflictString.append("- ").append(bSBOM.getTimestamp()).append("\n");
                 break;
             case ORIGIN_FORMAT_MISMATCH:
-                conflictString = "Origin Format Mismatch:\n";
-                conflictString += "+ " + aSBOM.getOriginFormat() + "\n";
-                conflictString += "- " + bSBOM.getOriginFormat() + "\n";
+                conflictString.append("Origin Format Mismatch:\n");
+                conflictString.append("+ ").append(aSBOM.getOriginFormat()).append("\n");
+                conflictString.append("- ").append(bSBOM.getOriginFormat()).append("\n");
                 break;
             case SCHEMA_VERSION_MISMATCH:
-                conflictString = "Schema Version Mismatch:\n";
-                conflictString += "+ " + aSBOM.getSpecVersion() + "\n";
-                conflictString += "- " + bSBOM.getSpecVersion() + "\n";
+                conflictString.append("Schema Version Mismatch:\n");
+                conflictString.append("+ ").append(aSBOM.getSpecVersion()).append("\n");
+                conflictString.append("- ").append(bSBOM.getSpecVersion()).append("\n");
                 break;
             case SBOM_VERSION_MISMATCH:
-                conflictString = "SBOM Version Mismatch:\n";
-                conflictString += "+ " + aSBOM.getSbomVersion() + "\n";
-                conflictString += "- " + bSBOM.getSbomVersion() + "\n";
+                conflictString.append("SBOM Version Mismatch:\n");
+                conflictString.append("+ ").append(aSBOM.getSbomVersion()).append("\n");
+                conflictString.append("- ").append(bSBOM.getSbomVersion()).append("\n");
                 break;
             case SERIAL_NUMBER_MISMATCH:
-                conflictString = "Serial Number Mismatch:\n";
-                conflictString += "+ " + aSBOM.getSerialNumber() + "\n";
-                conflictString += "- " + bSBOM.getSerialNumber() + "\n";
+                conflictString.append("Serial Number Mismatch:\n");
+                conflictString.append("+ ").append(aSBOM.getSerialNumber()).append("\n");
+                conflictString.append("- ").append(bSBOM.getSerialNumber()).append("\n");
                 break;
         }
 
-        return conflictString;
+        return conflictString.toString();
     }
 
     // Stringify this entire object

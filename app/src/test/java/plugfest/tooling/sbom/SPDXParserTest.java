@@ -1,9 +1,8 @@
 package plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.Test;
+import plugfest.tooling.translator.TranslatorSPDX;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,81 +37,47 @@ public class SPDXParserTest {
 
     @Test
     public void builder_makes_SBOM_test() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SPDX_v2_3_SBOM);
+        SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test);
-    }
-
-    @Test
-    public void builder_gets_all_raw_data_from_SBOM_correctly_test() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SPDX_v2_3_SBOM);
-        String current_line;
-        BufferedReader br = new BufferedReader(new FileReader(TEST_SPDX_v2_3_SBOM));
-//        for (String data : test.data) {
-//            current_line = br.readLine();
-//            assertEquals(current_line, data);
-//        }
     }
 
     @Test
     public void builder_makes_SBOM_from_SPDX_2_2_test() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SPDX_v2_2_SBOM);
+        SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_2_SBOM);
         assertNotNull(test);
     }
 
-    @Test
-    public void builder_gets_all_raw_data_from_SPDX_2_2_SBOM_correctly_test() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SPDX_v2_2_SBOM);
-        String current_line;
-        BufferedReader br = new BufferedReader(new FileReader(TEST_SPDX_v2_2_SBOM));
-//        for (String data : test.data) {
-//            current_line = br.readLine();
-//            assertEquals(current_line, data);
-//        }
-    }
 
     @Test
     public void builder_makes_large_SBOM_test() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SPDX_LARGE_v2_3_SBOM);
+        SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_LARGE_v2_3_SBOM);
         assertNotNull(test);
     }
 
-    @Test
-    public void builder_gets_all_raw_data_from_large_SBOM_correctly_test() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SPDX_LARGE_v2_3_SBOM);
-        String current_line;
-        BufferedReader br = new BufferedReader(new FileReader(TEST_SPDX_LARGE_v2_3_SBOM));
-//        for (String data : test.data) {
-//            current_line = br.readLine();
-//            assertEquals(current_line, data);
-//        }
-    }
 
     @Test
     public void builder_does_not_make_SBOM_from_blank_path() throws IOException {
-        SBOM test = SPDXParser.parse("");
+        SBOM test = TranslatorSPDX.translatorSPDX("");
         assertNull(test);
     }
 
     @Test
     public void builder_does_not_make_SBOM_from_non_existing_file() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SBOM_DOESNT_EXIST);
+        SBOM test = TranslatorSPDX.translatorSPDX(TEST_SBOM_DOESNT_EXIST);
         assertNull(test);
     }
 
     @Test
     public void builder_parses_SBOM_with_no_components() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SBOM_SPDX_NO_COMPONENTS);
+        SBOM test = TranslatorSPDX.translatorSPDX(TEST_SBOM_SPDX_NO_COMPONENTS);
         assertNotNull(test);
-//        assertEquals(0, test.components.size());
+        assertEquals(1, test.getAllComponents().size());
     }
 
     @Test
     public void builder_parses_SBOM_that_is_empty() throws IOException {
-        SBOM test = SPDXParser.parse(TEST_SBOM_SPDX_EMPTY);
+        SBOM test = TranslatorSPDX.translatorSPDX(TEST_SBOM_SPDX_EMPTY);
         assertNotNull(test);
-//        assertEquals(0, test.header.size());
-//        assertEquals(0, test.components.size());
-//        assertEquals(0, test.relationships.size());
+        assertEquals(0, test.getAllComponents().size());
     }
 }
-

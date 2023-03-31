@@ -20,7 +20,6 @@ public class Component {
      * Note: only used for assembling Dependency Tree
      */
     private UUID uuid = null;
-    private String UUIDShort = null;
 
     /**
      * Name of the component
@@ -31,6 +30,11 @@ public class Component {
      * Publisher of this component
      */
     private String publisher;
+
+    /**
+     * If the component is unpackaged (not included in SPDX notation)
+     */
+    private boolean unpackaged;
 
     /**
      * Unique identifiers of the component (ex: CDX uses purl and/or cpe)
@@ -81,6 +85,7 @@ public class Component {
         this.PURL = new HashSet<>();
         this.SWID = new HashSet<>();
         this.componentConflicts = new HashSet<>();
+        this.unpackaged = false;
     }
 
     /**
@@ -145,17 +150,7 @@ public class Component {
 
     public UUID getUUID() { return uuid; }
 
-    public String getUUIDShort() { return this.UUIDShort; }
-
-    protected void setUUID(UUID componentUUID) {
-        // Set UUID
-        this.uuid = componentUUID;
-        // If null, print to console
-        if(componentUUID == null)
-            System.out.println("Component UUID set to null");
-        else // Set short UUID representation
-            this.UUIDShort = this.uuid.toString().substring(0, 5);
-    }
+    protected void setUUID(UUID componentUUID) { this.uuid = componentUUID; }
 
     public String getName() {
         return name;
@@ -169,7 +164,9 @@ public class Component {
         return publisher;
     }
 
-    public void setPublisher(String publisher) { this.publisher = publisher; }
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
     public String getVersion() {
         return version;
@@ -196,6 +193,19 @@ public class Component {
                 .filter(license::equals)
                 .findAny()
                 .orElse(null);
+    }
+
+    /**
+     * Set if the component is unpackaged or not
+     *
+     * @param unpackaged If component is unpackaged
+     */
+    public void setUnpackaged(boolean unpackaged) {
+        this.unpackaged = unpackaged;
+    }
+
+    public boolean isUnpackaged() {
+        return unpackaged;
     }
 
     public void addChild(UUID child) {
@@ -304,7 +314,19 @@ public class Component {
 
     @Override
     public String toString() {
-        return this.publisher + " " + this.name + ":" + this.version;
+        // Only add what is not null
+        StringBuilder sb = new StringBuilder();
+        if (this.publisher != null) {
+            sb.append(this.publisher).append(" ");
+        }
+        if (this.name != null) {
+            // This should never happen, but may as well guard against it
+            sb.append(this.name);
+        }
+        if (this.version != null) {
+            sb.append(":").append(this.version);
+        }
+        return sb.toString();
     }
 
     @Override

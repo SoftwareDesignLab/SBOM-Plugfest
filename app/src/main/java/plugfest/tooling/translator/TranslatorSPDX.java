@@ -160,9 +160,10 @@ public class TranslatorSPDX {
                 Component unpackaged_component = new Component(
                         file_materials.get("FileName"),
                         "Unknown",
-                        file_materials.get("FileComment"),
+                        file_materials.get("PackageVersion"),
                         file_materials.get("SPDXID")
                 );
+                unpackaged_component.setUnpackaged(true);
 
                 // Add unpackaged file to components
                 components.put(unpackaged_component.getSPDXID(), unpackaged_component);
@@ -229,17 +230,20 @@ public class TranslatorSPDX {
                     }
                 }
 
-                final String pName = component_materials.get("PackageName");
-                final String pOriginator = component_materials.get("PackageOriginator");
-                final String pVersion = component_materials.get("PackageVersion");
-                final String spdxID = component_materials.get("SPDXID");
+                // Cleanup package originator
+                // Sometimes it will list as Person: NAME <EMAIL>, we want to cut it off at the <
+                String packageOriginator = component_materials.get("PackageOriginator");
+                if (packageOriginator != null && packageOriginator.startsWith("Person: ") && packageOriginator.contains("<")) {
+                    // 8 is the point at which Person: ends in a string
+                    packageOriginator = packageOriginator.substring(8, packageOriginator.indexOf(" <"));
+                }
 
                 // Create new component from required information
                 Component component = new Component(
-                        pName == null ? "Unknown" : pName,
-                        pOriginator == null ? "Unknown" : pOriginator,
-                        pVersion == null ? "Unknown" : pVersion,
-                        spdxID == null ? "Unknown" : spdxID
+                        component_materials.get("PackageName"),
+                        packageOriginator,
+                        component_materials.get("PackageVersion"),
+                        component_materials.get("SPDXID")
                 );
 
                 // Append CPEs and Purls

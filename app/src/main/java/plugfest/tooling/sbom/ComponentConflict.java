@@ -21,9 +21,6 @@ public class ComponentConflict {
      * Determine the type of conflict between the two components
      */
     private void assignConflictType() {
-        // To be set to true if we hit a situation where one component is a subset of the other
-        boolean falsePositive = false;
-
         // Compare the components and find the difference, then add it to the list of conflicts
         if (componentA.getName() != null && !componentA.getName().equals(componentB.getName())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_NAME_MISMATCH);
@@ -35,30 +32,18 @@ public class ComponentConflict {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_VERSION_MISMATCH);
         }
         if (componentA.getCPE() != null && !componentA.getCPE().equals(componentB.getCPE())) {
-            // Check if one set contains all items from the other
-            if (componentA.getCPE().containsAll(componentB.getCPE()) || componentB.getCPE().containsAll(componentA.getCPE())) {
-                // Then this isn't really a conflict
-                falsePositive = true;
-            }
-            else {
+            // Check if one set doesn't contain all items from the other
+            if (!(componentA.getCPE().containsAll(componentB.getCPE()) || componentB.getCPE().containsAll(componentA.getCPE()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
         if (componentA.getPURL() != null && !componentA.getPURL().equals(componentB.getPURL())) {
-            if (componentA.getPURL().containsAll(componentB.getPURL()) || componentB.getPURL().containsAll(componentA.getPURL())) {
-                // Then this isn't really a conflict
-            }
-            else {
+            if (!(componentA.getPURL().containsAll(componentB.getPURL()) || componentB.getPURL().containsAll(componentA.getPURL()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_PURL_MISMATCH);
             }
         }
         if (componentA.getSWID() != null && !componentA.getSWID().equals(componentB.getSWID())) {
-            if (componentA.getSWID().containsAll(componentB.getSWID()) || componentB.getSWID().containsAll(componentA.getSWID())) {
-                // Then this isn't really a conflict
-                falsePositive = true;
-
-            }
-            else {
+            if (!(componentA.getSWID().containsAll(componentB.getSWID()) || componentB.getSWID().containsAll(componentA.getSWID()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_SWID_MISMATCH);
             }
         }
@@ -68,7 +53,7 @@ public class ComponentConflict {
         if (componentA.getLicenses() != null && !componentA.getLicenses().equals(componentB.getLicenses())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_LICENSE_MISMATCH);
         }
-        if (componentConflictTypes.isEmpty() && !falsePositive) {
+        if (componentConflictTypes.isEmpty()) {
 //            componentConflictTypes.add(ComponentConflictType.COMPONENT_UNKNOWN_MISMATCH);
         }
 
@@ -88,6 +73,8 @@ public class ComponentConflict {
         if (componentA != null) {
             this.componentA = new Component();
             this.componentA.copyFrom(componentA);
+
+            componentCleanup(this.componentA);
         }
         else {
             this.componentA = null;
@@ -97,6 +84,8 @@ public class ComponentConflict {
         if (componentB != null) {
             this.componentB = new Component();
             this.componentB.copyFrom(componentB);
+
+            componentCleanup(this.componentB);
         }
         else {
             this.componentB = null;
@@ -109,6 +98,35 @@ public class ComponentConflict {
             // Now we need to determine what the conflict is
             assignConflictType();
         }
+    }
+
+    /**
+     * Cleanup a component, set unknowns to null and such
+     *
+     * @param component Component to clean up
+     */
+    private void componentCleanup(Component component) {
+        Set<String> emptyNames = new HashSet<>(Arrays.asList("", "Unknown", "N/A"));
+        // Set unknowns to null
+        if (component.getPublisher() != null && emptyNames.contains(component.getPublisher())) {
+            component.setPublisher(null);
+        }
+
+        if (component.getName() != null && emptyNames.contains(component.getName())) {
+            // This should never really happen, but we will guard against it
+            component.setName(null);
+        }
+
+        if (component.getVersion() != null && emptyNames.contains(component.getVersion())) {
+            component.setVersion(null);
+        }
+
+        // TODO figure out a better way to handle situations like this
+        // Occasionally the SBOM will name a component's version with its hash
+        if (component.getVersion() != null && component.getVersion().length() > 32) {
+            component.setVersion(null);
+        }
+
     }
 
     public Component getComponentA() {
@@ -128,6 +146,15 @@ public class ComponentConflict {
         StringBuilder conflictString = new StringBuilder();
         // Check if we are only showing stuff that isn't in the component string
         boolean printEquals = true;
+
+        if (componentA == null) {
+            // This means the component only exists in B
+            return "  - " + componentB.toString() + "\n";
+        }
+        else if (componentB == null) {
+            // Component only exists in A
+            return "  + " + componentA.toString() + "\n";
+        }
 
         // Check publisher equivalence
         if (componentA.getPublisher() != null) {
@@ -153,7 +180,7 @@ public class ComponentConflict {
         if (printEquals) {
             // This means we only are showing internal component differences
             // Only do this if there are conflicts
-            if (componentConflictTypes.size() > 0) {
+            if (componentConflictTypes.size() > 0 && componentConflictTypes.containsAll(Arrays.asList(ComponentConflictType.COMPONENT_NOT_FOUND))) {
                 conflictString.append("  = ").append(componentA.toString()).append("\n");
             }
         }
