@@ -44,7 +44,7 @@ public class Test {
      * @return The message of the test output.
      */
     public String getMessage() {
-        return Arrays.toString(message);
+        return String.join("", message);
     }
 
     @Override
