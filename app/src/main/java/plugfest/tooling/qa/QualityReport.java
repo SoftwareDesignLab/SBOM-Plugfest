@@ -55,7 +55,7 @@ public class QualityReport {
     public int getPassedComponents() {
         int passed = 0;
         for(TestResults tr : testResults) {
-            if(tr.finalStatus().equals("PASSED"))
+            if(tr.isSuccessful())
                 passed++;
         }
         return passed;

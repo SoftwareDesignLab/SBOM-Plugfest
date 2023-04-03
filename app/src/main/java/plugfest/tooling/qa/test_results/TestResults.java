@@ -97,7 +97,10 @@ public class TestResults {
     public String toString() {
         StringBuilder out = new StringBuilder();
         out.append(String.format("Component '%s' %s with %d/%d Tests Passed:\n",
-                component.getName(), isSuccessful(), getSuccessfulTests(), tests.size()));
+                component.getName(),
+                isSuccessful() ? "PASSED" : "FAILED", // If isSuccessful is true, set component to PASSED
+                getSuccessfulTests(),
+                tests.size()));
 
         for(Test t : tests) {
             out.append(String.format("  %s\n", t.toString()));
