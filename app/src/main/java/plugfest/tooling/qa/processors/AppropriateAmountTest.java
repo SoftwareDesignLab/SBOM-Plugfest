@@ -31,7 +31,7 @@ public class AppropriateAmountTest extends MetricTest {
      * Test a component to check its attributes' maximum line lengths.
      *
      * @param c The component to test
-     * @return ArrayList of all generated test results
+     * @return TestResults instance containing all maximum line length test results
      */
     @Override
     public TestResults test(Component c) {
@@ -53,26 +53,22 @@ public class AppropriateAmountTest extends MetricTest {
 
     private Test testPublisherName(Component c) {
         if(c.getPublisher() != null &&
-                c.getPublisher().strip().length() > maxLineLength) {
-            return new Test(false, "Publisher Name Length > 80");
-        }
-
-        return new Test(true, "Publisher Name <= 80");
+                c.getPublisher().strip().length() > maxLineLength)
+            return new Test(false, "Publisher Name Length > " + maxLineLength);
+        return new Test(true, "Publisher Name <= " + maxLineLength);
     }
 
     private Test testComponentName(Component c) {
         if(c.getName() != null &&
-                c.getName().strip().length() > maxLineLength) {
-            return new Test(false, "Component Name Length > 80");
-        }
-        return new Test(true, "Component Name Length <= 80");
+                c.getName().strip().length() > maxLineLength)
+            return new Test(false, "Component Name Length > " + maxLineLength);
+        return new Test(true, "Component Name Length <= " + maxLineLength);
     }
 
     private Test testComponentVersion(Component c) {
         if(c.getVersion() != null &&
-                c.getVersion().strip().length() > maxLineLength) {
-            new Test(false, "Version Length > 80");
-        }
-        return new Test(true, "Version Length <= 80");
+                c.getVersion().strip().length() > maxLineLength)
+            new Test(false, "Version Length > " + maxLineLength);
+        return new Test(true, "Version Length <= " + maxLineLength);
     }
 }
