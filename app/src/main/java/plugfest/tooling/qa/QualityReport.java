@@ -1,12 +1,8 @@
 package plugfest.tooling.qa;
 
-import plugfest.tooling.qa.test_results.Test;
 import plugfest.tooling.qa.test_results.TestResults;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class QualityReport {
     private final ArrayList<TestResults> testResults;
@@ -59,7 +55,7 @@ public class QualityReport {
     public int getPassedComponents() {
         int passed = 0;
         for(TestResults tr : testResults) {
-            if(tr.finalStatus().equals("PASSED"))
+            if(tr.isSuccessful())
                 passed++;
         }
         return passed;

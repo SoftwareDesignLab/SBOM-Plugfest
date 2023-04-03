@@ -18,9 +18,9 @@ import java.util.regex.Pattern;
 public class CompletenessTest extends MetricTest {
 
     /**
-     * The Regex used to test the format of a component publisher name.
+     * The Regex used to test the format of a component publisher email.
      */
-    private final Pattern publisherNameRegex;
+    private final Pattern publisherEmailRegex;
 
     /**
      * The Regex used to test the format of a component version.
@@ -41,10 +41,9 @@ public class CompletenessTest extends MetricTest {
         super("Completeness Test"); // Test name
 
         /*
-            Regex101: https://regex101.com/r/lgUcTP/1
-            Checks if name is in form: "Person: First Last <email@mail.com>"
+            Checks if publisher email is in form: "email@mail.com"
          */
-        this.publisherNameRegex = Pattern.compile("^Person: (\\S+ )+<\\S*@\\S*\\.\\S*>$", Pattern.MULTILINE);
+        this.publisherEmailRegex = Pattern.compile("<\\S*@\\S*\\.\\S*>$", Pattern.MULTILINE);
 
         /*
             Regex101: https://regex101.com/r/wzJeIq/4
@@ -86,6 +85,9 @@ public class CompletenessTest extends MetricTest {
         // Test Publisher Name
         testResults.addTest(testPublisherName(c));
 
+        // Test Publisher Email
+        testResults.addTest(testPublisherEmail(c));
+
         // Test Component Name
         testResults.addTest(testComponentName(c));
 
@@ -102,19 +104,80 @@ public class CompletenessTest extends MetricTest {
         return testResults;
     }
 
+    // TODO: Update translator to have publisherName and publisherEmail fields so we don't have to do it in this class
+
     /**
-     * Helper method that tests to ensure the component publisher:
+     * Helper method to get a substring of ONLY the first and last name of a publisher.
+     *
+     * @param c The component to get the publisher name of
+     * @return A substring containing ONLY the first and last name of a publisher (no email).
+     */
+    private String getPublisherName(Component c) {
+        if(c.getPublisher() == null) return null;
+        String publisher = c.getPublisher(); // Do this to make it more semantic
+
+        int firstCharFirstName = publisher.indexOf(" ") + 1; // Get first index of " " + 1 to get firstname (if SPDX)
+        int endCharLastName = publisher.indexOf("<") - 1; // Get first index of "<" - 1 since endIndex is not inclusive
+
+        // If publisher does not contain a colon, this is CDX format of "Firstname Lastname <email@mail.xyz>"
+        if(!publisher.contains(":"))
+            firstCharFirstName = 0; // Set first character to beginning
+        // Otherwise, it will be SPDX format of "Person: Firstname Lastname <email@mail.xyz>"
+
+        if(endCharLastName == -2) // If no email in string, just use end of string to get full name
+            endCharLastName = publisher.length();
+
+        return publisher.substring(firstCharFirstName, endCharLastName); // Return final substring
+    }
+
+    /**
+     * Helper method to get a substring of ONLY the email of a publisher.
+     *
+     * @param c The component to get the publisher email of
+     * @return A substring containing ONLY the email of a publisher (no first and last name).
+     */
+    private String getPublisherEmail(Component c) {
+        if(c.getPublisher() == null) return null;
+        String publisher = c.getPublisher(); // Do this to make it more semantic
+
+        int firstCharEmail = publisher.indexOf("<") + 1;
+
+        if(firstCharEmail == 0) // If no "<", then there is no email that exists
+            return ""; // Return blank email
+
+        return publisher.substring(
+                publisher.indexOf("<") + 1, // Will result in first character of email
+                publisher.indexOf(">") // Will result in last character of email, endIndex is not inclusive
+        );
+    }
+
+    /**
+     * Helper method that tests to ensure the component publisher name:
+     * a) Exists and
+     * b) Is not empty
+     *
+     * @param c The component to test the publisher of
+     * @return A single Test instance, describing if the test passed or failed and its details.
+     */
+    private Test testPublisherName(Component c) {
+        if (getPublisherName(c) == null || getPublisherName(c).isEmpty()) // Check to make sure publisher name exists
+            return new Test(false, "Publisher Name is Not Complete '", getPublisherName(c), "'."); // Test failed
+        return new Test(true, "Publisher Name is Complete."); // Test passed
+    }
+
+    /**
+     * Helper method that tests to ensure the component publisher email:
      * a) Exists and
      * b) Is in the format of the Regex specified in the constructor
      *
      * @param c The component to test the publisher of
      * @return A single Test instance, describing if the test passed or failed and its details.
      */
-    private Test testPublisherName(Component c) {
-        if (c.getPublisher() == null || // Check if publisher exists
-                !this.publisherNameRegex.matcher(c.getPublisher().strip()).matches()) // Compare against Regex
-            return new Test(false, "Publisher Name is Not Complete '", c.getPublisher(), "'."); // Test failed
-        return new Test(true, "Publisher Name is Complete."); // Test passed
+    private Test testPublisherEmail(Component c) {
+        if (getPublisherEmail(c) == null || // Check publisher email against regex
+                !this.publisherEmailRegex.matcher(getPublisherEmail(c).strip()).matches())
+            return new Test(false, "Publisher Email is Not Complete '", getPublisherEmail(c), "'."); // Test failed
+        return new Test(true, "Publisher Email is Complete."); // Test passed
     }
 
     /**

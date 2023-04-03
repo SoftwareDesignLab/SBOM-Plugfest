@@ -1,10 +1,7 @@
 package plugfest.tooling.qa.processors;
 
-import plugfest.tooling.qa.test_results.Test;
 import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
-
-import java.util.ArrayList;
 
 public abstract class MetricTest {
     //#region Attributes
