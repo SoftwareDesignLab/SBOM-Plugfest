@@ -4,8 +4,6 @@ import plugfest.tooling.qa.test_results.Test;
 import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
-import java.util.ArrayList;
-
 /**
  * File: AppropriateAmountTest.java
  * Tests a component to check if each attribute is <= 80 characters in length, the limit for max line length in Java.

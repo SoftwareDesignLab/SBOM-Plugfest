@@ -4,8 +4,6 @@ import plugfest.tooling.qa.test_results.Test;
 import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
-import java.util.ArrayList;
-
 /**
  * File: RelevancyTest.java
  * Tests a component to ensure that its name is most likely relevant to its functionality

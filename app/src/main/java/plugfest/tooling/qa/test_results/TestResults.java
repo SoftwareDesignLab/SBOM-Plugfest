@@ -3,8 +3,6 @@ package plugfest.tooling.qa.test_results;
 import plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
 
 /**
  * File: TestResults.java

@@ -5,7 +5,9 @@ import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOM;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class AttributeProcessor {
     private final Set<MetricTest> tests;

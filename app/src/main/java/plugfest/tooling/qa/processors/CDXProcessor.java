@@ -1,11 +1,12 @@
 package plugfest.tooling.qa.processors;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.util.BomUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 public class CDXProcessor extends SchemaProcessor{
     private String filepath;
