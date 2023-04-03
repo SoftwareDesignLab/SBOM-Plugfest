@@ -40,7 +40,7 @@ public class TimelinessTest extends MetricTest {
         try{
             String[] fromPURL = extractedFromPURL(purl);
             String name = c.getName().toLowerCase();
-            String nameFromPURL = fromPURL[0].toLowerCase();
+            String nameFromPURL = fromPURL[0].toLowerCase(); //todo purl object
             String version = c.getVersion().toLowerCase();
             String versionFromPURL = fromPURL[1].toLowerCase();
             String publisher = c.getPublisher().toLowerCase();
@@ -50,7 +50,7 @@ public class TimelinessTest extends MetricTest {
             if(!((name.contains(nameFromPURL)|| nameFromPURL.contains(name))))
                 testResults.add(String.format("FAILED: Component %s Name is not up to date", UUIDShort));
 
-            if(!((version.contains(versionFromPURL)|| versionFromPURL.contains(version))))
+            if(!((version.contains(versionFromPURL)|| versionFromPURL.contains(version)))) //todo check if version is in table
                 testResults.add(String.format("FAILED: Component %s can be updated from %s to %s", UUIDShort, version, versionFromPURL));
 
             if(!((publisher.contains(publisherFromPURL)|| publisherFromPURL.contains(publisher))))
