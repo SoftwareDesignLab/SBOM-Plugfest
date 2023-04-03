@@ -1,8 +1,8 @@
 package plugfest.tooling.qa.processors;
 
+import plugfest.tooling.qa.test_results.Test;
+import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
-
-import java.util.ArrayList;
 
 /**
  * File: AppropriateAmountTest.java
@@ -31,46 +31,44 @@ public class AppropriateAmountTest extends MetricTest {
      * Test a component to check its attributes' maximum line lengths.
      *
      * @param c The component to test
-     * @return ArrayList of all generated test results
+     * @return TestResults instance containing all maximum line length test results
      */
     @Override
-    public ArrayList<String> test(Component c) {
+    public TestResults test(Component c) {
         // Init StringBuilder
-        final ArrayList<String> testResults = new ArrayList<>();
-        final String UUIDShort = c.getUUID().toString().substring(0, 5);
+        TestResults testResults = new TestResults(c);
 
-        /*
-            Component publisher name length <= 80 chars
-         */
-        if(c.getPublisher() != null &&
-                c.getPublisher().strip().length() > maxLineLength) {
-            testResults.add(String.format("FAILED: Component %s Publisher Name Length > 80", UUIDShort));
-        }
+        // Test publisher name
+        testResults.addTest(testPublisherName(c));
 
-        /*
-            Component name length <= 80 chars
-         */
-        if(c.getName() != null &&
-                c.getName().strip().length() > maxLineLength) {
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.add(String.format("FAILED: Component %s Name Length > 80", UUIDShort));
-        }
+        // Test component name
+        testResults.addTest(testComponentName(c));
 
-        /*
-            Component version length <= 80 chars
-         */
-        if(c.getVersion() != null &&
-                c.getVersion().strip().length() > maxLineLength) {
-            // Add separator if not first check to fail
-            if(!testResults.isEmpty()) testResults.add("\n");
-            testResults.add(String.format("FAILED: Component %s Version Length > 80", UUIDShort));
-        }
-
-        // If no checks failed, mark test as passed
-        if(testResults.isEmpty()) testResults.add("PASSED");
+        // Test component version
+        testResults.addTest(testComponentVersion(c));
 
         // Return result
         return testResults;
+    }
+
+    private Test testPublisherName(Component c) {
+        if(c.getPublisher() != null &&
+                c.getPublisher().strip().length() > maxLineLength)
+            return new Test(false, "Publisher Name Length > " + maxLineLength);
+        return new Test(true, "Publisher Name <= " + maxLineLength);
+    }
+
+    private Test testComponentName(Component c) {
+        if(c.getName() != null &&
+                c.getName().strip().length() > maxLineLength)
+            return new Test(false, "Component Name Length > " + maxLineLength);
+        return new Test(true, "Component Name Length <= " + maxLineLength);
+    }
+
+    private Test testComponentVersion(Component c) {
+        if(c.getVersion() != null &&
+                c.getVersion().strip().length() > maxLineLength)
+            new Test(false, "Version Length > " + maxLineLength);
+        return new Test(true, "Version Length <= " + maxLineLength);
     }
 }

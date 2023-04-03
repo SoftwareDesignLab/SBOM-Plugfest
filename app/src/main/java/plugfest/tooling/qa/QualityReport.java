@@ -1,12 +1,11 @@
 package plugfest.tooling.qa;
 
+import plugfest.tooling.qa.test_results.TestResults;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class QualityReport {
-    private final Map<String, ArrayList<String>> testResults;
+    private final ArrayList<TestResults> testResults;
     private final String serialNumber;
 
     /**
@@ -14,7 +13,7 @@ public class QualityReport {
      * @param serialNumber the SBOM serialNumber
      */
     public QualityReport(String serialNumber){
-        this.testResults = new HashMap<>();
+        this.testResults = new ArrayList<>();
         this.serialNumber = serialNumber;
     }
 
@@ -24,17 +23,17 @@ public class QualityReport {
      * that does have a valid serialNumber.
      */
     public QualityReport(){
-        this.testResults = new HashMap<>();
+        this.testResults = new ArrayList<>();
         this.serialNumber = "INVALID_SN";
     }
 
-    public void addTestResult(String testName, ArrayList<String> testResults) {
-        // Insert the new test result
-        final ArrayList<String> existingValue = this.testResults.put(testName, testResults);
-
-        // If existingValue is not null, this action overrode that value
-        if(existingValue != null)
-            System.out.printf("Test %s already existed with value %s and has been overridden with value %s.", testName, existingValue, testResults);
+    /**
+     * Add results from a TestResults instance to the QualityReport.
+     *
+     * @param testResults The TestResults to add
+     */
+    public void addTestResult(TestResults testResults) {
+        this.testResults.add(testResults);
     }
 
     /**
@@ -45,7 +44,21 @@ public class QualityReport {
      * @param other QualityReport object to be appended
      */
     public void append(QualityReport other) {
-        this.testResults.putAll(other.testResults);
+        this.testResults.addAll(other.testResults);
+    }
+
+    /**
+     * Get total number of passed components in the quality report.
+     *
+     * @return Total number of passed components in the quality report
+     */
+    public int getPassedComponents() {
+        int passed = 0;
+        for(TestResults tr : testResults) {
+            if(tr.isSuccessful())
+                passed++;
+        }
+        return passed;
     }
 
     @Override
@@ -53,17 +66,12 @@ public class QualityReport {
         StringBuilder sb = new StringBuilder("QualityReport{");
         sb.append("serialNumber=");
         sb.append(this.serialNumber);
-        sb.append(",\n");
-        sb.append("testResults=[\n  ");
+        sb.append(",\n\n");
+        sb.append(String.format("TEST RESULTS - TOTAL COMPONENTS PASSED: %d/%d\n\n", getPassedComponents(), testResults.size()));
 
-        final String[] keySet = this.testResults.keySet().toArray(new String[0]);
-        for (int i = 0; i < keySet.length; i++) {
-            final String key = keySet[i];
-            sb.append(key);
-            sb.append("\n    ");
-            final ArrayList<String> results = this.testResults.get(key);
-            sb.append(String.join(",\n    ", results));
-            if(i + 1 < keySet.length) sb.append("\n  ");
+        // Loop through all TestResults in the QualityReport
+        for(TestResults result : testResults) {
+            sb.append(result.toString());
         }
 
         sb.append("]}");

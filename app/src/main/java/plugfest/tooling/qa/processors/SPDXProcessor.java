@@ -3,15 +3,11 @@ package plugfest.tooling.qa.processors;
 /**
  * Imports SPDX Tools
  */
-import org.spdx.tools.CompareSpdxDocs;
-import org.spdx.tools.Verify;
-import org.spdx.tools.SpdxToolsHelper;
 
-/**
- * Imports Java Native Libraries
- */
+import org.spdx.tools.SpdxToolsHelper;
+import org.spdx.tools.Verify;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SPDXProcessor extends SchemaProcessor{
     /*

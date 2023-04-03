@@ -1,7 +1,7 @@
 package plugfest.tooling.qa;
 
-import plugfest.tooling.metrics.timestampConsistencyMetric;
-import plugfest.tooling.qa.processors.*;
+import plugfest.tooling.qa.processors.AttributeProcessor;
+import plugfest.tooling.qa.processors.ContextualProcessor;
 import plugfest.tooling.sbom.SBOM;
 
 import java.util.HashSet;
@@ -15,7 +15,8 @@ public class QAPipeline {
         // TODO: Move processors initialization App so they can be chosen there
         processors = new HashSet<>();
         processors.add(new ContextualProcessor());
-        processors.add(new SPDXProcessor());
+        // TODO: figure out how to return TestResults from SPDXProcesor the same way as ContextualProcessor
+//        processors.add(new SPDXProcessor());
         // Add new processor here
     }
 
