@@ -75,17 +75,16 @@ public class TestResults {
             }
         }
 
-        return success; // Automatic type casting for the win
+        return success;
     }
 
     /**
-     * Get the final status of the component based on all tests. This currently only marks the component as passed if
-     *  all its tests are passed.
+     * Get the final status of the component based on all tests.
      *
-     * @return "PASSED" if the component passed, "FAILED" otherwise
+     * @return true if the component passed all tests, false otherwise
      */
-    public String finalStatus() {
-        return getSuccessfulTests() == tests.size() ? "PASSED" : "FAILED";
+    public boolean isSuccessful() {
+        return getSuccessfulTests() == tests.size();
     }
 
     /**
@@ -98,7 +97,7 @@ public class TestResults {
     public String toString() {
         StringBuilder out = new StringBuilder();
         out.append(String.format("Component '%s' %s with %d/%d Tests Passed:\n",
-                component.getName(), finalStatus(), getSuccessfulTests(), tests.size()));
+                component.getName(), isSuccessful(), getSuccessfulTests(), tests.size()));
 
         for(Test t : tests) {
             out.append(String.format("  %s\n", t.toString()));
