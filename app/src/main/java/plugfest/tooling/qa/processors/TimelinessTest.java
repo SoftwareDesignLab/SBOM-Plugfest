@@ -1,11 +1,12 @@
 package plugfest.tooling.qa.processors;
 
+import plugfest.tooling.qa.test_results.Test;
+import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -25,46 +26,58 @@ public class TimelinessTest extends MetricTest {
         super("TimelinessTest Test");
     }
 
+    /**
+     * General test for Timeliness
+     *
+     * @param component to test
+     * @return test results
+     */
     @Override
-    public ArrayList<String> test(Component c) {
+    public TestResults test(Component c) {
 
-        final ArrayList<String> testResults = new ArrayList<>();
+        final TestResults testResults = new TestResults(c); // Init TestResults for this component
         final String UUIDShort = c.getUUID().toString().substring(0, 5);
 
         Set<String> purl = c.getPURL();
         if(purl.isEmpty()){
-            testResults.add(String.format("FAILED: Component %s has no PURL", UUIDShort));
+            testResults.addTest(new Test(false, "Component has no PURL"));
             return testResults;
         }
+
+        //todo order: push then talk to dylan, purl object
 
         try{
             String[] fromPURL = extractedFromPURL(purl);
             String name = c.getName().toLowerCase();
             String nameFromPURL = fromPURL[0].toLowerCase(); //todo purl object
             String version = c.getVersion().toLowerCase();
-            String versionFromPURL = fromPURL[1].toLowerCase();
+            String versionsFromPURL = fromPURL[1].toLowerCase();
             String publisher = c.getPublisher().toLowerCase();
             String publisherFromPURL = fromPURL[2].toLowerCase().strip();
 
             // check whatever is online at least contains this component, or vice versa
             if(!((name.contains(nameFromPURL)|| nameFromPURL.contains(name))))
-                testResults.add(String.format("FAILED: Component %s Name is not up to date", UUIDShort));
+                testResults.addTest(new Test(false, "Name is not up to date"));
 
-            if(!((version.contains(versionFromPURL)|| versionFromPURL.contains(version)))) //todo check if version is in table
-                testResults.add(String.format("FAILED: Component %s can be updated from %s to %s", UUIDShort, version, versionFromPURL));
+            if(!versionsFromPURL.contains(version))
+                testResults.addTest(new Test(false,"Version ",version," does not exist"));
 
             if(!((publisher.contains(publisherFromPURL)|| publisherFromPURL.contains(publisher))))
-                testResults.add(String.format("FAILED: Component %s Publisher Name is not up to date", UUIDShort));
+                testResults.addTest(new Test(false,"Publisher Name is not up to date"));
         }
         catch(IOException e){
-            testResults.add(String.format("FAILED: Error in testing component %s:\n%s", UUIDShort, e.getMessage()));
+            testResults.addTest(new Test(false,"Error in testing component:\n", e.getMessage()));
 
         }
-        if(testResults.isEmpty()) testResults.add("PASSED");
-        return testResults;// todo refactor with Ian's testResult class
+        if(testResults.getTests().size() == 0) testResults.addTest(new Test(true,"Component is up to date"));
+        return testResults;
     }
 
-    //extract name, version, and publisher from online
+    /**
+         Extract name, version, and publisher from package manager online
+         @param PURL in the form of a string
+         @return component name, version(s), publisher name found online. Empty strings if not found
+    */
     private static String[] extractedFromPURL(Set<String> purl) throws IOException {
         String p = purl.toArray()[0].toString();
         if(p.contains("alpine")){
@@ -73,7 +86,11 @@ public class TimelinessTest extends MetricTest {
         return extractFromDebian(p); //todo: we don't test for this yet
     }
 
-    //extract name, version, and publisher from Alpine linux package manager online
+    /**
+        Extract name, version, and publisher from Alpine linux package manager online
+        @param PURL in the form of a string
+        @return component name, version(s), publisher name found online. Empty strings if not found
+     */
     private static String[] extractFromAlpine(String p) throws IOException {
 
         String[] purlSplit = p.split("[/@]");
@@ -93,7 +110,6 @@ public class TimelinessTest extends MetricTest {
         String[] columns = row.split("<td");
 
         String nameColumn = "";
-        String versionColumn = "";
         String publisherColumn = "";
 
         for (String column: columns
@@ -101,22 +117,55 @@ public class TimelinessTest extends MetricTest {
 
             if(column.contains("package\">"))
                 nameColumn = column;
-            else if(column.contains("version\">"))
-                versionColumn = column;
+
             else if(column.contains("maintainer\">")) {
                 publisherColumn = column;
                 break;
             }
         }
-        return new String[]{getSpecific(nameColumn), getSpecific(versionColumn), getSpecific(publisherColumn).strip()};
+        return new String[]{getSpecific(nameColumn), checkVersions(table), getSpecific(publisherColumn).strip()};
     }
 
-    //extract name, version, and publisher from Debian linux package manager online
+    /**
+      @param HTML table in the form of a string
+      @return all version numbers from query
+     */
+    private static String checkVersions(String table){
+
+        StringBuilder versions = new StringBuilder();
+        String[] rows = table.split("<tr>");
+        for (String row: rows
+             ) {
+
+            String[] columns = row.split("<td");
+            for (String col: columns
+                 ) {
+                if(col.contains("version\">"))
+                    versions.append(getSpecific(col)).append(", ");
+
+            }
+
+        }
+
+        return versions.substring(0, versions.toString().length()-1);
+
+
+    }
+
+    /**
+       Extract name, version, and publisher from Debian linux package manager online
+       @param PURL in the form of a string
+       @return component name, version(s), publisher name found online. Empty strings if not found
+     */
     private static String[] extractFromDebian(String p){
         return null;
     }
 
-    //from the last HTML element we narrow down to, find what we are looking for at the top of the table
+    /**
+        From the last HTML element we narrow down to, find what we are looking for at the top of the table
+        @param HTMl table column in the form of a string
+        @return specific word at the end of the column, right before '/a>'
+     */
     private static String getSpecific(String column) {
         String[] elements = column.split("[<>]");
         String found = "";
@@ -128,8 +177,11 @@ public class TimelinessTest extends MetricTest {
         }
         return found;
     }
-
-    //get HTML from connection
+    /**
+        Given an http connection, return the HTML
+        @param the HTML connection
+        @return the HTML
+     */
     private static htmlResult getHtmlResult(HttpURLConnection q) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(q.getInputStream()));
         String inputLine;
@@ -140,11 +192,17 @@ public class TimelinessTest extends MetricTest {
         return new htmlResult(in, response);
     }
 
-    //for readability
+    /**
+        Created by IDE for readability
+     */
     private record htmlResult(BufferedReader in, StringBuffer response) {
     }
 
-    //queryURL() from Parser.java in BenchmarkParser
+    /**
+        Adapted from queryURL() from Parser.java in BenchmarkParser
+        @param URL
+        @return HTTP connection
+     */
     protected static HttpURLConnection queryURL(String urlString) throws IOException {
         try {
             final URL url = new URL(urlString);
