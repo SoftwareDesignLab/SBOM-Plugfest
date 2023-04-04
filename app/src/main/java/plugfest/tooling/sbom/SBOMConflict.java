@@ -47,10 +47,9 @@ public class SBOMConflict {
         if (aSBOM.getTimestamp() != null && !aSBOM.getTimestamp().equals(bSBOM.getTimestamp())) {
             conflictTypes.add(SBOMConflictType.TIMESTAMP_MISMATCH);
         }
-        // TODO Currently skip author because it is not stored in the SBOM class, fix this
-//        if (aSBOM.getAuthor() != null && !aSBOM.getAuthor().equals(bSBOM.getAuthor())) {
-//            conflictTypes.add(SBOMConflictType.AUTHOR_MISMATCH);
-//        }
+        if (aSBOM.getSupplier() != null && !aSBOM.getSupplier().equals(bSBOM.getSupplier())) {
+            conflictTypes.add(SBOMConflictType.AUTHOR_MISMATCH);
+        }
         if (aSBOM.getSbomVersion() != null && !aSBOM.getSbomVersion().equals(bSBOM.getSbomVersion())) {
             conflictTypes.add(SBOMConflictType.SBOM_VERSION_MISMATCH);
         }
@@ -97,6 +96,10 @@ public class SBOMConflict {
         }
 
         return conflictString.toString();
+    }
+
+    public Set getConflicts() {
+        return this.conflictTypes;
     }
 
     // Stringify this entire object
