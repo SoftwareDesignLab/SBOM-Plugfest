@@ -10,16 +10,10 @@ package plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.Test;
 import plugfest.tooling.translator.TranslatorCDX;
-import plugfest.tooling.translator.TranslatorSPDX;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class CDXParserTest {
 
@@ -33,12 +27,20 @@ public class CDXParserTest {
     public void translatorcdx_small_file_test() throws ParserConfigurationException {
         SBOM sbom = TranslatorCDX.translatorCDX(test_small_cdx.toString());
         assertNotNull(sbom);
+        assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
+        assertEquals("1", sbom.getSbomVersion());
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
+        assertEquals(18, sbom.getAllComponents().size());
     }
 
     @Test
     public void translatorcdx_large_file_test() throws ParserConfigurationException {
         SBOM sbom = TranslatorCDX.translatorCDX(test_large_cdx.toString());
         assertNotNull(sbom);
+        assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
+        assertEquals("1", sbom.getSbomVersion());
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
+        assertEquals(434, sbom.getAllComponents().size());
     }
 
     @Test
@@ -52,6 +54,9 @@ public class CDXParserTest {
         SBOM sbom = TranslatorCDX.translatorCDX(test_no_components_cdx.toString());
         assertNotNull(sbom);
         // Should be 1 component for head component
+        assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
+        assertEquals("1", sbom.getSbomVersion());
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(1, sbom.getAllComponents().size());
     }
 

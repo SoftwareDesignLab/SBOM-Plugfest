@@ -39,12 +39,20 @@ public class SPDXParserTest {
     public void builder_makes_SBOM_test() throws IOException {
         SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test);
+        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals("1", test.getSbomVersion());
+        assertEquals("SPDX-2.3", test.getSpecVersion());
+        assertEquals(94, test.getAllComponents().size());
     }
 
     @Test
     public void builder_makes_SBOM_from_SPDX_2_2_test() throws IOException {
         SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_2_SBOM);
         assertNotNull(test);
+        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals("1", test.getSbomVersion());
+        assertEquals("SPDX-2.2", test.getSpecVersion());
+        assertEquals(137, test.getAllComponents().size());
     }
 
 
@@ -52,6 +60,10 @@ public class SPDXParserTest {
     public void builder_makes_large_SBOM_test() throws IOException {
         SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_LARGE_v2_3_SBOM);
         assertNotNull(test);
+        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals("1", test.getSbomVersion());
+        assertEquals("SPDX-2.3", test.getSpecVersion());
+        assertEquals(19037, test.getAllComponents().size());
     }
 
 
@@ -71,6 +83,9 @@ public class SPDXParserTest {
     public void builder_parses_SBOM_with_no_components() throws IOException {
         SBOM test = TranslatorSPDX.translatorSPDX(TEST_SBOM_SPDX_NO_COMPONENTS);
         assertNotNull(test);
+        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals("1", test.getSbomVersion());
+        assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());
     }
 
@@ -78,6 +93,9 @@ public class SPDXParserTest {
     public void builder_parses_SBOM_that_is_empty() throws IOException {
         SBOM test = TranslatorSPDX.translatorSPDX(TEST_SBOM_SPDX_EMPTY);
         assertNotNull(test);
+        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals("1", test.getSbomVersion());
+        assertEquals(null, test.getSpecVersion());
         assertEquals(0, test.getAllComponents().size());
     }
 }

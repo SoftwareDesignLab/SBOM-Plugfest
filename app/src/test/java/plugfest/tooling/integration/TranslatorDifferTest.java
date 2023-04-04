@@ -22,6 +22,8 @@ public class TranslatorDifferTest {
 
     private static final String TEST_SPDX_LARGE_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.python.2-3.spdx";
 
+    private static final String TEST_SPDX_EMPTY = "src/test/java/plugfest/tooling/sample_boms/sbom.empty.2-3.spdx";
+
     private static final String TEST_CDX_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.xml";
 
     private static final String TEST_CDX_DIFF_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine-compare.xml";
@@ -82,6 +84,25 @@ public class TranslatorDifferTest {
 
         assertNotNull(test_report);
         assertTrue(test_report.getSbomConflict().toString().contains(EXPECTED_VERSION_MISTMATCH_SPDX_2_3_SPDX_2_2));
+    }
+
+    @Test
+    public void full_diff_report_from_v2_3_SPDX_and_empty_SPDX() throws IOException {
+
+        // Create first SBOM
+        SBOM test_sbom_one = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
+        assertNotNull(test_sbom_one);
+
+        // Create second SBOM
+        SBOM test_sbom_two = TranslatorSPDX.translatorSPDX(TEST_SPDX_EMPTY);
+        assertNotNull(test_sbom_two);
+
+        DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report);
+        assertEquals(16, test_report.getComponentConflicts().size());
+
+
     }
 
     @Test
