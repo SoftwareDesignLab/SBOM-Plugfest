@@ -13,8 +13,9 @@ import java.net.URL;
 import java.util.Set;
 
 /**
- * File: TimelinessTest.java
- * Tests a component to ensure it still exists on its respective package manager
+ * <b>File</b>: TimelinessTest.java<br>
+ * <b>Description</b>: Tests a component to ensure it
+ * still exists on its respective package manager
  *
  * @author Juan Francisco Patino
  */
