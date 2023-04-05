@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  * File: TimelinessTest.java
- * Tests a component to ensure that it is up to date
+ * Tests a component to ensure it still exists on its respective package manager
  *
  * @author Juan Francisco Patino
  */
@@ -36,7 +36,6 @@ public class TimelinessTest extends MetricTest {
     public TestResults test(Component c) {
 
         final TestResults testResults = new TestResults(c); // Init TestResults for this component
-        final String UUIDShort = c.getUUID().toString().substring(0, 5);
 
         Set<String> purl = c.getPURL();
         if(purl.isEmpty()){
@@ -79,11 +78,8 @@ public class TimelinessTest extends MetricTest {
          @return component name, version(s), publisher name found online. Empty strings if not found
     */
     private static String[] extractedFromPURL(Set<String> purl) throws IOException {
-        String p = purl.toArray()[0].toString();
-        if(p.contains("alpine")){
-            return extractFromAlpine(p);
-        }
-        return extractFromDebian(p); //todo: we don't test for this yet
+        return extractFromAlpine(purl.toArray()[0].toString());
+        //todo: we don't test for Debian or Python pm yet
     }
 
     /**
@@ -150,15 +146,6 @@ public class TimelinessTest extends MetricTest {
         return versions.substring(0, versions.toString().length()-1);
 
 
-    }
-
-    /**
-       Extract name, version, and publisher from Debian linux package manager online
-       @param PURL in the form of a string
-       @return component name, version(s), publisher name found online. Empty strings if not found
-     */
-    private static String[] extractFromDebian(String p){
-        return null;
     }
 
     /**
