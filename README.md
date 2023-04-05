@@ -1,21 +1,20 @@
-# plugfest-tooling
-   
-   To compile a demo:
-     ./gradlew app:clean app:build
+# PlugFest Tooling
+> A collection of tools to compare the usage and quality of different SBOM generators
+>
+> **v1.0.0 - alpha** (4/7/23)
+> - Metrics: Determines the completeness of an SBOM
+> - Differ: Displays the differences between two SBOMs across formats
+> - QA Pipeline: Ensure that the SBOM follows its associated schema
 
-   To run cli demo for the differ:
-     java -jar app/build/libs/app.jar p1.spdx p2.spdx 
+## Metrics
+- 
 
-       console output:
+## System Requirements
+- Java 17
+  > Check: `java -version`
 
-            < p2.spdx : > p1.spdx
-            -----
-            1
-            =====
-            < SPDXVersion: SPDX-2.3
-            > SPDXVersion: SPDX-2.2
+## Quick Start
+1. `./gradlew jar`
+2. `java -jar app.jar [OPTIONS]`
 
-            10
-            =====
-            < Created: 2023-02-21T13:52:11Z
-            > Created: 2023-02-21T13:52:11Z-pliu
+## Contributors
