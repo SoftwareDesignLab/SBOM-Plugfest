@@ -42,3 +42,9 @@
 2. `java -jar app.jar [OPTIONS]`
 
 ## Contributors
+* Matt London
+* Tyler Drake
+* Henry Keena
+* Henry Lu
+* Chris Enoch
+* Ping Liu
