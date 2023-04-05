@@ -1,7 +1,8 @@
 package plugfest.tooling.sbom;
+
 /**
- * File: PURL.java
- * Object representation of the Package URl for a component
+ * <b>File</b>: PURL.java<br>
+ * <b>Description</b>: Object representation of the Package URl for a component
  *
  * @author Juan Francisco Patino
  */
@@ -11,7 +12,6 @@ public class PURL {
     private String version;
     private ComponentPackageManager pm;
     private String PURLString;
-    private PURL child;
 
     public PURL(String PURL){
         this.PURLString = PURL;
@@ -48,19 +48,19 @@ public class PURL {
         this.PURLString = PURLString;
     }
 
+    /**
+     * Helper function to convert the string representation to a class
+     * given the object already contains a PURL String
+     */
     public void addFromString(){
         assert PURLString != null;
         addFromString(PURLString);
     }
 
-    public void addChild(PURL c){
-        PURL temp = this.getChild();
-        while(temp != null){
-            temp = temp.getChild();
-        }
-        temp = c;
-    }
-
+    /**
+     * Helper function to convert the string representation to a class
+     * @param purl the PURL String
+     */
     public void addFromString(String purl){
         String p = purl.toLowerCase();
         if(p.contains("alpine"))
@@ -82,13 +82,10 @@ public class PURL {
 
     }
 
-    public PURL getChild() {
-        return child;
-    }
-
-    public void setChild(PURL child) {
-        this.child = child;
-    }
+    /**
+     * This is represented by the original PURL string
+     * @return the PURL string
+     */
     @Override
     public String toString() {
         return PURLString;

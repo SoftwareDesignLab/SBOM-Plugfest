@@ -36,8 +36,8 @@ public class ComponentConflict {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
-        if (componentA.getPURL() != null && !componentA.getPURL().equals(componentB.getPURL())) {
-            if (!(componentA.getPURL().containsAll(componentB.getPURL()) || componentB.getPURL().containsAll(componentA.getPURL()))) {
+        if (componentA.getPURLs() != null && !componentA.getPURLs().equals(componentB.getPURLs())) {
+            if (!(componentA.getPURLs().containsAll(componentB.getPURLs()) || componentB.getPURLs().containsAll(componentA.getPURLs()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_PURL_MISMATCH);
             }
         }
@@ -219,16 +219,16 @@ public class ComponentConflict {
                 case COMPONENT_PURL_MISMATCH:
                     conflictString.append("    PURL:\n");
                     // Get differences
-                    Set<String> purlA = new HashSet<>(componentA.getPURL());
-                    Set<String> purlB = new HashSet<>(componentB.getPURL());
-                    purlA.removeAll(componentB.getPURL());
-                    purlB.removeAll(componentA.getPURL());
+                    Set<PURL> purlA = new HashSet<>(componentA.getPURLs());
+                    Set<PURL> purlB = new HashSet<>(componentB.getPURLs());
+                    purlA.removeAll(componentB.getPURLs());
+                    purlB.removeAll(componentA.getPURLs());
 
-                    for (String purl : purlA) {
+                    for (PURL purl : purlA) {
                         conflictString.append("      + ").append(purl).append("\n");
                     }
 
-                    for (String purl : purlB) {
+                    for (PURL purl : purlB) {
                         conflictString.append("      - ").append(purl).append("\n");
                     }
 

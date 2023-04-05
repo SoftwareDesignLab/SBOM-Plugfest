@@ -20,7 +20,6 @@ import java.util.Set;
  *
  * @author Juan Francisco Patino
  */
-
 public class TimelinessTest extends MetricTest {
 
     private static final int MAX_CONNECTION_TIMEOUT = 1000;
@@ -39,8 +38,8 @@ public class TimelinessTest extends MetricTest {
 
         final TestResults testResults = new TestResults(c); // Init TestResults for this component
 
-        Set<String> purl = c.getPURL();
-        if(purl.isEmpty()){
+        Set<PURL> purls = c.getPURLs();
+        if(purls.isEmpty()){
             testResults.addTest(new Test(false, "Component has no PURL"));
             return testResults;
         }
@@ -87,8 +86,8 @@ public class TimelinessTest extends MetricTest {
          @param purl in the form of a string
          @return component name, version(s), publisher name found online. Empty strings if not found
     */
-    private static String[] extractedFromPURL(Set<String> purl) throws IOException {
-        return extractFromAlpine(purl.toArray()[0].toString());
+    private static String[] extractedFromPURL(PURL purl) throws IOException {
+        return extractFromAlpine(purl.toString());
         //todo: we don't test for Debian or Python pm yet
     }
 
