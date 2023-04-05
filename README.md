@@ -42,9 +42,9 @@
 2. `java -jar app.jar [OPTIONS]`
 
 ## Contributors
-* Matt London
-* Tyler Drake
-* Henry Keena
-* Henry Lu
-* Chris Enoch
-* Ping Liu
+- [Matt London](mailto:mrl2534@rit.edu)
+- [Tyler Drake](mailto:txd3634@rit.edu)
+- [Henry Keena](mailto:htk4363@rit.edu)
+- [Henry Lu](mailto:hyl2415@rit.edu)
+- [Chris Enoch](mailto:cte6149@rit.edu)
+- [Ping Liu](mailto:htk4363@rit.edu)
