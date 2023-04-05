@@ -2,11 +2,9 @@ package plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import plugfest.tooling.translator.TranslatorCDX;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.*;
 
 
@@ -16,20 +14,30 @@ public class SBOMConflictTest {
      * Test SBOM 1 Constant Set
      */
     public static final String SB_SPEC_VER_ONE = "1";
+
     public static final String SB_SBOM_VER_ONE = "CYCLONEDX-1.4";
+
     public static final String SB_AUTHOR_ONE = "Anchore";
+
     public static final String SB_SERIAL_ONE = "f057a217-e332-4981-94dc-799d6a776f58";
+
     public static final String SB_TIMESTAMP_ONE = "2023-01-01T00:00:00-05:00";
+
     public static final Signature SB_SIGNATURE_ONE = null;
 
     /**
      * Test SBOM 2 Constants
      */
     public static final String SB_SPEC_VER_TWO = "2";
+
     public static final String SB_SBOM_VER_TWO = "CYCLONEDX-1.3";
+
     public static final String SB_AUTHOR_TWO = "Anchor";
+
     public static final String SB_SERIAL_TWO = "e057a217-e332-4981-94dc-799d6a776f09";
+
     public static final String SB_TIMESTAMP_TWO = "2023-01-01T00:00:00-04:00";
+
     public static final Signature SB_SIGNATURE_TWO = null;
 
     /**
@@ -53,12 +61,6 @@ public class SBOMConflictTest {
             "Serial Number Mismatch:\n" +
             "+ f057a217-e332-4981-94dc-799d6a776f58\n" +
             "- e057a217-e332-4981-94dc-799d6a776f09\n";
-
-
-
-    /**
-     * Test SBOM 3 Constants
-     */
 
     @Test
     public void two_SBOMs_with_conflicts_test() {
@@ -158,7 +160,7 @@ public class SBOMConflictTest {
         assertNotNull(toString_result);
 
         // For some reason if I step through this on the debugger, it passes
-        // If i just let it run normally, it fails
+        // If I just let it run normally, it fails
         assertTrue(test_conflict.toString().contains(EXPECTED_TOSTRING_SBOM_ONE_SBOM_TWO));
 
     }
