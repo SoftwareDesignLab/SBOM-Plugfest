@@ -3,6 +3,7 @@ package plugfest.tooling.qa.processors;
 import plugfest.tooling.qa.test_results.Test;
 import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
+import plugfest.tooling.sbom.PURL;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,7 +31,7 @@ public class TimelinessTest extends MetricTest {
     /**
      * General test for Timeliness
      *
-     * @param component to test
+     * @param c component to test
      * @return test results
      */
     @Override
@@ -43,39 +44,47 @@ public class TimelinessTest extends MetricTest {
             testResults.addTest(new Test(false, "Component has no PURL"));
             return testResults;
         }
+        for (PURL p: c.getPURLs()
+             ) {
 
-        //todo order: push then talk to dylan, purl object
+            try{
 
-        try{
-            String[] fromPURL = extractedFromPURL(purl);
-            String name = c.getName().toLowerCase();
-            String nameFromPURL = fromPURL[0].toLowerCase(); //todo purl object
-            String version = c.getVersion().toLowerCase();
-            String versionsFromPURL = fromPURL[1].toLowerCase();
-            String publisher = c.getPublisher().toLowerCase();
-            String publisherFromPURL = fromPURL[2].toLowerCase().strip();
+                String[] fromOnline = extractedFromPURL(p);
 
-            // check whatever is online at least contains this component, or vice versa
-            if(!((name.contains(nameFromPURL)|| nameFromPURL.contains(name))))
-                testResults.addTest(new Test(false, "Name is not up to date"));
+                String name = p.getName();
+                String nameFoundOnline = fromOnline[0].toLowerCase(); //todo purl object
 
-            if(!versionsFromPURL.contains(version))
-                testResults.addTest(new Test(false,"Version ",version," does not exist"));
+                String version = p.getVersion();
+                String versionFoundOnline = fromOnline[1].toLowerCase();
 
-            if(!((publisher.contains(publisherFromPURL)|| publisherFromPURL.contains(publisher))))
-                testResults.addTest(new Test(false,"Publisher Name is not up to date"));
+                String publisher = c.getPublisher().toLowerCase();
+                String publisherFoundOnline = fromOnline[2].toLowerCase().strip();
+
+                // check whatever is online at least contains this component, or vice versa
+                if(!((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
+                    testResults.addTest(new Test(false, "Name is not up to date"));
+
+                if(!versionFoundOnline.contains(version))
+                    testResults.addTest(new Test(false,"Version ",version," does not exist"));
+
+                if(!((publisher.contains(publisherFoundOnline)|| publisherFoundOnline.contains(publisher))))
+                    testResults.addTest(new Test(false,"Publisher Name is not up to date"));
+            }
+            catch(IOException e){
+                testResults.addTest(new Test(false,"Error in testing component:\n", e.getMessage()));
+
+            }
+
         }
-        catch(IOException e){
-            testResults.addTest(new Test(false,"Error in testing component:\n", e.getMessage()));
 
-        }
-        if(testResults.getTests().size() == 0) testResults.addTest(new Test(true,"Component is up to date"));
+        if(testResults.getTests().size() == 0) testResults.addTest(new Test(true,"Component was " +
+                "found online"));
         return testResults;
     }
 
     /**
          Extract name, version, and publisher from package manager online
-         @param PURL in the form of a string
+         @param purl in the form of a string
          @return component name, version(s), publisher name found online. Empty strings if not found
     */
     private static String[] extractedFromPURL(Set<String> purl) throws IOException {
@@ -85,7 +94,7 @@ public class TimelinessTest extends MetricTest {
 
     /**
         Extract name, version, and publisher from Alpine linux package manager online
-        @param PURL in the form of a string
+        @param p PURl in the form of a string
         @return component name, version(s), publisher name found online. Empty strings if not found
      */
     private static String[] extractFromAlpine(String p) throws IOException {
@@ -124,7 +133,7 @@ public class TimelinessTest extends MetricTest {
     }
 
     /**
-      @param HTML table in the form of a string
+      @param table in the form of a string
       @return all version numbers from query
      */
     private static String checkVersions(String table){
@@ -151,7 +160,7 @@ public class TimelinessTest extends MetricTest {
 
     /**
         From the last HTML element we narrow down to, find what we are looking for at the top of the table
-        @param HTMl table column in the form of a string
+        @param column table column in the form of a string
         @return specific word at the end of the column, right before '/a>'
      */
     private static String getSpecific(String column) {
@@ -167,7 +176,7 @@ public class TimelinessTest extends MetricTest {
     }
     /**
         Given an http connection, return the HTML
-        @param the HTML connection
+        @param q HTML connection
         @return the HTML
      */
     private static htmlResult getHtmlResult(HttpURLConnection q) throws IOException {
@@ -188,7 +197,7 @@ public class TimelinessTest extends MetricTest {
 
     /**
         Adapted from queryURL() from Parser.java in BenchmarkParser
-        @param URL
+        @param urlString the URL
         @return HTTP connection
      */
     protected static HttpURLConnection queryURL(String urlString) throws IOException {

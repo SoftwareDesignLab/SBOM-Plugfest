@@ -32,9 +32,9 @@ public class Conflict {
         if (componentA.getVersion() != null && !componentA.getVersion().equals(componentB.getVersion())) {
             conflictTypes.add(ConflictType.COMPONENT_VERSION_MISMATCH);
         }
-        if (componentA.getCPE() != null && !componentA.getCPE().equals(componentB.getCPE())) {
+        if (componentA.getCPEs() != null && !componentA.getCPEs().equals(componentB.getCPEs())) {
             // Check if one set contains all items from the other
-            if (componentA.getCPE().containsAll(componentB.getCPE()) || componentB.getCPE().containsAll(componentA.getCPE())) {
+            if (componentA.getCPEs().containsAll(componentB.getCPEs()) || componentB.getCPEs().containsAll(componentA.getCPEs())) {
                 // Then this isn't really a conflict
                 falsePositive = true;
             }

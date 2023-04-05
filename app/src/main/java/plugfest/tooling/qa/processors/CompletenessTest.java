@@ -214,7 +214,7 @@ public class CompletenessTest extends MetricTest {
      */
     private Test testCPEs(Component c) {
         // Check CPEs and return a number of invalid CPEs per component
-        final int invalid = getNumInvalidStrings(c.getCPE(), cpe23Regex);
+        final int invalid = getNumInvalidStrings(c.getCPEs(), cpe23Regex);
         if (invalid > 0) // If there are invalid CPEs, mark as failed
             return new Test(false, "Had ", Integer.toString(invalid), " CPE(s) with Invalid Format.");
         return new Test(true, "CPE(s) have Valid Format."); // Test passed
