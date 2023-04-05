@@ -1,6 +1,5 @@
 package plugfest.tooling.sbom;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,9 +30,9 @@ public class ComponentConflict {
         if (componentA.getVersion() != null && !componentA.getVersion().equals(componentB.getVersion())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_VERSION_MISMATCH);
         }
-        if (componentA.getCPE() != null && !componentA.getCPE().equals(componentB.getCPE())) {
+        if (componentA.getCPEs() != null && !componentA.getCPEs().equals(componentB.getCPEs())) {
             // Check if one set doesn't contain all items from the other
-            if (!(componentA.getCPE().containsAll(componentB.getCPE()) || componentB.getCPE().containsAll(componentA.getCPE()))) {
+            if (!(componentA.getCPEs().containsAll(componentB.getCPEs()) || componentB.getCPEs().containsAll(componentA.getCPEs()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
@@ -203,10 +202,10 @@ public class ComponentConflict {
                 case COMPONENT_CPE_MISMATCH:
                     conflictString.append("    CPE:\n");
                     // Get differences
-                    Set<String> cpeA = new HashSet<>(componentA.getCPE());
-                    Set<String> cpeB = new HashSet<>(componentB.getCPE());
-                    cpeA.removeAll(componentB.getCPE());
-                    cpeB.removeAll(componentA.getCPE());
+                    Set<String> cpeA = new HashSet<>(componentA.getCPEs());
+                    Set<String> cpeB = new HashSet<>(componentB.getCPEs());
+                    cpeA.removeAll(componentB.getCPEs());
+                    cpeB.removeAll(componentA.getCPEs());
 
                     for (String cpe : cpeA) {
                         conflictString.append("      + ").append(cpe).append("\n");
