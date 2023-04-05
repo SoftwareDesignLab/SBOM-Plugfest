@@ -3,6 +3,7 @@ package plugfest.tooling.translator;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import plugfest.tooling.sbom.Component;
+import plugfest.tooling.sbom.PURL;
 import plugfest.tooling.sbom.SBOM;
 
 import java.io.BufferedReader;
@@ -202,7 +203,7 @@ public class TranslatorSPDX {
             // Temporary component collection of materials
             HashMap<String, String> component_materials = new HashMap<>();
             Set<String> cpes = new HashSet<>();
-            Set<String> purls = new HashSet<>();
+            Set<PURL> purls = new HashSet<>();
             Set<String> swids = new HashSet<>();
 
             // If new package/component is found
@@ -232,7 +233,7 @@ public class TranslatorSPDX {
                         // Last element is the PURL
                         String purl = lineSplit[lineSplit.length - 1];
 
-                        purls.add(purl);
+                        purls.add(new PURL(purl));
 
                         // Don't continue parsing after we add the special cases
                         continue;
@@ -267,8 +268,8 @@ public class TranslatorSPDX {
                 );
 
                 // Append CPEs and Purls
-                component.setCPE(cpes);
-                component.setPURL(purls);
+                component.setCPEs(cpes);
+                component.setPURLs(purls);
 
                 // License materials map
                 HashSet<String> licenses = new HashSet<>();

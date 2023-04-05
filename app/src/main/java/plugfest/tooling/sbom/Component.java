@@ -361,10 +361,10 @@ public class Component {
                 retval = retval && this.CPEs == null;
             }
 
-            if (otherComponent.PURL != null) {
-                retval = retval && otherComponent.PURL.equals(this.PURL);
+            if (otherComponent.PURLs != null) {
+                retval = retval && otherComponent.PURLs.equals(this.PURLs);
             } else {
-                retval = retval && this.PURL == null;
+                retval = retval && this.PURLs == null;
             }
 
             if (otherComponent.SWID != null) {

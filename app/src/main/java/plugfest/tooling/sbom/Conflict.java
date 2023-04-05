@@ -42,8 +42,8 @@ public class Conflict {
                 conflictTypes.add(ConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
-        if (componentA.getPURL() != null && !componentA.getPURL().equals(componentB.getPURL())) {
-            if (componentA.getPURL().containsAll(componentB.getPURL()) || componentB.getPURL().containsAll(componentA.getPURL())) {
+        if (componentA.getPURLs() != null && !componentA.getPURLs().equals(componentB.getPURLs())) {
+            if (componentA.getPURLs().containsAll(componentB.getPURLs()) || componentB.getPURLs().containsAll(componentA.getPURLs())) {
                 // Then this isn't really a conflict
             }
             else {
