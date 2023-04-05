@@ -44,8 +44,16 @@ tasks.named('test') {
 }
 
 jar {
-  manifest {
-   attributes 'Main-Class': 'plugfest.tooling.App'
-  }
+    manifest {
+        attributes 'Main-Class': 'plugfest.tooling.App'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+            project.zipTree(it)
+        }
+    }
 }
 
