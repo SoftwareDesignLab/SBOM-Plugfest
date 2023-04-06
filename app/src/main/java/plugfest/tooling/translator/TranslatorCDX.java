@@ -121,7 +121,7 @@ public class TranslatorCDX {
                         sbomMeta.item(b).getTextContent()
                 );
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
-                if(author != "") { author += " ~ "; }
+                if(!author.equals("")) { author += " ~ "; }
                 author += sbomMeta.item(b).getTextContent();
             } else {
                 sbom_materials.put(
@@ -137,7 +137,7 @@ public class TranslatorCDX {
                     "cyclonedx",
                     header_materials.get("xmlns"),
                     header_materials.get("version"),
-                    author == "" ? sbom_materials.get("vendor") : author,
+                    author.equals("") ? sbom_materials.get("vendor") : author,
                     header_materials.get("serialNumber"),
                     sbom_materials.get("timestamp"),
                     null);
