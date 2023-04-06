@@ -216,7 +216,7 @@ public class CompletenessTest extends MetricTest {
      */
     private Test testCPEs(Component c) {
         // Check CPEs and return a number of invalid CPEs per component
-        final int invalid = getNumInvalidStrings(c.getCPEs(), cpe23Regex);
+        final int invalid = getNumInvalidStrings(c.getCpes(), cpe23Regex);
         if (invalid > 0) // If there are invalid CPEs, mark as failed
             return new Test(false, "Had ", Integer.toString(invalid), " CPE(s) with Invalid Format.");
         return new Test(true, "CPE(s) have Valid Format."); // Test passed
@@ -231,9 +231,9 @@ public class CompletenessTest extends MetricTest {
      */
     private Test testPURLs(Component c) {
         // Check PURLs and return a number of invalid PURLs
-        Set<String> PURLStrings = new HashSet<>();
-        for (PURL p: c.getPURLs()) {PURLStrings.add(p.toString());}
-        final int invalid = getNumInvalidStrings(PURLStrings, purlRegex);
+        Set<String> purlStrings = new HashSet<>();
+        for (PURL p: c.getPurls()) {purlStrings.add(p.toString());}
+        final int invalid = getNumInvalidStrings(purlStrings, purlRegex);
         if (invalid > 0) // If there are invalid PURLs, mark as failed
             return new Test(false, "Had ", Integer.toString(invalid), " PURL(s) with Invalid Format.");
         return new Test(true, "PURL(s) have Valid Format."); // Test passed

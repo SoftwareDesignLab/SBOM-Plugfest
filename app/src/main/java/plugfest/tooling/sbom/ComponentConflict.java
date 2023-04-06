@@ -30,19 +30,19 @@ public class ComponentConflict {
         if (componentA.getVersion() != null && !componentA.getVersion().equals(componentB.getVersion())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_VERSION_MISMATCH);
         }
-        if (componentA.getCPEs() != null && !componentA.getCPEs().equals(componentB.getCPEs())) {
+        if (componentA.getCpes() != null && !componentA.getCpes().equals(componentB.getCpes())) {
             // Check if one set doesn't contain all items from the other
-            if (!(componentA.getCPEs().containsAll(componentB.getCPEs()) || componentB.getCPEs().containsAll(componentA.getCPEs()))) {
+            if (!(componentA.getCpes().containsAll(componentB.getCpes()) || componentB.getCpes().containsAll(componentA.getCpes()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
-        if (componentA.getPURLs() != null && !componentA.getPURLs().equals(componentB.getPURLs())) {
-            if (!(componentA.getPURLs().containsAll(componentB.getPURLs()) || componentB.getPURLs().containsAll(componentA.getPURLs()))) {
+        if (componentA.getPurls() != null && !componentA.getPurls().equals(componentB.getPurls())) {
+            if (!(componentA.getPurls().containsAll(componentB.getPurls()) || componentB.getPurls().containsAll(componentA.getPurls()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_PURL_MISMATCH);
             }
         }
-        if (componentA.getSWID() != null && !componentA.getSWID().equals(componentB.getSWID())) {
-            if (!(componentA.getSWID().containsAll(componentB.getSWID()) || componentB.getSWID().containsAll(componentA.getSWID()))) {
+        if (componentA.getSwids() != null && !componentA.getSwids().equals(componentB.getSwids())) {
+            if (!(componentA.getSwids().containsAll(componentB.getSwids()) || componentB.getSwids().containsAll(componentA.getSwids()))) {
                 componentConflictTypes.add(ComponentConflictType.COMPONENT_SWID_MISMATCH);
             }
         }
@@ -202,10 +202,10 @@ public class ComponentConflict {
                 case COMPONENT_CPE_MISMATCH:
                     conflictString.append("    CPE:\n");
                     // Get differences
-                    Set<String> cpeA = new HashSet<>(componentA.getCPEs());
-                    Set<String> cpeB = new HashSet<>(componentB.getCPEs());
-                    cpeA.removeAll(componentB.getCPEs());
-                    cpeB.removeAll(componentA.getCPEs());
+                    Set<String> cpeA = new HashSet<>(componentA.getCpes());
+                    Set<String> cpeB = new HashSet<>(componentB.getCpes());
+                    cpeA.removeAll(componentB.getCpes());
+                    cpeB.removeAll(componentA.getCpes());
 
                     for (String cpe : cpeA) {
                         conflictString.append("      + ").append(cpe).append("\n");
@@ -219,10 +219,10 @@ public class ComponentConflict {
                 case COMPONENT_PURL_MISMATCH:
                     conflictString.append("    PURL:\n");
                     // Get differences
-                    Set<PURL> purlA = new HashSet<>(componentA.getPURLs());
-                    Set<PURL> purlB = new HashSet<>(componentB.getPURLs());
-                    purlA.removeAll(componentB.getPURLs());
-                    purlB.removeAll(componentA.getPURLs());
+                    Set<PURL> purlA = new HashSet<>(componentA.getPurls());
+                    Set<PURL> purlB = new HashSet<>(componentB.getPurls());
+                    purlA.removeAll(componentB.getPurls());
+                    purlB.removeAll(componentA.getPurls());
 
                     for (PURL purl : purlA) {
                         conflictString.append("      + ").append(purl).append("\n");
@@ -236,11 +236,11 @@ public class ComponentConflict {
                 case COMPONENT_SWID_MISMATCH:
                     conflictString.append("    SWID:\n");
                     // Get differences
-                    Set<String> swidA = new HashSet<>(componentA.getSWID());
-                    Set<String> swidB = new HashSet<>(componentB.getSWID());
+                    Set<String> swidA = new HashSet<>(componentA.getSwids());
+                    Set<String> swidB = new HashSet<>(componentB.getSwids());
 
-                    swidA.removeAll(componentB.getSWID());
-                    swidB.removeAll(componentA.getSWID());
+                    swidA.removeAll(componentB.getSwids());
+                    swidB.removeAll(componentA.getSwids());
 
                     for (String swid : swidA) {
                         conflictString.append("      + ").append(swid).append("\n");

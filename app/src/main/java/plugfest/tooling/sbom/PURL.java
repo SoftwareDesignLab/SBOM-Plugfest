@@ -1,5 +1,7 @@
 package plugfest.tooling.sbom;
 
+import java.util.Objects;
+
 /**
  * <b>File</b>: PURL.java<br>
  * <b>Description</b>: Object representation of the Package URl for a component
@@ -64,20 +66,20 @@ public class PURL {
     public void addFromString(String purl){
         String p = purl.toLowerCase();
         if(p.contains("alpine"))
-            setPackageManager(ComponentPackageManager.Alpine);
+            setPackageManager(ComponentPackageManager.ALPINE);
         else if(p.contains("debian"))
-            setPackageManager(ComponentPackageManager.Debian);
+            setPackageManager(ComponentPackageManager.DEBIAN);
         else // add cases here as PMs are added
-            setPackageManager(ComponentPackageManager.Python);
+            setPackageManager(ComponentPackageManager.PYTHON);
 
         switch (this.pm){
-            case Alpine:
+            case ALPINE:
                 String[] purlSplit = p.split("[/@]");
                 this.name = purlSplit[2];
                 purlSplit = p.split("[@?]");
                 this.version = purlSplit[1];
                 break;
-            case Debian:
+            case DEBIAN:
         }
 
     }
@@ -89,5 +91,17 @@ public class PURL {
     @Override
     public String toString() {
         return PURLString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PURL purl)) return false;
+        return Objects.equals(getName(), purl.getName()) && Objects.equals(getVersion(), purl.getVersion()) && pm == purl.pm && Objects.equals(PURLString, purl.PURLString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getVersion(), pm, PURLString);
     }
 }

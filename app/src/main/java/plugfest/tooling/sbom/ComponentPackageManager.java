@@ -7,5 +7,5 @@ package plugfest.tooling.sbom;
  * @author Juan Francisco Patino
  */
 public enum ComponentPackageManager {
-    Alpine, Debian, Python // add more as we go
+    ALPINE, DEBIAN, PYTHON // add more as we go
 }

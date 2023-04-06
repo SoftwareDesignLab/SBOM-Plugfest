@@ -32,9 +32,9 @@ public class Conflict {
         if (componentA.getVersion() != null && !componentA.getVersion().equals(componentB.getVersion())) {
             conflictTypes.add(ConflictType.COMPONENT_VERSION_MISMATCH);
         }
-        if (componentA.getCPEs() != null && !componentA.getCPEs().equals(componentB.getCPEs())) {
+        if (componentA.getCpes() != null && !componentA.getCpes().equals(componentB.getCpes())) {
             // Check if one set contains all items from the other
-            if (componentA.getCPEs().containsAll(componentB.getCPEs()) || componentB.getCPEs().containsAll(componentA.getCPEs())) {
+            if (componentA.getCpes().containsAll(componentB.getCpes()) || componentB.getCpes().containsAll(componentA.getCpes())) {
                 // Then this isn't really a conflict
                 falsePositive = true;
             }
@@ -42,16 +42,16 @@ public class Conflict {
                 conflictTypes.add(ConflictType.COMPONENT_CPE_MISMATCH);
             }
         }
-        if (componentA.getPURLs() != null && !componentA.getPURLs().equals(componentB.getPURLs())) {
-            if (componentA.getPURLs().containsAll(componentB.getPURLs()) || componentB.getPURLs().containsAll(componentA.getPURLs())) {
+        if (componentA.getPurls() != null && !componentA.getPurls().equals(componentB.getPurls())) {
+            if (componentA.getPurls().containsAll(componentB.getPurls()) || componentB.getPurls().containsAll(componentA.getPurls())) {
                 // Then this isn't really a conflict
             }
             else {
                 conflictTypes.add(ConflictType.COMPONENT_PURL_MISMATCH);
             }
         }
-        if (componentA.getSWID() != null && !componentA.getSWID().equals(componentB.getSWID())) {
-            if (componentA.getSWID().containsAll(componentB.getSWID()) || componentB.getSWID().containsAll(componentA.getSWID())) {
+        if (componentA.getSwids() != null && !componentA.getSwids().equals(componentB.getSwids())) {
+            if (componentA.getSwids().containsAll(componentB.getSwids()) || componentB.getSwids().containsAll(componentA.getSwids())) {
                 // Then this isn't really a conflict
                 falsePositive = true;
 

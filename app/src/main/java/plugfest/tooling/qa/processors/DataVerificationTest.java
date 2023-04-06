@@ -14,21 +14,21 @@ import java.net.URL;
 import java.util.Set;
 
 /**
- * <b>File</b>: TimelinessTest.java<br>
+ * <b>File</b>: DataVerification.java<br>
  * <b>Description</b>: Tests a component to ensure it
  * still exists on its respective package manager
  *
  * @author Juan Francisco Patino
  */
-public class TimelinessTest extends MetricTest {
+public class DataVerificationTest extends MetricTest {
 
     private static final int MAX_CONNECTION_TIMEOUT = 1000;
-    protected TimelinessTest() {
-        super("TimelinessTest Test");
+    protected DataVerificationTest() {
+        super("Data Verification Test");
     }
 
     /**
-     * General test for Timeliness
+     * General test to verify component data
      *
      * @param c component to test
      * @return test results
@@ -38,20 +38,21 @@ public class TimelinessTest extends MetricTest {
 
         final TestResults testResults = new TestResults(c); // Init TestResults for this component
 
-        Set<PURL> purls = c.getPURLs();
+        Set<PURL> purls = c.getPurls();
         if(purls.isEmpty()){
             testResults.addTest(new Test(false, "Component has no PURL"));
             return testResults;
         }
-        for (PURL p: c.getPURLs()
+        for (PURL p: c.getPurls()
              ) {
 
             try{
 
                 String[] fromOnline = extractedFromPURL(p);
+                String packageManagerName = p.getPackageManager().name().toLowerCase();
 
                 String name = p.getName();
-                String nameFoundOnline = fromOnline[0].toLowerCase(); //todo purl object
+                String nameFoundOnline = fromOnline[0].toLowerCase();
 
                 String version = p.getVersion();
                 String versionFoundOnline = fromOnline[1].toLowerCase();
@@ -61,16 +62,21 @@ public class TimelinessTest extends MetricTest {
 
                 // check whatever is online at least contains this component, or vice versa
                 if(!((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
-                    testResults.addTest(new Test(false, "Name is not up to date"));
+                    testResults.addTest(new Test(false, "Name ", name, "does not match ",
+                            nameFoundOnline, " in ", packageManagerName));
 
                 if(!versionFoundOnline.contains(version))
-                    testResults.addTest(new Test(false,"Version ",version," does not exist"));
+                    testResults.addTest(new Test(false,"Version ",version," not found in ",
+                            packageManagerName, " database"));
 
                 if(!((publisher.contains(publisherFoundOnline)|| publisherFoundOnline.contains(publisher))))
-                    testResults.addTest(new Test(false,"Publisher Name is not up to date"));
+                    testResults.addTest(new Test(false,"Publisher Name", publisher,
+                            " does not match ", publisherFoundOnline," in ", packageManagerName, " database"));
             }
             catch(IOException e){
-                testResults.addTest(new Test(false,"Error in testing component:\n", e.getMessage()));
+                testResults.addTest(new Test(true,"Error accessing ",
+                        p.getPackageManager().name().toLowerCase(),
+                        " database\n", e.getMessage()));
 
             }
 

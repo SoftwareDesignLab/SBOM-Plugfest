@@ -36,9 +36,9 @@ public class Component {
     /**
      * Unique identifiers of the component (ex: CDX uses purl and/or cpe)
      */
-    private Set<String> CPEs;
-    private Set<PURL> PURLs;
-    private Set<String> SWID;
+    private Set<String> cpes;
+    private Set<PURL> purls;
+    private Set<String> swids;
 
     /**
      * Unique identifier for SPDX component
@@ -78,9 +78,9 @@ public class Component {
         // This should not be a parameter passed as children will not be instantiated first
         this.children = new HashSet<>();
         this.vulnerabilities = new HashSet<>();
-        this.CPEs = new HashSet<>();
-        this.PURLs = new HashSet<>();
-        this.SWID = new HashSet<>();
+        this.cpes = new HashSet<>();
+        this.purls = new HashSet<>();
+        this.swids = new HashSet<>();
         this.componentConflicts = new HashSet<>();
         this.unpackaged = false;
     }
@@ -136,9 +136,9 @@ public class Component {
      */
     public Component(String name, String publisher, String version, Set<String> CPE, Set<PURL> PURL, Set<String> SWID) {
         this(name, publisher, version);
-        this.CPEs = CPE;
-        this.PURLs = PURL;
-        this.SWID = SWID;
+        this.cpes = CPE;
+        this.purls = PURL;
+        this.swids = SWID;
     }
 
     ///
@@ -217,40 +217,40 @@ public class Component {
         children.remove(child);
     }
 
-    public Set<String> getCPEs() {
-        return CPEs;
+    public Set<String> getCpes() {
+        return cpes;
     }
 
-    public void setCPEs(Set<String> cpe) {
-        this.CPEs = cpe;
+    public void setCpes(Set<String> cpe) {
+        this.cpes = cpe;
     }
 
     public void addCPE(String cpe) {
-        this.CPEs.add(cpe);
+        this.cpes.add(cpe);
     }
 
-    public Set<PURL> getPURLs() {
-        return PURLs;
+    public Set<PURL> getPurls() {
+        return purls;
     }
 
-    public void setPURLs(Set<PURL> PURLs) {
-        this.PURLs = PURLs;
+    public void setPurls(Set<PURL> purls) {
+        this.purls = purls;
     }
 
     public void addPURL(PURL purl) {
-        this.PURLs.add(purl);
+        this.purls.add(purl);
     }
 
-    public Set<String> getSWID() {
-        return SWID;
+    public Set<String> getSwids() {
+        return swids;
     }
 
-    public void setSWID(Set<String> swid) {
-        this.SWID = swid;
+    public void setSwids(Set<String> swid) {
+        this.swids = swid;
     }
 
     public void addSWID(String swid) {
-        this.SWID.add(swid);
+        this.swids.add(swid);
     }
 
     public String getSPDXID() {
@@ -300,9 +300,9 @@ public class Component {
     public void copyFrom(Component component) {
         this.name = component.name;
         this.publisher = component.publisher;
-        this.CPEs = new HashSet<>(component.CPEs);
-        this.PURLs = new HashSet<>(component.PURLs);
-        this.SWID = new HashSet<>(component.SWID);
+        this.cpes = new HashSet<>(component.cpes);
+        this.purls = new HashSet<>(component.purls);
+        this.swids = new HashSet<>(component.swids);
         this.children.addAll(component.children);
         this.version = component.version;
         this.vulnerabilities.addAll(component.vulnerabilities);
@@ -333,7 +333,7 @@ public class Component {
         for (Vulnerability vulnerability : vulnerabilities) {
             vulnerabilitiesHash *= vulnerability.hashCode();
         }
-        return Objects.hash(name, publisher, CPEs, PURLs, SWID, children, version, licenses) * vulnerabilitiesHash;
+        return Objects.hash(name, publisher, cpes, purls, swids, children, version, licenses) * vulnerabilitiesHash;
     }
 
     @Override
@@ -355,22 +355,22 @@ public class Component {
                 retval = retval && this.publisher == null;
             }
 
-            if (otherComponent.CPEs != null) {
-                retval = retval && otherComponent.CPEs.equals(this.CPEs);
+            if (otherComponent.cpes != null) {
+                retval = retval && otherComponent.cpes.equals(this.cpes);
             } else {
-                retval = retval && this.CPEs == null;
+                retval = retval && this.cpes == null;
             }
 
-            if (otherComponent.PURLs != null) {
-                retval = retval && otherComponent.PURLs.equals(this.PURLs);
+            if (otherComponent.purls != null) {
+                retval = retval && otherComponent.purls.equals(this.purls);
             } else {
-                retval = retval && this.PURLs == null;
+                retval = retval && this.purls == null;
             }
 
-            if (otherComponent.SWID != null) {
-                retval = retval && otherComponent.SWID.equals(this.SWID);
+            if (otherComponent.swids != null) {
+                retval = retval && otherComponent.swids.equals(this.swids);
             } else {
-                retval = retval && this.SWID == null;
+                retval = retval && this.swids == null;
             }
 
             if (otherComponent.children != null) {

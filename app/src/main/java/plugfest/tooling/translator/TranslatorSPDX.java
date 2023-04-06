@@ -268,8 +268,8 @@ public class TranslatorSPDX {
                 );
 
                 // Append CPEs and Purls
-                component.setCPEs(cpes);
-                component.setPURLs(purls);
+                component.setCpes(cpes);
+                component.setPurls(purls);
 
                 // License materials map
                 HashSet<String> licenses = new HashSet<>();

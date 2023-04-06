@@ -214,8 +214,8 @@ public class TranslatorCDX {
                     );
 
                     // Set CPEs and PURLs
-                    component.setCPEs(cpes);
-                    component.setPURLs(purls);
+                    component.setCpes(cpes);
+                    component.setPurls(purls);
 
                     // Set licenses for component
                     component.setLicenses(component_licenses);
