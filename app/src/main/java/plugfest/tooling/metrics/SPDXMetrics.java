@@ -25,9 +25,9 @@ public class SPDXMetrics extends Metric{
     private String filepath;
     private final String sbom;
 
-    public SPDXMetrics(String _filepath, String _sbom) {
-        this.filepath = _filepath;
-        this.sbom = _sbom;
+    public SPDXMetrics(String filepath, String sbom) {
+        this.filepath = filepath;
+        this.sbom = sbom;
         this.score += this.testMetric();
     }
 
