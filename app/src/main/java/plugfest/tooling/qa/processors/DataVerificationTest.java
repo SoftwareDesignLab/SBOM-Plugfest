@@ -121,7 +121,7 @@ public class DataVerificationTest extends MetricTest {
         String[] columns = row.split("<td");
 
         String nameColumn = "";
-        String publisherColumn = "";
+        String publisherColumn = "";//
 
         for (String column: columns
              ) {
