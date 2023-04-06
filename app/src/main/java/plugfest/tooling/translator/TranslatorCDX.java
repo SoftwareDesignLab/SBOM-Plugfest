@@ -3,6 +3,7 @@ package plugfest.tooling.translator;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import plugfest.tooling.sbom.Component;
+import plugfest.tooling.sbom.PURL;
 import plugfest.tooling.sbom.SBOM;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -121,7 +122,7 @@ public class TranslatorCDX {
                         sbomMeta.item(b).getTextContent()
                 );
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
-                if(!author.equals("")) { author += " ~ "; }
+                if(author != "") { author += " ~ "; }
                 author += sbomMeta.item(b).getTextContent();
             } else {
                 sbom_materials.put(
@@ -137,7 +138,7 @@ public class TranslatorCDX {
                     "cyclonedx",
                     header_materials.get("xmlns"),
                     header_materials.get("version"),
-                    author.equals("") ? sbom_materials.get("vendor") : author,
+                    author == "" ? sbom_materials.get("vendor") : author,
                     header_materials.get("serialNumber"),
                     sbom_materials.get("timestamp"),
                     null);
@@ -178,7 +179,7 @@ public class TranslatorCDX {
                     HashMap<String, String> component_items = new HashMap<>();
                     HashSet<String> component_licenses = new HashSet<>();
 
-                    Set<String> purls = new HashSet<>();
+                    Set<PURL> purls = new HashSet<>();
                     Set<String> cpes = new HashSet<>();
 
                     // Iterate through each element in that component
@@ -194,7 +195,7 @@ public class TranslatorCDX {
                             cpes.add(component_elements.item(j).getTextContent());
                         }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("purl")) {
-                            purls.add(component_elements.item(j).getTextContent());
+                            purls.add(new PURL(component_elements.item(j).getTextContent()));
                         }
                         else {
                             component_items.put(
@@ -213,8 +214,8 @@ public class TranslatorCDX {
                     );
 
                     // Set CPEs and PURLs
-                    component.setCPE(cpes);
-                    component.setPURL(purls);
+                    component.setCpes(cpes);
+                    component.setPurls(purls);
 
                     // Set licenses for component
                     component.setLicenses(component_licenses);
