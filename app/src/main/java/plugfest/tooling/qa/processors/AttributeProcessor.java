@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Abstract class to be extended by all metric processors
+ */
 public abstract class AttributeProcessor {
     private final Set<MetricTest> tests;
 
