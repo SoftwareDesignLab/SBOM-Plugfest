@@ -21,19 +21,25 @@ public class SPDXProcessor extends SchemaProcessor{
         ArrayList<String> verificationResults = new ArrayList<>();
         final String extn = filePath.substring(filePath.indexOf('.'));
         try {
+            SpdxToolsHelper.SerFileType fileType = null;
             switch (extn) {
-                case "json" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.JSON);
-                case "rdf.xml", "rdf" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.RDFXML);
-                case "xml" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.XML);
-                case "xls" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.XLS);
-                case "xlsx" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.XLSX);
-                case "yaml" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.YAML);
-                case "tag", "spdx" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.TAG);
-                case "rdf.ttl" -> verificationResults = (ArrayList<String>)Verify.verify(filePath, SpdxToolsHelper.SerFileType.RDFTTL);
+                case "json" -> fileType = SpdxToolsHelper.SerFileType.JSON;
+                case "rdf.xml", "rdf" -> fileType = SpdxToolsHelper.SerFileType.RDFXML;
+                case "xml" -> fileType = SpdxToolsHelper.SerFileType.XML;
+                case "xls" -> fileType = SpdxToolsHelper.SerFileType.XLS;
+                case "xlsx" -> fileType = SpdxToolsHelper.SerFileType.XLSX;
+                case "yaml" -> fileType = SpdxToolsHelper.SerFileType.YAML;
+                case "tag", "spdx" -> fileType = SpdxToolsHelper.SerFileType.TAG;
+                case "rdf.ttl" -> fileType = SpdxToolsHelper.SerFileType.RDFTTL;
             }
+
+            if (fileType == null) {
+                throw new Exception("Unsupported SPDX File Type");
+            }
+            verificationResults = (ArrayList<String>)Verify.verify(filePath, fileType);
         }
         catch(Exception ex) {
-            System.out.println("EXCEPTION: "+ex);
+            System.out.println("EXCEPTION: " + ex);
             return null;
         }
         return verificationResults;
