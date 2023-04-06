@@ -94,7 +94,7 @@ public class DataVerificationTest extends MetricTest {
     */
     private static String[] extractedFromPURL(PURL purl) throws IOException {
         return extractFromAlpine(purl.toString());
-        //todo: we don't test for Debian or Python pm yet
+        // todo: we don't test for Debian or Python pm yet
     }
 
     /**
