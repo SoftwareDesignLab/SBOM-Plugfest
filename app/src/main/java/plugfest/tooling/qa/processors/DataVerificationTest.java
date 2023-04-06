@@ -115,9 +115,9 @@ public class DataVerificationTest extends MetricTest {
         if(html.contains("not found"))
             return new String[]{"", "", ""};
 
-        //otherwise
+        // otherwise
         String table = html.split("<tbody>")[1];
-        String row = table.split("<tr>")[1]; //we just care about the top row - most recent result
+        String row = table.split("<tr>")[1]; // we just care about the top row - most recent result
         String[] columns = row.split("<td");
 
         String nameColumn = "";
