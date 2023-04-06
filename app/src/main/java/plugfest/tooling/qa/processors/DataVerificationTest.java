@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.Set;
 
 /**
- * <b>File</b>: DataVerification.java<br>
+ * <b>File</b>: DataVerificationTest.java<br>
  * <b>Description</b>: Tests a component to ensure it
  * still exists on its respective package manager
  *
