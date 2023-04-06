@@ -1,5 +1,9 @@
 package plugfest.tooling.sbom;
 
+import plugfest.tooling.metrics.Metric;
+import plugfest.tooling.qa.QualityReport;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 

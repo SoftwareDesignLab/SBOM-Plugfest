@@ -3,23 +3,32 @@ package plugfest.tooling.metrics;
 /**
  * Imports SPDX Tools
  */
+
 import org.spdx.tools.CompareSpdxDocs;
 import org.spdx.tools.Verify;
+import org.spdx.tools.SpdxToolsHelper;
 
 /**
- * Imports Native Java Libraries
+ * Imports Java Native Libraries
  */
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
- * Class for Verifying SPDX Files
+ * Class for SPDX SBOM Metrics
  */
-public class SPDXMetrics {
+public class SPDXMetrics extends Metric{
     
-    private String filepath;
 
-    public SPDXMetrics(String _filepath) {
-        this.filepath = _filepath;
+    private String filepath;
+    private final String sbom;
+
+    public SPDXMetrics(String filepath, String sbom) {
+        this.filepath = filepath;
+        this.sbom = sbom;
+        this.score += this.testMetric();
     }
 
     public String getFilepath() {
@@ -31,7 +40,7 @@ public class SPDXMetrics {
     }
 
     public void compare(String[] sbom_files) {
-        System.out.println("Running Comparison on SBOM Files: "+sbom_files);
+        System.out.println("Running Comparison on SBOM Files: "+ Arrays.toString(sbom_files));
         Date date = new Date();
         long timestamp = date.getTime();
         String[] compareArgs = new String[(sbom_files.length+1)];
@@ -44,10 +53,20 @@ public class SPDXMetrics {
         CompareSpdxDocs.main(compareArgs);
     }
 
-    public void verify(String sbom){
-        System.out.println("Running Verification on SPDX SBOM File: "+sbom);
-        String sbom_file = (this.filepath+"/"+sbom);
-        String[] sboms = { sbom_file };
-        Verify.main(sboms);
+    public ArrayList<String> verifySPDX() {
+        final String fullPath = this.filepath + "/" + this.sbom;
+        System.out.println("Running Verification on SPDX SBOM File: " + fullPath);
+        ArrayList<String> verificationResults = null;
+        try {
+            verificationResults =
+                (ArrayList<String>)Verify.verify(fullPath, SpdxToolsHelper.fileToFileType(new File(fullPath)));
+        }
+        catch(Exception ex) { System.out.println("Error Verifying SPDX: " + ex); }
+        return verificationResults;
+    }
+
+    @Override
+    protected int testMetric() {
+        return verifySPDX() != null ? 1 : 0;
     }
 }

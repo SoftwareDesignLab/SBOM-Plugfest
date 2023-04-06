@@ -17,6 +17,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jsoup:jsoup:1.15.4'
+
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
