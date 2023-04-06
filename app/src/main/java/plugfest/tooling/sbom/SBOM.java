@@ -56,27 +56,6 @@ public class SBOM {
      */
     private Set<Signature> signature;
 
-    // START Metrics testing Section
-    // todo properly integrate w/ sbom before merge
-    private Set<QualityReport> metrics = new HashSet<>();
-
-    public Set<QualityReport> getQualityReports() {
-        return metrics;
-    }
-
-    public void addQualityReport(QualityReport metric) {
-        this.metrics.add(metric);
-    }
-
-//    public double score(){
-//        double score = 0;
-//        for( QualityReport m : this.metrics )
-//            score += m.getScore();
-//        return score / this.metrics.size();
-//    }
-
-    // END Metrics testing Section
-
     /**
      * Constructor to take all parameters except for DependencyTree
      *
