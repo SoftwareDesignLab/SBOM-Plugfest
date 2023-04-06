@@ -3,6 +3,9 @@ package plugfest.tooling.qa.processors;
 import plugfest.tooling.qa.test_results.TestResults;
 import plugfest.tooling.sbom.Component;
 
+/**
+ * Abstract class to be extended by all metric tests
+ */
 public abstract class MetricTest {
     //#region Attributes
 
