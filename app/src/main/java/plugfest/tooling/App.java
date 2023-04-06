@@ -6,10 +6,13 @@ package plugfest.tooling;
 import java.io.File;
 import java.io.IOException;
 
+import plugfest.tooling.differ.Comparer;
+import plugfest.tooling.differ.DiffReport;
 import plugfest.tooling.qa.QAPipeline;
 import plugfest.tooling.qa.QualityReport;
 import plugfest.tooling.sbom.*;
 import plugfest.tooling.translator.TranslatorSPDX;
+import plugfest.tooling.translator.TranslatorSVIP;
 
 
 public class App {
@@ -79,17 +82,19 @@ public class App {
         7. return new Report(sboms);    // use SBOM data to turn into a report to be exported via file/used by front end
          */
 
-
-        // todo remove below
-        /*
         if(args[0].contains("-q")) {
-            // QA Pipeline code here
-            //
-            // if ( we have a file ) : then check schema
-            //      if ( file is invalid schema ) : dont continue
-            //      else : continue
-            //
-            // End QA Pipeline
+            // Parse SBOM Object from file
+            SBOM sbom = TranslatorSVIP.translate(args[1]);
+
+            // Ensure SBOM Object was parsed without fail
+            assert sbom != null;
+
+            // Instantiate QA Pipeline
+            QAPipeline qa = new QAPipeline();
+            QualityReport qualityReport = qa.process(sbom);
+
+            // Display QualityReport
+            System.out.println(qualityReport.toString());
         } else if (args[0].contains("-m")) {
 //            Metrics metrics = new Metrics(args[1]);
 //            metrics.verify(args[1]);
@@ -115,7 +120,6 @@ public class App {
         } else {
             System.out.println("Invalid command given. Should be '-q' for quality check, '-m' for metrics, or 'd' for diff.");
         }
-        */
 
         
     }
