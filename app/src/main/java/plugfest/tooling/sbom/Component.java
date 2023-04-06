@@ -1,6 +1,9 @@
 package plugfest.tooling.sbom;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * File: Component.java
@@ -36,9 +39,9 @@ public class Component {
     /**
      * Unique identifiers of the component (ex: CDX uses purl and/or cpe)
      */
-    private Set<String> cpes;
-    private Set<PURL> purls;
-    private Set<String> swids;
+    private Set<String> CPE;
+    private Set<String> PURL;
+    private Set<String> SWID;
 
     /**
      * Unique identifier for SPDX component
@@ -78,9 +81,9 @@ public class Component {
         // This should not be a parameter passed as children will not be instantiated first
         this.children = new HashSet<>();
         this.vulnerabilities = new HashSet<>();
-        this.cpes = new HashSet<>();
-        this.purls = new HashSet<>();
-        this.swids = new HashSet<>();
+        this.CPE = new HashSet<>();
+        this.PURL = new HashSet<>();
+        this.SWID = new HashSet<>();
         this.componentConflicts = new HashSet<>();
         this.unpackaged = false;
     }
@@ -134,11 +137,11 @@ public class Component {
      * @param PURL      Set of PURLs of the component
      * @param SWID      SWID of the component
      */
-    public Component(String name, String publisher, String version, Set<String> CPE, Set<PURL> PURL, Set<String> SWID) {
+    public Component(String name, String publisher, String version, Set<String> CPE, Set<String> PURL, Set<String> SWID) {
         this(name, publisher, version);
-        this.cpes = CPE;
-        this.purls = PURL;
-        this.swids = SWID;
+        this.CPE = CPE;
+        this.PURL = PURL;
+        this.SWID = SWID;
     }
 
     ///
@@ -217,40 +220,40 @@ public class Component {
         children.remove(child);
     }
 
-    public Set<String> getCpes() {
-        return cpes;
+    public Set<String> getCPE() {
+        return CPE;
     }
 
-    public void setCpes(Set<String> cpe) {
-        this.cpes = cpe;
+    public void setCPE(Set<String> cpe) {
+        this.CPE = cpe;
     }
 
     public void addCPE(String cpe) {
-        this.cpes.add(cpe);
+        this.CPE.add(cpe);
     }
 
-    public Set<PURL> getPurls() {
-        return purls;
+    public Set<String> getPURL() {
+        return PURL;
     }
 
-    public void setPurls(Set<PURL> purls) {
-        this.purls = purls;
+    public void setPURL(Set<String> PURL) {
+        this.PURL = PURL;
     }
 
-    public void addPURL(PURL purl) {
-        this.purls.add(purl);
+    public void addPURL(String purl) {
+        this.PURL.add(purl);
     }
 
-    public Set<String> getSwids() {
-        return swids;
+    public Set<String> getSWID() {
+        return SWID;
     }
 
-    public void setSwids(Set<String> swid) {
-        this.swids = swid;
+    public void setSWID(Set<String> swid) {
+        this.SWID = swid;
     }
 
     public void addSWID(String swid) {
-        this.swids.add(swid);
+        this.SWID.add(swid);
     }
 
     public String getSPDXID() {
@@ -300,9 +303,9 @@ public class Component {
     public void copyFrom(Component component) {
         this.name = component.name;
         this.publisher = component.publisher;
-        this.cpes = new HashSet<>(component.cpes);
-        this.purls = new HashSet<>(component.purls);
-        this.swids = new HashSet<>(component.swids);
+        this.CPE = new HashSet<>(component.CPE);
+        this.PURL = new HashSet<>(component.PURL);
+        this.SWID = new HashSet<>(component.SWID);
         this.children.addAll(component.children);
         this.version = component.version;
         this.vulnerabilities.addAll(component.vulnerabilities);
@@ -333,7 +336,7 @@ public class Component {
         for (Vulnerability vulnerability : vulnerabilities) {
             vulnerabilitiesHash *= vulnerability.hashCode();
         }
-        return Objects.hash(name, publisher, cpes, purls, swids, children, version, licenses) * vulnerabilitiesHash;
+        return Objects.hash(name, publisher, CPE, PURL, SWID, children, version, licenses) * vulnerabilitiesHash;
     }
 
     @Override
@@ -355,22 +358,22 @@ public class Component {
                 retval = retval && this.publisher == null;
             }
 
-            if (otherComponent.cpes != null) {
-                retval = retval && otherComponent.cpes.equals(this.cpes);
+            if (otherComponent.CPE != null) {
+                retval = retval && otherComponent.CPE.equals(this.CPE);
             } else {
-                retval = retval && this.cpes == null;
+                retval = retval && this.CPE == null;
             }
 
-            if (otherComponent.purls != null) {
-                retval = retval && otherComponent.purls.equals(this.purls);
+            if (otherComponent.PURL != null) {
+                retval = retval && otherComponent.PURL.equals(this.PURL);
             } else {
-                retval = retval && this.purls == null;
+                retval = retval && this.PURL == null;
             }
 
-            if (otherComponent.swids != null) {
-                retval = retval && otherComponent.swids.equals(this.swids);
+            if (otherComponent.SWID != null) {
+                retval = retval && otherComponent.SWID.equals(this.SWID);
             } else {
-                retval = retval && this.swids == null;
+                retval = retval && this.SWID == null;
             }
 
             if (otherComponent.children != null) {
