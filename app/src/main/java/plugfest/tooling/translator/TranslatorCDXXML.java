@@ -18,12 +18,12 @@ import java.util.UUID;
 
 
 /**
- * file: TranslatorCDX.java
+ * file: TranslatorCDXXML.java
  * Coverts CycloneDX SBOMs into internal SBOM objects
  *
  * @author Tyler Drake
  */
-public class TranslatorCDX {
+public class TranslatorCDXXML {
 
     /**
      * Coverts CycloneDX SBOMs into internal SBOM object
@@ -34,7 +34,7 @@ public class TranslatorCDX {
      * @throws IOException
      * @throws SAXException
      */
-    public static SBOM translatorCDX(String file_path) throws ParserConfigurationException {
+    public static SBOM translatorCDXXML(String file_path) throws ParserConfigurationException {
 
         // New SBOM object
         SBOM sbom;
