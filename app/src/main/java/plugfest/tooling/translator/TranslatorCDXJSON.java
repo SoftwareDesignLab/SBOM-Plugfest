@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TranslatorCDXJSON {
