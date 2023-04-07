@@ -192,9 +192,9 @@ public class SBOM {
      */
     public SBOMType assignOriginFormat(String format) {
         if (format != null) {
-            if (format.contains("cyclonedx")) {
+            if (format.toLowerCase().contains("cyclonedx")) {
                 return SBOMType.CYCLONE_DX;
-            } else if (format.contains("spdx")) {
+            } else if (format.toLowerCase().contains("spdx")) {
                 return SBOMType.SPDX;
             }
         }
