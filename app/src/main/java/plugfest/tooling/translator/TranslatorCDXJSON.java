@@ -1,36 +1,23 @@
 package plugfest.tooling.translator;
-import com.google.common.collect.Multimap;
-import org.apache.commons.lang3.ObjectUtils;
+import plugfest.tooling.sbom.*;
+
+
+import org.cyclonedx.exception.ParseException;
+import org.cyclonedx.model.*;
+import org.cyclonedx.parsers.JsonParser;
+
 import plugfest.tooling.sbom.Component;
 import plugfest.tooling.sbom.SBOM;
 
 
-
-import org.apache.jena.atlas.json.io.parser.JSONParser;
-import org.cyclonedx.CycloneDxMediaType;
-import org.cyclonedx.exception.ParseException;
-import org.cyclonedx.model.*;
-import org.cyclonedx.parsers.JsonParser;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import plugfest.tooling.sbom.SBOM;
-import plugfest.tooling.sbom.Signature;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
 import java.util.*;
-import java.util.function.Function;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TranslatorCDXJSON {
-
-    private static final Pattern package_id_pattern = Pattern.compile("package-id=([a-f0-9]{16})");
 
     public static SBOM translatorCDXJSON(String file_path) throws IOException, ParseException {
 
@@ -78,15 +65,17 @@ public class TranslatorCDXJSON {
 
         HashMap<String, Component> components = new HashMap<>();
 
+
         for(org.cyclonedx.model.Component cdx_component : json_sbom.getComponents()) {
 
             if( cdx_component != null ) {
+                PURL purl = cdx_component.getPurl() == null ? null : new PURL(cdx_component.getPurl());
                 Component new_component = new Component(
                         cdx_component.getName(),
                         cdx_component.getPublisher(),
                         cdx_component.getVersion(),
                         Collections.singleton(cdx_component.getCpe()),
-                        Collections.singleton(cdx_component.getPurl()),
+                        Collections.singleton(purl),
                         Collections.singleton(String.valueOf(cdx_component.getSwid()))
                 );
                 try {
@@ -107,16 +96,23 @@ public class TranslatorCDXJSON {
 
         }
 
-        Map<String, List<Dependency>> dependencies = json_sbom.getDependencies()
-                        .stream()
-                                .collect(
-                                        Collectors.toMap(
-                                                Dependency::getRef,
-                                                Dependency::getDependencies
-                                        )
-                                );
+        try {
+            Map<String, List<Dependency>> dependencies = json_sbom.getDependencies()
+                    .stream()
+                    .collect(
+                            Collectors.toMap(
+                                    Dependency::getRef,
+                                    Dependency::getDependencies
+                            )
+                    );
 
-        dependencyBuilder(dependencies, components, top_component, sbom, null);
+            dependencyBuilder(dependencies, components, top_component, sbom, null);
+        } catch (NullPointerException e) {
+            System.err.println("Could not find dependencies. Dependency Tree will not be build for " + file_path);
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error when processing dependency tree: " + file_path);
+        }
 
         return sbom;
     }
