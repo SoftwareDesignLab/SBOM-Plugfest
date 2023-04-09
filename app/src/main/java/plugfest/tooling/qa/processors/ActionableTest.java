@@ -45,7 +45,6 @@ public class ActionableTest extends MetricTest{
 
         // Preform subtests
         testResults.addTest(testUniqueIdentifiers(c));
-        //testResults.addTest(testTimestamp(c));
 
         // Return result
         return testResults;
@@ -75,13 +74,39 @@ public class ActionableTest extends MetricTest{
             undefinedBehavior = true;
         }
 
-        //make a string with every message
+        //sort messages by type (Fails, then Undefines, then Passes), then alphabetically.
+        messages.sort((o1, o2) -> {
+            if (o1.startsWith("FAIL")) {
+               if(o2.startsWith("FAIL")){
+                    return o1.compareTo(o2);
+                } else {
+                    return -1;
+                }
+            } else if (o1.startsWith("UNDEFINED")) {
+                if (o2.startsWith("UNDEFINED")) {
+                    return o1.compareTo(o2);
+                } else if (o2.startsWith("FAIL")) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else if (o1.startsWith("PASS")) {
+                if (o2.startsWith("PASS")) {
+                    return o1.compareTo(o2);
+                } else {
+                    return 1;
+                }
+            } else {
+                System.err.println("Warn: ActionableTest.java/testUniqueIdentifiers/sort. Unknown message start: " + o1);
+                return 0;
+            }
+        });
+
+        //then make a string with every message
         StringBuilder messageString = new StringBuilder();
         for(String message : messages){
             messageString.append('\t').append(message).append('\n');
         }
-
-        //sort that string first by the result (Fails, then Undefines, then Passes), then alphabetically.
 
         //finally return the test result with the messages string.
         if (failed) {
@@ -96,6 +121,11 @@ public class ActionableTest extends MetricTest{
         }
     }
 
+    /**
+     * Attempts to connect to the given URL and returns the HTTP status code.
+     * @param url - Full URL to connect to
+     * @return - int HTTP status code
+     */
     private int tryURL(String url) {
         try {
             URL u = new URL(url);
@@ -108,6 +138,11 @@ public class ActionableTest extends MetricTest{
         }
     }
 
+    /**
+     * Returns a human-readable message for the given status code.
+     * @param status - HTTP status code
+     * @return - String message
+     */
     private String getMessage(int status) {
         if(status == 200) { //we found some result with this tag. Note that we don't check if the tag referenced the correct component.
             return("PASS: %s identifier is registered in the database.");
@@ -119,7 +154,7 @@ public class ActionableTest extends MetricTest{
             return("UNDEFINED: %s identifier may or may not be valid. The lookup service was reachable but did not respond to the lookup request.");
         } else { //something went wrong, and we got a response code we don't know how to handle.
             this.undefinedBehavior = true;
-            return("UNDEFINED: %s identifier may or may not be valid. The lookup service returned an unexpected response code: " + returnCode);
+            return("UNDEFINED: %s identifier may or may not be valid. The lookup service returned an unexpected response code: " + status);
         }
     }
 }
