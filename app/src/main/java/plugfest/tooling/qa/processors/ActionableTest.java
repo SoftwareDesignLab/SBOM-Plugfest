@@ -18,28 +18,22 @@ import java.util.regex.Pattern;
  */
 
 public class ActionableTest extends MetricTest{
-    private final Pattern cpe23Regex;
-    private final Pattern purlRegex;
-
     private final String CPE_LOOKUP_URL;
+
+    private boolean undefinedBehavior;
+
+    private boolean failed;
+
     public ActionableTest() {
         super("Actionable Test");
 
-        String CPE_LOOKUP_URL1; //not sure what is going on here. I am trying to wrap up for the day. Will check it out tomorrow.
+        //one result per page because we just care about the response code (404 vs 200)
+        CPE_LOOKUP_URL = "https://services.nvd.nist.gov/rest/json/cpes/2.0?resultsPerPage=1&cpeMatchString=";
+        PURL_LOOKUP_URL = "https://purl.org/"; //todo implement purl lookup
+        SWID_LOOKUP_URL = "https://swidtag.org/"; //todo implement swid lookup
 
-        //todo this is repeated from completeness test, which is not ideal.
-        //define strings
-        this.cpe23Regex = Pattern.compile("cpe:2\\.3:[aho\\*\\-](:(((\\?*|\\*?)([a-zA-Z0-9\\-\\._]|(\\\\[\\\\\\*\\?" +
-                "!\"#$$%&'\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){5}(:(([a-zA-Z]{2,3}" +
-                "(-([a-zA-Z]{2}|[0-9]{3}))?)|[\\*\\-]))(:(((\\?*|\\*?)([a-zA-Z0-9\\-\\._]|(\\\\[\\\\\\*\\?!\"#$$%&'" +
-                "\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){4}", Pattern.MULTILINE);
-
-        this.purlRegex = Pattern.compile("^pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@(" +
-                "[a-zA-Z0-9-~._%]+))?(\\?(([a-zA-Z][a-zA-Z0-9_.-]*=.+)&)*([a-zA-Z][a-zA-Z0-9-~._%]*=.+))?(#(" +
-                "[a-zA-Z0-9-~._%]*\\/)+[a-zA-Z0-9-~._%]*)?", Pattern.MULTILINE);
-
-        CPE_LOOKUP_URL1 = CPE_LOOKUP_URL1 = "https://services.nvd.nist.gov/rest/json/cpes/2.0?resultsPerPage=1&cpeMatchString=";
-        CPE_LOOKUP_URL = CPE_LOOKUP_URL1;
+        undefinedBehavior = false;
+        failed = false;
     }
     @Override
     public TestResults test(Component c) {
@@ -91,20 +85,6 @@ public class ActionableTest extends MetricTest{
                 continue;
             }
 
-            //todo I was mistaken about how this was laied out. This code is most likely going to go in a function called by several loops, one for each ID type
-
-            if(returnCode == 200) {
-                messages.add("PASS: " + id + " identifier is registered in the database.");
-            } else if(returnCode == 404) {
-                failed = true;
-                messages.add("FAIL: " + id + " identifier is structurally valid, but is not registered in the database.");
-            } else if (returnCode == -1) {
-                undefinedBehavior = true;
-                messages.add("UNDEFINED: " + id + " identifier may or may not be valid. The lookup service was reachable but did not respond to the lookup request.");
-            } else {
-                undefinedBehavior = true;
-                messages.add("UNDEFINED: " + id + " identifier may or may not be valid. The lookup service returned an unexpected response code: " + returnCode);
-            }
         }
 
         return new Test(false, "because I feel like it");
@@ -119,6 +99,21 @@ public class ActionableTest extends MetricTest{
             return connection.getResponseCode();
         } catch (IOException e) {
             return -1;
+        }
+    }
+
+    private String getMessage(int status) {
+        if(status == 200) { //we found some result with this tag. Note that we don't check if the tag referenced the correct component.
+            return("PASS: %s identifier is registered in the database.");
+        } else if(status == 404) { //the tag does not exist, we fail this metric because we can't use a tag which doesn't exist.
+            this.failed = true;
+            return("FAIL: %s identifier is not registered in the database.");
+        } else if (status == -1) { //something went funky and the service stopped responding between the first "are you alive" request and second request.
+            this.undefinedBehavior = true;
+            return("UNDEFINED: %s identifier may or may not be valid. The lookup service was reachable but did not respond to the lookup request.");
+        } else { //something went wrong, and we got a response code we don't know how to handle.
+            this.undefinedBehavior = true;
+            return("UNDEFINED: %s identifier may or may not be valid. The lookup service returned an unexpected response code: " + returnCode);
         }
     }
 }
