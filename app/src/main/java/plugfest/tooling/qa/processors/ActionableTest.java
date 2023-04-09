@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 
 public class ActionableTest extends MetricTest{
     private final String CPE_LOOKUP_URL;
+    private final String PURL_LOOKUP_URL;
+    private final String SWID_LOOKUP_URL;
+
 
     private boolean undefinedBehavior;
 
@@ -56,15 +59,20 @@ public class ActionableTest extends MetricTest{
          */
 
         ArrayList<String> messages = new ArrayList<>();
-
-        for(String id : c.getCPE()) {
-            //go to the URL and see if it returns a 200 or 404, then get the human message for that status code.
-            //the flags for the ultimate test result are updated by the getMessage method.
-            messages.add(
-                    String.format(
-                            getMessage(tryURL(CPE_LOOKUP_URL + id))
-                    , id) //add the ID to the message using string format
-            );
+        if (tryURL(CPE_LOOKUP_URL) == 200) {
+            for (String id : c.getCPE()) {
+                //go to the URL and see if it returns a 200 or 404, then get the human message for that status code.
+                //the flags for the ultimate test result are updated by the getMessage method.
+                messages.add(
+                        String.format(
+                                getMessage(tryURL(CPE_LOOKUP_URL + id))
+                                , id) //add the ID to the message using string format
+                );
+            }
+        } else {
+            // the NIST API is not working, we can't do this test.
+            messages.add("The CPE lookup service is currently unavailable. Please try again later.");
+            undefinedBehavior = true;
         }
 
         StringBuilder messageString = new StringBuilder();
