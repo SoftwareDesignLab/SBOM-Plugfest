@@ -50,44 +50,38 @@ public class ActionableTest extends MetricTest{
 
     private Test testUniqueIdentifiers(Component c) {
         /*
-         * the UUID object has multiple UUIDs in it. If one fails the lookup, then the entire test fails.
+         * the identifier objects have multiple identifiers in them. If one fails the lookup, then the entire test fails.
          * If there are no fails, and at least one undefined, then the test is undefined.
          * If all of them pass, then the test passes.
          */
 
-        boolean undefinedBehavior = false;
-        boolean failed = false;
-        ArrayList<String> messages = new ArrayList<String>();
+        ArrayList<String> messages = new ArrayList<>();
 
-        for(String id : c.getCPE()) { //todo support other identifiers.
-            int returnCode;
-
-            //CPE match
-            if(cpe23Regex.matcher(id.strip()).matches()) {
-                if(tryURL(CPE_LOOKUP_URL) != 200){
-                    //The URL is not reachable, so this test is undefined.
-                    undefinedBehavior = true;
-                    messages.add("UNDEFINED: CPE identifier " + id + " may or may not be valid. The CPE lookup service is not reachable at this time.");
-                }
-
-                returnCode = tryURL(CPE_LOOKUP_URL + id);
-
-                //PURL match
-            } else if(purlRegex.matcher(id.strip()).matches()) {
-                //todo implement purl lookup
-
-                returnCode = 0;
-
-                //we have no idea what this is.
-            } else {
-                messages.add("UNDEFINED: The identifier " + id + " is not in a known format (CPE, SWID, PURL).");
-                undefinedBehavior = true;
-                continue;
-            }
-
+        for(String id : c.getCPE()) {
+            //go to the URL and see if it returns a 200 or 404, then get the human message for that status code.
+            //the flags for the ultimate test result are updated by the getMessage method.
+            messages.add(
+                    String.format(
+                            getMessage(tryURL(CPE_LOOKUP_URL + id))
+                    , id) //add the ID to the message using string format
+            );
         }
 
-        return new Test(false, "because I feel like it");
+        StringBuilder messageString = new StringBuilder();
+        for(String message : messages){
+            messageString.append('\t').append(message).append('\n');
+        }
+
+        if (failed) {
+            messageString.insert(0, "FAILURE: The test failed because one or more of the identifiers was not found in the databases. See checks below for more details.\n");
+            return new Test(false, messageString.toString());
+        } else if (undefinedBehavior) {
+            messageString.insert(0, "UNDEFINED: The test was inconclusive for at least one of the identifiers. See checks below for more details.\n");
+            return new Test(false, messageString.toString());
+        } else {
+            messageString.insert(0, "PASSING: The test passed because all identifiers were located in the databases.\n");
+            return new Test(true, messageString.toString());
+        }
     }
 
     private int tryURL(String url) {
