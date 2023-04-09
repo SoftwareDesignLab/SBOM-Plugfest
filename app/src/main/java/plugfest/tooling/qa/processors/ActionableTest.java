@@ -75,11 +75,15 @@ public class ActionableTest extends MetricTest{
             undefinedBehavior = true;
         }
 
+        //make a string with every message
         StringBuilder messageString = new StringBuilder();
         for(String message : messages){
             messageString.append('\t').append(message).append('\n');
         }
 
+        //sort that string first by the result (Fails, then Undefines, then Passes), then alphabetically.
+
+        //finally return the test result with the messages string.
         if (failed) {
             messageString.insert(0, "FAILURE: The test failed because one or more of the identifiers was not found in the databases. See checks below for more details.\n");
             return new Test(false, messageString.toString());
