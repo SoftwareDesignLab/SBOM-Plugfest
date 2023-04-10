@@ -131,13 +131,13 @@ public class ActionableTest extends MetricTest{
 
         //finally return the test result with the messages string.
         if (failed) {
-            messageString.insert(0, "FAILURE: The test failed because one or more of the identifiers was not found in the databases. See checks below for more details.\n");
+            messageString.insert(0, "The test failed because one or more of the identifiers was not found in the databases. See checks below for more details.\n");
             return new Test(false, messageString.toString());
         } else if (undefinedBehavior) {
-            messageString.insert(0, "UNDEFINED: The test was inconclusive for at least one of the identifiers. See checks below for more details.\n");
+            messageString.insert(0, "The test was inconclusive for at least one of the identifiers. See checks below for more details.\n");
             return new Test(false, messageString.toString());
         } else {
-            messageString.insert(0, "PASSING: The test passed because all identifiers were located in the databases.\n");
+            messageString.insert(0, "The test passed because all identifiers were located in the databases.\n");
             return new Test(true, messageString.toString());
         }
     }
