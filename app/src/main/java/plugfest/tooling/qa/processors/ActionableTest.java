@@ -17,27 +17,46 @@ import java.util.regex.Pattern;
  * @author Asa Horn
  */
 
+/**
+ * Test suite for Actionable test items.
+ */
 public class ActionableTest extends MetricTest{
+    /**
+     * URL to lookup CPEs. Should be the whole URL which just needs the search term appended to the end.
+     * Should return 404 for a non-existant CPE, and 200 for a existing CPE.
+     */
     private final String CPE_LOOKUP_URL;
-    private final String PURL_LOOKUP_URL;
-    private final String SWID_LOOKUP_URL;
 
-
+    /**
+     * Flag which keeps track of weather the overall test should return undefined behavior or not.
+     */
     private boolean undefinedBehavior;
 
+    /**
+     * Flag which keeps track of weather the overall test should return failed or not.
+     */
     private boolean failed;
 
+    /**
+     * Constructor for ActionableTest
+     */
     public ActionableTest() {
         super("Actionable Test");
 
         //one result per page because we just care about the response code (404 vs 200)
         CPE_LOOKUP_URL = "https://services.nvd.nist.gov/rest/json/cpes/2.0?resultsPerPage=1&cpeMatchString=";
-        PURL_LOOKUP_URL = "https://purl.org/"; //todo implement purl lookup
-        SWID_LOOKUP_URL = "https://swidtag.org/"; //todo implement swid lookup
+        //PURL_LOOKUP_URL = "https://purl.org/"; //todo implement purl lookup
+        //SWID_LOOKUP_URL = "https://swidtag.org/"; //todo implement swid lookup
 
         undefinedBehavior = false;
         failed = false;
     }
+
+    /**
+     * Runs the tests for Actionable.
+     * @param c - component to test.
+     * @return - TestResults object containing the results of the test.
+     */
     @Override
     public TestResults test(Component c) {
         // Init StringBuilder
@@ -50,6 +69,11 @@ public class ActionableTest extends MetricTest{
         return testResults;
     }
 
+    /**
+     * Tests the unique identifiers of a component to ensure they are actionable.
+     * @param c - component to test.
+     * @return - Test object containing the results of the test.
+     */
     private Test testUniqueIdentifiers(Component c) {
         /*
          * the identifier objects have multiple identifiers in them. If one fails the lookup, then the entire test fails.
