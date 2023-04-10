@@ -8,7 +8,7 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'application'
+    id 'java'
 }
 
 repositories {
@@ -35,27 +35,22 @@ dependencies {
     implementation 'org.glassfish.hk2:hk2-utils:3.0.3'
 }
 
-application {
-    // Define the main class for the application.
-    mainClass = 'plugfest.tooling.App'
-}
-
-tasks.named('test') {
+test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'plugfest.tooling.App'
-    }
-
-    from {
-        configurations.runtimeClasspath.collect {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-            project.zipTree(it)
-        }
-    }
-}
+//jar {
+//    manifest {
+//        attributes 'Main-Class': 'plugfest.tooling.App'
+//    }
+//
+//    from {
+//        configurations.runtimeClasspath.collect {
+//            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//
+//            project.zipTree(it)
+//        }
+//    }
+//}
 
