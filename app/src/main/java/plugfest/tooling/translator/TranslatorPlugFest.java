@@ -18,18 +18,28 @@ public class TranslatorPlugFest {
      * @return SBOM object, null if failed
      */
     public static SBOM translate(String path) {
+
         SBOM sbom = null;
 
         // TODO check the contents of the file rather than trusting the file extension
         // TODO address the parser exception rather than ignoring it
+
+        final String extension = path.substring(path.toString().toLowerCase().lastIndexOf('.'));
+
         try {
-            if (path.toLowerCase().endsWith(".xml")) {
-                sbom = TranslatorCDXXML.translatorCDXXML(path);
-            } else if (path.toLowerCase().endsWith(".spdx")) {
-                sbom = TranslatorSPDX.translatorSPDX(path);
-            } else {
-                System.err.println("\nInvalid SBOM format found at: " + path);
+
+            switch (extension) {
+
+                case ".xml"  -> sbom = TranslatorCDXXML.translatorCDXXML(path);
+
+                case ".json" -> sbom = TranslatorCDXJSON.translatorCDXJSON(path);
+
+                case ".spdx" -> sbom = TranslatorSPDX.translatorSPDX(path);
+
+                default      -> System.err.println("\nInvalid SBOM format found at: " + path);
+
             }
+
         }
         catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

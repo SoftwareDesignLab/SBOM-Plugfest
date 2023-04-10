@@ -78,11 +78,10 @@ public class TranslatorCDXJSON {
                     top_component_meta.getVersion(),
                     top_component_meta.getBomRef()
             );
-            sbom.addComponent(null, top_component);
-
         } catch(Exception e) {
             System.err.println("Could not create top-level component from MetaData.\n " +
                     "If this is not expected please check SBOM file: " + file_path);
+
         }
 
         // Create new collection of components
@@ -124,14 +123,21 @@ public class TranslatorCDXJSON {
                 // Add component to component list
                 components.put(new_component.getSPDXID(), new_component);
 
+                // If a top component doesn't exist, make this new component the top component
+                top_component = top_component == null ? new_component : top_component;
+
             }
 
         }
 
-        // Attempt to build dependency tree
+        // Add the top component to the sbom
+        sbom.addComponent(null, top_component);
+
+        // Create dependency collection
+        Map<String, List<Dependency>> dependencies;
         try {
-            // Reformat list of dependencies
-            Map<String, List<Dependency>> dependencies = json_sbom.getDependencies()
+            // Attempt to get all dependencies from CycloneDX Object
+            dependencies = json_sbom.getDependencies()
                     .stream()
                     .collect(
                             Collectors.toMap(
@@ -139,16 +145,34 @@ public class TranslatorCDXJSON {
                                     Dependency::getDependencies
                             )
                     );
-
-            // Call dependency builder to build the dependency tree
-            dependencyBuilder(dependencies, components, top_component, sbom, null);
-        } catch (NullPointerException e) {
-            System.err.println("Could not find dependencies. Dependency Tree will not be built for: " + file_path);
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("Error when processing dependency tree: " + file_path);
-            e.printStackTrace();
+        } catch (NullPointerException nullPointerException) {
+            // I failed, ourput error message and default dependencies to null
+            System.err.println("Could not find dependencies from CycloneDX Object. " +
+                    "Defaulting all components to point to head component. File: " + file_path);
+            nullPointerException.printStackTrace();
+            dependencies = null;
         }
+
+
+        // If the dependency list isn't empty, call dependencyBuilder to construct dependencyTree
+        // Otherwise, default the dependencyTree by adding all subcomponents as children to the top component
+        if( !dependencies.isEmpty() ) {
+            try {
+                dependencyBuilder(dependencies, components, top_component, sbom, null);
+            } catch (Exception e) {
+                System.out.println("Error building dependency tree. Dependency tree may be incomplete for: " + file_path);
+            }
+        } else {
+            try {
+                for (Map.Entry<String, Component> comp : components.entrySet()) {
+                    if (comp != null) { sbom.addComponent(top_component.getUUID(), comp.getValue()); }
+                }
+            } catch (Exception exception) {
+                System.out.println("Could not default default the dependency tree. Dependency tree may be empty.");
+                exception.printStackTrace();
+            }
+        }
+
 
         // Return SBOM object
         return sbom;
