@@ -50,25 +50,6 @@ public class App {
             System.exit(0);
         }
 
-        try {
-            // Parse SBOM Object from file
-            SBOM sbom = TranslatorSPDX.translatorSPDX(args[1]);
-
-            // Ensure SBOM Object was parsed without fail
-            assert sbom != null;
-
-            // Instantiate QA Pipeline
-            QAPipeline qa = new QAPipeline();
-            QualityReport qualityReport = qa.process(sbom);
-
-            // Display QualityReport
-            System.out.println(qualityReport.toString());
-
-        } catch (IOException ignored) {
-            System.out.println("Error translating file.");
-            System.exit(-1);
-        }
-
         /*
         1. new translator t
         2. SBOM[] sboms = t.parse("path/to/sboms/dir");
