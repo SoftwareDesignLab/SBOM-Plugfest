@@ -46,20 +46,22 @@ public class TranslatorCDXJSON {
                     null
             );
         } catch (Exception e) {
-            System.err.println("Error in creating internal SBOM for " + file_path);
+            System.err.println("Error in creating internal SBOM for: " + file_path );
             return null;
         }
 
         try {
+            org.cyclonedx.model.Component top_component_meta = json_sbom.getMetadata().getComponent();
             top_component = new plugfest.tooling.sbom.Component(
-                    json_sbom.getMetadata().getComponent().getName(),
-                    json_sbom.getMetadata().getComponent().getPublisher(),
-                    json_sbom.getMetadata().getComponent().getVersion(),
-                    json_sbom.getMetadata().getComponent().getBomRef()
+                    top_component_meta.getName(),
+                    top_component_meta.getPublisher(),
+                    top_component_meta.getVersion(),
+                    top_component_meta.getBomRef()
             );
             sbom.addComponent(null, top_component);
         } catch(Exception e) {
-            System.err.println("Could not create top-level component from MetaData. If this is ");
+            System.err.println("Could not create top-level component from MetaData.\n " +
+                    "If this is not expected please check SBOM file: " + file_path);
         }
 
         HashMap<String, Component> components = new HashMap<>();
@@ -107,7 +109,7 @@ public class TranslatorCDXJSON {
 
             dependencyBuilder(dependencies, components, top_component, sbom, null);
         } catch (NullPointerException e) {
-            System.err.println("Could not find dependencies. Dependency Tree will not be build for " + file_path);
+            System.err.println("Could not find dependencies. Dependency Tree will not be build for: " + file_path);
             e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Error when processing dependency tree: " + file_path);
@@ -128,13 +130,15 @@ public class TranslatorCDXJSON {
 
         // Get the parent's dependencies as a list
         String parent_id = parent.getSPDXID();
-        List<Dependency> children_SPDX = (List<Dependency>) dependencies.get(parent_id);
-        if( children_SPDX == null ) { return; }
-        System.out.println("OK");
+        List<Dependency> children_ref = (List<Dependency>) dependencies.get(parent_id);
+
+        // If there are no
+        if( children_ref == null ) { return; }
+
         // Cycle through each dependency the parent component has
-        for (Dependency child_SPDX: children_SPDX) {
+        for (Dependency child_ref: children_ref) {
             // Retrieve the component the parent has a dependency for
-            Component child = (Component) components.get(child_SPDX.getRef());
+            Component child = (Component) components.get(child_ref.getRef());
 
             // If component is already in the dependency tree, add it as a child to the parent
             // Else, add it to the dependency tree while setting the parent
