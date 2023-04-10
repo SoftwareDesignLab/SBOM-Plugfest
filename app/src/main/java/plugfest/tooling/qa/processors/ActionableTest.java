@@ -8,17 +8,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 /**
  * File: ActionableTest.java
  * Test fields to ensure data contained is usable. (not placeholder, not null, not invalid, etc.)
  *
  * @author Asa Horn
- */
-
-/**
- * Test suite for Actionable test items.
  */
 public class ActionableTest extends MetricTest{
     /**
@@ -97,6 +92,8 @@ public class ActionableTest extends MetricTest{
             messages.add("The CPE lookup service is currently unavailable. Please try again later.");
             undefinedBehavior = true;
         }
+
+        //todo add SWID and PURL tests
 
         //sort messages by type (Fails, then Undefines, then Passes), then alphabetically.
         messages.sort((o1, o2) -> {
