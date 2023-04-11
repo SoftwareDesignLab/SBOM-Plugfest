@@ -1,5 +1,6 @@
 package plugfest.tooling.translator;
 
+import org.json.JSONObject;
 import org.xml.sax.SAXException;
 import plugfest.tooling.sbom.SBOM;
 
@@ -59,7 +60,11 @@ public class TranslatorSVIP {
                 switch (extension) {
                     case ".xml"  -> sbom_objects.add(TranslatorCDXXML.translatorCDXXML(sbom_item.toString()));
 
-                    case ".json" -> sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
+                    case ".json" -> {
+                        if (new JSONObject(new String(Files.readAllBytes(sbom_item))).toMap().get("bomFormat").equals("CycloneDX")) {
+                            sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
+                        }
+                    }
 
                     case ".spdx" -> sbom_objects.add(TranslatorSPDX.translatorSPDX(sbom_item.toString()));
 

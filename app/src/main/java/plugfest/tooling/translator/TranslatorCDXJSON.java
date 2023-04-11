@@ -156,7 +156,7 @@ public class TranslatorCDXJSON {
 
         // If the dependency list isn't empty, call dependencyBuilder to construct dependencyTree
         // Otherwise, default the dependencyTree by adding all subcomponents as children to the top component
-        if( !dependencies.isEmpty() ) {
+        if( dependencies != null ) {
             try {
                 dependencyBuilder(dependencies, components, top_component, sbom, null);
             } catch (Exception e) {
