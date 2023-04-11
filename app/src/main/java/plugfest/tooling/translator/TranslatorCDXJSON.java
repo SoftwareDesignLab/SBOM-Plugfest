@@ -11,7 +11,6 @@ import plugfest.tooling.sbom.SBOM;
 
 
 import java.io.File;
-import java.io.IOException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,10 +118,10 @@ public class TranslatorCDXJSON {
                 }
 
                 // Set the component's unique ID
-                new_component.setSPDXID(cdx_component.getBomRef());
+                new_component.setUniqueID(cdx_component.getBomRef());
 
                 // Add component to component list
-                components.put(new_component.getSPDXID(), new_component);
+                components.put(new_component.getUniqueID(), new_component);
 
                 // If a top component doesn't exist, make this new component the top component
                 top_component = top_component == null ? new_component : top_component;
@@ -194,11 +193,11 @@ public class TranslatorCDXJSON {
 
         if (visited != null) {
             // Add this parent to the visited set
-            visited.add(parent.getSPDXID());
+            visited.add(parent.getUniqueID());
         }
 
         // Get the parent's dependencies as a list
-        String parent_id = parent.getSPDXID();
+        String parent_id = parent.getUniqueID();
         List<Dependency> children_ref = (List<Dependency>) dependencies.get(parent_id);
 
         // If there are no
@@ -225,7 +224,7 @@ public class TranslatorCDXJSON {
             }
             else {
                 // Only explore if we haven't already visited this component
-                if (!visited.contains(child.getSPDXID())) {
+                if (!visited.contains(child.getUniqueID())) {
                     // Pass the child component as the new parent into dependencyBuilder
                     dependencyBuilder(dependencies, components, child, sbom, visited);
                 }
