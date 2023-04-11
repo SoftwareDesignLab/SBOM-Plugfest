@@ -52,16 +52,20 @@ public class TranslatorSVIP {
          *  - SPDX TAG-VALUE
          */
         for (Path sbom_item : sbom_files) {
+
+            final String extension = sbom_item.toString().substring(sbom_item.toString().toLowerCase().lastIndexOf('.'));
+
             try {
-                if (sbom_item.toString().toLowerCase().endsWith(".xml")) {
-                    sbom_objects.add(TranslatorCDXXML.translatorCDXXML(sbom_item.toString()));
-                } else if (sbom_item.toString().toLowerCase().endsWith(".json")) {
-                    sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
-                } else if (sbom_item.toString().toLowerCase().endsWith(".spdx")) {
-                    sbom_objects.add(TranslatorSPDX.translatorSPDX(sbom_item.toString()));
-                } else {
-                    System.err.println("\nInvalid SBOM format found in: " + sbom_item);
+                switch (extension) {
+                    case ".xml"  -> sbom_objects.add(TranslatorCDXXML.translatorCDXXML(sbom_item.toString()));
+
+                    case ".json" -> sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
+
+                    case ".spdx" -> sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
+
+                    default      -> System.err.println("\nInvalid SBOM format found at: " + sbom_item);
                 }
+
                 // todo deleting gitignore
                 try {
                     Files.delete(sbom_item);
