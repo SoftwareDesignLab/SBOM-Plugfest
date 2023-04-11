@@ -149,7 +149,6 @@ public class TranslatorCDXJSON {
             // I failed, ourput error message and default dependencies to null
             System.err.println("Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
-            nullPointerException.printStackTrace();
             dependencies = null;
         }
 
