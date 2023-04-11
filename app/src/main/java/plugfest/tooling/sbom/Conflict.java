@@ -60,7 +60,7 @@ public class Conflict {
                 conflictTypes.add(ConflictType.COMPONENT_SWID_MISMATCH);
             }
         }
-        if (componentA.getSPDXID() != null && !componentA.getSPDXID().equals(componentB.getSPDXID())) {
+        if (componentA.getUniqueID() != null && !componentA.getUniqueID().equals(componentB.getUniqueID())) {
             conflictTypes.add(ConflictType.COMPONENT_SPDXID_MISMATCH);
         }
         if (componentA.getLicenses() != null && !componentA.getLicenses().equals(componentB.getLicenses())) {

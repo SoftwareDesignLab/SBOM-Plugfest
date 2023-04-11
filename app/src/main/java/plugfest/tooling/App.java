@@ -12,7 +12,7 @@ import plugfest.tooling.qa.QAPipeline;
 import plugfest.tooling.qa.QualityReport;
 import plugfest.tooling.sbom.*;
 import plugfest.tooling.translator.TranslatorSPDX;
-import plugfest.tooling.translator.TranslatorSVIP;
+import plugfest.tooling.translator.TranslatorPlugFest;
 
 
 public class App {
@@ -65,7 +65,7 @@ public class App {
 
         if(args[0].contains("-q")) {
             // Parse SBOM Object from file
-            SBOM sbom = TranslatorSVIP.translate(args[1]);
+            SBOM sbom = TranslatorPlugFest.translate(args[1]);
 
             // Ensure SBOM Object was parsed without fail
             assert sbom != null;
@@ -87,8 +87,8 @@ public class App {
             }
 
             // Process first sbom
-            SBOM sbomOne = TranslatorSVIP.translate(args[1]);
-            SBOM sbomTwo = TranslatorSVIP.translate(args[2]);
+            SBOM sbomOne = TranslatorPlugFest.translate(args[1]);
+            SBOM sbomTwo = TranslatorPlugFest.translate(args[2]);
 
             if (sbomOne == null || sbomTwo == null) {
                 System.err.println("One or more of the SBOMs could not be parsed. Exiting...");
