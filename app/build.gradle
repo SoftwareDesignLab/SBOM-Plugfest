@@ -17,6 +17,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jsoup:jsoup:1.15.4'
+
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
@@ -44,8 +46,16 @@ tasks.named('test') {
 }
 
 jar {
-  manifest {
-   attributes 'Main-Class': 'plugfest.tooling.App'
-  }
+    manifest {
+        attributes 'Main-Class': 'plugfest.tooling.App'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+            project.zipTree(it)
+        }
+    }
 }
 

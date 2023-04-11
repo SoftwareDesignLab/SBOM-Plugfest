@@ -1,5 +1,20 @@
 # Plugfest Changelog
-## v2.0.0
+
+## v2.1.0 -- 4/7/23
+### Differ
+- None
+
+### Metrics
+- Documented `TimelinessTest`
+  - `TimelinessTest` now checks to see if version numbers and publishers match the resource (package manager database)
+
+### Miscellaneous
+- Added `changelog.md` to track weekly changes to the project
+- Added `README.md` to hold usage instructions and project breakdown
+- Removed quality metrics from the SBOM class
+- Added `PURL` class to allow for easier PURL parsing
+
+## v2.0.0 -- 3/31/23
 ### Differ
 - Rewrite the line-by-line system to digest SBOM data into an object for comparison
 - Add support for comparing across SBOM formats
