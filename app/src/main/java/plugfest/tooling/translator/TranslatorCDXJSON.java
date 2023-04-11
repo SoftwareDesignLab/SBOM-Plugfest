@@ -111,8 +111,9 @@ public class TranslatorCDXJSON {
                 try {
                     new_component.setLicenses(new HashSet<>(Arrays.asList(cdx_component.getLicenseChoice().getExpression())));
                 } catch (NullPointerException e) {
-                    System.err.println("No licenses found for " + new_component.getName() + ". bom-ref: " + cdx_component.getBomRef());
+                    // Getting a NullPointerException on licenses is fine. It just means the component had none.
                 } catch (Exception e) {
+                    // This may be an actual error
                     System.err.println("An error occurred while getting licenses: \n");
                     e.printStackTrace();
                 }
