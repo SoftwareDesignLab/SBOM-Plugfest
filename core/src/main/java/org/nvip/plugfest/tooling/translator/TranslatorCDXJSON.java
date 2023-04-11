@@ -71,7 +71,7 @@ public class TranslatorCDXJSON {
             org.cyclonedx.model.Component top_component_meta = json_sbom.getMetadata().getComponent();
 
             // Create top component and add it to SBOM object
-            top_component = new plugfest.tooling.sbom.Component(
+            top_component = new org.nvip.plugfest.tooling.sbom.Component(
                     top_component_meta.getName(),
                     top_component_meta.getPublisher(),
                     top_component_meta.getVersion(),
