@@ -14,21 +14,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TranslatorDifferTest {
 
-    private static final String TEST_SPDX_v2_3_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx";
+    private static final String TEST_SPDX_v2_3_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx";
 
-    private static final String TEST_SPDX_v2_3_DIFF_BOM = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine-compare.2-3.spdx";
+    private static final String TEST_SPDX_v2_3_DIFF_BOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine-compare.2-3.spdx";
 
-    private static final String TEST_SPDX_v2_2_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.docker.2-2.spdx";
+    private static final String TEST_SPDX_v2_2_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.docker.2-2.spdx";
 
-    private static final String TEST_SPDX_LARGE_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.python.2-3.spdx";
+    private static final String TEST_SPDX_LARGE_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.python.2-3.spdx";
 
-    private static final String TEST_SPDX_EMPTY = "src/test/java/plugfest/tooling/sample_boms/sbom.empty.2-3.spdx";
+    private static final String TEST_SPDX_EMPTY = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.empty.2-3.spdx";
 
-    private static final String TEST_CDX_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.xml";
+    private static final String TEST_CDX_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine.xml";
 
-    private static final String TEST_CDX_DIFF_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine-compare.xml";
+    private static final String TEST_CDX_DIFF_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine-compare.xml";
 
-    private static final String TEST_CDX_LARGE_SBOM = "src/test/java/plugfest/tooling/sample_boms/sbom.python.xml";
+    private static final String TEST_CDX_LARGE_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.python.xml";
 
     private static final int EXPECTED_CONFLICTS_SMALL_LARGE_SPDX = 447;
 
