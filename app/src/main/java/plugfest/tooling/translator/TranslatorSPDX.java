@@ -182,7 +182,7 @@ public class TranslatorSPDX {
                 unpackaged_component.setUnpackaged(true);
 
                 // Add unpackaged file to components
-                components.put(unpackaged_component.getSPDXID(), unpackaged_component);
+                components.put(unpackaged_component.getUniqueID(), unpackaged_component);
 
             } else {
                 current_line = br.readLine();
@@ -287,10 +287,10 @@ public class TranslatorSPDX {
                 component.setLicenses(licenses);
 
                 // Add packaged component to components list
-                components.put(component.getSPDXID(), component);
+                components.put(component.getUniqueID(), component);
 
                 // Add packaged component to packages list as well
-                packages.add(component.getSPDXID());
+                packages.add(component.getUniqueID());
 
             } else {
                 // if no package/component is found, get next line
@@ -346,9 +346,9 @@ public class TranslatorSPDX {
 
                     // If top component exists, and if it is SPDXID: SPDXRef-DOCUMENT, add top level components as its dependencies
                     // Then, add it as the top level component of the dependency tree
-                    if( top_component != null && top_component.getSPDXID().contains(DOCUMENT_REFERENCE_TAG) ) {
-                        dependencies.putAll(top_component.getSPDXID(), packages);
-                        dependencies.remove(top_component.getSPDXID(), top_component.getSPDXID());
+                    if( top_component != null && top_component.getUniqueID().contains(DOCUMENT_REFERENCE_TAG) ) {
+                        dependencies.putAll(top_component.getUniqueID(), packages);
+                        dependencies.remove(top_component.getUniqueID(), top_component.getUniqueID());
                     }
                 }
             }
@@ -406,11 +406,11 @@ public class TranslatorSPDX {
 
         if (visited != null) {
             // Add this parent to the visited set
-            visited.add(parent.getSPDXID());
+            visited.add(parent.getUniqueID());
         }
 
         // Get the parent's dependencies as a list
-        String parent_id = parent.getSPDXID();
+        String parent_id = parent.getUniqueID();
         Collection<Object> children_SPDX = dependencies.get(parent_id);
 
         // Cycle through each dependency the parent component has
@@ -434,7 +434,7 @@ public class TranslatorSPDX {
             }
             else {
                 // Only explore if we haven't already visited this component
-                if (!visited.contains(child.getSPDXID())) {
+                if (!visited.contains(child.getUniqueID())) {
                     // Pass the child component as the new parent into dependencyBuilder
                     dependencyBuilder(dependencies, components, child, sbom, visited);
                 }

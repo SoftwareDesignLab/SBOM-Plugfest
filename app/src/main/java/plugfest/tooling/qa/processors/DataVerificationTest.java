@@ -57,15 +57,23 @@ public class DataVerificationTest extends MetricTest {
                 String version = p.getVersion();
                 String versionFoundOnline = fromOnline[1].toLowerCase();
 
-                String publisher = c.getPublisher().toLowerCase();
+                String publisher;
+
+                if (c.getPublisher() == null) {
+                    publisher = "";
+                }
+                else {
+                    publisher = c.getPublisher().toLowerCase();
+                }
+
                 String publisherFoundOnline = fromOnline[2].toLowerCase().strip();
 
                 // check whatever is online at least contains this component, or vice versa
-                if(!((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
+                if(name == null || !((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
                     testResults.addTest(new Test(false, "Name ", name, "does not match ",
                             nameFoundOnline, " in ", packageManagerName));
 
-                if(!versionFoundOnline.contains(version))
+                if(version == null || !versionFoundOnline.contains(version))
                     testResults.addTest(new Test(false,"Version ",version," not found in ",
                             packageManagerName, " database"));
 
@@ -158,7 +166,12 @@ public class DataVerificationTest extends MetricTest {
 
         }
 
-        return versions.substring(0, versions.toString().length()-1);
+        if(versions.toString().length() == 0) {
+            return "";
+        }
+        else {
+            return versions.substring(0, versions.toString().length() - 1);
+        }
 
 
     }

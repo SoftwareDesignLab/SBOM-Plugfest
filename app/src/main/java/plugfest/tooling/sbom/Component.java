@@ -41,9 +41,11 @@ public class Component {
     private Set<String> swids;
 
     /**
-     * Unique identifier for SPDX component
+     * Unique identifier for a component in an SBOM
+     * For SPDX SBOMs this may be : SPDX_ID
+     * For CDX SBOMs this may be : bom-ref
      */
-    private String SPDXid;
+    private String uniqueID;
 
     /**
      * UUIDs for the children of the given component
@@ -117,11 +119,11 @@ public class Component {
      * @param name      Name of the component
      * @param publisher Publisher of the component
      * @param version   Version number of the component
-     * @param SPDXid    SPDX ID
+     * @param uniqueID  SPDX ID
      */
-    public Component(String name, String publisher, String version, String SPDXid) {
+    public Component(String name, String publisher, String version, String uniqueID) {
         this(name, publisher, version);
-        this.SPDXid = SPDXid;
+        this.uniqueID = uniqueID;
     }
 
     /**
@@ -253,12 +255,12 @@ public class Component {
         this.swids.add(swid);
     }
 
-    public String getSPDXID() {
-        return SPDXid;
+    public String getUniqueID() {
+        return uniqueID;
     }
 
-    public void setSPDXID(String spdxid) {
-        this.SPDXid = spdxid;
+    public void setUniqueID(String uniqueID) {
+        this.uniqueID = uniqueID;
     }
 
     public Set<ComponentConflict> getConflicts() {
