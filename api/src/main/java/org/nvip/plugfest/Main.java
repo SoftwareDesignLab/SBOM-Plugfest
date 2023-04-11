@@ -1,12 +1,12 @@
 package org.nvip.plugfest;
 
-import plugfest.tooling.differ.Comparer;
-import plugfest.tooling.differ.DiffReport;
-import plugfest.tooling.qa.QAPipeline;
-import plugfest.tooling.qa.QualityReport;
-import plugfest.tooling.sbom.SBOM;
-import plugfest.tooling.translator.TranslatorSPDX;
-import plugfest.tooling.translator.TranslatorSVIP;
+import org.nvip.plugfest.tooling.differ.Comparer;
+import org.nvip.plugfest.tooling.differ.DiffReport;
+import org.nvip.plugfest.tooling.qa.QAPipeline;
+import org.nvip.plugfest.tooling.qa.QualityReport;
+import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
+import org.nvip.plugfest.tooling.translator.TranslatorSVIP;
 
 import java.io.File;
 import java.io.IOException;
