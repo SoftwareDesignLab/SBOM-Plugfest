@@ -1,15 +1,15 @@
-package plugfest.tooling.sbom;
+package plugfest.tooling.translator;
 
 import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.Test;
+import plugfest.tooling.sbom.SBOM;
 import plugfest.tooling.translator.TranslatorCDXJSON;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CDXJSONParserTest {
+public class TranslatorCDXJSONTest {
 
     public static final String TEST_SMALL_CDX_JSON = "src/test/java/plugfest/tooling/sample_boms/cdx_json/sbom.alpine.json";
 

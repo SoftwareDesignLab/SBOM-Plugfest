@@ -16,7 +16,11 @@ public class AppTest {
     @Test
     public void appHasAGreeting() throws IOException, ParserConfigurationException {
         App classUnderTest = new App();
-        String[] args = {"-m", "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx"};
+        String[] args = {
+                "-d",
+                "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx",
+                "src/test/java/plugfest/tooling/sample_boms/sbom.alpine-compare.2-3.spdx"
+        };
         App.main(args);
         assertNotNull(classUnderTest);
     }

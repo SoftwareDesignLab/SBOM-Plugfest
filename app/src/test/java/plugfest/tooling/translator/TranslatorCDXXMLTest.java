@@ -6,16 +6,19 @@
  * @author Tyler Drake
  */
 
-package plugfest.tooling.sbom;
+package plugfest.tooling.translator;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import plugfest.tooling.sbom.SBOM;
+import plugfest.tooling.sbom.SBOMType;
 import plugfest.tooling.translator.TranslatorCDXXML;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-public class CDXParserTest {
+public class TranslatorCDXXMLTest {
 
     public static final String test_small_cdx = "src/test/java/plugfest/tooling/sample_boms/sbom.alpine.xml";
     public static final String test_large_cdx = "src/test/java/plugfest/tooling/sample_boms/sbom.python.xml";
@@ -27,12 +30,20 @@ public class CDXParserTest {
     public void translatorcdx_small_file_test() throws ParserConfigurationException {
         SBOM sbom = TranslatorCDXXML.translatorCDXXML(test_small_cdx.toString());
         assertNotNull(sbom);
+        Assertions.assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
+        assertEquals("1", sbom.getSbomVersion());
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
+        assertEquals(18, sbom.getAllComponents().size());
     }
 
     @Test
     public void translatorcdx_large_file_test() throws ParserConfigurationException {
         SBOM sbom = TranslatorCDXXML.translatorCDXXML(test_large_cdx.toString());
         assertNotNull(sbom);
+        assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
+        assertEquals("1", sbom.getSbomVersion());
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
+        assertEquals(434, sbom.getAllComponents().size());
     }
 
     @Test
@@ -46,6 +57,9 @@ public class CDXParserTest {
         SBOM sbom = TranslatorCDXXML.translatorCDXXML(test_no_components_cdx.toString());
         assertNotNull(sbom);
         // Should be 1 component for head component
+        assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
+        assertEquals("1", sbom.getSbomVersion());
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(1, sbom.getAllComponents().size());
     }
 
