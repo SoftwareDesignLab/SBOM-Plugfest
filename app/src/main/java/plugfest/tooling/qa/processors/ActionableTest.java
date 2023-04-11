@@ -78,7 +78,7 @@ public class ActionableTest extends MetricTest{
 
         ArrayList<String> messages = new ArrayList<>();
         if (tryURL(CPE_LOOKUP_URL) == 200) {
-            for (String id : c.getCPE()) {
+            for (String id : c.getCpes()) {
                 //go to the URL and see if it returns a 200 or 404, then get the human message for that status code.
                 //the flags for the ultimate test result are updated by the getMessage method.
                 messages.add(
