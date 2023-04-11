@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import plugfest.tooling.differ.Comparer;
 import plugfest.tooling.differ.DiffReport;
 import plugfest.tooling.sbom.SBOM;
-import plugfest.tooling.translator.TranslatorCDX;
+import plugfest.tooling.translator.TranslatorCDXXML;
 import plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -132,11 +132,11 @@ public class TranslatorDifferTest {
     public void full_diff_report_from_CDX_SBOM() throws ParserConfigurationException {
 
         // Create first SBOM
-        SBOM test_sbom_one = TranslatorCDX.translatorCDX(TEST_CDX_SBOM);
+        SBOM test_sbom_one = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorCDX.translatorCDX(TEST_CDX_DIFF_SBOM);
+        SBOM test_sbom_two = TranslatorCDXXML.translatorCDXXML(TEST_CDX_DIFF_SBOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -148,11 +148,11 @@ public class TranslatorDifferTest {
     @Test
     public void full_diff_report_from_small_CDX_SBOM_and_large_CDX_SBOM() throws ParserConfigurationException {
 
-        SBOM test_sbom_one = TranslatorCDX.translatorCDX(TEST_CDX_LARGE_SBOM);
+        SBOM test_sbom_one = TranslatorCDXXML.translatorCDXXML(TEST_CDX_LARGE_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorCDX.translatorCDX(TEST_CDX_SBOM);
+        SBOM test_sbom_two = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -175,7 +175,7 @@ public class TranslatorDifferTest {
         assertNotNull(test_sbom_one);
 
         // Create a CDX SBOM
-        SBOM test_sbom_two = TranslatorCDX.translatorCDX(TEST_CDX_SBOM);
+        SBOM test_sbom_two = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM);
         assertNotNull(test_sbom_two);
 
         // Make a diff report of the SPDX against the CDX SBOM

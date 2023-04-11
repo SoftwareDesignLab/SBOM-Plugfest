@@ -9,7 +9,6 @@
 package plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.Test;
-import plugfest.tooling.translator.TranslatorCDX;
 import plugfest.tooling.translator.TranslatorCDXXML;
 
 import static org.junit.jupiter.api.Assertions.*;
