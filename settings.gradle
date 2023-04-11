@@ -8,4 +8,6 @@
  */
 
 rootProject.name = 'plugfest-tooling'
-include('app')
+include 'api'
+include 'core'
+
