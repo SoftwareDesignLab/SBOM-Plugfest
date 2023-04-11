@@ -61,7 +61,7 @@ public class TranslatorSVIP {
 
                     case ".json" -> sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
 
-                    case ".spdx" -> sbom_objects.add(TranslatorCDXJSON.translatorCDXJSON(sbom_item.toString()));
+                    case ".spdx" -> sbom_objects.add(TranslatorSPDX.translatorSPDX(sbom_item.toString()));
 
                     default      -> System.err.println("\nInvalid SBOM format found at: " + sbom_item);
                 }
