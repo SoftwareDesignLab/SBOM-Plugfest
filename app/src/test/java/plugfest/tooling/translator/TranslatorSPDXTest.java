@@ -1,6 +1,9 @@
-package plugfest.tooling.sbom;
+package plugfest.tooling.translator;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import plugfest.tooling.sbom.SBOM;
+import plugfest.tooling.sbom.SBOMType;
 import plugfest.tooling.translator.TranslatorSPDX;
 
 import java.io.IOException;
@@ -13,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Tyler Drake
  */
-public class SPDXParserTest {
+public class TranslatorSPDXTest {
 
     /**
      * Test Constants
@@ -39,7 +42,7 @@ public class SPDXParserTest {
     public void builder_makes_SBOM_test() throws IOException {
         SBOM test = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test);
-        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        Assertions.assertEquals(SBOMType.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(94, test.getAllComponents().size());
