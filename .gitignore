@@ -47,3 +47,5 @@ gradle-app.setting
 .classpath
 #intelliJ
 .idea
+# Protect the repo from Mac users that use git add . without looking through their changes
+.DS_Store
