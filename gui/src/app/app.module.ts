@@ -17,7 +17,8 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     IconComponent,
     ButtonComponent,
-    AccordianComponent
+    AccordianComponent,
+    IconComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +27,8 @@ import { SharedModule } from './shared/shared.module';
     MatIconModule,
     MatExpansionModule,
     SharedModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
