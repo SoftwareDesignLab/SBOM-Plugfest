@@ -8,7 +8,8 @@ public class ContextualProcessor extends AttributeProcessor {
         super(new MetricTest[]{
                 new CompletenessTest(),
                 new AppropriateAmountTest(),
-                new DataVerificationTest()
+                new DataVerificationTest(),
+                new ActionableTest()
                 // Add new tests here
         });
     }
