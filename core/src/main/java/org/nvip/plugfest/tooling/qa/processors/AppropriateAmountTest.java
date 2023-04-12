@@ -51,6 +51,12 @@ public class AppropriateAmountTest extends MetricTest {
         return testResults;
     }
 
+    /**
+     * Make sure the publisher name first the criteria
+     *
+     * @param c Component to test
+     * @return Test result
+     */
     private Test testPublisherName(Component c) {
         if(c.getPublisher() != null &&
                 c.getPublisher().strip().length() > maxLineLength)
@@ -58,6 +64,12 @@ public class AppropriateAmountTest extends MetricTest {
         return new Test(true, "Publisher Name <= " + maxLineLength);
     }
 
+    /**
+     * Check if component name matches criteria
+     *
+     * @param c Component to test
+     * @return Test result
+     */
     private Test testComponentName(Component c) {
         if(c.getName() != null &&
                 c.getName().strip().length() > maxLineLength)
@@ -65,6 +77,12 @@ public class AppropriateAmountTest extends MetricTest {
         return new Test(true, "Component Name Length <= " + maxLineLength);
     }
 
+    /**
+     * Check if component version matches criteria
+     *
+     * @param c Component to test
+     * @return Test result
+     */
     private Test testComponentVersion(Component c) {
         if(c.getVersion() != null &&
                 c.getVersion().strip().length() > maxLineLength)
