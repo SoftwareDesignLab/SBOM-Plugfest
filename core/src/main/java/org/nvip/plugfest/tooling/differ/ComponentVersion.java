@@ -4,33 +4,57 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * File: ComponentVersion.java
+ * A component of a specific version.
+ * holds data about the component and a set of the IDs of the SBOMs it appears in.
+ *
+ * @author Juan Francisco Patino, Tyler Drake, Henry Orsagh
+ */
 public class ComponentVersion {
 
 
-    // Name of the component
+    /**
+     * Name of the component
+     */
     private String componentName;
 
-    // Version of the component
+    /**
+     * version of the component
+     */
     private String version;
 
-    // component CPE IDs
-    private Set<UniqueIdOccurrence> cpes;
+    /**
+     * a set of all CPEs associated with this component version
+     */
+    private Set<UniqueIdOccurrence> CPEs;
 
-    // component PURL IDs
-    private Set<UniqueIdOccurrence> purls;
+    /**
+     * a set of all PURLs associated with this component version
+     */
+    private Set<UniqueIdOccurrence> PURLs;
 
-    // component SWIDs
-    private Set<UniqueIdOccurrence> swids;
+    /**
+     * a set of all SWIDs associated with this component version
+     */
+    private Set<UniqueIdOccurrence> SWIDs;
 
-    // SBOMs the component appears in
+    /**
+     * a set of SBOM ID numbers where this component version appears
+     */
     private Set<Integer> appearances;
 
+    /**
+     * initializes component version with empty uniqueID HashSets.
+     * @param componentName name of the component
+     * @param version version of the component
+     */
     public ComponentVersion(String componentName, String version) {
         this.componentName = componentName;
         this.version = version;
-        this.cpes = new HashSet<>();
-        this.purls = new HashSet<>();
-        this.swids = new HashSet<>();
+        this.CPEs = new HashSet<>();
+        this.PURLs = new HashSet<>();
+        this.SWIDs = new HashSet<>();
     }
 
     // getters and setters
@@ -43,16 +67,16 @@ public class ComponentVersion {
         return this.version;
     }
 
-    public Set<UniqueIdOccurrence> getCPES() {
-        return this.cpes;
+    public Set<UniqueIdOccurrence> getCPEs() {
+        return this.CPEs;
     }
 
-    public Set<UniqueIdOccurrence> getPURLS() {
-        return this.purls;
+    public Set<UniqueIdOccurrence> getPURLs() {
+        return this.PURLs;
     }
 
-    public Set<UniqueIdOccurrence> getSWIDS() {
-        return this.swids;
+    public Set<UniqueIdOccurrence> getSWIDs() {
+        return this.SWIDs;
     }
 
     public Set<Integer> getAppearances() {
@@ -68,16 +92,16 @@ public class ComponentVersion {
         this.version = version;
     }
 
-    public void setCPES(Set<UniqueIdOccurrence> cpes) {
-        this.cpes = cpes;
+    public void setCPEs(Set<UniqueIdOccurrence> CPEs) {
+        this.CPEs = CPEs;
     }
 
-    public void setPURLS(Set<UniqueIdOccurrence> purls) {
-        this.purls = purls;
+    public void setPURLs(Set<UniqueIdOccurrence> PURLs) {
+        this.PURLs = PURLs;
     }
 
-    public void setSWIDS(Set<UniqueIdOccurrence> swids) {
-        this.swids = swids;
+    public void setSWIDs(Set<UniqueIdOccurrence> SWIDs) {
+        this.SWIDs = SWIDs;
     }
 
     public void setAppearances(Set<Integer> appearances) {
@@ -86,18 +110,34 @@ public class ComponentVersion {
 
     // add individual objects to respective sets
 
-    public void addCPE(UniqueIdOccurrence cpe){
-        cpes.add(cpe);
+    /**
+     * Adds a CPE to this componentVersion's CPE set.
+     * @param CPE CPE to add.
+     */
+    public void addCPE(UniqueIdOccurrence CPE){
+        CPEs.add(CPE);
     }
 
-    public void addPURL(UniqueIdOccurrence purl){
-        cpes.add(purl);
+    /**
+     * Adds a PURL to this componentVersion's PURL set.
+     * @param PURL PURL to add.
+     */
+    public void addPURL(UniqueIdOccurrence PURL){
+        PURLs.add(PURL);
     }
 
-    public void addSWID(UniqueIdOccurrence swid){
-        cpes.add(swid);
+    /**
+     * Adds a SWID to this componentVersion's SWID set.
+     * @param SWID SWID to add.
+     */
+    public void addSWID(UniqueIdOccurrence SWID){
+        SWIDs.add(SWID);
     }
 
+    /**
+     * adds an SBOM ID to the appearance set.
+     * @param a ID of the SBOM being added.
+     */
     public void addAppearance(int a){
         this.appearances.add(a);
     }
