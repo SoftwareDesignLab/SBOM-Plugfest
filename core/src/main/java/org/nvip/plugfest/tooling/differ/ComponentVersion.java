@@ -11,13 +11,13 @@ public class ComponentVersion {
     private String version;
 
     // component CPE IDs
-    private Set<UniqueIdOcurrance> cpe;
+    private Set<UniqueIdOccurrence> cpe;
 
     // component PURL IDs
-    private Set<UniqueIdOcurrance> purl;
+    private Set<UniqueIdOccurrence> purl;
 
     // component SWIDs
-    private Set<UniqueIdOcurrance> swid;
+    private Set<UniqueIdOccurrence> swid;
 
     // SBOMs the component appears in
     private Set<Integer> appearances;
@@ -34,15 +34,15 @@ public class ComponentVersion {
         return this.version;
     }
 
-    public Set<UniqueIdOcurrance> getCpe() {
+    public Set<UniqueIdOccurrence> getCpe() {
         return this.cpe;
     }
 
-    public Set<UniqueIdOcurrance> getPurl() {
+    public Set<UniqueIdOccurrence> getPurl() {
         return this.purl;
     }
 
-    public Set<UniqueIdOcurrance> getSwid() {
+    public Set<UniqueIdOccurrence> getSwid() {
         return this.swid;
     }
 
