@@ -1,8 +1,11 @@
 package org.nvip.plugfest.tooling.differ;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ComponentVersion {
+
 
     // Name of the component
     private String componentName;
@@ -11,20 +14,26 @@ public class ComponentVersion {
     private String version;
 
     // component CPE IDs
-    private Set<UniqueIdOccurrence> cpe;
+    private Set<UniqueIdOccurrence> cpes;
 
     // component PURL IDs
-    private Set<UniqueIdOccurrence> purl;
+    private Set<UniqueIdOccurrence> purls;
 
     // component SWIDs
-    private Set<UniqueIdOccurrence> swid;
+    private Set<UniqueIdOccurrence> swids;
 
     // SBOMs the component appears in
     private Set<Integer> appearances;
 
-    public ComponentVersion() {
-
+    public ComponentVersion(String componentName, String version) {
+        this.componentName = componentName;
+        this.version = version;
+        this.cpes = new HashSet<>();
+        this.purls = new HashSet<>();
+        this.swids = new HashSet<>();
     }
+
+    // getters and setters
 
     public String getComponentName() {
         return this.componentName;
@@ -34,20 +43,80 @@ public class ComponentVersion {
         return this.version;
     }
 
-    public Set<UniqueIdOccurrence> getCpe() {
-        return this.cpe;
+    public Set<UniqueIdOccurrence> getCPES() {
+        return this.cpes;
     }
 
-    public Set<UniqueIdOccurrence> getPurl() {
-        return this.purl;
+    public Set<UniqueIdOccurrence> getPURLS() {
+        return this.purls;
     }
 
-    public Set<UniqueIdOccurrence> getSwid() {
-        return this.swid;
+    public Set<UniqueIdOccurrence> getSWIDS() {
+        return this.swids;
     }
 
     public Set<Integer> getAppearances() {
         return this.appearances;
     }
 
+
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    public void setComponentVersion(String version) {
+        this.version = version;
+    }
+
+    public void setCPES(Set<UniqueIdOccurrence> cpes) {
+        this.cpes = cpes;
+    }
+
+    public void setPURLS(Set<UniqueIdOccurrence> purls) {
+        this.purls = purls;
+    }
+
+    public void setSWIDS(Set<UniqueIdOccurrence> swids) {
+        this.swids = swids;
+    }
+
+    public void setAppearances(Set<Integer> appearances) {
+        this.appearances = appearances;
+    }
+
+    // add individual UniqueIdOccurrences
+
+    public void addCPE(UniqueIdOccurrence cpe){
+        cpes.add(cpe);
+    }
+
+    public void addPURL(UniqueIdOccurrence purl){
+        cpes.add(purl);
+    }
+
+    public void addSWID(UniqueIdOccurrence swid){
+        cpes.add(swid);
+    }
+
+    // overrides
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ComponentVersion that)) return false;
+        return Objects.equals(getComponentName(), that.getComponentName()) && Objects.equals(version, that.version);
+    }
+
+    @Override
+    public String toString() {
+        return "ComponentVersion{" +
+                "componentName='" + componentName + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getComponentName(), version);
+    }
 }
