@@ -1,0 +1,7 @@
+.icon-container {
+    border-radius: 50%;
+    background-color: var(--accent);
+    color: white;
+    width: 32px;
+    height: 32px;
+}
