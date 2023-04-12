@@ -11,7 +11,9 @@ import java.util.Set;
  * @author Matt London
  */
 public class DiffReport {
+    /** Stores conflicts in non-trivial information within these sboms */
     private SBOMConflict sbomConflict;
+    /** Stores conflicts between components in two SBOMs */
     private Set<ComponentConflict> componentConflicts;
 
     /**
