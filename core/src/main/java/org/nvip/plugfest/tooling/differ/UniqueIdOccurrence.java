@@ -36,9 +36,9 @@ public class UniqueIdOccurrence {
         return this.appearances;
     }
 
-    // add individual SBOM to appearances
-    public void addAppearance(int s){
-        appearances.add(s);
+    // add individual SBOMs to appearances
+    public void addAppearance(int a){
+        appearances.add(a);
     }
 
     @Override

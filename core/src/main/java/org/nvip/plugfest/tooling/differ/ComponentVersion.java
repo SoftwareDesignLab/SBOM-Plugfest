@@ -84,7 +84,7 @@ public class ComponentVersion {
         this.appearances = appearances;
     }
 
-    // add individual UniqueIdOccurrences
+    // add individual objects to respective sets
 
     public void addCPE(UniqueIdOccurrence cpe){
         cpes.add(cpe);
@@ -96,6 +96,10 @@ public class ComponentVersion {
 
     public void addSWID(UniqueIdOccurrence swid){
         cpes.add(swid);
+    }
+
+    public void addAppearance(int a){
+        this.appearances.add(a);
     }
 
     // overrides
