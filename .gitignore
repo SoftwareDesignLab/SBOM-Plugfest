@@ -49,3 +49,7 @@ gradle-app.setting
 .idea
 # Protect the repo from Mac users that use git add . without looking through their changes
 .DS_Store
+# Angular
+/node_modules/
+core/bin
+*.spdx
