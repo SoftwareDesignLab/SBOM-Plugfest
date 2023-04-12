@@ -1,9 +1,7 @@
 package org.nvip.plugfest.tooling;
 
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import org.nvip.plugfest.tooling.translator.TranslatorSVIP;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 
 public class sbomDAO {
