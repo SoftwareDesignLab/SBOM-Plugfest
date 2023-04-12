@@ -39,6 +39,9 @@ public class CompletenessTest extends MetricTest {
      */
     private final Pattern purlRegex;
 
+    /**
+     * Constructor to build the regex patterns used to test the format of a component information
+     */
     protected CompletenessTest() {
         super("Completeness Test"); // Test name
 

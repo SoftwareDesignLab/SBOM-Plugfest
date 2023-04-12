@@ -13,13 +13,25 @@ import java.util.Set;
  * Abstract class to be extended by all metric processors
  */
 public abstract class AttributeProcessor {
+    /** Set of metric tests to run */
     private final Set<MetricTest> tests;
 
+    /**
+     * Constructor for AttributeProcessor
+     *
+     * @param metricTests Array of MetricTests to perform
+     */
     public AttributeProcessor(MetricTest[] metricTests) {
         this.tests = new HashSet<>();
         this.tests.addAll(List.of(metricTests));
     }
 
+    /**
+     * Process the SBOM, run against all tests, and return a QualityReport
+     *
+     * @param sbom SBOM to process
+     * @return QualityReport
+     */
     public QualityReport process(SBOM sbom) {
         // Init quality report
         QualityReport qr = new QualityReport();

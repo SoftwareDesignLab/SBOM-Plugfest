@@ -4,8 +4,15 @@ import org.nvip.plugfest.tooling.qa.test_results.TestResults;
 
 import java.util.ArrayList;
 
+/**
+ * QualityReport is a collection of TestResults objects that relate to a particular SBOM
+ */
 public class QualityReport {
+    /** Test results from the QAPipeline */
     private final ArrayList<TestResults> testResults;
+    /**
+     * The serial number of the SBOM that was tested
+     */
     private final String serialNumber;
 
     /**
