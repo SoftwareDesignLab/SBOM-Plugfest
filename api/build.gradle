@@ -1,0 +1,41 @@
+plugins {
+    id 'application'
+}
+
+group = 'org.nvip.plugfest'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation project(':core')
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'org.nvip.plugfest.Main'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.nvip.plugfest.Main'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+            project.zipTree(it)
+        }
+    }
+}
