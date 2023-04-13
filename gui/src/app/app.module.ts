@@ -28,7 +28,8 @@ import { SharedModule } from './shared/shared.module';
     MatExpansionModule,
     SharedModule,
     BrowserAnimationsModule,
-    MatIconModule
+    MatIconModule,
+    MatExpansionModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
