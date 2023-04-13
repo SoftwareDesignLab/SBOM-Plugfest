@@ -1,12 +1,13 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      <ng-container [ngFor]="let step of paths"]>{{step}}/</ng-container>
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <!-- <ng-container [ngFor]="let diffReport.compo of items">
-    </ng-container> -->
-    
-  </mat-card-content>
-</mat-card>
+<div class="comparison">
+    <div *ngIf="depth === 0">
+        <app-accordion *ngFor="let item of diffReport.components; let i = index" title={{item.info.name}} [extra]="[diffReport.components.length + ' Version(s)']">
+            <app-accordion *ngFor="let version of item.versions; let j = index" title={{version.info.name}} (click)="path.push(i, j); depth = 1"/>
+        </app-accordion>
+    </div>
+
+    <div *ngIf="depth === 1">
+        <app-accordion *ngFor="let item of diffReport.components[path[0]].versions[path[1]].attributes; let i = index" title={{item.info.name}} [extra]="[item.values.length + ' Values(s)']">
+            <app-accordion *ngFor="let value of item.values; let j = index" title={{value.name}} [extra]="[value.occurrences + ' Occurances', value.matching + ' Matching']"/>
+        </app-accordion>
+    </div>
+</div>
