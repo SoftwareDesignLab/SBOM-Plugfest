@@ -7,4 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class DropdownComponent {
   @Input() options: string[] = [];
+  selected: number = -1;
 }
