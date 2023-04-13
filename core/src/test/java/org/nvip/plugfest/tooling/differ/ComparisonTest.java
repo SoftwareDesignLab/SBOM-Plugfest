@@ -3,15 +3,9 @@ package org.nvip.plugfest.tooling.differ;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.sbom.DependencyTree;
-import org.nvip.plugfest.tooling.sbom.SBOM;
-import org.nvip.plugfest.tooling.sbom.SBOMConflictType;
-import org.nvip.plugfest.tooling.sbom.SBOMType;
+import org.nvip.plugfest.tooling.sbom.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -110,6 +104,52 @@ public class ComparisonTest {
     /**
      * assignComponents tests
      */
+    @Test
+    public void assignComponents_should_build_comparisons_test() {
+
+        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        Comparison test_comparison = new Comparison(test_SBOM_target);
+
+        assertNotNull(test_comparison);
+
+        SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        Component test_component_a = new Component(
+                "red", "red_publisher", "1.1.0",
+                Set.of("cpe2.3::test_red_cpe"), Set.of(new PURL("pkg:redpackage/red@1.1.0")), Set.of("random_red_swid")
+        );
+
+        Component test_component_b = new Component(
+                "red", "red_publisher", "1.2.3",
+                Set.of("cpe2.3::test_red_cpe_123"), Set.of(new PURL("pkg:redpackage/red@1.2.3")), Set.of("random_red_swid123")
+        );
+
+        Component test_component_c = new Component(
+                "blue", "blue_publisher", "1.1.0",
+                Set.of("cpe2.3::test_blue_cpe"), Set.of(new PURL("pkg:bluepackage/blue@1.1.0")), Set.of("random_blue_swid")
+        );
+
+        test_SBOM.addComponent(null, test_component_b);
+        test_SBOM.addComponent(test_component_b.getUUID(), test_component_a);
+        test_SBOM.addComponent(test_component_b.getUUID(), test_component_c);
+
+        assertEquals(3, test_SBOM.getAllComponents().size());
+
+        test_comparison.assignComponents(test_SBOM);
+
+        Map<String, Set<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
+
+        assertNotNull(test_comparisons);
+        assertEquals(2, test_comparisons.size());
+        assertEquals(3, test_comparisons.values().size());
+
+
+    }
 
     /**
      * getTargetSBOM tests
