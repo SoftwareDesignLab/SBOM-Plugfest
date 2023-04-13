@@ -96,6 +96,15 @@ public class apiController {
         }
     }
 
+    /**
+     * Helper function which takes a blob of jackson serialized SBOMs and returns an ArrayList of SBOMs.
+     * The SBOMs need to be laid out one per line and be valid jackson serialized SBOMs.
+     *
+     * @param encoded - jackson serialized SBOM on each line
+     * @return - ArrayList of SBOMs
+     * @throws JsonProcessingException - if the input is not valid JSON
+     * @throws JsonMappingException - if the JSON is not valid SBOM
+     */
     private ArrayList<SBOM> decode(String encoded) throws JsonProcessingException, JsonMappingException {
         ArrayList<SBOM> sboms = new ArrayList<>();
         for(String line : encoded.split("\n")){
@@ -105,6 +114,12 @@ public class apiController {
         return sboms;
     }
 
+    /**
+     * Helper function which takes an object and returns a jackson serialized string.
+     * @param o - object to serialize
+     * @return - jackson serialized string
+     * @throws JsonProcessingException - if the object cannot be serialized
+     */
     private String encode(Object o) throws JsonProcessingException {
         return mapper.writeValueAsString(o);
     }
