@@ -5,14 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.DependencyTree;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.SBOMConflictType;
 import org.nvip.plugfest.tooling.sbom.SBOMType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ComparisonTest {
 
@@ -20,11 +21,6 @@ public class ComparisonTest {
      * Test Constants
      */
 
-    public static final String TEST_SMALL_CDX_JSON = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/sbom.alpine.json";
-
-    public static final String TEST_MEDIUM_CDX_JSON ="src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/trivy-0.39.0_celery-3.1.cdx.json";
-
-    public static final String TEST_ANOTHER_SMALL_SYFT_CDX_JSON = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdx.json";
 
     /**
      * Setup Teardown Methods
@@ -58,7 +54,7 @@ public class ComparisonTest {
                 "b9fc484b-41c4-4589-b3ef-c57bba20078c", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_c = new SBOM(SBOMType.CYCLONE_DX, "1.4", "3", "supplier_three",
+        SBOM test_SBOM_c = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier_three",
                 "urn:uuid:1b53623d-a11a-1111-1a11-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -75,6 +71,38 @@ public class ComparisonTest {
 
         assertNotNull(test_report_result);
         assertEquals(3, test_report_result.size());
+
+        // Check conflicts for each diff report
+
+        // SBOM A
+        Set<SBOMConflictType> test_a_conflicts = test_report_result.get(0).getSbomConflict().getConflicts();
+        assertEquals(4, test_a_conflicts.size());
+        assertTrue(
+                test_a_conflicts.contains(SBOMConflictType.AUTHOR_MISMATCH) &&
+                        test_a_conflicts.contains(SBOMConflictType.SBOM_VERSION_MISMATCH) &&
+                        test_a_conflicts.contains(SBOMConflictType.SCHEMA_VERSION_MISMATCH) &&
+                        test_a_conflicts.contains(SBOMConflictType.TIMESTAMP_MISMATCH)
+        );
+
+        // SBOM B
+        Set<SBOMConflictType> test_b_conflicts = test_report_result.get(1).getSbomConflict().getConflicts();
+        assertEquals(test_b_conflicts.size(), 5);
+        assertTrue(
+                test_b_conflicts.contains(SBOMConflictType.ORIGIN_FORMAT_MISMATCH) &&
+                        test_b_conflicts.contains(SBOMConflictType.SBOM_VERSION_MISMATCH) &&
+                        test_b_conflicts.contains(SBOMConflictType.SCHEMA_VERSION_MISMATCH) &&
+                        test_b_conflicts.contains(SBOMConflictType.TIMESTAMP_MISMATCH) &&
+                        test_b_conflicts.contains(SBOMConflictType.SERIAL_NUMBER_MISMATCH)
+        );
+
+        // SBOM C
+        Set<SBOMConflictType> test_c_conflicts = test_report_result.get(2).getSbomConflict().getConflicts();
+        assertEquals(test_c_conflicts.size(), 3);
+        assertTrue(
+                test_c_conflicts.contains(SBOMConflictType.AUTHOR_MISMATCH) &&
+                        test_c_conflicts.contains(SBOMConflictType.TIMESTAMP_MISMATCH) &&
+                        test_c_conflicts.contains(SBOMConflictType.SERIAL_NUMBER_MISMATCH)
+        );
 
     }
 
