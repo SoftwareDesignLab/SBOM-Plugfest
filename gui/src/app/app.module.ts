@@ -10,6 +10,7 @@ import { SharedModule } from './shared/shared.module';
 import { IconComponent } from './shared/components/icon/icon.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { AccordianComponent } from './shared/components/accordian/accordian.component';
+import { DropdownComponent } from '@components/dropdown/dropdown.component';
 
 import { SharedModule } from './shared/shared.module';
 
@@ -19,7 +20,8 @@ import { SharedModule } from './shared/shared.module';
     IconComponent,
     ButtonComponent,
     AccordianComponent,
-    IconComponent
+    IconComponent,
+    DropdownComponent
   ],
   imports: [
     BrowserModule,
