@@ -9,5 +9,4 @@ export class AccordianComponent {
   @Input() title: string = '';
   @Input() extra: string[] = [];
   @Input() color: string = '';
-  @Input() content: string = '';
 }

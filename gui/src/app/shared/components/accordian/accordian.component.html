@@ -10,5 +10,7 @@
         </mat-panel-description>
         <div *ngIf="color != ''" class="color-bar" style="background-color: {{color}};"></div>
     </mat-expansion-panel-header>
-    <div [innerHTML]=content></div>
+    <div class='content'>
+        <ng-content/>
+    </div>
 </mat-expansion-panel>
