@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.differ;
 
+import com.google.common.collect.Multimap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,11 +143,11 @@ public class ComparisonTest {
 
         test_comparison.assignComponents(test_SBOM);
 
-        Map<String, Set<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
-
+        Map<String, Collection<ComponentVersion>> test_comparisons = test_comparison.getComparisons().asMap();
         assertNotNull(test_comparisons);
         assertEquals(2, test_comparisons.size());
-        assertEquals(3, test_comparisons.values().size());
+        assertEquals(2, test_comparisons.get("red").size());
+        assertEquals(1, test_comparisons.get("blue").size());
 
 
     }
