@@ -1,4 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --accent: #58A5FF;
+    --primary: #333333;
+    --secondary: #1B1E21;
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.flex {
+    display: flex;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.hover:hover {
+    transition-duration: .35s;
+    transform: translate(0, -3px);
+}
