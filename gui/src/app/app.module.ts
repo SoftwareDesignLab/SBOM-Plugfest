@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconComponent } from './shared/components/icon/icon.component';
 import { ButtonComponent } from './shared/components/button/button.component';
-import { AccordianComponent } from './shared/components/accordian/accordian.component';
+import { AccordionComponent } from './shared/components/accordion/accordion.component';
 import { DropdownComponent } from '@components/dropdown/dropdown.component';
 
 import { SharedModule } from './shared/shared.module';
@@ -18,7 +18,7 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     IconComponent,
     ButtonComponent,
-    AccordianComponent,
+    AccordionComponent,
     IconComponent,
     DropdownComponent
   ],
