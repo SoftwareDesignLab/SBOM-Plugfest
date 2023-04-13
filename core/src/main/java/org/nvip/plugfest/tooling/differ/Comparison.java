@@ -38,7 +38,7 @@ public class Comparison {
         for(Component current_component : current_sbom.getAllComponents()) {
 
             // Create a temporary ComponentVersion object for the current SBOM component
-            ComponentVersion temporary_cv = new ComponentVersion(current_component.getName(), current_component.getVersion());
+            ComponentVersion temporary_cv = generateComponentVersion(current_component);
 
             // If the comparisons collection contains
             if(comparisons.containsKey(current_component.getName())) {
@@ -52,8 +52,12 @@ public class Comparison {
                         .filter(x -> x.getComponentVersion().contains(current_component.getVersion()))
                         .toList();
 
+                // If there are no matching ComponentVersion objects in the Set for that package name
+                // Else, find all matching ComponentVersion objects and add relevant information
                 if (matching_cv_list == null) {
 
+                    // Add the new ComponentVersion object to the package name it matches in the comparisons collection
+                    comparisons.get(current_component.getName()).add(temporary_cv);
 
                 } else {
 
@@ -65,22 +69,35 @@ public class Comparison {
 
 
             } else {
-
+                // Add a new entry to the comparisons list along with the new ComponentVersion object
+                comparisons.put(temporary_cv.getComponentName(), Set.of(temporary_cv));
             }
         }
     }
 
     private ComponentVersion generateComponentVersion(Component component) {
+
+        // Create the new ComponentVersion
         ComponentVersion new_cv = new ComponentVersion(component.getName(), component.getVersion());
+
+        // Cycle through CPEs
         for (String cpe : component.getCpes()) {
+
+            // Create new UniqueIDOccurrence object for the CPE, then add it to the ComponentVersion object
             UniqueIdOccurrence new_cpe_uid = new UniqueIdOccurrence(cpe, UniqueIdentifierType.CPE);
             new_cv.addCPE(new_cpe_uid);
+
         }
         for (PURL purl : component.getPurls()) {
+
+            // Create new UniqueIDOccurrence object for the PURL, then add it to the ComponentVersion object
             UniqueIdOccurrence new_purl_uid = new UniqueIdOccurrence(purl.toString(), UniqueIdentifierType.PURL);
             new_cv.addPURL(new_purl_uid);
+
         }
         for (String swid : component.getSwids()) {
+
+            // Create new UniqueIDOccurrence object for the SWID, then add it to the ComponentVersion object
             UniqueIdOccurrence new_swid_uid = new UniqueIdOccurrence(swid, UniqueIdentifierType.SWID);
             new_cv.addSWID(new_swid_uid);
         }
