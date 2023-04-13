@@ -17,3 +17,34 @@
     transition-duration: .35s;
     cursor: pointer;
 }
+
+.mat-expansion-panel-header-description {
+    text-align: right;
+    align-items: inherit;
+}
+
+.color-bar {
+    height: 100%;
+    width: 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+
+/* 
+WIP overriding style
+
+.accordian-bar {
+    background-color: var(--primary);
+    color: white;
+}
+
+.accordian-bar:hover {
+    background-color: var(--secondary) !important;
+
+}
+
+.accordian-title, .accordian-desc {
+    color: white;
+} */
