@@ -42,6 +42,10 @@ public class apiController {
             return new ResponseEntity<>("Body was not valid JSON\n received body was " + encoded, HttpStatus.BAD_REQUEST);
         }
 
+        if (sboms.size() < 2) {
+            return new ResponseEntity<>("Body must contain at least two SBOMs", HttpStatus.BAD_REQUEST);
+        }
+
         //run the DiffReport
         //todo: uncomment when comparer changes are merged.
 //        DiffReport report = Comparer.generateReport(sboms.get(0), sboms.subList(1, sboms.size()));
