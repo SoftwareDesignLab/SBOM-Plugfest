@@ -22,9 +22,18 @@ public class apiController {
         pipeline = new QAPipeline();
     }
 
+    /**
+     * USAGE. Send POST request to /api/compare with a list of jackson serialized SBOMs in the body, one per line.
+     * The API will respond with an HTTP 200 and a jackson serialized DiffReport object.
+     *
+     * @param encoded - jackson serialized SBOM on each line
+     * @return - jackson serialized DiffReport object
+     */
     @RequestMapping(value="compare", method=RequestMethod.POST)
     public ResponseEntity<String> compare(@RequestBody String encoded) {
         ArrayList<SBOM> sboms;
+
+        //decode post body
         try {
             sboms = decode(encoded);
         } catch (JsonMappingException e) {
@@ -33,8 +42,11 @@ public class apiController {
             return new ResponseEntity<>("Body was not valid JSON\n received body was " + encoded, HttpStatus.BAD_REQUEST);
         }
 
+        //run the DiffReport
         //todo: uncomment when comparer changes are merged.
 //        DiffReport report = Comparer.generateReport(sboms.get(0), sboms.subList(1, sboms.size()));
+
+         //encode and send report
 //        try {
 //            return new ResponseEntity<>(encode(report), HttpStatus.OK);
 //        } catch (JsonProcessingException e) {
@@ -44,9 +56,17 @@ public class apiController {
         return new ResponseEntity<>("Not implemented", HttpStatus.NOT_IMPLEMENTED); //also remove this!!
     }
 
+    /**
+     * USAGE. Send POST request to /api/qa with a single jackson serialized SBOM in the body.
+     * The API will respond with an HTTP 200 and a jackson serialized QualityReport object.
+     *
+     * @param encoded - jackson serialized SBOM object
+     * @return - jackson serialized QualityReport object
+     */
     @RequestMapping(value="qa", method=RequestMethod.POST)
     public ResponseEntity<String> qa(@RequestBody String encoded) {
         ArrayList<SBOM> sboms;
+
         //decode post body
         try {
             sboms = decode(encoded);
