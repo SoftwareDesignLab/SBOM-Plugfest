@@ -63,11 +63,11 @@ public class UniqueIdOccurrence {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UniqueIdOccurrence that)) return false;
-        return Objects.equals(uniqueIdentifier, that.uniqueIdentifier);
+        return Objects.equals(uniqueIdentifier, that.uniqueIdentifier) && Objects.equals(getAppearances(), that.getAppearances()) && getUniqueIdType() == that.getUniqueIdType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uniqueIdentifier);
+        return Objects.hash(uniqueIdentifier, getAppearances(), getUniqueIdType());
     }
 }

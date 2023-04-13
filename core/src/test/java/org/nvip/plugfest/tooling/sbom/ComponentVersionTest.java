@@ -32,7 +32,7 @@ public class ComponentVersionTest {
         assertNotEquals(cv1, cv2);
     }
     @Test
-    public void appearancesTest(){
+    public void componentVersionAppearancesTest(){
 
         cv1.addAppearance(5);
         cv1.addAppearance(2);
@@ -44,7 +44,6 @@ public class ComponentVersionTest {
         assertEquals(cv1.getAppearances(), cv2.getAppearances());
 
     }
-
     @Test
     public void uidoTest(){
 
