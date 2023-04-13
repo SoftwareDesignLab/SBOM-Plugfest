@@ -58,16 +58,16 @@
 /*
 WIP overriding style
 
-.accordian-bar {
+.accordion-bar {
     background-color: var(--primary);
     color: white;
 }
 
-.accordian-bar:hover {
+.accordion-bar:hover {
     background-color: var(--secondary) !important;
 
 }
 
-.accordian-title, .accordian-desc {
+.accordion-title, .accordion-desc {
     color: white;
 } */
