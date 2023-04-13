@@ -17,7 +17,7 @@ public class Comparison {
     // Set of comparisons
     private Map<String, Set<ComponentVersion>> comparisons;
 
-    public Comparison(SBOM target, List<SBOM> stream) {
+    public Comparison(SBOM target) {
         this.targetSBOM = target;
         this.diffReportList = new ArrayList<>();
         this.comparisons = new HashMap<>();
@@ -55,7 +55,7 @@ public class Comparison {
     }
 
     public List<DiffReport> getDiffReports() {
-        return this.getDiffReports();
+        return this.diffReportList;
     }
 
     public Map<String, Set<ComponentVersion>> getComparisons() {
