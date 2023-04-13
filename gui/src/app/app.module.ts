@@ -12,8 +12,6 @@ import { ButtonComponent } from './shared/components/button/button.component';
 import { AccordionComponent } from './shared/components/accordion/accordion.component';
 import { DropdownComponent } from '@components/dropdown/dropdown.component';
 
-import { SharedModule } from './shared/shared.module';
-
 @NgModule({
   declarations: [
     AppComponent,
