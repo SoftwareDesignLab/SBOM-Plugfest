@@ -1,11 +1,6 @@
 package org.nvip.plugfest.tooling;
 
-import org.nvip.plugfest.tooling.differ.Comparer;
-import org.nvip.plugfest.tooling.qa.QAPipeline;
-import org.nvip.plugfest.tooling.qa.QualityReport;
-import org.nvip.plugfest.tooling.sbom.SBOM;
-
-public class metricsDAO {
+public class qaDAO {
 //    private static ObjectMapper mapper;
 //    private static QAPipeline pipeline;
 //
