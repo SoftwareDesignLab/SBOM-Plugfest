@@ -23,7 +23,7 @@ public class Comparison {
         this.comparisons = new HashMap<>();
     }
 
-    public List<DiffReport> runComparison(List<SBOM> stream) {
+    public void runComparison(List<SBOM> stream) {
         for(SBOM current_sbom : stream) {
             assignComponents(current_sbom);
             diffReportList.add(Comparer.generateReport(targetSBOM, current_sbom));
