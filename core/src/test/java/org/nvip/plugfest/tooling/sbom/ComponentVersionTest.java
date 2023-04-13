@@ -32,7 +32,7 @@ public class ComponentVersionTest {
         assertNotEquals(cv1, cv2);
     }
     @Test
-    public void setTestAppearances(){
+    public void appearancesTest(){
 
         cv1.addAppearance(5);
         cv1.addAppearance(2);
@@ -42,6 +42,34 @@ public class ComponentVersionTest {
         cv2.setAppearances(testAppearances);
 
         assertEquals(cv1.getAppearances(), cv2.getAppearances());
+
+    }
+
+    @Test
+    public void uidoTest(){
+
+        cv1.addCPE(new UniqueIdOccurrence("cpe", UniqueIdentifierType.CPE));
+        cv1.addCPE(new UniqueIdOccurrence("purl", UniqueIdentifierType.PURL));
+        cv1.addCPE(new UniqueIdOccurrence("swid", UniqueIdentifierType.SWID));
+
+        cv2.setCPEs(testUIDOs);
+        assertEquals(cv1.getCPEs(), cv2.getCPEs());
+
+
+        cv1.addPURL(new UniqueIdOccurrence("cpe", UniqueIdentifierType.CPE));
+        cv1.addPURL(new UniqueIdOccurrence("purl", UniqueIdentifierType.PURL));
+        cv1.addPURL(new UniqueIdOccurrence("swid", UniqueIdentifierType.SWID));
+
+        cv2.setPURLs(testUIDOs);
+        assertEquals(cv1.getPURLs(), cv2.getPURLs());
+
+
+        cv1.addSWID(new UniqueIdOccurrence("cpe", UniqueIdentifierType.CPE));
+        cv1.addSWID(new UniqueIdOccurrence("purl", UniqueIdentifierType.PURL));
+        cv1.addSWID(new UniqueIdOccurrence("swid", UniqueIdentifierType.SWID));
+
+        cv2.setSWIDs(testUIDOs);
+        assertEquals(cv1.getSWIDs(), cv2.getSWIDs());
 
     }
 

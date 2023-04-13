@@ -55,6 +55,7 @@ public class ComponentVersion {
         this.CPEs = new HashSet<>();
         this.PURLs = new HashSet<>();
         this.SWIDs = new HashSet<>();
+        this.appearances = new HashSet<>();
     }
 
     // getters and setters
