@@ -1,0 +1,14 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header class="accordian-bar">
+        <mat-panel-title class="accordian-title">
+            {{title}}
+        </mat-panel-title>
+        <mat-panel-description *ngIf="extra.length > 0" class="accordian-desc flex col">
+            <div *ngFor="let item of extra">
+                {{item}}
+            </div>
+        </mat-panel-description>
+        <div *ngIf="color != ''" class="color-bar" style="background-color: {{color}};"></div>
+    </mat-expansion-panel-header>
+    <div [innerHTML]=content></div>
+</mat-expansion-panel>
