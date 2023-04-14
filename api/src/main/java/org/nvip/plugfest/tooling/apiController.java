@@ -26,7 +26,7 @@ public class apiController {
     }
 
     /**
-     * USAGE. Send POST request to /api/compare with a list of jackson serialized SBOMs in the body, one per line.
+     * USAGE. Send POST request to /compare with a list of jackson serialized SBOMs in the body, one per line.
      * The API will respond with an HTTP 200 and a jackson serialized DiffReport object.
      *
      * @param encoded - jackson serialized SBOM on each line
@@ -64,7 +64,7 @@ public class apiController {
     }
 
     /**
-     * USAGE. Send POST request to /api/qa with a single jackson serialized SBOM in the body.
+     * USAGE. Send POST request to /qa with a single jackson serialized SBOM in the body.
      * The API will respond with an HTTP 200 and a jackson serialized QualityReport object.
      *
      * @param encoded - jackson serialized SBOM object
