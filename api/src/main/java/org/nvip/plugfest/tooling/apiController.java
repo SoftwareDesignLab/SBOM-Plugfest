@@ -2,6 +2,8 @@ package org.nvip.plugfest.tooling;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.nvip.plugfest.tooling.differ.Comparer;
+import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@RestController
 public class apiController {
 
     private static ObjectMapper mapper;
@@ -47,17 +50,17 @@ public class apiController {
         }
 
         //run the DiffReport
-        //todo: uncomment when comparer changes are merged.
-//        DiffReport report = Comparer.generateReport(sboms.get(0), sboms.subList(1, sboms.size()));
+        //todo: uncomment when comparer changes are merged and remove the line below
+//      DiffReport report = Comparer.generateReport(sboms.get(0), sboms.subList(1, sboms.size()));
+        DiffReport report = Comparer.generateReport(sboms.get(0), sboms.get(1));
 
-         //encode and send report
-//        try {
-//            return new ResponseEntity<>(encode(report), HttpStatus.OK);
-//        } catch (JsonProcessingException e) {
-//            return new ResponseEntity<>("Error processing report", HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+        //encode and send report
+        try {
+            return new ResponseEntity<>(encode(report), HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>("Error processing report", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return new ResponseEntity<>("Not implemented", HttpStatus.NOT_IMPLEMENTED); //also remove this!!
     }
 
     /**
