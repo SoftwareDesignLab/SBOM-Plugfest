@@ -1,37 +1,15 @@
 package org.nvip.plugfest.tooling.differ;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ComparisonTest {
-
-    /**
-     * Test Constants
-     */
-
-
-    /**
-     * Setup Teardown Methods
-     */
-    @BeforeEach
-    public void setup() {
-
-    }
-
-    @AfterEach
-    public void teardown() {
-
-    }
-
 
     /**
      * runComparison tests
@@ -205,13 +183,55 @@ public class ComparisonTest {
     /**
      * getTargetSBOM tests
      */
+    @Test
+    public void getTargetSBOM_should_return_target_sbom() {
+        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        Comparison test_comparison = new Comparison(test_SBOM_target);
+
+        SBOM test_get_target = test_comparison.getTargetSBOM();
+
+        assertNotNull(test_get_target);
+        assertEquals(test_SBOM_target, test_get_target);
+    }
 
     /**
      * getDiffReports
      */
+    @Test
+    public void getDiffReports_should_return_diff_reports() {
+        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
 
-    /**
-     * getComparisons
-     */
+        SBOM test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        SBOM test_SBOM_b = new SBOM(SBOMType.SPDX, "2", "2", "supplier",
+                "b9fc484b-41c4-4589-b3ef-c57bba20078c", "2023-01-02T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        SBOM test_SBOM_c = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier_three",
+                "urn:uuid:1b53623d-a11a-1111-1a11-f84b7f617c54", "2023-01-02T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        List<SBOM> test_SBOM_list = new ArrayList<>();
+        test_SBOM_list.add(test_SBOM_a);
+        test_SBOM_list.add(test_SBOM_b);
+        test_SBOM_list.add(test_SBOM_c);
+
+        Comparison test_comparison = new Comparison(test_SBOM_target);
+
+        test_comparison.runComparison(test_SBOM_list);
+
+        List<DiffReport> test_diff_reports = test_comparison.getDiffReports();
+
+        assertNotNull(test_diff_reports);
+        assertEquals(3, test_diff_reports.size());
+    }
+
 
 }
