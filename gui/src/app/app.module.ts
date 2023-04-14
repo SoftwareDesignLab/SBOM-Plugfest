@@ -11,6 +11,7 @@ import { IconComponent } from './shared/components/icon/icon.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { AccordionComponent } from './shared/components/accordion/accordion.component';
 import { DropdownComponent } from '@components/dropdown/dropdown.component';
+import { SidePanelComponent } from './features/comparison/side-panel/side-panel.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +19,8 @@ import { DropdownComponent } from '@components/dropdown/dropdown.component';
     ButtonComponent,
     AccordionComponent,
     IconComponent,
-    DropdownComponent
+    DropdownComponent,
+    SidePanelComponent
   ],
   imports: [
     BrowserModule,
