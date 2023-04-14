@@ -13,7 +13,15 @@ dependencies {
 
     implementation project(':core')
     implementation('org.springframework:spring-webmvc:6.0.7')
+    implementation('org.springframework.boot:spring-boot-autoconfigure:3.0.4')
+    implementation('org.springframework.boot:spring-boot-maven-plugin:3.0.4')
+    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2')
+    implementation('org.springframework.boot:spring-boot-starter-tomcat:3.0.5')
+    implementation('org.springframework:spring-web:6.0.7')
     implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
+
+    implementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.5')
+
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
