@@ -1,19 +1,22 @@
 package org.nvip.plugfest.tooling.differ;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
-import org.apache.jena.atlas.iterator.Iter;
-import org.apache.jena.ext.com.google.common.collect.ListMultimap;
-import org.apache.jena.ext.com.google.common.collect.Multimaps;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
 
+/**
+ * file: Comparison.java
+ *
+ * Comparison pipeline class used by the frontend to generate
+ * DiffReports from a target SBOM and a list of SBOMs.
+ *
+ * This class may also generate a list of component comparisons with
+ * ComponentVersion objects.
+ *
+ * @author Tyler Drake
+ */
 public class Comparison {
 
     // Target SBOM (Ground Truth) for comparison.
@@ -32,10 +35,17 @@ public class Comparison {
     }
 
     public void runComparison(List<SBOM> stream) {
+
+        // Cycle through each sbom in the stream
         for(SBOM current_sbom : stream) {
+
+            // Run assignComponents for each sbom
             assignComponents(current_sbom);
+
+            //generate a DiffReport for the current sbom and target sbom
             diffReportList.add(Comparer.generateReport(targetSBOM, current_sbom));
         }
+
     }
 
     public void assignComponents(SBOM current_sbom) {
