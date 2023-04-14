@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class SidePanelComponent {
   collapsed: boolean = false;
-  sboms: string[] = [];
-  selected: string = "";
+  sboms: string[] = ['SBOM B', 'SBOM C'];
+  selected: string = "SBOM A";
+  
 }
