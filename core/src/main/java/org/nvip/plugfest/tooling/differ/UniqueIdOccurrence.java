@@ -1,8 +1,10 @@
 package org.nvip.plugfest.tooling.differ;
 
 import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
+import org.cyclonedx.model.Hash;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -32,6 +34,7 @@ public class UniqueIdOccurrence {
     public UniqueIdOccurrence (String uID, UniqueIdentifierType type) {
         this.uniqueIdentifier = uID;
         this.uniqueIdType = type;
+        this.appearances = new HashSet<>();
     }
 
     // getters
@@ -60,11 +63,11 @@ public class UniqueIdOccurrence {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UniqueIdOccurrence that)) return false;
-        return Objects.equals(uniqueIdentifier, that.uniqueIdentifier);
+        return Objects.equals(uniqueIdentifier, that.uniqueIdentifier) && Objects.equals(getAppearances(), that.getAppearances()) && getUniqueIdType() == that.getUniqueIdType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uniqueIdentifier);
+        return Objects.hash(uniqueIdentifier, getAppearances(), getUniqueIdType());
     }
 }
