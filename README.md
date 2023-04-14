@@ -1,19 +1,13 @@
 # PlugFest Tooling
 > A collection of tools to compare the usage and quality of different SBOM generators
 >
-> ## v2.1.0 -- 4/7/23
-> ### Differ
-> - None
->
+> ## v2.2.0 -- 4/14/23
+> ### Comparison reports
+> - Built a comparison report object to send to the frontend which will compare a list of SBOMs to some target SBOM
+> - Built a comparison function which generates the report from a target SBOM and list of SBOMs
 > ### Metrics
-> - Documented `TimelinessTest`
-> - `TimelinessTest` now checks to see if version numbers and publishers match the resource (package manager database)
->
-> ### Miscellaneous
-> - Added `changelog.md` to track weekly changes to the project
-> - Added `README.md` to hold usage instructions and project breakdown
-> - Removed quality metrics from the SBOM class
-> - Added `PURL` class to allow for easier PURL parsing
+> - Built a new metrics object to send to frontend for displaying SBOM quality
+> - Added an `ActionableTest` to preliminarily check if an SBOM is actionable
 
 ## Differ
 - Compares two SBOMs supporting CycloneDX XML and SPDX Tag-Value
