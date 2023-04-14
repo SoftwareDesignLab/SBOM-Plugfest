@@ -172,9 +172,9 @@ public class ComparisonTest {
 
         ComponentVersion test_cv = test_comparisons.get("red").iterator().next();
 
-        assertEquals(2, test_cv.getCPES().size());
-        assertEquals(2, test_cv.getPURLS().size());
-        assertEquals(2, test_cv.getSWIDS().size());
+        assertEquals(2, test_cv.getCPEs().size());
+        assertEquals(2, test_cv.getPURLs().size());
+        assertEquals(2, test_cv.getSWIDs().size());
         assertEquals("red", test_cv.getComponentName());
         assertEquals("1.1.0", test_cv.getComponentVersion());
 

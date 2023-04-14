@@ -99,13 +99,13 @@ public class Comparison {
                         new_set.remove(matching_cv);
 
                         // Update the ComponentVersion object with the extra CPEs
-                        temporary_cv.getCPES().iterator().forEachRemaining(cpe -> matching_cv.addCPE(cpe));
+                        temporary_cv.getCPEs().iterator().forEachRemaining(cpe -> matching_cv.addCPE(cpe));
 
                         // Update the ComponentVersion object with extra PURLs
-                        temporary_cv.getPURLS().iterator().forEachRemaining(purl -> matching_cv.addPURL(purl));
+                        temporary_cv.getPURLs().iterator().forEachRemaining(purl -> matching_cv.addPURL(purl));
 
                         // Update the ComponentVersion object with extra SWIDs
-                        temporary_cv.getSWIDS().iterator().forEachRemaining(swid -> matching_cv.addSWID(swid));
+                        temporary_cv.getSWIDs().iterator().forEachRemaining(swid -> matching_cv.addSWID(swid));
 
                         // Add it back into the map
                         new_set.add(matching_cv);
