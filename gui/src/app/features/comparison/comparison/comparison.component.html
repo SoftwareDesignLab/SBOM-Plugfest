@@ -1,13 +1,41 @@
 <div class="comparison">
-    <div *ngIf="depth === 0">
-        <app-accordion *ngFor="let item of diffReport.components; let i = index" title={{item.info.name}} [extra]="[diffReport.components.length + ' Version(s)']">
-            <app-accordion *ngFor="let version of item.versions; let j = index" title={{version.info.name}} (click)="path.push(i, j); depth = 1"/>
+  <div *ngIf="depth === 0">
+    <app-accordion
+      *ngFor="let item of diffReport.components; let i = index"
+      [extra]="[diffReport.components.length + ' Version(s)']"
+    >
+      <span title>{{ item.info.name }}</span>
+      <div body>
+        <app-accordion
+          *ngFor="let version of item.versions; let j = index"
+          (click)="path.push(i, j); depth = 1"
+        >
+          <div title>{{ version.info.name }}</div>
         </app-accordion>
-    </div>
+      </div>
+    </app-accordion>
+  </div>
 
-    <div *ngIf="depth === 1">
-        <app-accordion *ngFor="let item of diffReport.components[path[0]].versions[path[1]].attributes; let i = index" title={{item.info.name}} [extra]="[item.values.length + ' Values(s)']">
-            <app-accordion *ngFor="let value of item.values; let j = index" title={{value.name}} [extra]="[value.occurrences + ' Occurances', value.matching + ' Matching']"/>
+  <div *ngIf="depth === 1">
+    <app-accordion
+      *ngFor="
+        let item of diffReport.components[path[0]].versions[path[1]].attributes;
+        let i = index
+      "
+      [extra]="[item.values.length + ' Values(s)']"
+    >
+      <span title> Components / {{ item.info.name }}</span>
+      <div body>
+        <app-accordion
+          *ngFor="let value of item.values; let j = index"
+          [extra]="[
+            value.occurrences + ' Occurances',
+            value.matching + ' Matching'
+          ]"
+        >
+          <div title>{{ value.name }}</div>
         </app-accordion>
-    </div>
+      </div>
+    </app-accordion>
+  </div>
 </div>
