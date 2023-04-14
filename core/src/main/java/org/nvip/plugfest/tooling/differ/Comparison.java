@@ -3,11 +3,16 @@ package org.nvip.plugfest.tooling.differ;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import org.apache.jena.atlas.iterator.Iter;
+import org.apache.jena.ext.com.google.common.collect.ListMultimap;
+import org.apache.jena.ext.com.google.common.collect.Multimaps;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.security.Key;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Comparison {
 
@@ -18,12 +23,12 @@ public class Comparison {
     private List<DiffReport> diffReportList;
 
     // Set of comparisons
-    private Multimap<String, ComponentVersion> comparisons;
+    private Map<String, HashSet<ComponentVersion>> comparisons;
 
     public Comparison(SBOM target) {
         this.targetSBOM = target;
         this.diffReportList = new ArrayList<>();
-        this.comparisons = HashMultimap.create();
+        this.comparisons = new HashMap<>();
     }
 
     public void runComparison(List<SBOM> stream) {
@@ -45,7 +50,7 @@ public class Comparison {
             if(comparisons.containsKey(current_component.getName())) {
 
                 // Get that component's component version collection
-                Collection<ComponentVersion> current_cv_list = comparisons.get(current_component.getName());
+                Set<ComponentVersion> current_cv_list = comparisons.get(current_component.getName());
 
                 // Get all ComponentVersions that match the temporary ComponentVersion's version
                 List<ComponentVersion> matching_cv_list = current_cv_list
@@ -57,16 +62,31 @@ public class Comparison {
                 // Else, find all matching ComponentVersion objects and add relevant information
                 if (matching_cv_list.isEmpty()) {
 
-                    // Add the new ComponentVersion object to the package name it matches in the comparisons collection
-                    comparisons.put(current_component.getName(), temporary_cv);
+                    // Get the old collection for this
+                    HashSet<ComponentVersion> new_set = comparisons.get(current_component.getName());
+
+                    // Remove the old set for this key
+                    comparisons.remove(current_component.getName());
+
+                    // Add the new ComponentVersion to the set
+                    new_set.add(temporary_cv);
+
+                    // Add the new set with the newly added ComponentVersion to the collection
+                    comparisons.put(current_component.getName(), new_set);
 
                 } else {
+
+                    // Get the old collection for this
+                    HashSet<ComponentVersion> new_set = comparisons.get(current_component.getName());
+
+                    // Remove the old set for this key
+                    comparisons.remove(current_component.getName());
 
                     // Take all CPEs, PURLs, and SWIDs, that don't exist in the original ComponentVersion and add them in
                     for (ComponentVersion matching_cv : matching_cv_list) {
 
-                        // Remove the old matching ComponentVersion object from the Map
-                        comparisons.remove(current_component.getName(), matching_cv);
+                        // Remove the old matching ComponentVersion object from the set
+                        new_set.remove(matching_cv);
 
                         // Update the ComponentVersion object with the extra CPEs
                         temporary_cv.getCPES().iterator().forEachRemaining(cpe -> matching_cv.addCPE(cpe));
@@ -78,18 +98,25 @@ public class Comparison {
                         temporary_cv.getSWIDS().iterator().forEachRemaining(swid -> matching_cv.addSWID(swid));
 
                         // Add it back into the map
-                        comparisons.put(current_component.getName(), matching_cv);
+                        new_set.add(matching_cv);
 
                     }
 
-                }
+                    // Add the new ComponentVersion to the set
+                    new_set.add(temporary_cv);
 
+                    // Add the new set with the newly added ComponentVersion to the collection
+                    comparisons.put(current_component.getName(), new_set);
+
+                }
 
             } else {
                 // Add a new entry to the comparisons list along with the new ComponentVersion object
-                comparisons.put(temporary_cv.getComponentName(), temporary_cv);
+                comparisons.put(temporary_cv.getComponentName(), new HashSet<>(Arrays.asList(temporary_cv)));
             }
+
         }
+
     }
 
     private ComponentVersion generateComponentVersion(Component component) {
@@ -129,8 +156,10 @@ public class Comparison {
         return this.diffReportList;
     }
 
-    public Multimap<String, ComponentVersion> getComparisons() {
+    public Map<String, HashSet<ComponentVersion>> getComparisons() {
+
         return this.comparisons;
+
     }
 
 }

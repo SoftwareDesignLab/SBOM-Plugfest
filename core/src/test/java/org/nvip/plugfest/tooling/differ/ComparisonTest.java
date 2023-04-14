@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.differ;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -143,7 +145,7 @@ public class ComparisonTest {
 
         test_comparison.assignComponents(test_SBOM);
 
-        Map<String, Collection<ComponentVersion>> test_comparisons = test_comparison.getComparisons().asMap();
+        Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
         assertNotNull(test_comparisons);
         assertEquals(2, test_comparisons.size());
         assertEquals(2, test_comparisons.get("red").size());
@@ -183,12 +185,20 @@ public class ComparisonTest {
 
         test_comparison.assignComponents(test_SBOM);
 
-        Map<String, Collection<ComponentVersion>> test_comparisons = test_comparison.getComparisons().asMap();
+        Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
         assertNotNull(test_comparisons);
 
         // Even though we had two components, there should only be one component version because
         // the two component have the same 'name' and 'version'
         assertEquals(1, test_comparisons.size());
+
+        ComponentVersion test_cv = test_comparisons.get("red").iterator().next();
+
+        assertEquals(2, test_cv.getCPES().size());
+        assertEquals(2, test_cv.getPURLS().size());
+        assertEquals(2, test_cv.getSWIDS().size());
+        assertEquals("red", test_cv.getComponentName());
+        assertEquals("1.1.0", test_cv.getComponentVersion());
 
     }
 
