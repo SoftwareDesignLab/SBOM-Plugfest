@@ -8,6 +8,8 @@
 > ### Metrics
 > - Built a new metrics object to send to frontend for displaying SBOM quality
 > - Added an `ActionableTest` to preliminarily check if an SBOM is actionable
+> ### Misc
+> - General documentation and code cleanup
 
 ## Differ
 - Compares two SBOMs supporting CycloneDX XML and SPDX Tag-Value

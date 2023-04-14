@@ -7,6 +7,8 @@
 ### Metrics
 - Built a new metrics object to send to frontend for displaying SBOM quality
 - Added an `ActionableTest` to preliminarily check if an SBOM is actionable
+### Misc
+- General documentation and code cleanup
 
 ## v2.1.0 -- 4/7/23
 ### Differ
