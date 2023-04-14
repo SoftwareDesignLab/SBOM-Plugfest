@@ -9,4 +9,5 @@ export class AccordionComponent {
   @Input() title: string = '';
   @Input() extra: string[] = [];
   @Input() color: string = '';
+  @Input() expanded: boolean = false;
 }

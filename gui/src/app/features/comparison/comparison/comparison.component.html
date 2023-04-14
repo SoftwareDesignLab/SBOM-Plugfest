@@ -3,6 +3,7 @@
     <app-accordion
       *ngFor="let item of diffReport.components; let i = index"
       [extra]="[diffReport.components.length + ' Version(s)']"
+      [expanded]="true"
     >
       <span title>{{ item.info.name }}</span>
       <div body>
@@ -23,6 +24,7 @@
         let i = index
       "
       [extra]="[item.values.length + ' Values(s)']"
+      [expanded]="true"
     >
       <span title> Components / {{ item.info.name }}</span>
       <div body>
