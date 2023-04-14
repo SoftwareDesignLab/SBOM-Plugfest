@@ -1,25 +1,40 @@
 package org.nvip.plugfest.tooling.differ;
 
 import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
+import org.cyclonedx.model.Hash;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * File: UniqueIdOccurrence.java
+ * holds a CPE/PURL/SWID, and the IDs of every SBOM that identifier appears in.
+ *
+ * @author Juan Francisco Patino, Tyler Drake, Henry Orsagh
+ */
 public class UniqueIdOccurrence {
 
-    // Unique ID
+    /**
+     * The PURL/CPE/SWID
+     */
     private String uniqueIdentifier;
 
-    // SBOMs found in
+    /**
+     * a set of SBOM IDs that this unique ID appears in
+     */
     private Set<Integer> appearances;
 
-    // Type of Unique ID
+    /**
+     * the type of Unique ID
+     */
     private UniqueIdentifierType uniqueIdType;
 
     public UniqueIdOccurrence (String uID, UniqueIdentifierType type) {
         this.uniqueIdentifier = uID;
         this.uniqueIdType = type;
+        this.appearances = new HashSet<>();
     }
 
     // getters
@@ -36,7 +51,10 @@ public class UniqueIdOccurrence {
         return this.appearances;
     }
 
-    // add individual SBOMs to appearances
+    /**
+     * adds an SBOM ID to the appearance Set.
+     * @param a ID of the SBOM this unique ID appears in.
+     */
     public void addAppearance(int a){
         appearances.add(a);
     }
@@ -45,11 +63,11 @@ public class UniqueIdOccurrence {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UniqueIdOccurrence that)) return false;
-        return Objects.equals(uniqueIdentifier, that.uniqueIdentifier);
+        return Objects.equals(uniqueIdentifier, that.uniqueIdentifier) && Objects.equals(getAppearances(), that.getAppearances()) && getUniqueIdType() == that.getUniqueIdType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uniqueIdentifier);
+        return Objects.hash(uniqueIdentifier, getAppearances(), getUniqueIdType());
     }
 }
