@@ -152,6 +152,46 @@ public class ComparisonTest {
 
     }
 
+    @Test
+    public void assignComponents_should_merge_IDs_for_matching_componentVersions() {
+        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        Comparison test_comparison = new Comparison(test_SBOM_target);
+
+        assertNotNull(test_comparison);
+
+        SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
+                new HashSet<>(), new DependencyTree());
+
+        Component test_component_a = new Component(
+                "red", "red_publisher", "1.1.0",
+                Set.of("cpe2.3::test_red_cpe"), Set.of(new PURL("pkg:redpackage/red@1.1.0")), Set.of("random_red_swid")
+        );
+
+        Component test_component_b = new Component(
+                "red", "red_publisher", "1.1.0",
+                Set.of("cpe2.3::test_red_cpe_again"), Set.of(new PURL("pkg:redpackage/red@1.1")), Set.of("random_red_swid_a")
+        );
+
+        test_SBOM.addComponent(null, test_component_b);
+        test_SBOM.addComponent(test_component_b.getUUID(), test_component_a);
+
+        assertEquals(2, test_SBOM.getAllComponents().size());
+
+        test_comparison.assignComponents(test_SBOM);
+
+        Map<String, Collection<ComponentVersion>> test_comparisons = test_comparison.getComparisons().asMap();
+        assertNotNull(test_comparisons);
+
+        // Even though we had two components, there should only be one component version because
+        // the two component have the same 'name' and 'version'
+        assertEquals(1, test_comparisons.size());
+
+    }
+
     /**
      * getTargetSBOM tests
      */

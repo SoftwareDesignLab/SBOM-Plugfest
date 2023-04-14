@@ -91,11 +91,11 @@ public class ComponentVersion {
     }
 
     public void addPURL(UniqueIdOccurrence purl){
-        cpes.add(purl);
+        purls.add(purl);
     }
 
     public void addSWID(UniqueIdOccurrence swid){
-        cpes.add(swid);
+        swids.add(swid);
     }
 
     public void addAppearance(int a){
