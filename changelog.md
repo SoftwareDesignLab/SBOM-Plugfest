@@ -1,5 +1,15 @@
 # Plugfest Changelog
 
+## v2.2.0 -- 4/14/23
+### Comparison reports
+- Build a comparison report object to send to the frontend which will compare a list of SBOMs to some target SBOM
+- Built a comparison function which generates the report from a target SBOM and list of SBOMs
+### Metrics
+- Built a new metrics object to send to frontend for displaying SBOM quality
+- Added an `ActionableTest` to preliminarily check if an SBOM is actionable
+### Misc
+- General documentation and code cleanup
+
 ## v2.1.0 -- 4/7/23
 ### Differ
 - None
