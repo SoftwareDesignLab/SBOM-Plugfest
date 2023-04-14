@@ -21,6 +21,7 @@ dependencies {
     implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
 
     implementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.5')
+    implementation project(path: ':core')
 
 
     testImplementation platform('org.junit:junit-bom:5.9.1')

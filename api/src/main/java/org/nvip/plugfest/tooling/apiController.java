@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.nvip.plugfest.tooling.differ.Comparer;
@@ -21,7 +22,7 @@ public class apiController {
     private static QAPipeline pipeline;
 
     public apiController() {
-        mapper = new ObjectMapper();
+        mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         pipeline = new QAPipeline();
     }
 
