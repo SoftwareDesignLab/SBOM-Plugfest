@@ -1,15 +1,13 @@
 package org.nvip.plugfest.tooling.differ;
 
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import org.checkerframework.common.aliasing.qual.Unique;
-import org.cyclonedx.model.Diff;
+
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Comparison {
 
@@ -25,7 +23,7 @@ public class Comparison {
     public Comparison(SBOM target) {
         this.targetSBOM = target;
         this.diffReportList = new ArrayList<>();
-        this.comparisons = ArrayListMultimap.create();
+        this.comparisons = HashMultimap.create();
     }
 
     public void runComparison(List<SBOM> stream) {
@@ -67,7 +65,20 @@ public class Comparison {
                     // Take all CPEs, PURLs, and SWIDs, that don't exist in the original ComponentVersion and add them in
                     for (ComponentVersion matching_cv : matching_cv_list) {
 
-                        //TODO: UniqueIDOccurrence mapping between an existing ComponentVersion of the same name
+                        // Remove the old matching ComponentVersion object from the Map
+                        comparisons.remove(current_component.getName(), matching_cv);
+
+                        // Update the ComponentVersion object with the extra CPEs
+                        temporary_cv.getCPES().iterator().forEachRemaining(cpe -> matching_cv.addCPE(cpe));
+
+                        // Update the ComponentVersion object with extra PURLs
+                        temporary_cv.getPURLS().iterator().forEachRemaining(purl -> matching_cv.addPURL(purl));
+
+                        // Update the ComponentVersion object with extra SWIDs
+                        temporary_cv.getSWIDS().iterator().forEachRemaining(swid -> matching_cv.addSWID(swid));
+
+                        // Add it back into the map
+                        comparisons.put(current_component.getName(), matching_cv);
 
                     }
 
