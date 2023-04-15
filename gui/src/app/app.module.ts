@@ -13,7 +13,7 @@ import { SharedModule } from './shared/shared.module';
 import { IconComponent } from './shared/components/icon/icon.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { AccordionComponent } from './shared/components/accordion/accordion.component';
-import { DropdownComponent } from '@components/dropdown/dropdown.component';
+import { DropdownComponent } from './shared/components/dropdown/dropdown.component';
 import { SidePanelComponent } from './features/comparison/side-panel/side-panel.component';
 import { ComparisonComponent } from './features/comparison/comparison/comparison.component';
 import { TextEmitterDirective } from './shared/directive/textEmitter.directive';
