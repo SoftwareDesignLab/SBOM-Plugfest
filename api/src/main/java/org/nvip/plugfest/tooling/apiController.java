@@ -77,6 +77,12 @@ public class apiController {
         //decode post body
         sboms = decode(encoded);
 
+        for (int i = 0; i < sboms.size(); i++) {
+            if(sboms.get(i) == null){
+                return new ResponseEntity<>("Translator rejected SBOM at index " + i + ". No other information is available", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
         //some basic validation
         if(sboms.size() != 1){
             return new ResponseEntity<>("QA request must contain only one SBOM", HttpStatus.BAD_REQUEST);
@@ -114,7 +120,7 @@ public class apiController {
             //write that string to disk
             Path onDisk;
             try {
-                onDisk = Files.createTempFile(fileName.split("\\.")[0], fileName.split("\\.")[1]);
+                onDisk = Files.createTempFile(fileName.split("\\.")[0], '.' + fileName.split("\\.")[1]);
                 Files.writeString(onDisk, plainText);
             } catch (Exception e) {
                 System.err.println("Could not create temp file: " + fileName);
