@@ -8,10 +8,15 @@ import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 @RestController
@@ -38,13 +43,7 @@ public class apiController {
         ArrayList<SBOM> sboms;
 
         //decode post body
-        try {
-            sboms = decode(encoded);
-        } catch (JsonMappingException e) {
-            return new ResponseEntity<>("Body was not valid SBOM object\n received body was " + encoded, HttpStatus.BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            return new ResponseEntity<>("Body was not valid JSON\n received body was " + encoded, HttpStatus.BAD_REQUEST);
-        }
+        sboms = decode(encoded);
 
         if (sboms.size() < 2) {
             return new ResponseEntity<>("Body must contain at least two SBOMs", HttpStatus.BAD_REQUEST);
@@ -76,13 +75,7 @@ public class apiController {
         ArrayList<SBOM> sboms;
 
         //decode post body
-        try {
-            sboms = decode(encoded);
-        } catch (JsonMappingException e) {
-            return new ResponseEntity<>("Body was not valid SBOM object\n received body was " + encoded, HttpStatus.BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            return new ResponseEntity<>("Body was not valid JSON\n received body was " + encoded, HttpStatus.BAD_REQUEST);
-        }
+        sboms = decode(encoded);
 
         //some basic validation
         if(sboms.size() != 1){
@@ -101,18 +94,38 @@ public class apiController {
     }
 
     /**
-     * Helper function which takes a blob of jackson serialized SBOMs and returns an ArrayList of SBOMs.
-     * The SBOMs need to be laid out one per line and be valid jackson serialized SBOMs.
+     * Helper function which takes a string in the format of "sbomFileName.xml{base64encodedSBOMdata}
+     * sbomFileName2.json{base64encodedSBOMdata}" (white space shouldn't matter) and does some shenanigans to push
+     * that to the translator and get back a list of SBOMs.
      *
-     * @param encoded - jackson serialized SBOM on each line
+     * @param encoded - raw data
      * @return - ArrayList of SBOMs
-     * @throws JsonProcessingException - if the input is not valid JSON
-     * @throws JsonMappingException - if the JSON is not valid SBOM
      */
-    private ArrayList<SBOM> decode(String encoded) throws JsonProcessingException, JsonMappingException {
+    private ArrayList<SBOM> decode(String encoded) {
         ArrayList<SBOM> sboms = new ArrayList<>();
-        for(String line : encoded.split("\n")){
-            sboms.add(mapper.readValue(line, SBOM.class));
+        for(String sbom : encoded.split("}")){
+            //split the payload from the label
+            String fileName = sbom.split("\\{")[0].strip();
+            String payload = sbom.split("\\{")[1];
+
+            //decode the base64 encoded string
+            String plainText = new String(java.util.Base64.getDecoder().decode(payload));
+
+            //write that string to disk
+            Path onDisk;
+            try {
+                onDisk = Files.createTempFile(fileName.split("\\.")[0], fileName.split("\\.")[1]);
+                Files.writeString(onDisk, plainText);
+            } catch (Exception e) {
+                System.err.println("Could not create temp file: " + fileName);
+                return null;
+            }
+
+            //call translator
+            sboms.add(TranslatorPlugFest.translate(onDisk.toString()));
+
+            //clean up
+            onDisk.toFile().delete();
         }
 
         return sboms;
