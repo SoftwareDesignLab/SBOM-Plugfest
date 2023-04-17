@@ -155,23 +155,44 @@ public class TranslatorPlugFestTest {
     }
 
     @Test
-    public void driver_translates_xml_version() {
+    public void driver_translates_xml_SBOM_version() {
         SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
     }
 
     @Test
-    public void driver_translates_json_version() {
+    public void driver_translates_json_SBOM_version() {
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
     }
 
     @Test
-    public void driver_translates_spdx_version() {
+    public void driver_translates_spdx_SBOM_version() {
         SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
+    }
+
+    @Test
+    public void driver_translates_xml_spec_version() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
+        assertNotNull(sbom);
+        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
+    }
+
+    @Test
+    public void driver_translates_json_spec_version() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
+        assertNotNull(sbom);
+        assertEquals("1.4", sbom.getSpecVersion());
+    }
+
+    @Test
+    public void driver_translates_spdx_spec_version() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertEquals("SPDX-2.2", sbom.getSpecVersion());
     }
 }
