@@ -3,6 +3,9 @@ package org.nvip.plugfest.tooling.translator;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -48,5 +51,42 @@ public class TranslatorPlugFestTest {
         assertEquals(EXPECTED_SPDX_COMPONENTS, sbom.getAllComponents().size());
     }
 
+    @Test
+    public void driver_translates_xml_content() {
+        String content = null;
+        try {
+            content = new String(Files.readAllBytes(Paths.get(TEST_XML)));
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+        SBOM sbom = TranslatorPlugFest.translateContents(content, TEST_XML);
+        assertNotNull(sbom);
+        assertEquals(EXPECTED_XML_COMPONENTS, sbom.getAllComponents().size());
+    }
 
+    @Test
+    public void driver_translates_json_content() {
+        String content = null;
+        try {
+            content = new String(Files.readAllBytes(Paths.get(TEST_JSON)));
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+        SBOM sbom = TranslatorPlugFest.translateContents(content, TEST_JSON);
+        assertNotNull(sbom);
+        assertEquals(EXPECTED_JSON_COMPONENTS, sbom.getAllComponents().size());
+    }
+
+    @Test
+    public void driver_translates_spdx_content() {
+        String content = null;
+        try {
+            content = new String(Files.readAllBytes(Paths.get(TEST_SPDX)));
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+        SBOM sbom = TranslatorPlugFest.translateContents(content, TEST_SPDX);
+        assertNotNull(sbom);
+        assertEquals(EXPECTED_SPDX_COMPONENTS, sbom.getAllComponents().size());
+    }
 }
