@@ -12,6 +12,9 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.File;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,16 +26,15 @@ import java.util.stream.Collectors;
  * @author Tyler Drake
  */
 public class TranslatorCDXJSON {
-
     /**
-     * Coverts CDX JSON SBOMs into internal SBOM objects
+     * Converts a file into an internal SBOM object
      *
-     * @param file_path Path to CDX JSON SBOM
+     * @param fileContents String of file contents
+     * @param file_path Path to file
      * @return internal SBOM object
-     * @throws ParseException
+     * @throws ParseException If file is not valid JSON
      */
-    public static SBOM translatorCDXJSON(String file_path) throws ParseException {
-
+    public static SBOM translatorCDXJSONContents(String fileContents, String file_path) throws ParseException {
         // Internal SBOM Object
         SBOM sbom;
 
@@ -43,7 +45,7 @@ public class TranslatorCDXJSON {
         JsonParser parser = new JsonParser();
 
         // Use JSON Parser to parse cdx.json file and store into cyclonedx Bom Object
-        Bom json_sbom = parser.parse(new File(file_path));
+        Bom json_sbom = parser.parse(fileContents.getBytes());
 
         // Attempt to create the SBOM object. If information isn't found, cancel process and return a null object,
         try {
@@ -175,6 +177,27 @@ public class TranslatorCDXJSON {
 
         // Return SBOM object
         return sbom;
+    }
+
+    /**
+     * Coverts CDX JSON SBOMs into internal SBOM objects
+     *
+     * @param file_path Path to CDX JSON SBOM
+     * @return internal SBOM object
+     * @throws ParseException
+     */
+    public static SBOM translatorCDXJSON(String file_path) throws ParseException {
+        // Read the file at file_path into a string
+        String contents = null;
+        try {
+            contents = Files.readAllBytes(Paths.get(file_path)).toString();
+        }
+        catch (IOException e) {
+            System.err.println("Could not read file: " + file_path);
+            return null;
+        }
+
+        return translatorCDXJSONContents(contents, file_path);
     }
 
     /**
