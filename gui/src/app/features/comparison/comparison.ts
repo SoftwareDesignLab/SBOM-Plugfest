@@ -41,7 +41,7 @@ interface UniqueIdOccurrence {
 }
 
 export interface Comparison {
-  targetSbom: SBOM;
+  targetSbom?: SBOM;
   diffReports: DiffReport[];
   comparisons: Map<string, Set<ComponentVersion>>;
 }

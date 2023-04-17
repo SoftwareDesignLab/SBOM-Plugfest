@@ -7,13 +7,8 @@ import { Comparison, comparisonMockup } from '../comparison';
   styleUrls: ['./comparison.component.css']
 })
 
-export class ComparisonComponent implements OnChanges {
-  @Input() comparison: Comparison | null = comparisonMockup;
-  readonly attributeKeys = ['comparisons', '']
+export class ComparisonComponent {
+  @Input() comparison: Comparison | null = null;
   path: number[] = [];
   depth: number = 0;
-
-  ngOnChanges(): void {
-    this.comparison = comparisonMockup;
-  }
 }

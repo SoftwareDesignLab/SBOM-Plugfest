@@ -1,44 +1,14 @@
- <!-- <div class="comparison">
-  <div *ngIf="depth === 0">
-    <app-accordion
-      *ngFor="let item of comparison?.comparisons; let i = index"
-      [extra]=" item.va.size + ' Ver(s)']"
-      [expanded]="true"
-    >
-      <span title> item </span>
-      <div body>
-        <app-accordion
-          *ngFor="let component of comparison?.comparisons; let j = index"
-          (click)="path.push(i, j); depth = 1"
-        >
-          <div title>{{ component[0] as componentv}}</div>
-        </app-accordion>
-      </div>
-    </app-accordion>
+<div class="comparison">
+  <div>
+    <div *ngIf="depth === 0">
+      <app-accordion
+        *ngFor="let item of comparison?.comparisons; let i = index"
+        [extra]="[item[1].size + ' Ver(s)']"
+        [expanded]="true"
+      >
+        <span title> heee </span>
+        <div body>hiiii</div>
+      </app-accordion>
+    </div>
   </div>
-
- <div *ngIf="depth === 1">
-    <app-accordion
-      *ngFor="
-        let item of diffReport.components[path[0]].versions[path[1]].attributes;
-        let i = index
-      "
-      [extra]="[item.values.length + ' Values(s)']"
-      [expanded]="true"
-    >
-      <span title> Components / {{ diffReport.components[path[0]].versions[path[1]].info.name }}</span>
-      <div body>
-        <app-accordion
-          *ngFor="let value of item.values; let j = index"
-          [extra]="[
-            value.occurrences + ' Occurances',
-            value.matching + ' Matching'
-          ]"
-        >
-          <div title>{{ value.name }}</div>
-        </app-accordion>
-      </div>
-    </app-accordion>
-  </div>
-</div> 
-</div> -->
+</div>

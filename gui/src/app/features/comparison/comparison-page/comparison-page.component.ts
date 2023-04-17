@@ -11,10 +11,9 @@ export class ComparisonPageComponent {
   collapsed: boolean = false;
 
   sboms: SBOM[] = [];
-  selectionSBOMS: SBOM[] = [];  // to display in options
+  selectionSBOMS: SBOM[] = []; // to display in options
   targetSbom: SBOM | null = null; // number is for original position
-  comparisonSBOM: SBOM | null = null;
-  comparison:Comparison| null = null;
+  comparison: Comparison | null = null;
 
   uploadSbom($event: any) {
     // @TODO: FILE UPLOAD HERE
@@ -23,25 +22,15 @@ export class ComparisonPageComponent {
     this.selectionSBOMS = this.sboms;
   }
 
-
   selectTargetSbom($event: any) {
     this.targetSbom = $event;
     this.selectionSBOMS = this.sboms.filter(
       (s) => s.name !== this.targetSbom?.name
     );
-    this.compare();
+    this.comparison = comparisonMockup;
   }
 
-  selectComparison($event: any){
-    this.comparisonSBOM = $event.target?.value || null
-    this.compare();
-  }
-
-  compare() {
-    if (this.targetSbom && this.comparisonSBOM) {
-      //this.comparison = [this.targetSbom, this.comparisonSBOM];
-      this.comparison = comparisonMockup;
-    }
+  selectComparison($event: any) {
+    //this.targetSbom = $event.target?.value
   }
 }
-
