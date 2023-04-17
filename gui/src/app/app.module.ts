@@ -12,6 +12,8 @@ import { ButtonComponent } from './shared/components/button/button.component';
 import { AccordionComponent } from './shared/components/accordion/accordion.component';
 import { DropdownComponent } from '@components/dropdown/dropdown.component';
 import { SidePanelComponent } from './shared/components/side-panel/side-panel.component';
+import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel/metrics-side-panel.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,8 @@ import { SidePanelComponent } from './shared/components/side-panel/side-panel.co
     AccordionComponent,
     IconComponent,
     DropdownComponent,
-    SidePanelComponent
+    SidePanelComponent,
+    MetricsSidePanelComponent
   ],
   imports: [
     BrowserModule,
