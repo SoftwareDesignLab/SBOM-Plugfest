@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./metrics-side-panel.component.css']
 })
 export class MetricsSidePanelComponent {
-
+  sboms: any[] = [];
 }
