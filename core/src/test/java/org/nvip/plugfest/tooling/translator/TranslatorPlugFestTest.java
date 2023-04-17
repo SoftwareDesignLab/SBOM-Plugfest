@@ -132,4 +132,25 @@ public class TranslatorPlugFestTest {
         assertNotNull(sbom);
         assertEquals("2023-03-10T18:48:20Z", sbom.getTimestamp());
     }
+
+    @Test
+    public void driver_translates_xml_format() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
+        assertNotNull(sbom);
+        assertEquals("CYCLONE_DX", sbom.getOriginFormat().toString());
+    }
+
+    @Test
+    public void driver_translates_json_format() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
+        assertNotNull(sbom);
+        assertEquals("CYCLONE_DX", sbom.getOriginFormat().toString());
+    }
+
+    @Test
+    public void driver_translates_spdx_format() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertEquals("SPDX", sbom.getOriginFormat().toString());
+    }
 }
