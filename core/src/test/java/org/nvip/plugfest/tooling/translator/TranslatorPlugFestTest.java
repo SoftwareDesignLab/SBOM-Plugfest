@@ -89,4 +89,26 @@ public class TranslatorPlugFestTest {
         assertNotNull(sbom);
         assertEquals(EXPECTED_SPDX_COMPONENTS, sbom.getAllComponents().size());
     }
+
+
+    @Test
+    public void driver_translates_xml_supplier() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
+        assertNotNull(sbom);
+        assertEquals("anchore", sbom.getSupplier());
+    }
+
+    @Test
+    public void driver_translates_json_supplier() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
+        assertNotNull(sbom);
+        assertEquals("[org.cyclonedx.model.Tool@9e23bc53]", sbom.getSupplier());
+    }
+
+    @Test
+    public void driver_translates_spdx_supplier() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertEquals("spdx-sbom-generator-source-code", sbom.getSupplier());
+    }
 }
