@@ -103,18 +103,30 @@ public class Comparison {
 
                         // Update the ComponentVersion object with the extra CPEs
                         temporary_cv.getCPEs().iterator().forEachRemaining(
-                                cpe -> { matching_cv.addCPE(cpe) ; matching_cv.addAppearance(SBOM_index); }
+                                cpe -> {
+                                    cpe.addAppearance(SBOM_index);
+                                    matching_cv.addCPE(cpe);
+                                }
                         );
 
                         // Update the ComponentVersion object with extra PURLs
                         temporary_cv.getPURLs().iterator().forEachRemaining(
-                                purl -> { matching_cv.addPURL(purl) ; matching_cv.addAppearance(SBOM_index); }
+                                purl -> {
+                                    purl.addAppearance(SBOM_index);
+                                    matching_cv.addPURL(purl);
+                                }
                         );
 
                         // Update the ComponentVersion object with extra SWIDs
                         temporary_cv.getSWIDs().iterator().forEachRemaining(
-                                swid -> { matching_cv.addSWID(swid) ; matching_cv.addAppearance(SBOM_index); }
+                                swid -> {
+                                    swid.addAppearance(SBOM_index);
+                                    matching_cv.addSWID(swid);
+                                }
                         );
+
+                        // Add the appearance to ComponentVersion
+                        matching_cv.addAppearance(SBOM_index);
 
                         // Add it back into the map
                         new_set.add(matching_cv);
