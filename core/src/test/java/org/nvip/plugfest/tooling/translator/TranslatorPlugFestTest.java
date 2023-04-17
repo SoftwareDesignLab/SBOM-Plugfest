@@ -190,10 +190,10 @@ public class TranslatorPlugFestTest {
     }
 
     @Test
-    public void driver_translates_spdx_spec_version() {
+    public void driver_translates_spdx_headUUID() {
         SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
         assertNotNull(sbom);
-        assertEquals("SPDX-2.2", sbom.getSpecVersion());
+        assertEquals("25e612da-c4c5-40cc-909d-c4216617bef2", sbom.getHeadUUID().toString());
     }
 
     @Test
