@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
@@ -11,6 +12,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,18 +28,15 @@ import java.util.UUID;
  * @author Tyler Drake
  */
 public class TranslatorCDXXML {
-
     /**
-     * Coverts CycloneDX SBOMs into internal SBOM object
+     * Translates a CycloneDX XML file into an SBOM object from the contents of an SBOM
      *
-     * @param file_path Path to CycloneDX SBOM
-     * @return internal SBOM object
-     * @throws ParserConfigurationException
-     * @throws IOException
-     * @throws SAXException
+     * @param contents String contents of the SBOM file
+     * @param file_path String path to the SBOM file
+     * @return SBOM object
+     * @throws ParserConfigurationException if the DocumentBuilder cannot be created
      */
-    public static SBOM translatorCDXXML(String file_path) throws ParserConfigurationException {
-
+    public static SBOM translatorCDXXMLContents(String contents, String file_path) throws ParserConfigurationException {
         // New SBOM object
         SBOM sbom;
 
@@ -60,7 +61,7 @@ public class TranslatorCDXXML {
         Document sbom_xml_file;
 
         try {
-            sbom_xml_file = documentBuilder.parse(new File(file_path));
+            sbom_xml_file = documentBuilder.parse(new InputSource(new StringReader(contents)));
         } catch (SAXException saxException) {
             System.err.println("Error: SAXException found. File must be a properly formatted Cyclone-DX XML file: " + file_path);
             return null;
@@ -100,7 +101,7 @@ public class TranslatorCDXXML {
         } catch (Exception e) {
             System.err.println(
                     "Warning: no components found. If this is not intended, please check file format. " +
-                    "File: " + file_path
+                            "File: " + file_path
             );
             sbomComp = null;
         }
@@ -234,5 +235,29 @@ public class TranslatorCDXXML {
 
         // Return complete SBOM object
         return sbom;
+    }
+
+    /**
+     * Coverts CycloneDX SBOMs into internal SBOM object
+     *
+     * @param file_path Path to CycloneDX SBOM
+     * @return internal SBOM object
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static SBOM translatorCDXXML(String file_path) throws ParserConfigurationException {
+        // Get file_path contents and save it into a string
+        String file_contents = "";
+        try {
+            file_contents = new String(Files.readAllBytes(Paths.get(file_path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error: Unable to read file: " + file_path);
+            return null;
+        }
+
+        return translatorCDXXMLContents(file_contents, file_path);
+
     }
 }
