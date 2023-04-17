@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class apiController {
+public class APIController {
 
     private static ObjectMapper mapper;
 
     private static QAPipeline pipeline;
 
-    public apiController() {
+    public APIController() {
         mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         pipeline = new QAPipeline();
     }
