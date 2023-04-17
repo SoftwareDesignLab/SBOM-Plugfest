@@ -26,9 +26,9 @@
 <div>
   <mat-form-field appearance="fill">
     <mat-label></mat-label>
-    <mat-select>
+    <mat-select (selectionChange)="selectedItem($event)">
       <mat-option *ngFor="let item of options"  [value]="item">
-        {{item}}
+        {{item[key] || item}}
       </mat-option>
     </mat-select>
   </mat-form-field>

@@ -16,19 +16,19 @@ import { AccordionComponent } from './shared/components/accordion/accordion.comp
 import { DropdownComponent } from './shared/components/dropdown/dropdown.component';
 import { SidePanelComponent } from './features/comparison/side-panel/side-panel.component';
 import { ComparisonComponent } from './features/comparison/comparison/comparison.component';
-import { TextEmitterDirective } from './shared/directive/textEmitter.directive';
+import { ComparisonPageComponent } from './features/comparison/comparison-page/comparison-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     IconComponent,
     ButtonComponent,
+    ComparisonPageComponent,
     AccordionComponent,
     IconComponent,
     DropdownComponent,
     SidePanelComponent,
     ComparisonComponent,
-    TextEmitterDirective
   ],
   imports: [
     BrowserModule,

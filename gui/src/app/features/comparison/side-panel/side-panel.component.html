@@ -1,12 +1,12 @@
 <div class="side-panel" [ngStyle]="{'maxWidth': collapsed ? '0px' : '100%'}">
-    <div class="content flex col">
+    <form class="content flex col">
         <div class="header">SBOM List</div>
         <div class="selection flex col">
             <div class="header">
                 Target
             </div>
             <div class="content">
-                <app-dropdown [options]="sboms"/>
+                <app-dropdown [options]="sboms" key="name" (selectionChange)="selectTargetSbom($event)"/>
             </div>
         </div>
         <div class="selection flex col">
@@ -14,17 +14,17 @@
                 Comparisons
             </div>
             <div class="content flex col">
-                <div class="compare-item flex" *ngFor="let item of sboms">
-                    <input type="radio"/>
+                <div class="compare-item flex" *ngFor="let item of selectionSBOMS">
+                    <input type="radio" name="comparison" [value]="item" (click)="selectComparison($event)"/>
                     <div class="sbom flex">
-                        {{item}}
+                        {{item.name}}
                         <icon icon="question_mark"/>
                     </div>
                 </div>
             </div>
         </div>
-        <app-button icon="add">ADD SBOMS</app-button>
-    </div>
+        <app-button type="file" icon="add" (click)="uploadSbom($event)">ADD SBOMS</app-button>
+    </form>
 
     <div class="tab flex center" (click)="collapsed = !collapsed">
         <div class="text">SBOM List</div>

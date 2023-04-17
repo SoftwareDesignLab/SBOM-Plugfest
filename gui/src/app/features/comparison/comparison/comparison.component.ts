@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {mockupDiffReport, DiffReport} from '../diffreport';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Comparison, comparisonMockup } from '../comparison';
 
 @Component({
   selector: 'app-comparison',
@@ -7,9 +7,13 @@ import {mockupDiffReport, DiffReport} from '../diffreport';
   styleUrls: ['./comparison.component.css']
 })
 
-export class ComparisonComponent {
-  //@Input() diffReport: DiffReport;
-  diffReport: DiffReport = mockupDiffReport;
+export class ComparisonComponent implements OnChanges {
+  @Input() comparison: Comparison | null = comparisonMockup;
+  readonly attributeKeys = ['comparisons', '']
   path: number[] = [];
   depth: number = 0;
+
+  ngOnChanges(): void {
+    this.comparison = comparisonMockup;
+  }
 }

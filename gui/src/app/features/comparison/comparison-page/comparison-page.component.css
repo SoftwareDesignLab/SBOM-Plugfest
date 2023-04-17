@@ -1,0 +1,13 @@
+#main-wrapper {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+app-side-panel {
+  flex-basis: 20%;
+}
+
+app-comparison {
+    flex-direction: 60%;
+}
