@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Comparison, comparisonMockup } from '../comparison';
+import { Comparison } from '../comparison';
 
 @Component({
   selector: 'app-comparison',

@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from '@angular/core';
-import { Comparison, comparisonMockup } from '../comparison';
+import { Comparison } from '../comparison';
 import { SBOM } from '@models/sbom';
 
 @Component({
@@ -27,10 +27,10 @@ export class ComparisonPageComponent {
     this.selectionSBOMS = this.sboms.filter(
       (s) => s.name !== this.targetSbom?.name
     );
-    this.comparison = comparisonMockup;
+   // this.comparison = comparisonMockup;
   }
 
   selectComparison($event: any) {
-    //this.targetSbom = $event.target?.value
+    this.targetSbom = $event.target?.value
   }
 }

@@ -1,105 +1,69 @@
+import mockup from './diffreport3.json';
 interface SBOM {
   name: string;
 }
 
-interface Component {
-  name: string;
-}
-
 interface SBOMConflict {
-  sbomA: SBOM;
-  sbomB: SBOM;
-  conflictTypes: Set<string>;
+  conflictTypes?: Set<string>;
+  conflicts?: any[];
 }
 
 interface ComponentConflict {
-  componentA: Component;
-  componentB: Component;
-  conflictTypes: Set<string>;
+  componentA?: attributes | null;
+  componentB?: attributes | null;
+  conflictTypes?: string[];
+  conflicts?: any[];
+}
+
+interface attributes {
+  uuid?: string | null;
+  name?: string | null;
+  publisher?: string | null;
+  unpackaged?: boolean;
+  cpes?: attributes[] | string[] | [] | null;
+  purls?: attributes[] | attributes | [];
+  swids?: string[] | [];
+  uniqueID?: string | null;
+  uniqueIDType?: string | null;
+  children?: string[] | [];
+  version?: string | null;
+  vulnerabilities?: string[] | [];
+  licenses?: string[] | [] | null;
+  conflicts?: any[] | [];
+  componentName?: string | null;
+  appearances?: Number[] | []
+  componentVersion?: Number[] | [] | string;
+  packageManager?: string | null;
 }
 
 interface DiffReport {
-  sbomA: SBOM;
-  sbomB: SBOM;
-  sbomConflict: SBOMConflict;
-  componentConflicts: Set<ComponentConflict>;
+  sbomConflict?: SBOMConflict;
+  componentConflicts?: ComponentConflict[];
 }
 
 interface ComponentVersion {
-  componentName: string;
-  version: string;
-  CPES: Set<UniqueIdOccurrence>;
-  PURLs: Set<UniqueIdOccurrence>;
-  SWID: Set<UniqueIdOccurrence>;
-  appearances: Set<number>; // number meaning SBOM ID
+  componentName?: string;
+  version?: string;
+  CPES?: Set<UniqueIdOccurrence>;
+  PURLs?: Set<UniqueIdOccurrence>;
+  SWID?: Set<UniqueIdOccurrence>;
+  appearances?: Set<number>; // number meaning SBOM ID
 }
 
 interface UniqueIdOccurrence {
-  uniqueIdentifier: string;
-  appearances: Set<number>;
-  uniqueIdType: string;
+  uniqueIdentifier?: string;
+  appearances?: Set<number>;
+  uniqueIdType?: string;
 }
 
 export interface Comparison {
   targetSbom?: SBOM;
   diffReports: DiffReport[];
-  comparisons: Map<string, Set<ComponentVersion>>;
+  comparisons: {[key: string]:  attributes[]};
 }
 
 //#region mockup Comparison
-const sbomA = { name: 'SBOM a' };
-const sbomB = { name: 'SBOM b' };
 
-const componentA: Component = { name: 'Component A' };
-const componentB: Component = { name: 'Component b' };
-
-const componentConflict: ComponentConflict = {
-  componentA: componentA,
-  componentB: componentB,
-  conflictTypes: new Set<string>([
-    'COMPONENT_VERSION_MISMATCH',
-    'COMPONENT_CPE_MISMATCH',
-  ]),
-};
-
-const componentVersions = [
-  {
-    componentName: 'Component A',
-    version: '1.1.2',
-    CPES: new Set<UniqueIdOccurrence>(),
-    PURLs: new Set<UniqueIdOccurrence>(),
-    SWID: new Set<UniqueIdOccurrence>(),
-    appearances: new Set<number>([1]),
-  },
-  {
-    componentName: 'Component A',
-    version: '1.1.3',
-    CPES: new Set<UniqueIdOccurrence>(),
-    PURLs: new Set<UniqueIdOccurrence>(),
-    SWID: new Set<UniqueIdOccurrence>(),
-    appearances: new Set<number>([2]),
-  },
-];
-
-export const comparisonMockup: Comparison = {
-  targetSbom: {
-    name: 'SBOM a',
-  },
-  diffReports: [
-    {
-      sbomA: sbomA,
-      sbomB: sbomB,
-      sbomConflict: {
-        sbomA: sbomA,
-        sbomB: sbomB,
-        conflictTypes: new Set<string>(['SUPPLIER_MISMATCH']),
-      },
-      componentConflicts: new Set<ComponentConflict>([componentConflict]),
-    },
-  ],
-  comparisons: new Map([
-    ['Component A', new Set<ComponentVersion>(componentVersions)],
-  ]),
-};
+export const finalMockup: Comparison = mockup;
 
 //#endregion
