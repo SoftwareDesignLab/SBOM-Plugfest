@@ -34,12 +34,12 @@ test {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.nvip.plugfest.Main'
+    mainClass = 'org.nvip.plugfest.tooling.Main'
 }
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.nvip.plugfest.Main'
+        attributes 'Main-Class': 'org.nvip.plugfest.tooling.Main'
     }
 
     from {

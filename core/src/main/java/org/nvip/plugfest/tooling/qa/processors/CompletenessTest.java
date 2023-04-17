@@ -39,6 +39,9 @@ public class CompletenessTest extends MetricTest {
      */
     private final Pattern purlRegex;
 
+    /**
+     * Constructor to build the regex patterns used to test the format of a component information
+     */
     protected CompletenessTest() {
         super("Completeness Test"); // Test name
 
@@ -202,7 +205,7 @@ public class CompletenessTest extends MetricTest {
      * @return A single Test instance, describing if the test passed or failed and its details.
      */
     private Test testComponentVersion(Component c) {
-        if (!this.componentVersionRegex.matcher(c.getVersion().strip()).matches()) // Compare against Regex
+        if (c.getVersion() == null || !this.componentVersionRegex.matcher(c.getVersion().strip()).matches()) // Compare against Regex
             return new Test(false, "Version is Not Complete: '", c.getVersion(), "'."); // Test failed
         return new Test(true, "Version is Complete."); // Test passed
     }
