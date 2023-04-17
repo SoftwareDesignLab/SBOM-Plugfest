@@ -195,4 +195,28 @@ public class TranslatorPlugFestTest {
         assertNotNull(sbom);
         assertEquals("SPDX-2.2", sbom.getSpecVersion());
     }
+
+    @Test
+    public void driver_translates_xml_children() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertNotNull(sbom.getHeadUUID());
+        assertEquals(135, sbom.getChildrenUUIDs(sbom.getHeadUUID()).size());
+    }
+
+    @Test
+    public void driver_translates_json_spec_children() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertNotNull(sbom.getHeadUUID());
+        assertEquals(135, sbom.getChildrenUUIDs(sbom.getHeadUUID()).size());
+    }
+
+    @Test
+    public void driver_translates_spdx_children() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertNotNull(sbom.getHeadUUID());
+        assertEquals(135, sbom.getChildrenUUIDs(sbom.getHeadUUID()).size());
+    }
 }
