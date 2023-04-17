@@ -111,4 +111,25 @@ public class TranslatorPlugFestTest {
         assertNotNull(sbom);
         assertEquals("spdx-sbom-generator-source-code", sbom.getSupplier());
     }
+
+    @Test
+    public void driver_translates_xml_timestamp() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
+        assertNotNull(sbom);
+        assertEquals("2023-02-21T08:50:33-05:00", sbom.getTimestamp());
+    }
+
+    @Test
+    public void driver_translates_json_timestamp() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
+        assertNotNull(sbom);
+        assertEquals("Wed Apr 05 12:49:04 EDT 2023", sbom.getTimestamp());
+    }
+
+    @Test
+    public void driver_translates_spdx_timestamp() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertEquals("2023-03-10T18:48:20Z", sbom.getTimestamp());
+    }
 }
