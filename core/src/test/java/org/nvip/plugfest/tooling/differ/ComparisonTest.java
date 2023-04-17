@@ -1,7 +1,5 @@
 package org.nvip.plugfest.tooling.differ;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.*;
 
@@ -121,7 +119,7 @@ public class ComparisonTest {
 
         assertEquals(3, test_SBOM.getAllComponents().size());
 
-        test_comparison.assignComponents(test_SBOM);
+        test_comparison.assignComponents(test_SBOM, 0);
 
         Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
         assertNotNull(test_comparisons);
@@ -161,7 +159,7 @@ public class ComparisonTest {
 
         assertEquals(2, test_SBOM.getAllComponents().size());
 
-        test_comparison.assignComponents(test_SBOM);
+        test_comparison.assignComponents(test_SBOM, 0);
 
         Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
         assertNotNull(test_comparisons);

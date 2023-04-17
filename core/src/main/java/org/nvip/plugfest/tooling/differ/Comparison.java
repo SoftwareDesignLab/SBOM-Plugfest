@@ -36,11 +36,14 @@ public class Comparison {
 
     public void runComparison(List<SBOM> stream) {
 
+        // Index of the current SBOM from the list
+        int SBOM_index = 0;
+
         // Cycle through each sbom in the stream
         for(SBOM current_sbom : stream) {
 
             // Run assignComponents for each sbom
-            assignComponents(current_sbom);
+            assignComponents(current_sbom, SBOM_index++);
 
             //generate a DiffReport for the current sbom and target sbom
             diffReportList.add(Comparer.generateReport(targetSBOM, current_sbom));
@@ -48,13 +51,13 @@ public class Comparison {
 
     }
 
-    public void assignComponents(SBOM current_sbom) {
+    public void assignComponents(SBOM current_sbom, int SBOM_index) {
 
         // Loop through all components in SBOM and add them to comparisons list.
         for(Component current_component : current_sbom.getAllComponents()) {
 
             // Create a temporary ComponentVersion object for the current SBOM component
-            ComponentVersion temporary_cv = generateComponentVersion(current_component);
+            ComponentVersion temporary_cv = generateComponentVersion(current_component, SBOM_index);
 
             // If the comparisons collection contains
             if(comparisons.containsKey(current_component.getName())) {
@@ -99,13 +102,19 @@ public class Comparison {
                         new_set.remove(matching_cv);
 
                         // Update the ComponentVersion object with the extra CPEs
-                        temporary_cv.getCPEs().iterator().forEachRemaining(cpe -> matching_cv.addCPE(cpe));
+                        temporary_cv.getCPEs().iterator().forEachRemaining(
+                                cpe -> { matching_cv.addCPE(cpe) ; matching_cv.addAppearance(SBOM_index); }
+                        );
 
                         // Update the ComponentVersion object with extra PURLs
-                        temporary_cv.getPURLs().iterator().forEachRemaining(purl -> matching_cv.addPURL(purl));
+                        temporary_cv.getPURLs().iterator().forEachRemaining(
+                                purl -> { matching_cv.addPURL(purl) ; matching_cv.addAppearance(SBOM_index); }
+                        );
 
                         // Update the ComponentVersion object with extra SWIDs
-                        temporary_cv.getSWIDs().iterator().forEachRemaining(swid -> matching_cv.addSWID(swid));
+                        temporary_cv.getSWIDs().iterator().forEachRemaining(
+                                swid -> { matching_cv.addSWID(swid) ; matching_cv.addAppearance(SBOM_index); }
+                        );
 
                         // Add it back into the map
                         new_set.add(matching_cv);
@@ -129,16 +138,18 @@ public class Comparison {
 
     }
 
-    private ComponentVersion generateComponentVersion(Component component) {
+    private ComponentVersion generateComponentVersion(Component component, int SBOM_index) {
 
         // Create the new ComponentVersion
         ComponentVersion new_cv = new ComponentVersion(component.getName(), component.getVersion());
+        new_cv.addAppearance(SBOM_index);
 
         // Cycle through CPEs
         for (String cpe : component.getCpes()) {
 
             // Create new UniqueIDOccurrence object for the CPE, then add it to the ComponentVersion object
             UniqueIdOccurrence new_cpe_uid = new UniqueIdOccurrence(cpe, UniqueIdentifierType.CPE);
+            new_cpe_uid.addAppearance(SBOM_index);
             new_cv.addCPE(new_cpe_uid);
 
         }
@@ -146,6 +157,7 @@ public class Comparison {
 
             // Create new UniqueIDOccurrence object for the PURL, then add it to the ComponentVersion object
             UniqueIdOccurrence new_purl_uid = new UniqueIdOccurrence(purl.toString(), UniqueIdentifierType.PURL);
+            new_purl_uid.addAppearance(SBOM_index);
             new_cv.addPURL(new_purl_uid);
 
         }
@@ -153,9 +165,13 @@ public class Comparison {
 
             // Create new UniqueIDOccurrence object for the SWID, then add it to the ComponentVersion object
             UniqueIdOccurrence new_swid_uid = new UniqueIdOccurrence(swid, UniqueIdentifierType.SWID);
+            new_swid_uid.addAppearance(SBOM_index);
             new_cv.addSWID(new_swid_uid);
+
         }
+
         return new_cv;
+
     }
 
     public SBOM getTargetSBOM() {
