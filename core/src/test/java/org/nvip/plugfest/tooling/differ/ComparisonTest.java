@@ -32,13 +32,14 @@ public class ComparisonTest {
                 new HashSet<>(), new DependencyTree());
 
         List<SBOM> test_SBOM_list = new ArrayList<>();
+        test_SBOM_list.add(test_SBOM_target);
         test_SBOM_list.add(test_SBOM_a);
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
+        Comparison test_comparison = new Comparison(test_SBOM_list);
 
-        test_comparison.runComparison(test_SBOM_list);
+        test_comparison.runComparison();
 
         List<DiffReport> test_report_result = test_comparison.getDiffReports();
 
@@ -90,10 +91,6 @@ public class ComparisonTest {
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
-
-        assertNotNull(test_comparison);
-
         SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
                 new HashSet<>(), new DependencyTree());
@@ -119,6 +116,14 @@ public class ComparisonTest {
 
         assertEquals(3, test_SBOM.getAllComponents().size());
 
+        List<SBOM> test_list = new ArrayList<>();
+        test_list.add(test_SBOM_target);
+        test_list.add(test_SBOM);
+
+        Comparison test_comparison = new Comparison(test_list);
+
+        assertNotNull(test_comparison);
+
         test_comparison.assignComponents(test_SBOM, 0);
 
         Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
@@ -136,9 +141,6 @@ public class ComparisonTest {
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
-
-        assertNotNull(test_comparison);
 
         SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
@@ -158,6 +160,14 @@ public class ComparisonTest {
         test_SBOM.addComponent(test_component_b.getUUID(), test_component_a);
 
         assertEquals(2, test_SBOM.getAllComponents().size());
+
+        List<SBOM> test_list = new ArrayList<>();
+        test_list.add(test_SBOM_target);
+        test_list.add(test_SBOM);
+
+        Comparison test_comparison = new Comparison(test_list);
+
+        assertNotNull(test_comparison);
 
         test_comparison.assignComponents(test_SBOM, 0);
 
@@ -187,7 +197,10 @@ public class ComparisonTest {
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
+        List<SBOM> test_list = new ArrayList<>();
+        test_list.add(test_SBOM_target);
+
+        Comparison test_comparison = new Comparison(test_list);
 
         SBOM test_get_target = test_comparison.getTargetSBOM();
 
@@ -217,13 +230,14 @@ public class ComparisonTest {
                 new HashSet<>(), new DependencyTree());
 
         List<SBOM> test_SBOM_list = new ArrayList<>();
+        test_SBOM_list.add(test_SBOM_target);
         test_SBOM_list.add(test_SBOM_a);
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
+        Comparison test_comparison = new Comparison(test_SBOM_list);
 
-        test_comparison.runComparison(test_SBOM_list);
+        test_comparison.runComparison();
 
         List<DiffReport> test_diff_reports = test_comparison.getDiffReports();
 

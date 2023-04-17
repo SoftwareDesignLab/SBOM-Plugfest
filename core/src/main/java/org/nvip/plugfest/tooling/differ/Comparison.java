@@ -22,31 +22,39 @@ public class Comparison {
     // Target SBOM (Ground Truth) for comparison.
     private SBOM targetSBOM;
 
+    // List of SBOMs to stream against the Target SBOM for comparison
+    private List<SBOM> sbomStream;
+
     // List of diff reports
     private List<DiffReport> diffReportList;
 
     // Set of comparisons
     private Map<String, HashSet<ComponentVersion>> comparisons;
 
-    public Comparison(SBOM target) {
-        this.targetSBOM = target;
+    public Comparison(List<SBOM> stream) {
+        this.targetSBOM = stream.get(0);
+        this.sbomStream = stream.subList(1, stream.size());
         this.diffReportList = new ArrayList<>();
         this.comparisons = new HashMap<>();
     }
 
-    public void runComparison(List<SBOM> stream) {
+    public void runComparison() {
 
         // Index of the current SBOM from the list
         int SBOM_index = 0;
 
+        // Assign components for target SBOM
+        assignComponents(targetSBOM, SBOM_index++);
+
         // Cycle through each sbom in the stream
-        for(SBOM current_sbom : stream) {
+        for(SBOM current_sbom : sbomStream) {
 
             // Run assignComponents for each sbom
             assignComponents(current_sbom, SBOM_index++);
 
             //generate a DiffReport for the current sbom and target sbom
             diffReportList.add(Comparer.generateReport(targetSBOM, current_sbom));
+
         }
 
     }
@@ -195,9 +203,7 @@ public class Comparison {
     }
 
     public Map<String, HashSet<ComponentVersion>> getComparisons() {
-
         return this.comparisons;
-
     }
 
 }
