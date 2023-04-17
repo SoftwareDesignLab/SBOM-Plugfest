@@ -6,13 +6,12 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * file: TranslatorSPDX.java
@@ -50,16 +49,13 @@ public class TranslatorSPDX {
 
 
     /**
-     * Coverts SPDX SBOMs into internal SBOM objects
+     * Coverts SPDX SBOMs into internal SBOM objects by its contents
      *
-     * @param file_path Path to SPDX SBOM
-     * @return internal SBOM object
-     * @throws IOException
+     * @param fileContents Contents of the SBOM to translate
+     * @param file_path Original path to SPDX SBOM
+     * @return internal SBOM object from contents
      */
-    public static SBOM translatorSPDX(String file_path) throws IOException {
-
-        if(!new File(file_path).exists()) { return null; }
-
+    public static SBOM translatorSPDXContents(String fileContents, String file_path) throws IOException {
         // Create a new SBOM object
         SBOM sbom;
 
@@ -88,10 +84,8 @@ public class TranslatorSPDX {
         List<String> packages = new ArrayList<>();
 
         // Get SPDX file
-        File file = new File(file_path);
-
         // Initialize BufferedReader along with current line
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader br = new BufferedReader(new StringReader(fileContents));
         String current_line;
 
         /**
@@ -99,10 +93,10 @@ public class TranslatorSPDX {
          */
         // Get next line until end of file is found or un-packaged tag not found
         while ( (current_line = br.readLine()) != null
-                        && !current_line.contains(UNPACKAGED_TAG)
-                        && !current_line.contains(PACKAGE_TAG)
-                        && !current_line.contains(RELATIONSHIP_TAG)
-                        && !current_line.contains(RELATIONSHIP_KEY)
+                && !current_line.contains(UNPACKAGED_TAG)
+                && !current_line.contains(PACKAGE_TAG)
+                && !current_line.contains(RELATIONSHIP_TAG)
+                && !current_line.contains(RELATIONSHIP_KEY)
         ) {
 
             // If the document namespace (serial number) tag is found, attempt to extract the UUID
@@ -249,9 +243,9 @@ public class TranslatorSPDX {
                 // Cleanup package originator
                 String supplier = null;
                 if(component_materials.get("PackageSupplier") != null) {
-                        supplier = component_materials.get("PackageSupplier");
+                    supplier = component_materials.get("PackageSupplier");
                 } else if(component_materials.get("PackageOriginator") != null) {
-                        supplier = component_materials.get("PackageOriginator");
+                    supplier = component_materials.get("PackageOriginator");
                 }
 
                 if (supplier != null) {
@@ -388,7 +382,27 @@ public class TranslatorSPDX {
 
         // Return SBOM object
         return sbom;
+    }
 
+    /**
+     * Coverts SPDX SBOMs into internal SBOM objects
+     *
+     * @param file_path Path to SPDX SBOM
+     * @return internal SBOM object
+     * @throws IOException
+     */
+    public static SBOM translatorSPDX(String file_path) throws IOException {
+        // Get file_path contents and save it into a string
+        String file_contents = "";
+        try {
+            file_contents = new String(Files.readAllBytes(Paths.get(file_path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error: Unable to read file: " + file_path);
+            return null;
+        }
+
+        return translatorSPDXContents(file_contents, file_path);
     }
 
     /**
