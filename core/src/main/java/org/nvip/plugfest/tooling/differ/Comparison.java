@@ -92,6 +92,9 @@ public class Comparison {
                     // Add the new ComponentVersion to the set
                     new_set.add(temporary_cv);
 
+                    // Add which SBOM it appears in
+                    temporary_cv.addAppearance(SBOM_index);
+
                     // Add the new set with the newly added ComponentVersion to the collection
                     comparisons.put(current_component.getName(), new_set);
 
@@ -150,8 +153,13 @@ public class Comparison {
                 }
 
             } else {
+
+                // Add which SBOM this ComponentVersion appears in
+                temporary_cv.addAppearance(SBOM_index);
+
                 // Add a new entry to the comparisons list along with the new ComponentVersion object
                 comparisons.put(temporary_cv.getComponentName(), new HashSet<>(Arrays.asList(temporary_cv)));
+
             }
 
         }
