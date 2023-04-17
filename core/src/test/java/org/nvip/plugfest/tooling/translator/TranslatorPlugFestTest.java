@@ -153,4 +153,25 @@ public class TranslatorPlugFestTest {
         assertNotNull(sbom);
         assertEquals("SPDX", sbom.getOriginFormat().toString());
     }
+
+    @Test
+    public void driver_translates_xml_version() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
+        assertNotNull(sbom);
+        assertEquals("1", sbom.getSbomVersion());
+    }
+
+    @Test
+    public void driver_translates_json_version() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
+        assertNotNull(sbom);
+        assertEquals("1", sbom.getSbomVersion());
+    }
+
+    @Test
+    public void driver_translates_spdx_version() {
+        SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
+        assertNotNull(sbom);
+        assertEquals("1", sbom.getSbomVersion());
+    }
 }
