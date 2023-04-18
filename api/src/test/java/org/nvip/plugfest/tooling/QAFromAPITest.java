@@ -19,10 +19,7 @@ public class QAFromAPITest {
 
     @Test
     public void qaTest() {
-
-        List<MultipartFile> m = new ArrayList<>();
-        m.add(smallDockerSBOM);
-        ResponseEntity<QualityReport> qa = ctrl.qa(m);
+        ResponseEntity<QualityReport> qa = ctrl.qa(smallDockerSBOM);
         assert qa.getStatusCode() == HttpStatus.OK;
         assert qa.getBody().getPassedComponents() > 0;
 
@@ -30,12 +27,9 @@ public class QAFromAPITest {
 
     @Test
     public void qaFastTest() {
-
-        List<MultipartFile> m = new ArrayList<>();
-        m.add(pythonSBOM);
-        ResponseEntity<QualityReport> qa = ctrl.qa(m);
+        ResponseEntity<QualityReport> qa = ctrl.qa(pythonSBOM);
         assert qa.getStatusCode() == HttpStatus.OK;
-        assert qa.getBody().getPassedComponents() == 0;
+        assert qa.getBody().getPassedComponents() > 0;
 
     }
 
