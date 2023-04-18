@@ -12,9 +12,12 @@ import java.util.List;
 
 public class CompareFromAPITest {
 
-    private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir") + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.alpine-compare.2-3.spdx");
-    private final MultipartFile pythonSBOM = new MockMultipartFile(System.getProperty("user.dir") + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx");
-    private final MultipartFile dockerSBOM = new MockMultipartFile(System.getProperty("user.dir") + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx");
+    private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir")
+            + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.alpine-compare.2-3.spdx");
+    private final MultipartFile pythonSBOM = new MockMultipartFile(System.getProperty("user.dir")
+            + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx");
+    private final MultipartFile dockerSBOM = new MockMultipartFile(System.getProperty("user.dir")
+            + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx");
 
     private APIController ctrl;
 
