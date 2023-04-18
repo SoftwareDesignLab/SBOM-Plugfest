@@ -92,7 +92,7 @@ public class Comparison {
                 // Get all ComponentVersions that match the temporary ComponentVersion's version
                 List<ComponentVersion> matching_cv_list = current_cv_list
                         .stream()
-                        .filter(x -> x.getComponentVersion().contains(current_component.getVersion()))
+                        .filter(x -> (Objects.equals(x.getComponentVersion(), current_component.getVersion()) || x.getComponentVersion().contains(current_component.getVersion())))
                         .toList();
 
                 // If there are no matching ComponentVersion objects in the Set for that package name
