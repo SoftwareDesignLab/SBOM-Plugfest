@@ -1,3 +1,9 @@
+/** Author: Tina DiLorenzo */
+
+/** @TODO */
+// 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT
+// 2. CONVERT JSON PROPERTIES TO SETS/MAPS
+
 import mockup from './diffreport3.json';
 interface SBOM {
   name: string;
@@ -51,7 +57,6 @@ interface ComponentVersion {
 }
 
 interface UniqueIdOccurrence {
-  uniqueId?: string;
   appearances?: number[];
   uniqueIdType?: string;
 }

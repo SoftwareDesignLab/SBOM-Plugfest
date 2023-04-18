@@ -1,3 +1,5 @@
+/** @Author Max Stein */
+
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({

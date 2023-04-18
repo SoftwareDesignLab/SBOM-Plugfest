@@ -1,4 +1,5 @@
-// Author Tina DiLorenzo
+/** @Author Tina DiLorenzo */
+
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { Comparison, finalMockup } from '../comparison';
 import { SBOM } from '@models/sbom';
@@ -23,7 +24,7 @@ export class ComparisonPageComponent {
   constructor(public dialog: MatDialog) {}
 
   uploadSbom($event: any) {
-    // @TODO: FILE UPLOAD HERE
+    /**  @TODO FILE UPLOAD HERE */
     // apiCall with event.target.files
     this.sboms = [
       {
@@ -44,14 +45,18 @@ export class ComparisonPageComponent {
     ];
   }
 
+  /** @TODO create an api call where you would send the target sbom and compare */ 
+  // it against all sboms rather than doing singular api calls for each one  */
   selectTargetSbom($event: any) {
     this.targetSbom = $event;
   }
 
+  /** @TODO replace with inserting the associated diff report */
   selectComparison($event: any) {
     //this.targetSbom = $event.target?.value
   }
 
+  // Display diff report 
   generate() {
     this.comparison = finalMockup;
   }
@@ -64,8 +69,8 @@ export class ComparisonPageComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('heee')
-        this.sboms = this.sboms.filter(s => s !== sbom )
+        console.log('heee');
+        this.sboms = this.sboms.filter((s) => s !== sbom);
       }
     });
   }

@@ -1,3 +1,5 @@
+/** @Author Tina DiLorenzo */
+
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({

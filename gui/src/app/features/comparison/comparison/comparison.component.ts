@@ -1,3 +1,4 @@
+/** @Author Tina DiLorenzo */
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Comparison } from '../comparison';
 
@@ -36,7 +37,7 @@ export class ComparisonComponent implements OnChanges {
     }
   }
 
-  /**TODO: REPLACE WITH PIPE */
+  /** @TODO REPLACE WITH PIPE */
   getKeys(obj: any) {
     return Object.keys(obj);
   }

@@ -1,4 +1,5 @@
-// Author Tina DiLorenzo
+/** @Author Tina DiLorenzo */
+
 import { Directive, ElementRef, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Directive({

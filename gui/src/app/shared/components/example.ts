@@ -1,4 +1,5 @@
-// @author Tina DiLorenzo 
+/** @Author Justin Jantzi */
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({

@@ -1,3 +1,6 @@
+/** @Author Tina DiLorenzo */
+/** @TODO Replace ? when finalized */
+
 export interface SBOM {
   name: string;
   originFormat?: string;
