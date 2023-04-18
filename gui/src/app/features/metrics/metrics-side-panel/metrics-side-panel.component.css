@@ -10,6 +10,7 @@
 }
 
 .selection {
+    margin-top: 30%;
     width: 90%;
     height: fit-content;
     gap: 15px;
