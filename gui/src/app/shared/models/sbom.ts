@@ -6,6 +6,7 @@ export interface SBOM {
   serialNumber?: string;
   supplier?: string;
   timestamp?: string;
+  publisher?: string;
 
   // @TODO: implement fully later
   dependencyTree?: any;

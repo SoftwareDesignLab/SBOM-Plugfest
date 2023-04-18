@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
-import { MatExpansionModule } from '@angular/material/expansion'
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +16,12 @@ import { AccordionComponent } from './shared/components/accordion/accordion.comp
 import { DropdownComponent } from './shared/components/dropdown/dropdown.component';
 import { SidePanelComponent } from './shared/components/side-panel/side-panel.component';
 import { ComparisonComponent } from './features/comparison/comparison/comparison.component';
-import { ComparisonPageComponent } from './features/comparison/comparison-page/comparison-page.component';
+import {
+  ComparisonPageComponent,
+  ComparisonDialogComponent,
+} from './features/comparison/comparison-page/comparison-page.component';
+import { DialogComponent } from '@components/dialog/dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -29,6 +34,8 @@ import { ComparisonPageComponent } from './features/comparison/comparison-page/c
     DropdownComponent,
     SidePanelComponent,
     ComparisonComponent,
+    DialogComponent,
+    ComparisonDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,8 +50,9 @@ import { ComparisonPageComponent } from './features/comparison/comparison-page/c
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatDialogModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

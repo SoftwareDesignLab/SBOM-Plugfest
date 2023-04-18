@@ -16,11 +16,11 @@
               Comparisons
           </div>
           <div class="content flex col">
-              <div class="compare-item flex" *ngFor="let item of selectionSBOMS">
-                  <input type="radio" name="comparison" [value]="item" (click)="selectComparison($event)"/>
+              <div class="compare-item flex" *ngFor="let sbom of selectionSBOMS">
+                  <input type="radio" name="comparison" [value]="sbom" (click)="selectComparison($event)"/>
                   <div class="sbom flex">
-                      {{item.name}}
-                      <icon icon="question_mark"/>
+                      {{sbom.name}}
+                      <icon icon="question_mark" (click)="openDialog(sbom)"/>
                   </div>
               </div>
           </div>

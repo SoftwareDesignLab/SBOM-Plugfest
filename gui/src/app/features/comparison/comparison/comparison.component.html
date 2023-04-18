@@ -1,5 +1,6 @@
 <div>
-  <span class="path"
+  <span
+    class="path"
     *ngFor="let title of pathTitles; let i = index"
     (click)="decreaseDepth(i)"
     >{{ title }}</span
@@ -35,7 +36,9 @@
         >
           <span title> {{ attribute }}</span>
           <div body>
-            <app-accordion *ngFor="let value of path[2][attribute]">
+            <app-accordion
+              *ngFor="let value of path[2][attribute]"
+            >
               <span title> {{ value.uniqueId }} </span>
             </app-accordion>
           </div>
