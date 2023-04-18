@@ -9,8 +9,9 @@ import java.util.List;
 
 public class QAFromAPITest {
 
-    private final MultipartFile alpineSBOM = new MockMultipartFile("../sample_sboms/sbom.alpine.xml");
-    private final MultipartFile pythonSBOM = new MockMultipartFile("../sample_sboms/sbom.python.xml");
+    private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir") + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.alpine-compare.2-3.spdx");
+    private final MultipartFile pythonSBOM = new MockMultipartFile(System.getProperty("user.dir") + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx");
+    private final MultipartFile dockerSBOM = new MockMultipartFile(System.getProperty("user.dir") + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx");
     private APIController ctrl;
 
     @Test
@@ -19,6 +20,7 @@ public class QAFromAPITest {
         List<MultipartFile> m = new ArrayList<>();
         m.add(alpineSBOM);
         m.add(pythonSBOM);
+        m.add(dockerSBOM);
         assert ctrl.qa(m).getStatusCode() == HttpStatus.OK;
 
     }

@@ -27,7 +27,7 @@ public class MockMultipartFile implements MultipartFile {
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                s.append(data);
+                s.append('\n').append(data);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
@@ -64,7 +64,7 @@ public class MockMultipartFile implements MultipartFile {
 
     @Override
     public byte[] getBytes() throws IOException {
-        return new byte[0];
+        return content;
     }
 
     @Override

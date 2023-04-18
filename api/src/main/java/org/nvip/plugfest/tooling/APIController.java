@@ -14,6 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,7 @@ public class APIController {
         SBOM target = sboms.get(0); // target SBOM
 
         Comparison report = new Comparison(target); // report to return
+
         report.runComparison(sboms);
 
         //encode and send report
@@ -69,7 +73,6 @@ public class APIController {
         ArrayList<SBOM> sboms = new ArrayList<>();
 
         int i = 0;
-        FileWriter w;
         try{
             for (MultipartFile file: boms
             ) {
@@ -77,18 +80,18 @@ public class APIController {
                 // write contents to temp file
                 String originalName = file.getOriginalFilename();
                 assert originalName != null;
-                String extension = "." + originalName.substring(originalName.toLowerCase().lastIndexOf('.'));
-                String path = "tmp" + i + extension;
+                String extension = originalName.substring(originalName.toLowerCase().lastIndexOf('.'));
+                String path = System.getProperty("user.dir") + "/tmp" + i + extension;
 
                 // read and add to SBOM list
-                w = new FileWriter(path);
-                w.write(new String(file.getBytes()));
+                FileWriter w = new FileWriter(path);
+                w.write(new String(file.getBytes(), StandardCharsets.UTF_8));
                 sboms.add(TranslatorPlugFest.translate(path));
 
                 // delete temporary file
-                if (!new File(path).delete())
+                if (!Files.deleteIfExists(Paths.get(path)))
                     System.out.println("Failed to delete " + path);
-
+                i++;
             }
         }catch(IOException e){
             System.err.println(e.getMessage());
