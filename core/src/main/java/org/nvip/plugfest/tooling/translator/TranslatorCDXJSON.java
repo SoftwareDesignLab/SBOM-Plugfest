@@ -190,7 +190,7 @@ public class TranslatorCDXJSON {
         // Read the file at file_path into a string
         String contents = null;
         try {
-            contents = Files.readAllBytes(Paths.get(file_path)).toString();
+            contents = new String(Files.readAllBytes(Paths.get(file_path)));
         }
         catch (IOException e) {
             System.err.println("Could not read file: " + file_path);
