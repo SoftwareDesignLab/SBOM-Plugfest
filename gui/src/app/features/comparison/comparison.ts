@@ -1,8 +1,11 @@
 /** Author: Tina DiLorenzo */
 
 /** @TODO */
-// 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT
-// 2. CONVERT JSON PROPERTIES TO SETS/MAPS
+// 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT to create comparisons
+// 2. CONVERT JSON 
+//    - readonly arrays TO SETS
+//    - convert keys/values to maps
+
 
 import mockup from './diffreport3.json';
 interface SBOM {
@@ -10,15 +13,15 @@ interface SBOM {
 }
 
 interface SBOMConflict {
-  conflictTypes?: Set<string>;
-  conflicts?: any[];
+  conflictTypes?:  readonly any[];
+  conflicts?: readonly any[];
 }
 
 interface ComponentConflict {
   componentA?: attributes | null;
   componentB?: attributes | null;
-  conflictTypes?: string[];
-  conflicts?: any[];
+  conflictTypes?: readonly string[];
+  conflicts?: readonly any[];
 }
 
 interface attributes {
@@ -26,45 +29,45 @@ interface attributes {
   name?: string | null;
   publisher?: string | null;
   unpackaged?: boolean;
-  cpes?: attributes[] | string[] | [] | null;
-  purls?: attributes[] | attributes | [];
-  swids?: string[] | [];
+  cpes?: readonly attributes[] | readonly string[] | readonly [] | null;
+  purls?: readonly attributes[] | attributes | readonly [];
+  swids?: readonly string[] | readonly [];
   uniqueID?: string | null;
   uniqueIDType?: string | null;
-  children?: string[] | [];
+  children?: readonly string[] | readonly [];
   version?: string | null;
   vulnerabilities?: string[] | [];
-  licenses?: string[] | [] | null;
+  licenses?: readonly string[] | readonly [] | null;
   conflicts?: any[] | [];
   componentName?: string | null;
-  appearances?: Number[] | []
-  componentVersion?: Number[] | [] | string;
+  appearances?: readonly Number[] | readonly []
+  componentVersion?: readonly Number[] | readonly [] | string;
   packageManager?: string | null;
 }
 
 interface DiffReport {
   sbomConflict?: SBOMConflict;
-  componentConflicts?: ComponentConflict[];
+  componentConflicts?: readonly ComponentConflict[];
 }
 
 interface ComponentVersion {
   componentName?: string | null;
   componentVersion: string | null;
-  cpes?: UniqueIdOccurrence[] | [];
-  purls?: UniqueIdOccurrence[] | [];
-  swids?: UniqueIdOccurrence[] | [];
-  appearances?: number[] | []; // number meaning SBOM ID
+  cpes?: readonly UniqueIdOccurrence[] | readonly [];
+  purls?: readonly UniqueIdOccurrence[] | readonly [];
+  swids?: readonly UniqueIdOccurrence[] | readonly [];
+  appearances?: readonly number[] | readonly []; // number meaning SBOM ID
 }
 
 interface UniqueIdOccurrence {
-  appearances?: number[];
+  appearances?: readonly number[];
   uniqueIdType?: string;
 }
 
 export interface Comparison {
   targetSbom?: SBOM;
-  diffReports: DiffReport[];
-  comparisons: {[key: string]:  ComponentVersion[]};
+  diffReports: readonly DiffReport[];
+  comparisons: {[key: string]: readonly ComponentVersion[]};
 }
 
 //#region mockup Comparison
