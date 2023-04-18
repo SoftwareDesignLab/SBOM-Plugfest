@@ -17,7 +17,6 @@ export class ComparisonPageComponent {
   collapsed: boolean = false;
 
   sboms: SBOM[] = [];
-  selectionSBOMS: SBOM[] = []; // to display in options
   targetSbom: SBOM | null = null; // number is for original position
   comparison: Comparison | null = null;
 
@@ -43,15 +42,10 @@ export class ComparisonPageComponent {
         publisher: 'unknown',
       },
     ];
-    this.selectionSBOMS = this.sboms;
   }
 
   selectTargetSbom($event: any) {
     this.targetSbom = $event;
-    this.selectionSBOMS = this.sboms.filter(
-      (s) => s.name !== this.targetSbom?.name
-    );
-    //this.comparison = finalMockup;
   }
 
   selectComparison($event: any) {
@@ -72,7 +66,6 @@ export class ComparisonPageComponent {
       if (result) {
         console.log('heee')
         this.sboms = this.sboms.filter(s => s !== sbom )
-        this.selectionSBOMS = this.sboms;
       }
     });
   }

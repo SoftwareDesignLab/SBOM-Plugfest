@@ -8,7 +8,7 @@
               <app-button (click)="generate()">Generate</app-button>
           </div>
           <div class="content">
-              <app-dropdown [options]="sboms" key="name" (selectionChange)="selectTargetSbom($event)"/>
+              <app-dropdown [options]="sboms" key="name" (selectionChange)="targetSbom = $event;"/>
           </div>
       </div>
       <div class="selection flex col">
@@ -16,8 +16,8 @@
               Comparisons
           </div>
           <div class="content flex col">
-              <div class="compare-item flex" *ngFor="let sbom of selectionSBOMS">
-                  <input type="radio" name="comparison" [value]="sbom" (click)="selectComparison($event)"/>
+              <div class="compare-item flex" *ngFor="let sbom of sboms">
+                  <input type="radio" name="comparison" [value]="sbom" (click)="selectComparison($event)" [disabled]="sbom === targetSbom"/>
                   <div class="sbom flex">
                       {{sbom.name}}
                       <icon icon="question_mark" (click)="openDialog(sbom)"/>
@@ -25,7 +25,7 @@
               </div>
           </div>
       </div>
-      <app-button icon="add" (click)="uploadSbom($event)"><input type="file"> SBOMS</app-button>
+      <app-button icon="add"><input type="file" multiple (change)="uploadSbom($event)"> SBOMS</app-button>
   </form>
   </app-side-panel>
   <app-comparison [comparison]="comparison"/>
