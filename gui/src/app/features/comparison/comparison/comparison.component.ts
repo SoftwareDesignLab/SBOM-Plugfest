@@ -7,8 +7,18 @@ import { Comparison } from '../comparison';
   styleUrls: ['./comparison.component.css']
 })
 
-export class ComparisonComponent {
+export class ComparisonComponent implements OnChanges{
   @Input() comparison: Comparison | null = null;
+  display: any = null;
+  keys: string[] = [];
   path: number[] = [];
   depth: number = 0;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.comparison) {
+      this.display = this.comparison?.comparisons;
+      this.keys = Object.keys(this.display);
+      console.log(this.keys);
+    }
+  }
 }

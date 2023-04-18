@@ -1,9 +1,9 @@
-<!-- <div class="comparison">
+<div class="comparison">
   <div>
     <div *ngIf="depth === 0">
       <app-accordion
-        *ngFor="let item of comparison?.comparisons; let i = index"
-        [extra]="[item[1].size + ' Ver(s)']"
+        *ngFor="let key of keys;" 
+        [extra]="[' Ver(s)']"
         [expanded]="true"
       >
         <span title> heee </span>
@@ -11,4 +11,4 @@
       </app-accordion>
     </div>
   </div>
-</div> -->
+</div>

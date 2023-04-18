@@ -42,12 +42,12 @@ interface DiffReport {
 }
 
 interface ComponentVersion {
-  componentName?: string;
-  version?: string;
-  CPES?: Set<UniqueIdOccurrence>;
-  PURLs?: Set<UniqueIdOccurrence>;
-  SWID?: Set<UniqueIdOccurrence>;
-  appearances?: Set<number>; // number meaning SBOM ID
+  componentName?: string | null;
+  version?: string | null;
+  CPES?: UniqueIdOccurrence[] | [];
+  PURLs?: UniqueIdOccurrence[] | [];
+  SWID?: UniqueIdOccurrence[] | [];
+  appearances?: number[] | []; // number meaning SBOM ID
 }
 
 interface UniqueIdOccurrence {
@@ -59,7 +59,7 @@ interface UniqueIdOccurrence {
 export interface Comparison {
   targetSbom?: SBOM;
   diffReports: DiffReport[];
-  comparisons: {[key: string]:  attributes[]};
+  comparisons: {[key: string]:  ComponentVersion[]};
 }
 
 //#region mockup Comparison
