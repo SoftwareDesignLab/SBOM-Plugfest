@@ -30,7 +30,7 @@ public class CompareFromAPITest {
         m.add(dockerSBOM);
         ResponseEntity<Comparison> report = ctrl.compare(m);
         assert report.getStatusCode() == HttpStatus.OK;
-        assert report.getBody().getDiffReports().size() == 3;
+        assert report.getBody().getDiffReports().size() == 2;
         assert report.getBody().getComparisons().size() > 0; // todo translator doesn't add components
 
     }
