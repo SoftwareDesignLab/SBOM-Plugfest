@@ -14,6 +14,7 @@ import { DropdownComponent } from '@components/dropdown/dropdown.component';
 import { SidePanelComponent } from './shared/components/side-panel/side-panel.component';
 import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel/metrics-side-panel.component';
 import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
+import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-main.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-bo
     DropdownComponent,
     SidePanelComponent,
     MetricsSidePanelComponent,
-    MetricsBodyComponent
+    MetricsBodyComponent,
+    MetricsMainComponent
   ],
   imports: [
     BrowserModule,
