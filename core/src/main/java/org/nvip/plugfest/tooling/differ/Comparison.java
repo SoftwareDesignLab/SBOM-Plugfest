@@ -31,6 +31,11 @@ public class Comparison {
     // Set of comparisons
     private Map<String, HashSet<ComponentVersion>> comparisons;
 
+    /**
+     * Default constructor for Comparison
+     *
+     * @param stream a list of SBOMs
+     */
     public Comparison(List<SBOM> stream) {
         this.targetSBOM = stream.get(0);
         this.sbomStream = stream.subList(1, stream.size());
@@ -38,6 +43,10 @@ public class Comparison {
         this.comparisons = new HashMap<>();
     }
 
+    /**
+     * General driver for Comparison. Runs through the stream of SBOMs.
+     * Each SBOM will be compared against the target and will go through assignComponents.
+     */
     public void runComparison() {
 
         // Index of the current SBOM from the list
@@ -59,6 +68,13 @@ public class Comparison {
 
     }
 
+    /**
+     * Cycles through all components in an SBOM and creates ComponentVersion objects.
+     * These ComponentVersion objects are added to the comparisons list.
+     *
+     * @param current_sbom
+     * @param SBOM_index
+     */
     public void assignComponents(SBOM current_sbom, int SBOM_index) {
 
         // Loop through all components in SBOM and add them to comparisons list.
@@ -166,6 +182,13 @@ public class Comparison {
 
     }
 
+    /**
+     * Builds a ComponentVersion object for the current component including all IDs.
+     *
+     * @param component
+     * @param SBOM_index
+     * @return
+     */
     private ComponentVersion generateComponentVersion(Component component, int SBOM_index) {
 
         // Create the new ComponentVersion
@@ -202,14 +225,29 @@ public class Comparison {
 
     }
 
+    /**
+     * Returns the target SBOM
+     *
+     * @return target SBOM
+     */
     public SBOM getTargetSBOM() {
         return this.targetSBOM;
     }
 
+    /**
+     * Returns the list of diffReports for the stream of SBOMs
+     *
+     * @return a list of diffReports
+     */
     public List<DiffReport> getDiffReports() {
         return this.diffReportList;
     }
 
+    /**
+     * Returns the comparisons map
+     *
+     * @return comparisons map containing Component Name as Key, and HashSet<ComponentVersion> as Value
+     */
     public Map<String, HashSet<ComponentVersion>> getComparisons() {
         return this.comparisons;
     }
