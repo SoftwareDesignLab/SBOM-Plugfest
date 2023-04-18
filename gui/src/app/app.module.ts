@@ -13,6 +13,7 @@ import { AccordionComponent } from './shared/components/accordion/accordion.comp
 import { DropdownComponent } from '@components/dropdown/dropdown.component';
 import { SidePanelComponent } from './shared/components/side-panel/side-panel.component';
 import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel/metrics-side-panel.component';
+import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel
     IconComponent,
     DropdownComponent,
     SidePanelComponent,
-    MetricsSidePanelComponent
+    MetricsSidePanelComponent,
+    MetricsBodyComponent
   ],
   imports: [
     BrowserModule,
