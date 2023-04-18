@@ -27,10 +27,14 @@ export class ComparisonPageComponent {
     this.selectionSBOMS = this.sboms.filter(
       (s) => s.name !== this.targetSbom?.name
     );
-    this.comparison = finalMockup;
+    //this.comparison = finalMockup;
   }
 
   selectComparison($event: any) {
     //this.targetSbom = $event.target?.value
+  }
+
+  generate() {
+    this.comparison = finalMockup;
   }
 }

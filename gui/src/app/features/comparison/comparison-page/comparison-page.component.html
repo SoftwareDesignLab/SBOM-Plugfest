@@ -3,8 +3,9 @@
     <form class="content flex col">
       <div class="header">SBOM List</div>
       <div class="selection flex col">
-          <div class="header">
-              Target
+          <div class="header flex row">
+              <span>Target</span>
+              <app-button (click)="generate()">Generate</app-button>
           </div>
           <div class="content">
               <app-dropdown [options]="sboms" key="name" (selectionChange)="selectTargetSbom($event)"/>

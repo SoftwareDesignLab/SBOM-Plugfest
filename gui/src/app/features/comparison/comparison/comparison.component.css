@@ -1,0 +1,6 @@
+.path {
+    margin-left: 5px;
+}
+.path:hover {
+    text-decoration: underline;
+}

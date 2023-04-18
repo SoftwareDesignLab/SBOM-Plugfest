@@ -43,16 +43,16 @@ interface DiffReport {
 
 interface ComponentVersion {
   componentName?: string | null;
-  version?: string | null;
-  CPES?: UniqueIdOccurrence[] | [];
-  PURLs?: UniqueIdOccurrence[] | [];
-  SWID?: UniqueIdOccurrence[] | [];
+  componentVersion: string | null;
+  cpes?: UniqueIdOccurrence[] | [];
+  purls?: UniqueIdOccurrence[] | [];
+  swids?: UniqueIdOccurrence[] | [];
   appearances?: number[] | []; // number meaning SBOM ID
 }
 
 interface UniqueIdOccurrence {
-  uniqueIdentifier?: string;
-  appearances?: Set<number>;
+  uniqueId?: string;
+  appearances?: number[];
   uniqueIdType?: string;
 }
 
