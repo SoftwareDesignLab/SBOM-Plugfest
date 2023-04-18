@@ -56,6 +56,12 @@ public class SBOM {
      */
     private Set<Signature> signature;
 
+    public SBOM () {
+        this.dependencyTree = new DependencyTree();
+        this.signature = new HashSet<>();
+        this.serialNumber = "urn:uuid:" + UUID.randomUUID().toString();
+    }
+
     /**
      * Constructor to take all parameters except for DependencyTree
      *
