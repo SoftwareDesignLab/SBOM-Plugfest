@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * File: CompareFromAPITest.java
+ * Unit test for API regarding Comparisons
+ *
+ * @author Juan Francisco Patino
+ */
 public class CompareFromAPITest {
 
     private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir")

@@ -10,7 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
- * Mock MultipartFile for API test
+ * File: MockMultipartFile.java
+ * Mock MultipartFile class for testing purposes
+ *
+ * @author Juan Francisco Patino
  */
 public class MockMultipartFile implements MultipartFile {
 

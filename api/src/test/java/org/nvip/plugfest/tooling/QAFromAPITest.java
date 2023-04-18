@@ -6,9 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * File: QAFromAPITest.java
+ * Unit tests for API regarding QA
+ *
+ * @author Juan Francisco Patino
+ */
 public class QAFromAPITest {
 
     private final MultipartFile smallDockerSBOM = new MockMultipartFile(System.getProperty("user.dir")

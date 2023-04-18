@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
@@ -11,23 +10,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * File: APIController.java
+ * REST API Controller for SBOM Comparison and QA
+ *
+ * @author Juan Francisco Patino, Asa Horn
+ */
 @RestController
 public class APIController {
-
-    private static ObjectMapper mapper;
 
     private static QAPipeline pipeline;
 
     public APIController() {
-        mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         pipeline = new QAPipeline();
     }
 
@@ -36,7 +35,7 @@ public class APIController {
      * The API will respond with an HTTP 200 and a jackson serialized DiffReport object.
      *
      * @param boms - list of files to compare
-     * @return - jackson serialized DiffReport object
+     * @return - wrapped Comparison object
      */
     @RequestMapping(value="compare", method=RequestMethod.POST)
     public ResponseEntity<Comparison> compare(@RequestBody List<MultipartFile> boms) throws IOException {
@@ -71,7 +70,7 @@ public class APIController {
      * The API will respond with an HTTP 200 and a jackson serialized QualityReport object.
      *
      * @param bom - SBOM to run metrics on
-     * @return - jackson serialized QualityReport object
+     * @return - wrapped QualityReport object
      */
     @RequestMapping(value="qa", method=RequestMethod.POST)
     public ResponseEntity<QualityReport> qa(@RequestBody MultipartFile bom) {
