@@ -1,7 +1,9 @@
 package org.nvip.plugfest.tooling;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -9,22 +11,31 @@ import java.util.List;
 
 public class QAFromAPITest {
 
-    private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir")
-            + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.alpine-compare.2-3.spdx");
+    private final MultipartFile smallDockerSBOM = new MockMultipartFile(System.getProperty("user.dir")
+            + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2_small.spdx");
     private final MultipartFile pythonSBOM = new MockMultipartFile(System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx");
-    private final MultipartFile dockerSBOM = new MockMultipartFile(System.getProperty("user.dir")
-            + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx");
     private APIController ctrl;
 
     @Test
     public void qaTest() {
 
         List<MultipartFile> m = new ArrayList<>();
-        m.add(alpineSBOM);
+        m.add(smallDockerSBOM);
+        ResponseEntity<QualityReport> qa = ctrl.qa(m);
+        assert qa.getStatusCode() == HttpStatus.OK;
+        assert qa.getBody().getPassedComponents() > 0;
+
+    }
+
+    @Test
+    public void qaFastTest() {
+
+        List<MultipartFile> m = new ArrayList<>();
         m.add(pythonSBOM);
-        m.add(dockerSBOM);
-        assert ctrl.qa(m).getStatusCode() == HttpStatus.OK;
+        ResponseEntity<QualityReport> qa = ctrl.qa(m);
+        assert qa.getStatusCode() == HttpStatus.OK;
+        assert qa.getBody().getPassedComponents() == 0;
 
     }
 
