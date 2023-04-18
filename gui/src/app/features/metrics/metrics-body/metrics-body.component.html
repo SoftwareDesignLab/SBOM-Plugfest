@@ -1,12 +1,14 @@
-<div class="graphs">
+<div class="metrics-body flex col center">
+    <div class="graphs">
 
-</div>
-<div class="results">
-    <app-accordion title="TEST RESULTS" [extra]="[(report ? report.testResults.length : '0') + ' COMPONENTS']">
-        <app-accordion *ngFor="let testResult of report?.testResults" title="{{testResult.component.name}}">
-            <div class="test" *ngFor="let test of testResult.tests">
-                {{test.message}}
-            </div>
+    </div>
+    <div class="results">
+        <app-accordion title="TEST RESULTS" [extra]="[(report ? report.testResults.length : '0') + ' COMPONENTS']">
+            <app-accordion *ngFor="let testResult of report?.testResults" title="{{testResult.component.name}}">
+                <div class="test" *ngFor="let test of testResult.tests">
+                    {{test.message}}
+                </div>
+            </app-accordion>
         </app-accordion>
-    </app-accordion>
+    </div>
 </div>
