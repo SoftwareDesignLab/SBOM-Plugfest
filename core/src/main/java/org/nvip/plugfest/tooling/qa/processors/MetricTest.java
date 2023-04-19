@@ -5,6 +5,8 @@ import org.nvip.plugfest.tooling.sbom.Component;
 
 /**
  * Abstract class to be extended by all metric tests
+ *
+ * @author Dylan Mulligan
  */
 public abstract class MetricTest {
     //#region Attributes
