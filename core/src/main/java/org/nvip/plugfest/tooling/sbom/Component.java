@@ -143,6 +143,23 @@ public class Component {
         this.swids = SWID;
     }
 
+    /**
+     * Copy a component's attributes to this component
+     *
+     * @param component Component to copy from
+     */
+    public void copyFrom(Component component) {
+        this.name = component.name;
+        this.publisher = component.publisher;
+        this.cpes = new HashSet<>(component.cpes);
+        this.purls = new HashSet<>(component.purls);
+        this.swids = new HashSet<>(component.swids);
+        this.children.addAll(component.children);
+        this.version = component.version;
+        this.vulnerabilities.addAll(component.vulnerabilities);
+        this.licenses = component.licenses;
+    }
+
     ///
     /// Getters and Setters
     ///
@@ -194,11 +211,6 @@ public class Component {
                 .orElse(null);
     }
 
-    /**
-     * Set if the component is unpackaged or not
-     *
-     * @param unpackaged If component is unpackaged
-     */
     public void setUnpackaged(boolean unpackaged) {
         this.unpackaged = unpackaged;
     }
@@ -267,49 +279,21 @@ public class Component {
         return componentConflicts;
     }
 
-    /**
-     * Adds a conflict to the component
-     *
-     * @param componentConflict Conflict to add
-     */
     public void addConflict(ComponentConflict componentConflict) {
         componentConflicts.add(componentConflict);
     }
 
-    /**
-     * Add a vulnerability to the list of vulnerabilities for this component
-     *
-     * @param vulnerability Vulnerability to add to this component
-     */
     public void addVulnerability(Vulnerability vulnerability) {
         vulnerabilities.add(vulnerability);
     }
 
-    /**
-     * Get a set of all vulnerabilities for this component
-     *
-     * @return The set of all vulnerabilities
-     */
     public Set<Vulnerability> getVulnerabilities() {
         return vulnerabilities;
     }
 
-    /**
-     * Copy a component's attributes to this component
-     *
-     * @param component Component to copy from
-     */
-    public void copyFrom(Component component) {
-        this.name = component.name;
-        this.publisher = component.publisher;
-        this.cpes = new HashSet<>(component.cpes);
-        this.purls = new HashSet<>(component.purls);
-        this.swids = new HashSet<>(component.swids);
-        this.children.addAll(component.children);
-        this.version = component.version;
-        this.vulnerabilities.addAll(component.vulnerabilities);
-        this.licenses = component.licenses;
-    }
+    ///
+    /// Overrides
+    ///
 
     @Override
     public String toString() {
