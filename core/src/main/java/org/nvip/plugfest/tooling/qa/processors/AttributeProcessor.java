@@ -11,6 +11,8 @@ import java.util.Set;
 
 /**
  * Abstract class to be extended by all metric processors
+ *
+ * @author (names)
  */
 public abstract class AttributeProcessor {
     /** Set of metric tests to run */
