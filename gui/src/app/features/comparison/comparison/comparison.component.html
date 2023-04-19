@@ -1,0 +1,49 @@
+<div>
+  <span
+    class="path"
+    *ngFor="let title of pathTitles; let i = index"
+    (click)="decreaseDepth(i)"
+    >{{ title }}</span
+  >
+</div>
+<div class="comparison">
+  <div>
+    <div *ngIf="path.length === 1">
+      <app-accordion
+        *ngFor="let key of keys"
+        [extra]="[display[key]?.length + ' Ver(s)']"
+        (click)="increaseDepth(display[key], key)"
+      >
+        <span title> {{ key }} </span>
+      </app-accordion>
+    </div>
+
+    <div *ngIf="path.length === 2">
+      <app-accordion
+        *ngFor="let version of path[1]"
+        [extra]="[version?.appearances.length + ' Occurrence(s)']"
+        (click)="increaseDepth(version, version.componentVersion)"
+      >
+        <span title> {{ version.componentVersion }} </span>
+      </app-accordion>
+    </div>
+
+    <div *ngIf="path.length === 3">
+      <div *ngFor="let attribute of attributes">
+        <app-accordion
+          *ngIf="path[2][attribute].length"
+          [extra]="[path[2][attribute].length + ' Value(s)']"
+        >
+          <span title> {{ attribute }}</span>
+          <div body>
+            <app-accordion
+              *ngFor="let value of path[2][attribute]"
+            >
+              <span title> {{ value.uniqueId }} </span>
+            </app-accordion>
+          </div>
+        </app-accordion>
+      </div>
+    </div>
+  </div>
+</div>

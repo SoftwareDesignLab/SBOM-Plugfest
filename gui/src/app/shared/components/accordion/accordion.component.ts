@@ -1,3 +1,5 @@
+/** @Author Justin Jantzi */
+
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -9,4 +11,5 @@ export class AccordionComponent {
   @Input() title: string = '';
   @Input() extra: string[] = [];
   @Input() color: string = '';
+  @Input() expanded: boolean = false;
 }

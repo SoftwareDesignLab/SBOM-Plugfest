@@ -1,3 +1,6 @@
+/** @Author Tina DiLorenzo */
+/** @TODO Replace ? when finalized */
+
 export interface SBOM {
   name: string;
   originFormat?: string;
@@ -6,6 +9,7 @@ export interface SBOM {
   serialNumber?: string;
   supplier?: string;
   timestamp?: string;
+  publisher?: string;
 
   // @TODO: implement fully later
   dependencyTree?: any;
