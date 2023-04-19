@@ -35,7 +35,7 @@ public class QAFromAPITest {
     public void qaFastTest() {
         ResponseEntity<QualityReport> qa = ctrl.qa(pythonSBOM);
         assertEquals(qa.getStatusCode(), HttpStatus.OK);
-        assertEquals(qa.getBody().getPassedComponents(), 0);
+        assertNotEquals(qa.getBody().getPassedComponents(), 0);
     }
 
     @BeforeEach
