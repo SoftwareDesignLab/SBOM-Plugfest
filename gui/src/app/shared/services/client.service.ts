@@ -9,9 +9,6 @@ import { Injectable } from '@angular/core';
 export class ClientService {
 
   private readonly SERVER_URL: string = 'http://localhost:8080/SVIP/';
-  private readonly NVIP_URL: string = "http://ec2-3-234-206-219.compute-1.amazonaws.com:8080/";
-  private loggedIn: boolean = false;
-  public showLogin: boolean = false;
 
   private httpOptions = {
     headers: new HttpHeaders({
@@ -22,9 +19,6 @@ export class ClientService {
   };
 
   constructor(private http: HttpClient) { 
-    this.post("endpoint", new HttpParams().set("endpoint", this.NVIP_URL)).subscribe((data) => {
-      console.log(data);
-    });
   }
 
   get(path: string, params: HttpParams = new HttpParams()) {
@@ -35,14 +29,5 @@ export class ClientService {
   post(path: string, params: HttpParams = new HttpParams()) {
     this.httpOptions.params = params;
     return this.http.post(this.SERVER_URL + path, this.httpOptions.params);
-  }
-
-  IsLoggedIn() {
-    return this.loggedIn;
-  }
-
-  setLoggedIn() {
-    this.loggedIn = true;
-    this.showLogin = false;
   }
 }
