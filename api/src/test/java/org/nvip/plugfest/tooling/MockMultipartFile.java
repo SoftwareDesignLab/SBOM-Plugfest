@@ -43,6 +43,10 @@ public class MockMultipartFile implements MultipartFile {
         content = s.toString().getBytes(StandardCharsets.UTF_8);
     }
 
+    ///
+    /// Getters and Setters
+    ///
+
     @Override
     public String getName() {
         return path.substring(path.toLowerCase().lastIndexOf('/'));
@@ -77,6 +81,10 @@ public class MockMultipartFile implements MultipartFile {
     public InputStream getInputStream() throws IOException {
         return null;
     }
+
+    ///
+    /// Overrides
+    ///
 
     @Override
     public void transferTo(File dest) throws IOException, IllegalStateException {
