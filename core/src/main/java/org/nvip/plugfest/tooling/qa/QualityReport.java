@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 /**
  * QualityReport is a collection of TestResults objects that relate to a particular SBOM
+ *
+ * @author Dylan Mulligan, Matt London, Ian Dunn, Derek Garcia
  */
 public class QualityReport {
     /** Test results from the QAPipeline */
