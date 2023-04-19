@@ -18,14 +18,30 @@ public class fooMetric extends Metric {
     }
 }
  */
+
+/**
+ * Metric to test if the timestamp is in the correct format
+ *
+ * @author Derek Garcia
+ */
 public class timestampConsistencyMetric extends Metric {
     private final String timestamp;   // Metric related field etc
 
+    /**
+     * Constructor for timestampConsistencyMetric
+     *
+     * @param timestamp - the timestamp to be tested
+     */
     public timestampConsistencyMetric(String timestamp) {
         this.timestamp = timestamp;
-        this.score = testMetric();
+        this.score = testMetric(); //run the test
     }
 
+    /**
+     * Test if the timestamp is in the correct format
+     *
+     * @return - Integer score this SBOM received for this metric. (1 pass, 0 fail)
+     */
     @Override
     protected int testMetric() {
         // metric implementation here
