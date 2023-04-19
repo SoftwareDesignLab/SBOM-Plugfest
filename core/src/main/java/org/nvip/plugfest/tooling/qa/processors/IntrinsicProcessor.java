@@ -2,6 +2,8 @@ package org.nvip.plugfest.tooling.qa.processors;
 
 /**
  * Metrics that relate specifically to the data stored in the SBOM
+ *
+ * @author (names)
  */
 public class IntrinsicProcessor extends AttributeProcessor {
     /**
