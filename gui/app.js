@@ -2,6 +2,7 @@ const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 
 const url = require("url");
 const path = require("path");
+const fs = require("fs");
 
 let mainWindow = undefined;
 let filePath = undefined;
@@ -61,3 +62,9 @@ ipcMain.handle("selectFiles", async () => {
 
   return files.filePaths;
 });
+
+ipcMain.handle("getFileData", async (path) => {
+    fs.readFileSync(path, (error, data) => {
+        return data;
+    })
+})
