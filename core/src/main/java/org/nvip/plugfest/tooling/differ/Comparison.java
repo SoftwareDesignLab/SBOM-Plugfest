@@ -185,9 +185,9 @@ public class Comparison {
     /**
      * Builds a ComponentVersion object for the current component including all IDs.
      *
-     * @param component
-     * @param SBOM_index
-     * @return
+     * @param component - the current component
+     * @param SBOM_index - the index of this SBOM in the whole set
+     * @return - the ComponentVersion object
      */
     private ComponentVersion generateComponentVersion(Component component, int SBOM_index) {
 
@@ -225,29 +225,18 @@ public class Comparison {
 
     }
 
-    /**
-     * Returns the target SBOM
-     *
-     * @return target SBOM
-     */
+    ///
+    /// Getters
+    //
+
     public SBOM getTargetSBOM() {
         return this.targetSBOM;
     }
 
-    /**
-     * Returns the list of diffReports for the stream of SBOMs
-     *
-     * @return a list of diffReports
-     */
     public List<DiffReport> getDiffReports() {
         return this.diffReportList;
     }
 
-    /**
-     * Returns the comparisons map
-     *
-     * @return comparisons map containing Component Name as Key, and HashSet<ComponentVersion> as Value
-     */
     public Map<String, HashSet<ComponentVersion>> getComparisons() {
         return this.comparisons;
     }
