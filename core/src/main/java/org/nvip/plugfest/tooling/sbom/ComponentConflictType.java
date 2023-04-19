@@ -2,6 +2,8 @@ package org.nvip.plugfest.tooling.sbom;
 
 /**
  * Enum to represent the type of conflict between two components
+ *
+ * @author Matt London
  */
 public enum ComponentConflictType {
     /** Component only found in one SBOM */
