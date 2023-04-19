@@ -13,6 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 /**
  * File: QAFromAPITest.java
  * Unit tests for API regarding QA
+ * <p>
+ *     Tests:<br>
+ *     - qaTest: Test that the API can QA a small SBOM<br>
+ *     - qaFastTest: Test that the API can QA a large SBOM
+ * </p>
  *
  * @author Juan Francisco Patino
  */
