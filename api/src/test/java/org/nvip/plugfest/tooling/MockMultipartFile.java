@@ -20,6 +20,10 @@ public class MockMultipartFile implements MultipartFile {
     private final String path;
     private byte[] content;
 
+    /**
+     * Constructor
+     * @param path - path we are pretending has a file
+     */
     public MockMultipartFile(String path){
 
         this.path = path;
