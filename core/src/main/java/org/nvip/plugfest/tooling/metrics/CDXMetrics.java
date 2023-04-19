@@ -24,7 +24,7 @@ import org.cyclonedx.util.BomUtils;
 /**
  * Class for CDX SBOM Metrics
  *
- * @author (names)
+ * @author Henry Keena
  */
 public class CDXMetrics extends Metric{
 
