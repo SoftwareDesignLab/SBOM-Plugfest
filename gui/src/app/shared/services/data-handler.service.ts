@@ -9,7 +9,7 @@ import { IpcRenderer } from 'electron';
 export class DataHandlerService {
 
   private ipc!: IpcRenderer;
-  private filePaths: string[] = [];
+  public filePaths: string[] = [];
   private metrics: { [id: string]: Object } = {};
 
   constructor(private client: ClientService) { 
@@ -24,13 +24,17 @@ export class DataHandlerService {
     }
   }
 
-  RunMetrics() {
-      this.filePaths.forEach((file) => {
-        this.ipc.invoke('getFileData', file).then((data) => {
-          this.client.post("qa", new HttpParams().set("bom", data)).subscribe((result) => {
-            this.metrics[file] = result;
-          })
-        });
+  RunAllMetrics() {
+    this.filePaths.forEach((file) => {
+      this.RunMetricsOnFile(file);
+    })
+  }
+
+  RunMetricsOnFile(path: string) {
+    this.ipc.invoke('getFileData', path).then((data) => {
+      this.client.post("qa", new HttpParams().set("bom", data)).subscribe((result) => {
+        this.metrics[path] = result;
       })
+    });
   }
 }
