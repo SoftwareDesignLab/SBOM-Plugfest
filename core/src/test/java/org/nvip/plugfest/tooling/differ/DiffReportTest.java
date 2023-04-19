@@ -19,6 +19,8 @@ public class DiffReportTest {
 
     private static final int EXPECTED_SBOM_CONFLICT_COUNT = 4;
 
+    private static final int EXPECTED_COMPONENT_CONFLICT_COUNT = 3;
+
     /**
      * Test variables
      */
@@ -143,13 +145,42 @@ public class DiffReportTest {
 
         assertNotNull(test_report);
 
+        assertEquals(EXPECTED_SBOM_CONFLICT_COUNT, test_report.getSbomConflict().getConflicts().size());
+
+    }
+
+    @Test
+    public void diffReport_get_sbomConflicts_has_correct_conflicts_test() {
+
+        Set<ComponentConflict> test_conflicts = new HashSet<>(
+                Arrays.asList(test_component_conflict_one, test_component_conflict_two, test_component_conflict_three)
+        );
+
+        DiffReport test_report = new DiffReport(test_SBOM_conflict, test_conflicts);
+
+        assertNotNull(test_report);
+
         Set<SBOMConflict> conflict_results = test_report.getSbomConflict().getConflicts();
 
-        assertEquals(EXPECTED_SBOM_CONFLICT_COUNT, conflict_results.size());
         assertTrue(conflict_results.contains(SBOMConflictType.SBOM_VERSION_MISMATCH));
         assertTrue(conflict_results.contains(SBOMConflictType.SCHEMA_VERSION_MISMATCH));
         assertTrue(conflict_results.contains(SBOMConflictType.AUTHOR_MISMATCH));
         assertTrue(conflict_results.contains(SBOMConflictType.ORIGIN_FORMAT_MISMATCH));
+
+    }
+
+    @Test
+    public void diffReport_get_componentConflict_test() {
+
+        Set<ComponentConflict> test_conflicts = new HashSet<>(
+                Arrays.asList(test_component_conflict_one, test_component_conflict_two, test_component_conflict_three)
+        );
+
+        DiffReport test_report = new DiffReport(test_SBOM_conflict, test_conflicts);
+
+        assertNotNull(test_report);
+
+        assertEquals(EXPECTED_COMPONENT_CONFLICT_COUNT, test_report.getComponentConflicts().size());
 
     }
 
