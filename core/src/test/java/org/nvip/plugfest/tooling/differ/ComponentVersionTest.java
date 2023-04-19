@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.differ;
 
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.differ.ComponentVersion;
