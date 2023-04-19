@@ -16,11 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 /**
  * File: CompareFromAPITest.java
  * Unit test for API regarding Comparisons
+ * <p>
+ * Tests:<br>
+ * - compareTest: Test that the API can compare three SBOMs
  *
  * @author Juan Francisco Patino
  */
 public class CompareFromAPITest {
-
+    /**
+     *  Example SBOMs to use for testing
+     */
     private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.alpine-compare.2-3.spdx");
     private final MultipartFile pythonSBOM = new MockMultipartFile(System.getProperty("user.dir")
@@ -28,8 +33,15 @@ public class CompareFromAPITest {
     private final MultipartFile dockerSBOM = new MockMultipartFile(System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx");
 
+    /**
+     * Controller to test
+     */
     private APIController ctrl;
 
+    /**
+     * Test that the API can compare three SBOMs
+     * @throws IOException - if the SBOM parsing is broken
+     */
     @Test
     public void compareTest() throws IOException {
 
@@ -43,6 +55,9 @@ public class CompareFromAPITest {
         assertNotEquals(report.getBody().getComparisons().size(),0);
     }
 
+    /**
+     * SETUP: Ensure API is running.
+     */
     @BeforeEach
     public void setup(){
 
