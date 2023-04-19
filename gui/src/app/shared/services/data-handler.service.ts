@@ -9,7 +9,7 @@ import { IpcRenderer } from 'electron';
 export class DataHandlerService {
 
   private ipc!: IpcRenderer;
-  public filePaths: string[] = [];
+  private filePaths: string[] = [];
   private metrics: { [id: string]: Object } = {};
 
   constructor(private client: ClientService) { 
@@ -24,6 +24,14 @@ export class DataHandlerService {
     }
   }
 
+  AddFiles(paths: string[]) {
+    this.filePaths.push(...paths);
+
+    paths.forEach((path) => {
+      this.RunMetricsOnFile(path);
+    })
+  }
+
   RunAllMetrics() {
     this.filePaths.forEach((file) => {
       this.RunMetricsOnFile(file);
@@ -32,7 +40,7 @@ export class DataHandlerService {
 
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data) => {
-      this.client.post("qa", new HttpParams().set("bom", data)).subscribe((result) => {
+      this.client.post("qa", new HttpParams().set("bom", JSON.stringify(data))).subscribe((result) => {
         this.metrics[path] = result;
       })
     });

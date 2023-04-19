@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataHandlerService } from '@services/data-handler.service';
 import { IpcRenderer } from 'electron';
 
 @Component({
@@ -7,10 +8,9 @@ import { IpcRenderer } from 'electron';
   styleUrls: ['./upload.component.css']
 })
 export class UploadComponent {
-  files: [] = [];
   private ipc!: IpcRenderer;
 
-  constructor() {
+  constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
       try {
         this.ipc = window.require('electron').ipcRenderer;
@@ -25,13 +25,10 @@ export class UploadComponent {
   browse() {
     this.ipc.invoke('selectFiles').then((files) => {
       if(files === undefined || files === "" || files === null) {
-        this.files = [];
         return;
       }
 
-      this.files = files;
+      this.dataHandler.AddFiles(files);
     });
   }
-
-
 }
