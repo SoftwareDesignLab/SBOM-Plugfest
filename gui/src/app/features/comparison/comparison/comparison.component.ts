@@ -19,7 +19,6 @@ export class ComparisonComponent implements OnChanges {
     if (this.comparison) {
       this.display = this.comparison?.comparisons;
       this.keys = Object.keys(this.display);
-      console.log(this.keys);
       this.path = [this.comparison.comparisons];
       this.pathTitles = ['Components'];
     }

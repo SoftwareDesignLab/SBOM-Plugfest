@@ -35,7 +35,7 @@
     background: var(--secondary);
     color: white;
     width: 25%;
-    margin: auto auto;
+    margin: auto;
     height: 50px;
     align-items: center;
     cursor: pointer;

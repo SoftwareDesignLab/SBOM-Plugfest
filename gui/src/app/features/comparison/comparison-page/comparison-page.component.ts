@@ -62,14 +62,12 @@ export class ComparisonPageComponent {
   }
 
   openDialog(sbom: SBOM): void {
-    console.log('clicked!');
     const dialogRef = this.dialog.open(ComparisonDialogComponent, {
       data: sbom,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('heee');
         this.sboms = this.sboms.filter((s) => s !== sbom);
       }
     });
