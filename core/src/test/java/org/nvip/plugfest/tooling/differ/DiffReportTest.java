@@ -9,13 +9,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DiffReportTest {
 
     /**
      * Test Constants
      */
+
+    private static final int EXPECTED_SBOM_CONFLICT_COUNT = 4;
 
     /**
      * Test variables
@@ -125,6 +127,14 @@ public class DiffReportTest {
     @Test
     public void create_differReport_test() {
 
+        DiffReport test_report = new DiffReport(test_SBOM_conflict, Set.of(test_component_conflict_one));
+        assertNotNull(test_report);
+
+    }
+
+    @Test
+    public void diffReport_get_sbomConflict_test() {
+
         Set<ComponentConflict> test_conflicts = new HashSet<>(
                 Arrays.asList(test_component_conflict_one, test_component_conflict_two, test_component_conflict_three)
         );
@@ -132,6 +142,14 @@ public class DiffReportTest {
         DiffReport test_report = new DiffReport(test_SBOM_conflict, test_conflicts);
 
         assertNotNull(test_report);
+
+        Set<SBOMConflict> conflict_results = test_report.getSbomConflict().getConflicts();
+
+        assertEquals(EXPECTED_SBOM_CONFLICT_COUNT, conflict_results.size());
+        assertTrue(conflict_results.contains(SBOMConflictType.SBOM_VERSION_MISMATCH));
+        assertTrue(conflict_results.contains(SBOMConflictType.SCHEMA_VERSION_MISMATCH));
+        assertTrue(conflict_results.contains(SBOMConflictType.AUTHOR_MISMATCH));
+        assertTrue(conflict_results.contains(SBOMConflictType.ORIGIN_FORMAT_MISMATCH));
 
     }
 
