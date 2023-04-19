@@ -26,6 +26,10 @@ public class DiffReport {
         this.componentConflicts = componentConflicts;
     }
 
+    ///
+    /// Getters
+    ///
+
     public SBOMConflict getSbomConflict() {
         return sbomConflict;
     }
@@ -33,6 +37,10 @@ public class DiffReport {
     public Set<ComponentConflict> getComponentConflicts() {
         return componentConflicts;
     }
+
+    ///
+    /// Overrides
+    ///
 
     @Override
     public String toString() {
