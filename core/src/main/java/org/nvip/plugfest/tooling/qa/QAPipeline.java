@@ -9,6 +9,11 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Pipeline that will run all tests against a given SBOM
+ *
+ * @author Dylan Mulligan, Matt London
+ */
 public class QAPipeline {
 
     /** All processors that will run tests against this pipeline */
