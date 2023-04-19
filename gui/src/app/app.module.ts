@@ -22,6 +22,9 @@ import {
 } from './features/comparison/comparison-page/comparison-page.component';
 import { DialogComponent } from '@components/dialog/dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel/metrics-side-panel.component';
+import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
+import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-main.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +39,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     ComparisonComponent,
     DialogComponent,
     ComparisonDialogComponent,
+    MetricsSidePanelComponent,
+    MetricsBodyComponent,
+    MetricsMainComponent
   ],
   imports: [
     BrowserModule,

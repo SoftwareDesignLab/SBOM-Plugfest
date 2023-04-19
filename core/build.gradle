@@ -33,6 +33,15 @@ dependencies {
 
     implementation 'org.glassfish.hk2:hk2-locator:3.0.3'
     implementation 'org.glassfish.hk2:hk2-utils:3.0.3'
+
+
+    implementation('org.springframework:spring-webmvc:6.0.7')
+    implementation('org.springframework.boot:spring-boot-autoconfigure:3.0.4')
+    implementation('org.springframework.boot:spring-boot-maven-plugin:3.0.4')
+    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2')
+    implementation('org.springframework.boot:spring-boot-starter-tomcat:3.0.5')
+    implementation('org.springframework:spring-web:6.0.7')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
 }
 
 test {
