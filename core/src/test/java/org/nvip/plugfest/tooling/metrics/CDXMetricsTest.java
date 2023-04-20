@@ -24,7 +24,9 @@ public class CDXMetricsTest {
 
     private static final String TEST_CDX_SBOM_THREE = "cdx.json";
 
-    private static final String TEST_SPDX_SBOM_ONE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.docker.2-2.spdx";
+    private static final String TEST_SPDX_SBOM_PATH = "src/test/java/org/nvip/plugfest/tooling/sample_boms/";
+
+    private static final String TEST_SPDX_SBOM_ONE = "sbom.docker.2-2.spdx";
 
     /**
      * Test Variables
@@ -114,6 +116,15 @@ public class CDXMetricsTest {
     @Test
     public void CDXMetrics_verifyCDX_returns_null_on_null_path_test() {
         CDXMetrics test_cdx_metric = new CDXMetrics(null, TEST_CDX_SBOM_ONE);
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, Boolean> verify_result = test_cdx_metric.verifyCDX(TEST_CDX_SBOM_ONE);
+        assertNull(verify_result);
+    }
+
+    @Disabled("Possible Bug; An SPDX SBOM is getting true for every CDX schema")
+    @Test
+    public void CDXMetrics_verifyCDX_fails_when_given_SPDX_SBOM_test() {
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
         assertNotNull(test_cdx_metric);
         HashMap<CycloneDxSchema.Version, Boolean> verify_result = test_cdx_metric.verifyCDX(TEST_CDX_SBOM_ONE);
         assertNull(verify_result);
