@@ -25,7 +25,7 @@
               </div>
           </div>
       </div>
-      <app-button icon="add"><input type="file" multiple (change)="uploadSbom($event)"> SBOMS</app-button>
+      <app-button icon="add" multiple (click)="browse()">ADD SBOMS</app-button>
   </form>
   </app-side-panel>
   <app-comparison [comparison]="comparison"/>
