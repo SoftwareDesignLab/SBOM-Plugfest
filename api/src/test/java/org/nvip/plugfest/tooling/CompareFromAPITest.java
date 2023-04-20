@@ -56,7 +56,7 @@ public class CompareFromAPITest {
     }
 
     /**
-     * SETUP: Ensure API is running.
+     * SETUP: Start API before testing
      */
     @BeforeEach
     public void setup(){
