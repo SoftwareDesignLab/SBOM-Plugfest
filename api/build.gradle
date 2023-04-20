@@ -9,18 +9,32 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
 dependencies {
 
     implementation project(':core')
-    implementation('org.springframework:spring-webmvc:6.0.7')
-    implementation('org.springframework.boot:spring-boot-autoconfigure:3.0.4')
-    implementation('org.springframework.boot:spring-boot-maven-plugin:3.0.4')
-    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2')
-    implementation('org.springframework.boot:spring-boot-starter-tomcat:3.0.5')
-    implementation('org.springframework:spring-web:6.0.7')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
 
-    implementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.5')
+//    implementation('org.springframework.boot:spring-boot-autoconfigure:3.0.4')
+//    implementation('org.springframework:spring-web:6.0.7')
+//    implementation('org.springframework:spring-webmvc:6.0.7')
+//    implementation('org.springframework.boot:spring-boot-maven-plugin:3.0.4')
+//    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2')
+//    implementation('org.springframework.boot:spring-boot-starter-tomcat:3.0.5')
+//    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
+
+//    implementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.5')
+
+    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2') {
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-log4j2:3.0.2')
+    implementation('com.fasterxml.jackson.core:jackson-databind')
+
     implementation project(path: ':core')
 
 
@@ -34,12 +48,12 @@ test {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.nvip.plugfest.tooling.Main'
+    mainClass = 'org.nvip.plugfest.tooling.APIApplication'
 }
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.nvip.plugfest.tooling.Main'
+        attributes 'Main-Class': 'org.nvip.plugfest.tooling.APIApplication'
     }
 
     from {
