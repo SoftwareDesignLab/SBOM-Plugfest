@@ -1,9 +1,16 @@
 plugins {
+    id 'java'
     id 'application'
 }
 
 group = 'org.nvip.plugfest'
 version = '1.0'
+
+application {
+    mainClassName = 'org.nvip.plugfest.tooling.APIApplication'
+    mainClass = 'org.nvip.plugfest.tooling.APIApplication'
+
+}
 
 repositories {
     mavenCentral()
@@ -30,7 +37,7 @@ dependencies {
 //    implementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.5')
 
     implementation('org.springframework.boot:spring-boot-starter-web:3.0.2') {
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
+//        exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
     implementation('org.springframework.boot:spring-boot-starter-log4j2:3.0.2')
     implementation('com.fasterxml.jackson.core:jackson-databind')
@@ -46,21 +53,13 @@ test {
     useJUnitPlatform()
 }
 
-application {
-    // Define the main class for the application.
-    mainClass = 'org.nvip.plugfest.tooling.APIApplication'
-}
-
 jar {
+
     manifest {
         attributes 'Main-Class': 'org.nvip.plugfest.tooling.APIApplication'
     }
-
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
-        configurations.runtimeClasspath.collect {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-            project.zipTree(it)
-        }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
