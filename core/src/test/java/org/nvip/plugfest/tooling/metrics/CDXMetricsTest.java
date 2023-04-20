@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CDXMetricsTest {
 
@@ -76,6 +75,14 @@ public class CDXMetricsTest {
             assertEquals(true, result);
         }
 
+    }
+
+    @Test
+    public void CDXMetrics_verifyCDX_returns_null_on_invalid_SBOM() {
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_CDX_JSON_SBOM_PATH, "");
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, Boolean> verify_result = test_cdx_metric.verifyCDX("");
+        assertNull(verify_result);
     }
 
 }
