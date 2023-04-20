@@ -134,4 +134,16 @@ public class SPDXMetricsTest {
         assertEquals(EXPECTED_GOOD_SPDX_SCORE, test_spdx_metric.testMetric());
     }
 
+    /**
+     * testMetric getScore
+     */
+    @Test
+    public void SPDXMetrics_getScore_test() {
+        SPDXMetrics test_spdx_metric = new SPDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
+        assertNotNull(test_spdx_metric);
+        ArrayList<String> verify_results = test_spdx_metric.verifySPDX();
+        assertNotNull(verify_results);
+        assertEquals(EXPECTED_GOOD_SPDX_SCORE, test_spdx_metric.getScore());
+    }
+
 }
