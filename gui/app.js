@@ -64,7 +64,6 @@ ipcMain.handle("selectFiles", async () => {
 });
 
 ipcMain.handle("getFileData", async (event, ...args) => {
-    fs.readFileSync(args[0], (error, data) => {
-        return data;
-    })
+    let data = JSON.parse(fs.readFileSync(args[0], 'utf8'));
+    return data;
 })
