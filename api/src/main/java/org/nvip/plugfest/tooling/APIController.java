@@ -39,7 +39,7 @@ public class APIController {
     /**
      * USAGE. Send POST request to /compare with a multipart/form-data body containing two+ SBOM files.
      * The first SBOM will be the baseline, and the rest will be compared to it.
-     * The API will respond with an HTTP 200 and a plain text DiffReport object.
+     * The API will respond with an HTTP 200 and a serialized DiffReport object.
      *
      * @param boms - list of files to compare
      * @return - wrapped Comparison object
@@ -74,7 +74,7 @@ public class APIController {
 
     /**
      * USAGE. Send POST request to /qa with a single sbom file in plain text in the body.
-     * The API will respond with an HTTP 200 and a plain text report in the body.
+     * The API will respond with an HTTP 200 and a serialized report in the body.
      *
      * @param bom - SBOM to run metrics on
      * @return - wrapped QualityReport object
