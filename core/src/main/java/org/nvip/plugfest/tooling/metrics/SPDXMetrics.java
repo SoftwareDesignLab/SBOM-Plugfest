@@ -35,8 +35,8 @@ public class SPDXMetrics extends Metric{
 
     /**
      * Constructor for SPDXMetrics
-     * @param filepath - the filepath of the SBOM file
-     * @param sbom - the text of the SBOM file
+     * @param filepath The filepath of the SBOM file
+     * @param sbom The text of the SBOM file
      */
     public SPDXMetrics(String filepath, String sbom) {
         this.filepath = filepath;
@@ -46,7 +46,7 @@ public class SPDXMetrics extends Metric{
 
     /**
      * Method that compares two+ SPDX SBOM files.
-     * @param sbom_files - the SPDX SBOM files to be compared. The baseline SBOM file should be the first file in the array.
+     * @param sbom_files The SPDX SBOM files to be compared. The baseline SBOM file should be the first file in the array.
      */
     public void compare(String[] sbom_files) {
         System.out.println("Running Comparison on SBOM Files: "+ Arrays.toString(sbom_files));
@@ -75,7 +75,7 @@ public class SPDXMetrics extends Metric{
      * Method that verifies whether a provided SPDX SBOM file is valid according to the SPDX SBOM file format schema.
      * This method relies on SPDXMetrics being instantiated with a valid SPDX SBOM file.
      *
-     * @return - an ArrayList of verification results.
+     * @return An ArrayList of verification results.
      */
     public ArrayList<String> verifySPDX() {
         //setup

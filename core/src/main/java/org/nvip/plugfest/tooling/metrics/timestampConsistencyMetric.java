@@ -30,7 +30,7 @@ public class timestampConsistencyMetric extends Metric {
     /**
      * Constructor for timestampConsistencyMetric
      *
-     * @param timestamp - the timestamp to be tested
+     * @param timestamp The timestamp to be tested
      */
     public timestampConsistencyMetric(String timestamp) {
         this.timestamp = timestamp;
@@ -40,7 +40,7 @@ public class timestampConsistencyMetric extends Metric {
     /**
      * Test if the timestamp is in the correct format
      *
-     * @return - Integer score this SBOM received for this metric. (1 pass, 0 fail)
+     * @return Integer score this SBOM received for this metric. (1 pass, 0 fail)
      */
     @Override
     protected int testMetric() {
