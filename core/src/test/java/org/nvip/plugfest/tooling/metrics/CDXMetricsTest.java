@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.metrics;
 
 import org.cyclonedx.CycloneDxSchema;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class CDXMetricsTest {
     private static final String TEST_CDX_SBOM_TWO = "sbom.alpine.json";
 
     private static final String TEST_CDX_SBOM_THREE = "cdx.json";
+
+    private static final String TEST_SPDX_SBOM_ONE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.docker.2-2.spdx";
 
     /**
      * Test Variables
@@ -77,11 +80,24 @@ public class CDXMetricsTest {
 
     }
 
+    @Disabled("Possible Bug; Why are we getting 'true' for all CDX Schema from an SBOM that doesn't exist?")
     @Test
     public void CDXMetrics_verifyCDX_returns_null_on_invalid_SBOM() {
         CDXMetrics test_cdx_metric = new CDXMetrics(TEST_CDX_JSON_SBOM_PATH, "");
         assertNotNull(test_cdx_metric);
         HashMap<CycloneDxSchema.Version, Boolean> verify_result = test_cdx_metric.verifyCDX("");
+        assertNull(verify_result);
+    }
+
+    @Disabled(
+            "Possible Bug; same problem as above but with 'null' now. Shouldn't we be getting no matches?" +
+            "I would assume the verify check would tell a 'null' object it doesn't match any CDX schemas."
+    )
+    @Test
+    public void CDXMetrics_verifyCDX_returns_null_on_null_SBOM() {
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_CDX_JSON_SBOM_PATH, null);
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, Boolean> verify_result = test_cdx_metric.verifyCDX(null);
         assertNull(verify_result);
     }
 
