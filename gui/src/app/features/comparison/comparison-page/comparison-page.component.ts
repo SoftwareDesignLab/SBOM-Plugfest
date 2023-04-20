@@ -3,7 +3,6 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { Comparison, finalMockup } from '../comparison';
 import { SBOM } from '@models/sbom';
-import { IpcRenderer } from 'electron';
 
 import {
   MatDialog,
@@ -22,31 +21,8 @@ export class ComparisonPageComponent {
   sboms: SBOM[] = [];
   targetSbom: SBOM | null = null; // number is for original position
   comparison: Comparison | null = null;
-  files: [] = [];
-  private ipc!: IpcRenderer;
 
-  constructor(public dialog: MatDialog) {
-    if (window.require) {
-      try {
-        this.ipc = window.require('electron').ipcRenderer;
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.warn('App not running inside Electron!');
-    }
-  }
-
-  browse() {
-    this.ipc.invoke('selectFiles').then((files) => {
-      if(files === undefined || files === "" || files === null) {
-        this.files = [];
-        return;
-      }
-
-      this.files = files;
-    });
-  }
+  constructor(public dialog: MatDialog) {}
 
   /** @TODO create an api call where you would send the target sbom and compare */
   // it against all sboms rather than doing singular api calls for each one  */
@@ -60,7 +36,7 @@ export class ComparisonPageComponent {
   }
 
   // Display diff report
-  generate() {
+  compare() {
     this.comparison = finalMockup;
   }
 

@@ -1,11 +1,10 @@
 <div id="main-wrapper">
   <app-side-panel tabText="SBOM list">
     <form class="content flex col">
-      <div class="header">SBOM List</div>
+      <div class="header">SBOM LIST</div>
       <div class="selection flex col">
         <div class="header flex">
           <span>Target</span>
-          <app-button (click)="generate()">Generate</app-button>
         </div>
         <div class="content">
           <app-dropdown [options]="sboms" key="name" (selectionChange)="targetSbom = $event;" />
@@ -25,7 +24,7 @@
           </div>
         </div>
       </div>
-      <app-button icon="add" multiple (click)="browse()" class="addSBOMScenter">ADD SBOMS</app-button>
+      <app-button  icon="compare_arrows" (click)="compare()"  class="addSBOMScenter">COMPARE</app-button>
     </form>
   </app-side-panel>
   <app-comparison [comparison]="comparison" />
