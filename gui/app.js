@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 const url = require("url");
 const path = require("path");
 
@@ -10,7 +10,8 @@ function createWindow () {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false,
         }
     })
 
@@ -38,7 +39,7 @@ app.on('ready', function() {
     // }
 
     // filePath = arg1;
-    
+
     //TODO: Launch backend with file path arg
 
     createWindow();
@@ -51,3 +52,11 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
     if (mainWindow === null) createWindow()
 })
+
+ipcMain.handle("selectFiles", async () => {
+  let files = await dialog.showOpenDialog(mainWindow, {
+    properties: ["multiSelections"],
+  });
+
+  return files.filePaths;
+});
