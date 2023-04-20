@@ -40,7 +40,7 @@ export class DataHandlerService {
 
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data) => {
-      this.client.post("qa", new HttpParams().set("bom", JSON.stringify(data))).subscribe((result) => {
+      this.client.post("qa", new HttpParams().set("contents", JSON.stringify(data)).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
       })
     });
