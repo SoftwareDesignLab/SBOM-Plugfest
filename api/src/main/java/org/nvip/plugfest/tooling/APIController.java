@@ -22,6 +22,7 @@ import java.util.List;
  * @author Juan Francisco Patino, Asa Horn
  */
 @RestController
+@RequestMapping("plugfest")
 public class APIController {
 
     private static QAPipeline pipeline;
@@ -37,7 +38,7 @@ public class APIController {
      * @param boms - list of files to compare
      * @return - wrapped Comparison object
      */
-    @RequestMapping(value="compare", method=RequestMethod.POST)
+    @PostMapping("compare")
     public ResponseEntity<Comparison> compare(@RequestBody List<MultipartFile> boms) throws IOException {
         // Convert the SBOMs to SBOM objects
         ArrayList<SBOM> sboms = new ArrayList<>();
@@ -72,7 +73,7 @@ public class APIController {
      * @param bom - SBOM to run metrics on
      * @return - wrapped QualityReport object
      */
-    @RequestMapping(value="qa", method=RequestMethod.POST)
+    @PostMapping("qa")
     public ResponseEntity<QualityReport> qa(@RequestBody MultipartFile bom) {
         // Get file contents into a string
         String contents;
