@@ -11,7 +11,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 public class APIApplication {
     public static void main(String[] args) {
         new SpringApplicationBuilder(APIApplication.class)
-                .web(WebApplicationType.SERVLET) //This is required to prevent the dreaded "No valid webserver" error. Ask me how I know....
+                .web(WebApplicationType.SERVLET) //This is required to prevent "No valid webserver" error.
                 .run(args);
     }
 }
