@@ -3,6 +3,8 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { Comparison, finalMockup } from '../comparison';
 import { SBOM } from '@models/sbom';
+import { IpcRenderer } from 'electron';
+
 import {
   MatDialog,
   MatDialogRef,
@@ -20,32 +22,33 @@ export class ComparisonPageComponent {
   sboms: SBOM[] = [];
   targetSbom: SBOM | null = null; // number is for original position
   comparison: Comparison | null = null;
+  files: [] = [];
+  private ipc!: IpcRenderer;
 
-  constructor(public dialog: MatDialog) {}
-
-  uploadSbom($event: any) {
-    /**  @TODO FILE UPLOAD HERE */
-    // apiCall with event.target.files
-    this.sboms = [
-      {
-        name: 'SBOM A',
-        timestamp: '2023-02-21T13:50:52Z',
-        publisher: 'unknown',
-      },
-      {
-        name: 'SBOM B',
-        timestamp: '2023-01-21T13:50:52Z',
-        publisher: 'unknown',
-      },
-      {
-        name: 'SBOM C',
-        timestamp: '2023-03-21T13:50:52Z',
-        publisher: 'unknown',
-      },
-    ];
+  constructor(public dialog: MatDialog) {
+    if (window.require) {
+      try {
+        this.ipc = window.require('electron').ipcRenderer;
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.warn('App not running inside Electron!');
+    }
   }
 
-  /** @TODO create an api call where you would send the target sbom and compare */ 
+  browse() {
+    this.ipc.invoke('selectFiles').then((files) => {
+      if(files === undefined || files === "" || files === null) {
+        this.files = [];
+        return;
+      }
+
+      this.files = files;
+    });
+  }
+
+  /** @TODO create an api call where you would send the target sbom and compare */
   // it against all sboms rather than doing singular api calls for each one  */
   selectTargetSbom($event: any) {
     this.targetSbom = $event;
@@ -56,7 +59,7 @@ export class ComparisonPageComponent {
     //this.targetSbom = $event.target?.value
   }
 
-  // Display diff report 
+  // Display diff report
   generate() {
     this.comparison = finalMockup;
   }
