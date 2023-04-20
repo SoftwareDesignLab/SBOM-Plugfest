@@ -12,7 +12,8 @@ import java.util.Set;
 /**
  * Pipeline that will run all tests against a given SBOM
  *
- * @author Dylan Mulligan, Matt London
+ * @author Dylan Mulligan
+ * @author Matt London
  */
 public class QAPipeline {
 

@@ -12,7 +12,9 @@ import java.util.Set;
 /**
  * Abstract class to be extended by all metric processors
  *
- * @author Dylan Mulligan, Matt London, Ian Dunn
+ * @author Dylan Mulligan
+ * @author Matt London
+ * @author Ian Dunn
  */
 public abstract class AttributeProcessor {
     /** Set of metric tests to run */

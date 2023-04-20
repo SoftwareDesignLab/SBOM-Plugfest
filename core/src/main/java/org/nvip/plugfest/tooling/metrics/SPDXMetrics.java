@@ -19,7 +19,9 @@ import java.util.Date;
 /**
  * Class for SPDX SBOM Metrics
  *
- * @author Henry Lu, Henry Keena, Dylan Mulligan
+ * @author Henry Lu
+ * @author Henry Keena
+ * @author Dylan Mulligan
  */
 public class SPDXMetrics extends Metric{
 
