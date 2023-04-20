@@ -1,10 +1,13 @@
 package org.nvip.plugfest.tooling.metrics;
 
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.model.Hash;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +30,18 @@ public class CDXMetricsTest {
     private static final String TEST_SPDX_SBOM_PATH = "src/test/java/org/nvip/plugfest/tooling/sample_boms/";
 
     private static final String TEST_SPDX_SBOM_ONE = "sbom.docker.2-2.spdx";
+
+    private static final int EXPECTED_SBOM_ONE_V10_HASHES = 6;
+
+    private static final int EXPECTED_SBOM_ONE_V11_HASHES = 6;
+
+    private static final int EXPECTED_SBOM_ONE_V12_HASHES = 8;
+
+    private static final int EXPECTED_SBOM_ONE_V13_HASHES = 8;
+
+    private static final int EXPECTED_SBOM_ONE_V14_HASHES = 8;
+
+
 
     /**
      * Test Variables
@@ -130,4 +145,30 @@ public class CDXMetricsTest {
         assertNull(verify_result);
     }
 
+    @Test
+    public void CDXMetrics_calculateHashes_test() {
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, List<Hash>> calculate_result = test_cdx_metric.calculateHashes(TEST_SPDX_SBOM_ONE);
+        assertNotNull(calculate_result);
+    }
+
+    @Test
+    public void CDXMetrics_calculateHashes_should_have_correct_amount_of_hashes_test() {
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, List<Hash>> calculate_result = test_cdx_metric.calculateHashes(TEST_SPDX_SBOM_ONE);
+        assertNotNull(calculate_result);
+
+        assertEquals(EXPECTED_SBOM_ONE_V10_HASHES, calculate_result.get(CycloneDxSchema.Version.VERSION_10).size());
+
+        assertEquals(EXPECTED_SBOM_ONE_V11_HASHES, calculate_result.get(CycloneDxSchema.Version.VERSION_11).size());
+
+        assertEquals(EXPECTED_SBOM_ONE_V12_HASHES, calculate_result.get(CycloneDxSchema.Version.VERSION_12).size());
+
+        assertEquals(EXPECTED_SBOM_ONE_V13_HASHES, calculate_result.get(CycloneDxSchema.Version.VERSION_13).size());
+
+        assertEquals(EXPECTED_SBOM_ONE_V14_HASHES, calculate_result.get(CycloneDxSchema.Version.VERSION_14).size());
+
+    }
 }
