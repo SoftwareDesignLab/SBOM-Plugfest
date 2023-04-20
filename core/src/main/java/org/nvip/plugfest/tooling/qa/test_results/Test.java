@@ -29,7 +29,10 @@ public class Test {
         this.message = message;
     }
 
-    //getters
+    ///
+    /// getters and setters
+    ///
+
     public boolean getStatus() {
         return status;
     }
@@ -38,7 +41,10 @@ public class Test {
         return String.join("", message);
     }
 
-    //overrides
+    ///
+    /// Overrides
+    ///
+
     @Override
     public String toString() {
         return (status ? "PASSED: " : "FAILED: ") + getMessage();

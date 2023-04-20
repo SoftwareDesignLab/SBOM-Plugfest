@@ -69,7 +69,10 @@ public class TestResults {
         return getSuccessfulTests() == tests.size();
     }
 
-    //getters
+    ///
+    /// getters and setters
+    ///
+
     public Component getComponent() {
         return this.component;
     }
@@ -78,8 +81,10 @@ public class TestResults {
         return this.tests;
     }
 
+    ///
+    /// Overrides
+    ///
 
-    //overrides
     /**
      * Prints the component name, final status, and number of tests passed vs total tests.
      *  Underneath the header is printed the status and message of each individual Test.

@@ -22,7 +22,10 @@ public abstract class Metric {
      */
     protected abstract int testMetric();
 
-    //getter
+    ///
+    /// getters and setters
+    ///
+
     public int getScore() {
         return this.score;
     }
