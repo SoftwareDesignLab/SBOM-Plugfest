@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.metrics;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SPDXMetricsTest {
@@ -29,6 +30,14 @@ public class SPDXMetricsTest {
     public void create_SPDXMetrics_test() {
         SPDXMetrics test_spdx_metric = new SPDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
         assertNotNull(test_spdx_metric);
+    }
+
+    @Test
+    public void SPDXMetrics_getFilepath_test() {
+        SPDXMetrics test_spdx_metric = new SPDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
+        assertNotNull(test_spdx_metric);
+        String file_path_result = test_spdx_metric.getFilepath();
+        assertEquals(TEST_SPDX_SBOM_PATH, file_path_result);
     }
 
 }
