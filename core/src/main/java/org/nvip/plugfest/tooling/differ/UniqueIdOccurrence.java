@@ -33,8 +33,8 @@ public class UniqueIdOccurrence {
 
     /**
      * initializes a UniqueIdOccurrence with an empty appearance Set.
-     * @param uID - the unique ID
-     * @param type - the type of unique ID (CPE/PURL/SWID/etc)
+     * @param uID The unique ID
+     * @param type The type of unique ID (CPE/PURL/SWID/etc)
      */
     public UniqueIdOccurrence (String uID, UniqueIdentifierType type) {
         this.uniqueIdentifier = uID;

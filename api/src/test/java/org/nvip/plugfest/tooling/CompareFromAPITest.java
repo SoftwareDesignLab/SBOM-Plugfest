@@ -40,7 +40,7 @@ public class CompareFromAPITest {
 
     /**
      * Test that the API can compare three SBOMs
-     * @throws IOException - if the SBOM parsing is broken
+     * @throws IOException If the SBOM parsing is broken
      */
     @Test
     public void compareTest() throws IOException {

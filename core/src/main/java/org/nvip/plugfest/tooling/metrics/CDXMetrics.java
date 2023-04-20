@@ -41,8 +41,8 @@ public class CDXMetrics extends Metric{
     /**
      * Constructor for CDXMetrics
      *
-     * @param filepath- the filepath of the SBOM file
-     * @param sbom- the text of the SBOM file
+     * @param filepath The filepath of the SBOM file
+     * @param sbom The text of the SBOM file
      */
     public CDXMetrics(String filepath, String sbom) {
         this.filepath = filepath;

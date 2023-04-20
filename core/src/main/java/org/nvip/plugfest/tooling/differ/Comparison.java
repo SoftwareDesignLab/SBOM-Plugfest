@@ -185,9 +185,9 @@ public class Comparison {
     /**
      * Builds a ComponentVersion object for the current component including all IDs.
      *
-     * @param component - the current component
-     * @param SBOM_index - the index of this SBOM in the whole set
-     * @return - the ComponentVersion object
+     * @param component The current component
+     * @param SBOM_index The index of this SBOM in the whole set
+     * @return The ComponentVersion object
      */
     private ComponentVersion generateComponentVersion(Component component, int SBOM_index) {
 

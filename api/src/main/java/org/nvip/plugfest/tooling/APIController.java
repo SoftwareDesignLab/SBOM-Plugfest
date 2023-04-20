@@ -41,8 +41,8 @@ public class APIController {
      * The first SBOM will be the baseline, and the rest will be compared to it.
      * The API will respond with an HTTP 200 and a serialized DiffReport object.
      *
-     * @param boms - list of files to compare
-     * @return - wrapped Comparison object
+     * @param boms List of files to compare
+     * @return Wrapped Comparison object
      */
     @RequestMapping(value="compare", method=RequestMethod.POST)
     public ResponseEntity<Comparison> compare(@RequestBody List<MultipartFile> boms) throws IOException {
