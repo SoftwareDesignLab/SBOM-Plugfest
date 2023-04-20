@@ -4,6 +4,12 @@
   height: 100vh;
 }
 
+.addSBOMScenter {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
 
 .content {
   gap: 25px;
