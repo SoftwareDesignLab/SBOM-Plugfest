@@ -187,5 +187,14 @@ public class CDXMetricsTest {
         List<Hash> test_hash_v14 = calculate_result.get(CycloneDxSchema.Version.VERSION_14);
 
         for (Hash hash : test_hash_v10) { assertInstanceOf(Hash.class, hash); }
+
+        for (Hash hash : test_hash_v11) { assertInstanceOf(Hash.class, hash); }
+
+        for (Hash hash : test_hash_v12) { assertInstanceOf(Hash.class, hash); }
+
+        for (Hash hash : test_hash_v13) { assertInstanceOf(Hash.class, hash); }
+
+        for (Hash hash : test_hash_v14) { assertInstanceOf(Hash.class, hash); }
+
     }
 }
