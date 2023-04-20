@@ -22,7 +22,7 @@ public class MockMultipartFile implements MultipartFile {
 
     /**
      * Constructor
-     * @param path - path we are pretending has a file
+     * @param path - path of the file
      */
     public MockMultipartFile(String path){
 
