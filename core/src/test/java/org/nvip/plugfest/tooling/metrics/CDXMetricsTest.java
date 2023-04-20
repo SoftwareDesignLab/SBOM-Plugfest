@@ -1,6 +1,9 @@
 package org.nvip.plugfest.tooling.metrics;
 
+import org.cyclonedx.CycloneDxSchema;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -58,6 +61,20 @@ public class CDXMetricsTest {
         assertNotNull(test_cdx_metric);
         test_cdx_metric.setFilepath(TEST_FAKE_CDX_SBOM_PATH);
         assertEquals(TEST_FAKE_CDX_SBOM_PATH, test_cdx_metric.getFilepath());
+
+    }
+
+    @Test
+    public void CDXMetrics_verifyCDX_version_1_4_cdx_test() {
+
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_CDX_JSON_SBOM_PATH, TEST_CDX_SBOM_ONE);
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, Boolean> verify_result = test_cdx_metric.verifyCDX(TEST_CDX_SBOM_ONE);
+        assertNotNull(verify_result);
+
+        for(Boolean result : verify_result.values()) {
+            assertEquals(true, result);
+        }
 
     }
 
