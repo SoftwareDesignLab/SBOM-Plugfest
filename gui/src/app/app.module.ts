@@ -13,6 +13,8 @@ import { AccordionComponent } from './shared/components/accordion/accordion.comp
 import { DropdownComponent } from '@components/dropdown/dropdown.component';
 import { SidePanelComponent } from './shared/components/side-panel/side-panel.component';
 import { UploadComponent } from './features/upload/upload.component';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +36,7 @@ import { UploadComponent } from './features/upload/upload.component';
     BrowserAnimationsModule,
     MatIconModule,
     MatExpansionModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
