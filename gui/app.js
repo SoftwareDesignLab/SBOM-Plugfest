@@ -63,8 +63,8 @@ ipcMain.handle("selectFiles", async () => {
   return files.filePaths;
 });
 
-ipcMain.handle("getFileData", async (path) => {
-    fs.readFileSync(path, (error, data) => {
+ipcMain.handle("getFileData", async (event, ...args) => {
+    fs.readFileSync(args[0], (error, data) => {
         return data;
     })
 })

@@ -23,8 +23,8 @@ export class UploadComponent {
   }
 
   browse() {
-    this.ipc.invoke('selectFiles').then((files) => {
-      if(files === undefined || files === "" || files === null) {
+    this.ipc.invoke('selectFiles').then((files: string[]) => {
+      if(files === undefined || files === null || files.length === 0) {
         return;
       }
 
