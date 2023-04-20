@@ -2,6 +2,8 @@ package org.nvip.plugfest.tooling.metrics;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -49,6 +51,14 @@ public class SPDXMetricsTest {
         test_spdx_metric.setFilepath(TEST_FAKE_SPDX_SBOM_PATH);
         String file_path_result = test_spdx_metric.getFilepath();
         assertEquals(TEST_FAKE_SPDX_SBOM_PATH, file_path_result);
+    }
+
+    @Test
+    public void SPDXMetrics_verifySPDX_test() {
+        SPDXMetrics test_spdx_metric = new SPDXMetrics(TEST_SPDX_SBOM_PATH, TEST_SPDX_SBOM_ONE);
+        assertNotNull(test_spdx_metric);
+        ArrayList<String> verify_results = test_spdx_metric.verifySPDX();
+        assertNotNull(verify_results);
     }
 
 }
