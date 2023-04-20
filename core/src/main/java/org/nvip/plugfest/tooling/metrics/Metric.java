@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Abstract class for metrics
  *
- * @author (names)
+ * @author Dylan Mulligan
  */
 public abstract class Metric {
     /**
