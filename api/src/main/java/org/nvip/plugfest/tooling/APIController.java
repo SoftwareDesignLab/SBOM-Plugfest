@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
@@ -11,23 +10,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * File: APIController.java
+ * REST API Controller for SBOM Comparison and QA
+ *
+ * @author Juan Francisco Patino, Asa Horn
+ */
 @RestController
 public class APIController {
-
-    private static ObjectMapper mapper;
 
     private static QAPipeline pipeline;
 
     public APIController() {
-        mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         pipeline = new QAPipeline();
     }
 
@@ -36,22 +35,26 @@ public class APIController {
      * The API will respond with an HTTP 200 and a jackson serialized DiffReport object.
      *
      * @param boms - list of files to compare
-     * @return - jackson serialized DiffReport object
+     * @return - wrapped Comparison object
      */
     @RequestMapping(value="compare", method=RequestMethod.POST)
     public ResponseEntity<Comparison> compare(@RequestBody List<MultipartFile> boms) throws IOException {
+        // Convert the SBOMs to SBOM objects
+        ArrayList<SBOM> sboms = new ArrayList<>();
 
-        ArrayList<SBOM> sboms = multiFilesToSboms(boms);
+        for (MultipartFile file: boms) {
+            // Get contents of the file
+            String contents = new String(file.getBytes(), StandardCharsets.UTF_8);
+
+            sboms.add(TranslatorPlugFest.translateContents(contents, file.getOriginalFilename()));
+        }
 
         if(sboms.size() < 2){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        SBOM target = sboms.get(0); // target SBOM
-
-        Comparison report = new Comparison(target); // report to return
-
-        report.runComparison(sboms);
+        Comparison report = new Comparison(sboms); // report to return
+        report.runComparison();
 
         //encode and send report
         try {
@@ -63,62 +66,26 @@ public class APIController {
     }
 
     /**
-     * Helper function to convert a list of files to a list of SBOM objects
-     *
-     * @param boms - list of files to compare
-     * @return a list of SBOM objects created from the files
-     */
-    private static ArrayList<SBOM> multiFilesToSboms(List<MultipartFile> boms) {
-        ArrayList<SBOM> sboms = new ArrayList<>();
-
-        int i = 0;
-        try{
-            for (MultipartFile file: boms
-            ) {
-
-                // write contents to temp file
-                String originalName = file.getOriginalFilename();
-                assert originalName != null;
-                String extension = originalName.substring(originalName.toLowerCase().lastIndexOf('.'));
-                String path = System.getProperty("user.dir") + "/tmp" + i + extension;
-
-                // read and add to SBOM list
-                FileWriter w = new FileWriter(path);
-                w.write(new String(file.getBytes(), StandardCharsets.UTF_8));
-                sboms.add(TranslatorPlugFest.translate(path));
-
-                // delete temporary file
-                if (!Files.deleteIfExists(Paths.get(path)))
-                    System.out.println("Failed to delete " + path);
-                i++;
-            }
-        }catch(IOException e){
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        }
-        return sboms;
-    }
-
-    /**
      * USAGE. Send POST request to /qa with a single jackson serialized SBOM in the body.
      * The API will respond with an HTTP 200 and a jackson serialized QualityReport object.
      *
-     * @param boms - list of files to compare
-     * @return - jackson serialized QualityReport object
+     * @param bom - SBOM to run metrics on
+     * @return - wrapped QualityReport object
      */
     @RequestMapping(value="qa", method=RequestMethod.POST)
-    public ResponseEntity<QualityReport> qa(@RequestBody List<MultipartFile> boms) {
-        ArrayList<SBOM> sboms;
-
-        //decode post body
-        sboms = multiFilesToSboms(boms);
-
-        if(sboms.size() < 1)
+    public ResponseEntity<QualityReport> qa(@RequestBody MultipartFile bom) {
+        // Get file contents into a string
+        String contents;
+        try {
+            contents = new String(bom.getBytes(), StandardCharsets.UTF_8);
+        }
+        catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
+        }
+        SBOM sbom = TranslatorPlugFest.translateContents(contents, bom.getOriginalFilename());
 
         //run the QA
-        QualityReport report = pipeline.process(sboms.get(0));
+        QualityReport report = pipeline.process(sbom);
 
         //encode and send report
         try {

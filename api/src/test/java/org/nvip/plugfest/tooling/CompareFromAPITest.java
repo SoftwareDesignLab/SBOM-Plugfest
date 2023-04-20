@@ -10,6 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+/**
+ * File: CompareFromAPITest.java
+ * Unit test for API regarding Comparisons
+ *
+ * @author Juan Francisco Patino
+ */
 public class CompareFromAPITest {
 
     private final MultipartFile alpineSBOM = new MockMultipartFile(System.getProperty("user.dir")
@@ -29,10 +38,9 @@ public class CompareFromAPITest {
         m.add(pythonSBOM);
         m.add(dockerSBOM);
         ResponseEntity<Comparison> report = ctrl.compare(m);
-        assert report.getStatusCode() == HttpStatus.OK;
-        assert report.getBody().getDiffReports().size() == 3;
-        assert report.getBody().getComparisons().size() > 0; // todo translator doesn't add components
-
+        assertEquals(report.getStatusCode(), HttpStatus.OK);
+        assertEquals(report.getBody().getDiffReports().size(), 2);
+        assertNotEquals(report.getBody().getComparisons().size(),0);
     }
 
     @BeforeEach

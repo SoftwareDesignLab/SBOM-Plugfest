@@ -1,7 +1,5 @@
 package org.nvip.plugfest.tooling.differ;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.*;
 
@@ -34,13 +32,14 @@ public class ComparisonTest {
                 new HashSet<>(), new DependencyTree());
 
         List<SBOM> test_SBOM_list = new ArrayList<>();
+        test_SBOM_list.add(test_SBOM_target);
         test_SBOM_list.add(test_SBOM_a);
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
+        Comparison test_comparison = new Comparison(test_SBOM_list);
 
-        test_comparison.runComparison(test_SBOM_list);
+        test_comparison.runComparison();
 
         List<DiffReport> test_report_result = test_comparison.getDiffReports();
 
@@ -92,10 +91,6 @@ public class ComparisonTest {
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
-
-        assertNotNull(test_comparison);
-
         SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
                 new HashSet<>(), new DependencyTree());
@@ -121,7 +116,15 @@ public class ComparisonTest {
 
         assertEquals(3, test_SBOM.getAllComponents().size());
 
-        test_comparison.assignComponents(test_SBOM);
+        List<SBOM> test_list = new ArrayList<>();
+        test_list.add(test_SBOM_target);
+        test_list.add(test_SBOM);
+
+        Comparison test_comparison = new Comparison(test_list);
+
+        assertNotNull(test_comparison);
+
+        test_comparison.assignComponents(test_SBOM, 0);
 
         Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
         assertNotNull(test_comparisons);
@@ -138,9 +141,6 @@ public class ComparisonTest {
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
-
-        assertNotNull(test_comparison);
 
         SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
@@ -161,7 +161,15 @@ public class ComparisonTest {
 
         assertEquals(2, test_SBOM.getAllComponents().size());
 
-        test_comparison.assignComponents(test_SBOM);
+        List<SBOM> test_list = new ArrayList<>();
+        test_list.add(test_SBOM_target);
+        test_list.add(test_SBOM);
+
+        Comparison test_comparison = new Comparison(test_list);
+
+        assertNotNull(test_comparison);
+
+        test_comparison.assignComponents(test_SBOM, 0);
 
         Map<String, HashSet<ComponentVersion>> test_comparisons = test_comparison.getComparisons();
         assertNotNull(test_comparisons);
@@ -189,7 +197,10 @@ public class ComparisonTest {
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
+        List<SBOM> test_list = new ArrayList<>();
+        test_list.add(test_SBOM_target);
+
+        Comparison test_comparison = new Comparison(test_list);
 
         SBOM test_get_target = test_comparison.getTargetSBOM();
 
@@ -219,13 +230,14 @@ public class ComparisonTest {
                 new HashSet<>(), new DependencyTree());
 
         List<SBOM> test_SBOM_list = new ArrayList<>();
+        test_SBOM_list.add(test_SBOM_target);
         test_SBOM_list.add(test_SBOM_a);
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_target);
+        Comparison test_comparison = new Comparison(test_SBOM_list);
 
-        test_comparison.runComparison(test_SBOM_list);
+        test_comparison.runComparison();
 
         List<DiffReport> test_diff_reports = test_comparison.getDiffReports();
 
@@ -233,5 +245,83 @@ public class ComparisonTest {
         assertEquals(3, test_diff_reports.size());
     }
 
+    /**
+     * Appearances Tests
+     */
+
+    @Test
+    public void comparison_should_show_component_appearances_correctly() {
+
+        /**
+         * Create components
+         */
+
+        Component test_component_a = new Component(
+                "red", "red_publisher", "1.1.0",
+                Set.of("cpe2.3::test_red_cpe"), Set.of(new PURL("pkg:redpackage/red@1.1.0")), Set.of("random_red_swid")
+        );
+
+        Component test_component_b = new Component(
+                "blue", "blue_publisher", "1.1.0",
+                Set.of("cpe2.3::test_blue_cpe"), Set.of(new PURL("pkg:bluepackage/blue@1.1.0")), Set.of("random_blue_swid")
+        );
+
+        Component test_component_c = new Component(
+                "yellow", "yellow_publisher", "2.3.7",
+                Set.of("cpe2.3::test_yellow_cpe"), Set.of(new PURL("pkg:yellowpackage/yellow@2.3.7")), Set.of("random_yellow_swid")
+        );
+
+        /**
+         * Create SBOMs. Target SBOM should have a unique component and Test SBOM A should have a unique component.
+         * They should also share a similar component.
+         */
+
+        // This SBOM will have Test Component A (red) as head component, which relies on Component C (Yellow)
+        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+        test_SBOM_target.addComponent(null, test_component_a);
+        test_SBOM_target.addComponent(test_component_a.getUUID(), test_component_c);
+
+
+        // This SBOM has Component B (blue) as the head component, which also relies on Component C (Yellow)
+        SBOM test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+                "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
+                new HashSet<>(), new DependencyTree());
+        test_SBOM_a.addComponent(null, test_component_b);
+        test_SBOM_a.addComponent(test_component_b.getUUID(), test_component_c);
+
+        // Set up the Comparison instance
+        List<SBOM> test_SBOM_list = new ArrayList<>();
+        test_SBOM_list.add(test_SBOM_target);
+        test_SBOM_list.add(test_SBOM_a);
+
+        Comparison test_comparison = new Comparison(test_SBOM_list);
+
+        test_comparison.runComparison();
+
+        // Get the results
+        Map<String, HashSet<ComponentVersion>> comparison_results = test_comparison.getComparisons();
+
+        // There should only be one component version each for red, blue, and yellow.
+        assertEquals(1, comparison_results.get("red").size());
+        assertEquals(1, comparison_results.get("blue").size());
+        assertEquals(1, comparison_results.get("yellow").size());
+
+        Set<Integer> red_appearances = comparison_results.get("red").iterator().next().getAppearances();
+        Set<Integer> blue_appearances = comparison_results.get("blue").iterator().next().getAppearances();
+        Set<Integer> yellow_appearances = comparison_results.get("yellow").iterator().next().getAppearances();
+
+        // Red and blue should have 1 appearance. However, yellow should have 2 since it was in target SBOM and SBOM A.
+        assertEquals(1, red_appearances.size());
+        assertEquals(1, blue_appearances.size());
+        assertEquals(2, yellow_appearances.size());
+
+        // Make sure ComponentVersion appearances match which SBOMs they are in.
+        assertEquals(Set.of(0), red_appearances);
+        assertEquals(Set.of(1), blue_appearances);
+        assertEquals(Set.of(0, 1), yellow_appearances);
+
+    }
 
 }
