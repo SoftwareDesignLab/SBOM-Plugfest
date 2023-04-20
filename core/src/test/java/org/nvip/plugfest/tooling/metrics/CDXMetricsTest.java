@@ -171,4 +171,21 @@ public class CDXMetricsTest {
         assertEquals(EXPECTED_SBOM_ONE_V14_HASHES, calculate_result.get(CycloneDxSchema.Version.VERSION_14).size());
 
     }
+
+    @Disabled("Bad Test; Putting this on the back burner for now.")
+    @Test
+    public void CDXMetrics_calculateHashes_should_have_real_hashes_test() {
+        CDXMetrics test_cdx_metric = new CDXMetrics(TEST_CDX_JSON_SBOM_PATH, TEST_CDX_SBOM_ONE);
+        assertNotNull(test_cdx_metric);
+        HashMap<CycloneDxSchema.Version, List<Hash>> calculate_result = test_cdx_metric.calculateHashes(TEST_SPDX_SBOM_ONE);
+        assertNotNull(calculate_result);
+
+        List<Hash> test_hash_v10 = calculate_result.get(CycloneDxSchema.Version.VERSION_10);
+        List<Hash> test_hash_v11 = calculate_result.get(CycloneDxSchema.Version.VERSION_11);
+        List<Hash> test_hash_v12 = calculate_result.get(CycloneDxSchema.Version.VERSION_12);
+        List<Hash> test_hash_v13 = calculate_result.get(CycloneDxSchema.Version.VERSION_13);
+        List<Hash> test_hash_v14 = calculate_result.get(CycloneDxSchema.Version.VERSION_14);
+
+        for (Hash hash : test_hash_v10) { assertInstanceOf(Hash.class, hash); }
+    }
 }
