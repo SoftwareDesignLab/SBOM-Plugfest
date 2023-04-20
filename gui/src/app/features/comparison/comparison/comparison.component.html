@@ -1,12 +1,12 @@
-<div>
-  <span
-    class="path"
-    *ngFor="let title of pathTitles; let i = index"
-    (click)="decreaseDepth(i)"
-    >{{ title }}</span
-  >
-</div>
 <div class="comparison">
+  <div>
+    <span
+      class="path"
+      *ngFor="let title of pathTitles; let i = index"
+      (click)="decreaseDepth(i)"
+      >{{ title.trim() + "/"}}</span
+    >
+  </div>
   <div>
     <div *ngIf="path.length === 1">
       <app-accordion
