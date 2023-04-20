@@ -74,16 +74,9 @@ public class APIController {
      * @return - wrapped QualityReport object
      */
     @PostMapping("qa")
-    public ResponseEntity<QualityReport> qa(@RequestBody MultipartFile bom) {
-        // Get file contents into a string
-        String contents;
-        try {
-            contents = new String(bom.getBytes(), StandardCharsets.UTF_8);
-        }
-        catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        SBOM sbom = TranslatorPlugFest.translateContents(contents, bom.getOriginalFilename());
+    public ResponseEntity<QualityReport> qa(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName) {
+
+        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
 
         //run the QA
         QualityReport report = pipeline.process(sbom);
