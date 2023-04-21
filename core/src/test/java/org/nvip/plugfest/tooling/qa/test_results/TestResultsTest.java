@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.qa.test_results;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.HashSet;
@@ -94,11 +95,36 @@ public class TestResultsTest {
         assertEquals(null, component_result);
     }
 
+    /**
+     * addTest Tests
+     */
+
     @Test
     public void TestResults_addTest_test() {
         TestResults test_tr = new TestResults(test_component_a);
         assertNotNull(test_tr);
         test_tr.addTest(test_test_a);
+    }
+
+    @Test
+    public void TestResults_addTest_null_test() {
+        TestResults test_tr = new TestResults(test_component_a);
+        assertNotNull(test_tr);
+        test_tr.addTest(null);
+    }
+
+    @Test
+    public void TestResult_addTest_to_a_null_component() {
+        TestResults test_tr = new TestResults(test_component_a);
+        assertNotNull(test_tr);
+        test_tr.addTest(test_test_a);
+    }
+
+    @Test
+    public void TestResult_addTest_should_not_work_on_null_TestResults() {
+        TestResults test_tr = null;
+        assertNull(test_tr);
+        assertThrows(NullPointerException.class, () -> test_tr.addTest(test_test_a));
     }
 
 }
