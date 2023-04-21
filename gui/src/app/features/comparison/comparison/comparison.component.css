@@ -16,5 +16,25 @@
 .comparison {
   width: 80%;
   overflow-y: scroll;
-  padding: 20px;
+  padding: 30px;
+  margin-top: 20px;
+  border-radius: 15px;
+  background-color: #1B1E21;
+  display: flex;
+  flex-direction: column;
 }
+
+.comparison .app-accordion {
+  margin-bottom: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  font-size: 30px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+

@@ -59,16 +59,18 @@
 /*
 WIP overriding style
 
+*/
+
 .accordion-bar {
     background-color: var(--primary);
     color: white;
 }
 
 .accordion-bar:hover {
-    background-color: var(--secondary) !important;
+    background-color: grey !important;
 
 }
 
 .accordion-title, .accordion-desc {
     color: white;
-} */
+}

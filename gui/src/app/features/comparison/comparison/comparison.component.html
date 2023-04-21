@@ -1,5 +1,5 @@
-<div class="comparison">
-  <div>
+<div *ngIf="comparison" class="comparison">
+  <div class="header">
     <span
       class="path"
       *ngFor="let title of pathTitles; let i = index"
@@ -10,7 +10,7 @@
   <div>
     <div *ngIf="path.length === 1">
       <app-accordion
-        *ngFor="let key of keys"
+        *ngFor="let key of keys | slice:0:10"
         [extra]="[display[key]?.length + ' Ver(s)']"
         (click)="increaseDepth(display[key], key)"
       >
