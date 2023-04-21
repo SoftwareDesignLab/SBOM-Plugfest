@@ -39,15 +39,13 @@ public class APIController {
      * @return - wrapped Comparison object
      */
     @PostMapping("compare")
-    public ResponseEntity<Comparison> compare(@RequestBody List<MultipartFile> boms) throws IOException {
+    public ResponseEntity<Comparison> compare(@RequestParam("contents") List<String> contents, @RequestParam("filenames") List<String> filenames) throws IOException {
         // Convert the SBOMs to SBOM objects
         ArrayList<SBOM> sboms = new ArrayList<>();
 
-        for (MultipartFile file: boms) {
+        for (int i = 0; i < contents.size(); i++) {
             // Get contents of the file
-            String contents = new String(file.getBytes(), StandardCharsets.UTF_8);
-
-            sboms.add(TranslatorPlugFest.translateContents(contents, file.getOriginalFilename()));
+            sboms.add(TranslatorPlugFest.translateContents(contents.get(i), filenames.get(i)));
         }
 
         if(sboms.size() < 2){
