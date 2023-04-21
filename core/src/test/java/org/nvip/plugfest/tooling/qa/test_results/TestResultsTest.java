@@ -389,4 +389,59 @@ public class TestResultsTest {
         assertEquals(EXPECTED_TO_STRING_ALL_TEST, toString_result);
     }
 
+    /**
+     * equals Tests
+     */
+
+    @Test
+    public void TestResult_equals_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+
+        TestResults test_tr_two = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+
+        assertTrue(test_tr_one.equals(test_tr_two));
+        assertTrue(test_tr_one.equals(test_tr_two));
+    }
+
+    @Test
+    public void TestResult_equals_different_components_should_return_false_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+
+        TestResults test_tr_two = new TestResults(test_component_b);
+        assertNotNull(test_tr_one);
+
+        assertFalse(test_tr_one.equals(test_tr_two));
+        assertFalse(test_tr_two.equals(test_tr_one));
+    }
+
+    @Test
+    public void TestResult_equals_same_components_different_tests_should_return_false_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+
+        TestResults test_tr_two = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_two.addTest(test_test_b);
+
+        assertFalse(test_tr_one.equals(test_tr_two));
+        assertFalse(test_tr_two.equals(test_tr_one));
+    }
+
+    @Test
+    public void TestResult_equals_same_components_same_tests_should_return_true_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+
+        TestResults test_tr_two = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_two.addTest(test_test_a);
+
+        assertTrue(test_tr_one.equals(test_tr_two));
+        assertTrue(test_tr_two.equals(test_tr_one));
+    }
 }
