@@ -1,7 +1,7 @@
 /** @Author Tina DiLorenzo */
 
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { Comparison, finalMockup } from '../comparison';
+import { Comparison } from '../comparison';
 import { SBOM } from '@models/sbom';
 
 import {
@@ -37,7 +37,7 @@ export class ComparisonPageComponent {
 
   // Display diff report
   compare() {
-    this.comparison = finalMockup;
+    // this.comparison = finalMockup;
   }
 
   openDialog(sbom: SBOM): void {

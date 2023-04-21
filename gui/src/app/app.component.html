@@ -1,10 +1,15 @@
 <mat-stepper linear #stepper>
     <mat-step>
-    <button mat-button matStepperNext>Next</button>
-    <app-upload/>
-    
-    <button mat-button matStepperNext>Next</button>
+        <app-upload/>
+        <button mat-button matStepperNext>Next</button>
+    </mat-step>
+    <button mat-button matStepperPrevious>Next</button>
+     <button mat-button matStepperNext>Next</button>
     <mat-step>
         <app-metrics-main/>
+    </mat-step>
+    <mat-step>
+        <app-comparison/>
+        <button mat-button matStepperPrevious>Next</button>
     </mat-step>
   </mat-stepper>

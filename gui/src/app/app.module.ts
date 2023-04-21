@@ -27,6 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel/metrics-side-panel.component';
 import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
 import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-main.component';
+import {MatStepperModule} from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-ma
     BrowserAnimationsModule,
     MatIconModule,
     MatExpansionModule,
+    MatStepperModule,
     HttpClientModule,
     MatFormFieldModule,
     MatInputModule,

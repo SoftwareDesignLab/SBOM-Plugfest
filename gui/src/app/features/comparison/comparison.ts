@@ -5,9 +5,6 @@
 // 2. CONVERT JSON 
 //    - readonly arrays TO SETS
 //    - convert keys/values to maps
-
-
-import mockup from './diffreport3.json';
 interface SBOM {
   name: string;
 }
@@ -69,9 +66,3 @@ export interface Comparison {
   diffReports: readonly DiffReport[];
   comparisons: {[key: string]: readonly ComponentVersion[]};
 }
-
-//#region mockup Comparison
-
-export const finalMockup: Comparison = mockup;
-
-//#endregion
