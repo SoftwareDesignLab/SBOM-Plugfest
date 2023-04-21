@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa.test_results;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.nvip.plugfest.tooling.sbom.Component;
 
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ public class TestResults {
     /**
      * Component that the test results belong to
      */
-    private final Component component;
-    private final ArrayList<Test> tests;
+    @JsonProperty("component") private final Component component;
+    @JsonProperty("tests") private final ArrayList<Test> tests;
 
     /**
      * Initialize a new instance of TestResults

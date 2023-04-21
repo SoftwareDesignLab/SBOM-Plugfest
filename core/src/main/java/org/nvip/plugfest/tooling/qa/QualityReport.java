@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.nvip.plugfest.tooling.qa.test_results.TestResults;
 
 import java.util.ArrayList;
@@ -9,11 +10,11 @@ import java.util.ArrayList;
  */
 public class QualityReport {
     /** Test results from the QAPipeline */
-    private final ArrayList<TestResults> testResults;
+    @JsonProperty("testResults") private final ArrayList<TestResults> testResults;
     /**
      * The serial number of the SBOM that was tested
      */
-    private final String serialNumber;
+    @JsonProperty("serialNumber") private final String serialNumber;
 
     /**
      * Create new QualityReport object with the SBOM serialNumber.
