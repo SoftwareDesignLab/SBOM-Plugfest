@@ -10,7 +10,7 @@ export class DataHandlerService {
 
   private ipc!: IpcRenderer;
   private filePaths: string[] = [];
-  private metrics: { [id: string]: Object } = {};
+  public metrics: { [id: string]: Object } = {};
 
   constructor(private client: ClientService) { 
     if (window.require) {
