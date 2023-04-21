@@ -1,0 +1,22 @@
+<div class="metrics-body flex col center">
+    <div class="graphs">
+        <!--Not a priority atm-->
+    </div>
+    <div class="results" *ngIf="report && report.testResults.length > 0">
+        <app-accordion title="TEST RESULTS" [extra]="[(report ? report.testResults.length : '0') + ' COMPONENTS']">
+            <app-accordion *ngFor="let testResult of report?.testResults" title="{{testResult.component.name}}">
+                <div class="test" *ngFor="let test of testResult.tests">
+                    <div class="result" id="{{test.status ? 'pass' : 'fail'}}">
+                        {{test.message}}
+                    </div>
+                </div>
+            </app-accordion>
+        </app-accordion>
+    </div>
+    <div class="text flex center" *ngIf="!report">
+        Please select an SBOM to see test results
+    </div>
+    <div class="text flex center" *ngIf="report && report.testResults.length === 0">
+        There aren't any test results with the selected SBOM
+    </div>
+</div>

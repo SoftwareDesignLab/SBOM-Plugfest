@@ -1,1 +1,10 @@
-<app-upload/>
+<mat-stepper linear #stepper>
+    <mat-step>
+    <button mat-button matStepperNext>Next</button>
+    <app-upload/>
+    
+    <button mat-button matStepperNext>Next</button>
+    <mat-step>
+        <app-metrics-main/>
+    </mat-step>
+  </mat-stepper>
