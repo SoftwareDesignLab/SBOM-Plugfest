@@ -5,7 +5,7 @@
             <icon icon="{{item.value !== null ? 'done' : 'close'}}"/>
             <div class="sbom flex">
                 {{item.key}}
-                <icon icon="question_mark"/>
+                <icon icon="delete" (click)="RemoveFile(item.key)"/>
             </div>
         </div>
     </div>

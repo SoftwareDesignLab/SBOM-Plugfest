@@ -39,4 +39,8 @@ export class UploadComponent {
   GetFiles() {
     return this.dataHandler.metrics;
   }
+
+  RemoveFile(file: string) {
+    //this.dataHandler.metrics 
+  }
 }
