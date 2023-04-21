@@ -31,4 +31,12 @@ export class UploadComponent {
       this.dataHandler.AddFiles(files);
     });
   }
+
+  ContainsFiles() {
+    return Object.keys(this.dataHandler.metrics).length > 0;
+  }
+
+  GetFiles() {
+    return this.dataHandler.metrics;
+  }
 }
