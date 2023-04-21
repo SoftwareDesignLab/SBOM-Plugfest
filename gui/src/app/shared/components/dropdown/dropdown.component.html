@@ -1,13 +1,11 @@
-<div class="dropdown flex" [matMenuTriggerFor]="menu">
-  <div class="selected">
-    {{options[selected]}}
-  </div>
-  <span class="mat-expansion-indicatorng-star-inserted" style="transform: rotate(0deg);">
-  </span>
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label></mat-label>
+    <mat-select (selectionChange)="selectedItem($event)">
+      <mat-option *ngFor="let item of options"  [value]="item">
+        {{item[key] || item}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
-<mat-menu #menu="matMenu">
-  <button mat-menu-item *ngFor="let item of options; let i = index" (click)="selected = i">
-    {{item}}
-  </button>
-</mat-menu>

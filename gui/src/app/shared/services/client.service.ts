@@ -1,3 +1,5 @@
+/** @Author Justin Jantzi */
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -20,9 +22,6 @@ export class ClientService {
   };
 
   constructor(private http: HttpClient) { 
-    this.post("endpoint", new HttpParams().set("endpoint", this.NVIP_URL)).subscribe((data) => {
-      console.log(data);
-    });
   }
 
   get(path: string, params: HttpParams = new HttpParams()) {
@@ -33,14 +32,5 @@ export class ClientService {
   post(path: string, params: HttpParams = new HttpParams()) {
     this.httpOptions.params = params;
     return this.http.post(this.SERVER_URL + path, this.httpOptions.params);
-  }
-
-  IsLoggedIn() {
-    return this.loggedIn;
-  }
-
-  setLoggedIn() {
-    this.loggedIn = true;
-    this.showLogin = false;
   }
 }

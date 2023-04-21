@@ -34,7 +34,8 @@
 .dropdown {
     background: var(--secondary);
     color: white;
-    width: 100%;
+    width: 25%;
+    margin: auto;
     height: 50px;
     align-items: center;
     cursor: pointer;
@@ -58,16 +59,18 @@
 /*
 WIP overriding style
 
+*/
+
 .accordion-bar {
     background-color: var(--primary);
     color: white;
 }
 
 .accordion-bar:hover {
-    background-color: var(--secondary) !important;
+    background-color: grey !important;
 
 }
 
 .accordion-title, .accordion-desc {
     color: white;
-} */
+}

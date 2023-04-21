@@ -7,7 +7,7 @@
     --bg: #191d20;
 }
 
-html, body { height: 100%; }
+html, body { height: 100%; background-color: black; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .flex {
@@ -16,6 +16,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .col {
     flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
 }
 
 .center {
