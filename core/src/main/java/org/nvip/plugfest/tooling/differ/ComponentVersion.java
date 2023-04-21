@@ -58,7 +58,9 @@ public class ComponentVersion {
         this.appearances = new HashSet<>();
     }
 
-    // getters and setters
+    ///
+    /// getters and setters
+    ///
 
     public String getComponentName() {
         return this.componentName;

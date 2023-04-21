@@ -1,8 +1,5 @@
 package org.nvip.plugfest.tooling.metrics;
 
-/**
- * Imports Java Native Libraries
- */
 import java.util.List;
 import java.util.HashMap;
 import java.io.File;
@@ -26,23 +23,30 @@ import org.cyclonedx.util.BomUtils;
 
 /**
  * Class for CDX SBOM Metrics
+ *
+ * @author Henry Keena
  */
 public class CDXMetrics extends Metric{
 
+    /**
+     * The filepath of the SBOM file.
+     */
     private String filepath;
+
+    /**
+     * The text of the SBOM file.
+     */
     private final String sbom;
 
+    /**
+     * Constructor for CDXMetrics
+     *
+     * @param filepath The filepath of the SBOM file
+     * @param sbom The text of the SBOM file
+     */
     public CDXMetrics(String filepath, String sbom) {
         this.filepath = filepath;
         this.sbom = sbom;
-    }
-
-    public String getFilepath() {
-        return this.filepath;
-    }
-
-    public void setFilepath(String _filepath) {
-        this.filepath = _filepath;
     }
 
     /**
@@ -96,6 +100,22 @@ public class CDXMetrics extends Metric{
         }
         return hashesMap;
     }
+
+    ///
+    /// getter and setter methods
+    ///
+
+    public String getFilepath() {
+        return this.filepath;
+    }
+
+    public void setFilepath(String _filepath) {
+        this.filepath = _filepath;
+    }
+
+    ///
+    /// Overrides
+    ///
 
     @Override
     protected int testMetric() {

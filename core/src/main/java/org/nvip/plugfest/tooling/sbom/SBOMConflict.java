@@ -55,6 +55,11 @@ public class SBOMConflict {
         }
     }
 
+    /**
+     * Generate a string summary of the conflict
+     *
+     * @return String representation of a conflict
+     */
     public String getConflictString(SBOMConflictType conflictType) {
         StringBuilder conflictString = new StringBuilder();
         switch (conflictType) {
@@ -98,9 +103,17 @@ public class SBOMConflict {
         return conflictString.toString();
     }
 
+    ///
+    /// Getters and Setters
+    ///
+
     public Set getConflicts() {
         return this.conflictTypes;
     }
+
+    ///
+    /// Overrides
+    ///
 
     // Stringify this entire object
     @Override

@@ -59,6 +59,7 @@ public class TranslatorPlugFest {
 
         try {
 
+            //call the appropriate translator based on the file extension
             switch (extension) {
 
                 case ".xml"  -> sbom = TranslatorCDXXML.translatorCDXXMLContents(contents, filePath);

@@ -27,24 +27,6 @@ public class TestResults {
     }
 
     /**
-     * Get the component that the tests belong to.
-     *
-     * @return The component that the tests belong to
-     */
-    public Component getComponent() {
-        return this.component;
-    }
-
-    /**
-     * Get a list of all tests, regardless of passing or failing.
-     *
-     * @return An ArrayList of all tests performed
-     */
-    public ArrayList<Test> getTests() {
-        return this.tests;
-    }
-
-    /**
      * Add a single test
      *
      * @param t Test to add
@@ -86,6 +68,22 @@ public class TestResults {
     public boolean isSuccessful() {
         return getSuccessfulTests() == tests.size();
     }
+
+    ///
+    /// getters and setters
+    ///
+
+    public Component getComponent() {
+        return this.component;
+    }
+
+    public ArrayList<Test> getTests() {
+        return this.tests;
+    }
+
+    ///
+    /// Overrides
+    ///
 
     /**
      * Prints the component name, final status, and number of tests passed vs total tests.
