@@ -1,8 +1,7 @@
 package org.nvip.plugfest.tooling.qa.test_results;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import org.apache.commons.lang3.builder.ToStringSummary;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.nvip.plugfest.tooling.sbom.*;
@@ -37,6 +36,20 @@ public class TestResultsTest {
     private static final int EXPECTED_PASSING_GETSUCCESSFULTESTS_TWO_PASS_ONE_FAIL = 2;
 
     private static final int EXPECTED_PASSING_GET_SUCCESSFULTESTS_NONE = 0;
+
+    private static final String EXPECTED_TO_STRING_ONE =
+            "Component 'red' PASSED with 1/1 Tests Passed:\n" +
+                    "  PASSED: This is a test.\n";
+
+    private static final String EXPECTED_TO_STRING_NO_TEST =
+            "Component 'red' PASSED with 0/0 Tests Passed:\n";
+
+    private static final String EXPECTED_TO_STRING_ALL_TEST =
+            "Component 'red' FAILED with 3/4 Tests Passed:\n" +
+                    "  PASSED: This is a test.\n" +
+                    "  PASSED: This is also a test.\n" +
+                    "  FAILED: This may as well be test.\n" +
+                    "  PASSED: This is indeed again, a test.\n";
 
     /**
      * Test Variables
@@ -298,5 +311,82 @@ public class TestResultsTest {
     /**
      * isSuccessful Tests
      */
+
+    @Test
+    public void TestResult_isSuccessful_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+        assertTrue(test_tr_one.isSuccessful());
+    }
+
+    @Test
+    public void TestResult_isSuccessful_returns_false_with_failing_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+        test_tr_one.addTest(test_test_c);
+        assertFalse(test_tr_one.isSuccessful());
+    }
+
+    @Test
+    public void TestResult_isSuccessful_no_tests_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        assertTrue(test_tr_one.isSuccessful());
+    }
+
+    @Test
+    public void TestResult_isSuccessful_should_fail_with_a_null_test_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(null);
+        assertThrows(NullPointerException.class, () -> test_tr_one.isSuccessful());
+    }
+
+    /**
+     * toString Tests
+     */
+
+    @Test
+    public void TestResult_toString_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one.toString());
+    }
+
+    @Test
+    public void TestResult_toString_has_correct_output_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+        String toString_result = test_tr_one.toString();
+        assertEquals(EXPECTED_TO_STRING_ONE, toString_result);
+    }
+
+    @Test
+    public void TestResult_toString_should_be_null_for_null_TestResult_test() {
+        TestResults test_tr_one = null;
+        assertThrows(NullPointerException.class, () -> test_tr_one.toString());
+    }
+
+    @Test
+    public void TestResult_toString_outputs_nothing_for_no_test_TestResult_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        String toString_result = test_tr_one.toString();
+        assertEquals(EXPECTED_TO_STRING_NO_TEST, toString_result);
+    }
+
+    @Test
+    public void TestResult_toString_has_correct_output_multiple_tests_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+        test_tr_one.addTest(test_test_b);
+        test_tr_one.addTest(test_test_c);
+        test_tr_one.addTest(test_test_d);
+        String toString_result = test_tr_one.toString();
+        assertEquals(EXPECTED_TO_STRING_ALL_TEST, toString_result);
+    }
 
 }
