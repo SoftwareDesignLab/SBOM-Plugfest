@@ -93,19 +93,22 @@ public class TranslatorCDXJSON {
 
             if( cdx_component != null ) {
 
+                // Initialize ID collections
+                Set<String> cpe_set = new HashSet<>();
+                Set<PURL> purl_set = new HashSet<>();
+                Set<String> swid_set = new HashSet<>();
+
                 // Get CPE, PURL, and SWIDs
-                String cpe = cdx_component.getCpe() == null ? null : cdx_component.getCpe();
-                PURL purl = cdx_component.getPurl() == null ? null : new PURL(cdx_component.getPurl());
-                String swid = cdx_component.getSwid() == null ? null : String.valueOf(cdx_component.getSwid());
+                if(cdx_component.getCpe() != null) { cpe_set.add(cdx_component.getCpe()) ; }
+                if(cdx_component.getPurl() != null) { cpe_set.add(cdx_component.getPurl()) ; }
+                if(cdx_component.getSwid() != null) { cpe_set.add(String.valueOf(cdx_component.getSwid())) ; }
 
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(
                         cdx_component.getName(),
                         cdx_component.getPublisher(),
                         cdx_component.getVersion(),
-                        Collections.singleton(cpe),
-                        Collections.singleton(purl),
-                        Collections.singleton(swid)
+                        cpe_set, purl_set, swid_set
                 );
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
