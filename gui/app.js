@@ -57,13 +57,13 @@ app.on('activate', function () {
 
 ipcMain.handle("selectFiles", async () => {
   let files = await dialog.showOpenDialog(mainWindow, {
-    properties: ["multiSelections"],
+    properties: ["openFile","multiSelections"],
   });
 
   return files.filePaths;
 });
 
 ipcMain.handle("getFileData", async (event, ...args) => {
-    let data = JSON.parse(fs.readFileSync(args[0], 'utf8'));
+    let data = fs.readFileSync(args[0], 'utf8');
     return data;
 })
