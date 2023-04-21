@@ -32,6 +32,12 @@ public class TestResultsTest {
 
     private static final int EXPECTED_ADDTESTS_RESULT = 3;
 
+    private static final int EXPECTED_PASSING_GETSUCCESSFULTESTS_TWO_PASS = 2;
+
+    private static final int EXPECTED_PASSING_GETSUCCESSFULTESTS_TWO_PASS_ONE_FAIL = 2;
+
+    private static final int EXPECTED_PASSING_GET_SUCCESSFULTESTS_NONE = 0;
+
     /**
      * Test Variables
      */
@@ -70,7 +76,7 @@ public class TestResultsTest {
 
         test_test_b = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_TWO);
 
-        test_test_c = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_THREE);
+        test_test_c = new org.nvip.plugfest.tooling.qa.test_results.Test(false, TEST_MESSAGE_THREE);
 
         test_test_d = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_FOUR);
 
@@ -252,5 +258,45 @@ public class TestResultsTest {
         }
     }
 
+    /**
+     * getSuccessfulTests Tests
+     */
+    @Test
+    public void TestResult_getSuccessfulTests_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+        assertNotNull(test_tr_one.getSuccessfulTests());
+    }
+
+    @Test
+    public void TestResult_getSuccessfulTests_should_have_correct_count_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a);
+        test_tr_one.addTest(test_test_b);
+        assertEquals(EXPECTED_PASSING_GETSUCCESSFULTESTS_TWO_PASS, test_tr_one.getSuccessfulTests());
+    }
+
+    @Test
+    public void TestResult_getSuccessfulTests_should_have_correct_count_with_a_failing_test_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        test_tr_one.addTest(test_test_a); // passing test
+        test_tr_one.addTest(test_test_b); // passing test
+        test_tr_one.addTest(test_test_c); // failing test
+        assertEquals(EXPECTED_PASSING_GETSUCCESSFULTESTS_TWO_PASS_ONE_FAIL, test_tr_one.getSuccessfulTests());
+    }
+
+    @Test
+    public void TestResult_getSuccessfulTests_should_return_zero_for_no_tests_test() {
+        TestResults test_tr_one = new TestResults(test_component_a);
+        assertNotNull(test_tr_one);
+        assertEquals(EXPECTED_PASSING_GET_SUCCESSFULTESTS_NONE, test_tr_one.getSuccessfulTests());
+    }
+
+    /**
+     * isSuccessful Tests
+     */
 
 }
