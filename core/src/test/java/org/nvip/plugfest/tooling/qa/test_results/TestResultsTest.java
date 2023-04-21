@@ -8,8 +8,7 @@ import org.nvip.plugfest.tooling.sbom.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestResultsTest {
 
@@ -85,6 +84,21 @@ public class TestResultsTest {
         assertNotNull(test_tr);
         Component component_result = test_tr.getComponent();
         assertEquals(test_component_a, component_result);
+    }
+
+    @Test
+    public void TestResults_getComponent_on_null_component() {
+        TestResults test_tr = new TestResults(null);
+        assertNotNull(test_tr);
+        Component component_result = test_tr.getComponent();
+        assertEquals(null, component_result);
+    }
+
+    @Test
+    public void TestResults_addTest_test() {
+        TestResults test_tr = new TestResults(test_component_a);
+        assertNotNull(test_tr);
+        test_tr.addTest(test_test_a);
     }
 
 }
