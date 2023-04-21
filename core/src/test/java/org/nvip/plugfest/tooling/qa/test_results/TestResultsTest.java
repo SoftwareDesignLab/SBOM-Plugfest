@@ -1,9 +1,7 @@
 package org.nvip.plugfest.tooling.qa.test_results;
 
-import org.apache.commons.lang3.builder.ToStringSummary;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.*;
@@ -23,11 +21,6 @@ public class TestResultsTest {
     private static final String TEST_MESSAGE_THREE = "This may as well be test.";
 
     private static final String TEST_MESSAGE_FOUR = "This is indeed again, a test.";
-
-
-    private static final String TO_STRING_PASS_MESSAGE = "PASSED: " + TEST_MESSAGE;
-
-    private static final String TO_STRING_FAIL_MESSAGE = "FAILED: " + TEST_MESSAGE;
 
     private static final int EXPECTED_ADDTESTS_RESULT = 3;
 
@@ -55,17 +48,17 @@ public class TestResultsTest {
      * Test Variables
      */
 
-    Component test_component_a;
+    private Component test_component_a;
 
-    Component test_component_b;
+    private Component test_component_b;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_a;
+    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_a;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_b;
+    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_b;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_c;
+    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_c;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_d;
+    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_d;
 
 
     /**
