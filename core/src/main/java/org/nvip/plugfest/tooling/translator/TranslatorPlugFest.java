@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.apache.jena.atlas.json.JSON;
 import org.json.JSONObject;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -46,6 +45,10 @@ public class TranslatorPlugFest {
      * @return SBOM object, null if failed
      */
     public static SBOM translateContents(String contents, String filePath) {
+
+        // Remove all non-ascii characters
+        // TODO instead receive the file in utf8 so we can support these characters
+        contents = contents.replaceAll("[^\\x00-\\x7F]", "");
 
         SBOM sbom = null;
 
