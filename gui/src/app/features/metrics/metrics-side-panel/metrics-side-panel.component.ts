@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataHandlerService } from '@services/data-handler.service';
 
 @Component({
   selector: 'app-metrics-side-panel',
@@ -6,5 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./metrics-side-panel.component.css']
 })
 export class MetricsSidePanelComponent {
-  sboms: any[] = [];
+
+  constructor(private handeler: DataHandlerService) {}
+
+  GetSBOMs() {
+    return this.handeler.GetValidSBOMs();
+  }
+
+  SetSelectedSBOM(bom: string) {
+    this.handeler.selectedQualityReport = bom;
+  }
 }

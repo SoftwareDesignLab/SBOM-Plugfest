@@ -15,6 +15,9 @@ export class DataHandlerService {
   public metrics: { [id: string]: Object } = {};
   public comparison!: Comparison; 
 
+  //TODO: Cleanup (yeah this shouldn't be here but midnight + demo + ratio)
+  public selectedQualityReport!: string;
+
   constructor(private client: ClientService) { 
     if (window.require) {
       try {
@@ -47,6 +50,10 @@ export class DataHandlerService {
         this.metrics[path] = result;
       })
     });
+  }
+
+  GetValidSBOMs() {
+    return Object.keys(this.metrics).filter((x) => this.metrics[x] !== null);
   }
 
   Compare(main: string, others: string[]) {
