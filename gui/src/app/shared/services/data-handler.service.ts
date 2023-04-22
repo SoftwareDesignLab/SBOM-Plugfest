@@ -13,7 +13,7 @@ export class DataHandlerService {
   private filePaths: string[] = [];
 
   public metrics: { [id: string]: Object } = {};
-  public comparison!: Comparison; 
+  public comparison!: Comparison;
 
   //TODO: Cleanup (yeah this shouldn't be here but midnight + demo + ratio)
   public selectedQualityReport!: string;
@@ -56,23 +56,28 @@ export class DataHandlerService {
     return Object.keys(this.metrics).filter((x) => this.metrics[x] !== null);
   }
 
-  Compare(main: string, others: string[]) {
-    let toSend: { [path: string]: string } = {};
+  async Compare(main: string, others: string[]): Promise<any> {
+    let toSend: { [path: string]: any } = {};
     let total = others.length + 1;
     let i = 0;
 
-    Object.keys(this.metrics).filter(x => x === main || others.includes(x)).forEach((path) => {
+    let paths = [main, ...others];
+
+    paths.forEach((path) => {
       this.ipc.invoke('getFileData', path).then((data: any) => {
         toSend[path] = data;
         i++;
-
+  
         //last time running
         if(i == total) {
+          console.log("last running");
+  
           let fileData: string[] = [];
           let filePaths: string[] = [];
-
+  
           //Ensure that the compare is first in list
           Object.keys(toSend).forEach((path) => {
+            console.log("insert path: " + path);
             if(path === main) {
               fileData.unshift(toSend[path]);
               filePaths.unshift(path);
@@ -81,7 +86,7 @@ export class DataHandlerService {
               filePaths.push(path);
             }
           })
-
+  
           this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
             this.comparison = result;
           })
@@ -89,4 +94,5 @@ export class DataHandlerService {
       })
     })
   }
+  
 }

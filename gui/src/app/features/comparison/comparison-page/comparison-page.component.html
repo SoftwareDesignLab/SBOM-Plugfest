@@ -7,7 +7,7 @@
           <span>Target</span>
         </div>
         <div class="content">
-          <app-dropdown [options]="sboms" key="name" (selectionChange)="targetSbom = $event;" />
+          <app-dropdown [options]="GetValidSBOMs()" key="name" (selectionChange)="targetSbom = $event;" />
         </div>
       </div>
       <div class="selection flex col">
@@ -15,11 +15,11 @@
           Comparisons
         </div>
         <div class="content flex col">
-          <div class="compare-item flex" *ngFor="let sbom of sboms">
-            <input type="radio" name="comparison" [value]="sbom" (click)="selectComparison($event)" [disabled]="sbom === targetSbom" />
+          <div class="compare-item flex" *ngFor="let sbom of GetValidSBOMs()">
+            <input type="radio" name="comparison" [value]="sbom" (click)="selectComparison(sbom)" [disabled]="sbom === targetSbom" />
             <div class="sbom flex">
-              {{sbom.name}}
-              <icon icon="question_mark" (click)="openDialog(sbom)" />
+              {{sbom}}
+              <icon icon="question_mark"/>
             </div>
           </div>
         </div>
@@ -27,5 +27,5 @@
       <app-button  icon="compare_arrows" (click)="compare()"  class="addSBOMScenter">COMPARE</app-button>
     </form>
   </app-side-panel>
-  <app-comparison [comparison]="comparison" />
+  <app-comparison [comparison]="GetComparison()" />
 </div>

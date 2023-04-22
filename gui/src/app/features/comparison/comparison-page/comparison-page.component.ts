@@ -1,4 +1,4 @@
-/** @Author Tina DiLorenzo */
+/** @Author Tina DiLorenzo, Justin Jantzi */
 
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { Comparison } from '../comparison';
@@ -9,6 +9,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+import { DataHandlerService } from '@services/data-handler.service';
 
 @Component({
   selector: 'app-comparison-page',
@@ -18,11 +19,11 @@ import {
 export class ComparisonPageComponent {
   collapsed: boolean = false;
 
-  sboms: SBOM[] = [];
-  targetSbom: SBOM | null = null; // number is for original position
-  comparison: Comparison | null = null;
+  sboms: string[] = ['a', 'b'];
+  targetSbom!: string;
+  compareTo!: string;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private dataHandler: DataHandlerService) {}
 
   /** @TODO create an api call where you would send the target sbom and compare */
   // it against all sboms rather than doing singular api calls for each one  */
@@ -31,13 +32,13 @@ export class ComparisonPageComponent {
   }
 
   /** @TODO replace with inserting the associated diff report */
-  selectComparison($event: any) {
-    //this.targetSbom = $event.target?.value
+  selectComparison(value: string) {
+    this.compareTo = value;
   }
 
   // Display diff report
   compare() {
-    // this.comparison = finalMockup;
+    this.dataHandler.Compare(this.targetSbom, [this.compareTo]);
   }
 
   openDialog(sbom: SBOM): void {
@@ -47,9 +48,17 @@ export class ComparisonPageComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.sboms = this.sboms.filter((s) => s !== sbom);
+        //this.sboms = this.sboms.filter((s) => s !== sbom);
       }
     });
+  }
+
+  GetValidSBOMs() {
+    return this.dataHandler.GetValidSBOMs();
+  }
+
+  GetComparison() {
+    return this.dataHandler.comparison;
   }
 }
 
