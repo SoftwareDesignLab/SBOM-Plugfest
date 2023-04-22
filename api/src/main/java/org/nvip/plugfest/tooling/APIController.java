@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
@@ -8,10 +10,8 @@ import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * File: APIController.java
  * REST API Controller for SBOM Comparison and QA
  *
- * @author Juan Francisco Patino, Asa Horn
+ * @author Juan Francisco Patino, Asa Horn, Justin Jantzi
  */
 @RestController
 @RequestMapping("plugfest")
@@ -39,13 +39,18 @@ public class APIController {
      * @return - wrapped Comparison object
      */
     @PostMapping("compare")
-    public ResponseEntity<Comparison> compare(@RequestParam("contents") List<String> contents, @RequestParam("filenames") List<String> filenames) throws IOException {
+    public ResponseEntity<Comparison> compare(@RequestParam("contents") String contentArray, @RequestParam("fileNames") String fileArray) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> contents = objectMapper.readValue(contentArray, new TypeReference<List<String>>(){});
+        List<String> fileNames = objectMapper.readValue(fileArray, new TypeReference<List<String>>(){});
+
         // Convert the SBOMs to SBOM objects
         ArrayList<SBOM> sboms = new ArrayList<>();
 
         for (int i = 0; i < contents.size(); i++) {
             // Get contents of the file
-            sboms.add(TranslatorPlugFest.translateContents(contents.get(i), filenames.get(i)));
+            sboms.add(TranslatorPlugFest.translateContents(contents.get(i), fileNames.get(i)));
         }
 
         if(sboms.size() < 2){
