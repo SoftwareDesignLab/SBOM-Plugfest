@@ -7,6 +7,12 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: ComparisonTest.java
+ * Tests for Comparison
+ *
+ * @author Tyler Drake
+ */
 public class ComparisonTest {
 
     /**

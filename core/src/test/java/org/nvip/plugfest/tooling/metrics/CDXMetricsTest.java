@@ -5,12 +5,17 @@ import org.cyclonedx.model.Hash;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: CDXMetricsTest.java
+ * Tests for CDXMetrics
+ *
+ * @author Tyler Drake
+ */
 public class CDXMetricsTest {
 
     /**

@@ -8,6 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * TODO: timestampConsistencyMetric isn't used much. Revisit this when it's being used more or receives more development.
  */
 
+/**
+ * File: timestampConsistencyMetricTests
+ * Tests for timestampConsistencyMetric
+ *
+ * @author Tyler Drake
+ */
 public class timestampConsistencyMetricTest {
 
     /**

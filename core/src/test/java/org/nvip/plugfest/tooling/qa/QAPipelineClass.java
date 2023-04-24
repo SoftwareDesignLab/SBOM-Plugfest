@@ -9,6 +9,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * File: QAPipelineClass.java
+ * Tests for QAPipeline
+ *
+ * @author Tyler Drake
+ */
 public class QAPipelineClass {
 
     /**

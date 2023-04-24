@@ -12,6 +12,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * File: QualityReportTest.java
+ * Tests for QualityReport
+ *
+ * @author Tyler Drake
+ */
 public class QualityReportTest {
 
     /**

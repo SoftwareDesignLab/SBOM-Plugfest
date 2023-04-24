@@ -9,6 +9,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+/**
+ * File: UniqueIdOccurrenceTest.java
+ * Tests for UniqueIdOccurrence
+ *
+ * @author Juan Patino
+ */
 public class UniqueIdOccurrenceTest {
 
     public final static Set<Integer> testAppearances = new HashSet<>(Arrays.asList(5,2,4,5));

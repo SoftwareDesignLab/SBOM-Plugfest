@@ -9,6 +9,14 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * File: TranslatorPlugFestTest.java
+ * Tests for TranslatorPlugFest
+ *
+ * @author Tyler Drake
+ * @author Asa Horn
+ * @author Matt London
+ */
 public class TranslatorPlugFestTest {
 
     /**

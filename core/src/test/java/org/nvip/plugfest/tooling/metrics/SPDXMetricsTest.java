@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * File: SPDXMetricsTest.java
+ * Tests for SPDXMetrics
+ *
+ * @author Tyler Drake
+ */
 public class SPDXMetricsTest {
 
     /**

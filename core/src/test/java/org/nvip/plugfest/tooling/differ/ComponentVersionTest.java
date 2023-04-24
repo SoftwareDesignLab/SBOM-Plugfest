@@ -1,9 +1,6 @@
 package org.nvip.plugfest.tooling.differ;
 
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.differ.ComponentVersion;
-import org.nvip.plugfest.tooling.differ.UniqueIdOccurrence;
-import org.nvip.plugfest.tooling.differ.UniqueIdentifierType;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,6 +9,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: ComponentVersion
+ *
+ *
+ * @author Juan Patino
+ */
 public class ComponentVersionTest {
 
     public final static ComponentVersion cv1 = new ComponentVersion("Test", "v1");

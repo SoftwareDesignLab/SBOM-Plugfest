@@ -7,7 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
-
+/**
+ * File: SBOMConflictTest.java
+ * Tests for SBOMConflict
+ *
+ * @author Tyler Drake
+ */
 public class SBOMConflictTest {
 
     /**

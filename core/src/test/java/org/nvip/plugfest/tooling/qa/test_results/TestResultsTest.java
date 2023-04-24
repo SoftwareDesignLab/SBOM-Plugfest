@@ -8,6 +8,12 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: TestResultsTest.java
+ * Tests for TestResults
+ *
+ * @author Tyler Drake
+ */
 public class TestResultsTest {
 
     /**
