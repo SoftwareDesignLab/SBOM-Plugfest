@@ -9,7 +9,8 @@ import { IpcRenderer } from 'electron';
 })
 export class UploadComponent {
   private ipc!: IpcRenderer;
-
+  isLoading = false;
+  
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
       try {
@@ -20,6 +21,7 @@ export class UploadComponent {
     } else {
       console.warn('App not running inside Electron!');
     }
+    this.dataHandler.loading.subscribe(isLoading => this.isLoading = isLoading )
   }
 
   browse() {

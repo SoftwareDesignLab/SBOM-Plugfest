@@ -3,6 +3,7 @@ import { ClientService } from './client.service';
 import { HttpParams } from '@angular/common/http';
 import { IpcRenderer } from 'electron';
 import { Comparison } from '@features/comparison/comparison';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class DataHandlerService {
 
   public metrics: { [id: string]: Object } = {};
   public comparison!: Comparison;
+
+  public loading = new BehaviorSubject<boolean>(false);
 
   //TODO: Cleanup (yeah this shouldn't be here but midnight + demo + ratio)
   public selectedQualityReport!: string;
@@ -31,6 +34,7 @@ export class DataHandlerService {
   }
 
   AddFiles(paths: string[]) {
+    this.loading.next(true);
     this.filePaths.push(...paths);
 
     paths.forEach((path) => {
@@ -48,6 +52,7 @@ export class DataHandlerService {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
+        this.loading.next(false);
       })
     });
   }

@@ -1,13 +1,18 @@
 <div class="upload-page center">
-    <h1>UPLOAD SBOMS</h1>
-    <div class="uploaded-files flex col" *ngIf="ContainsFiles()">
-        <div class="file flex center" *ngFor="let item of GetFiles() | keyvalue">
-            <icon icon="{{item.value !== null ? 'done' : 'close'}}"/>
-            <div class="sbom flex">
-                {{item.key}}
-                <icon icon="delete" (click)="RemoveFile(item.key)"/>
+    <div *ngIf="!isLoading">
+        <h1>UPLOAD SBOMS</h1>
+        <div class="uploaded-files flex col" *ngIf="ContainsFiles()">
+            <div class="file flex center" *ngFor="let item of GetFiles() | keyvalue">
+                <icon icon="{{item.value !== null ? 'done' : 'close'}}"/>
+                <div class="sbom flex">
+                    {{item.key}}
+                    <icon icon="delete" (click)="RemoveFile(item.key)"/>
+                </div>
             </div>
         </div>
+        <app-button class="add-button" icon="add" (click)="browse()">ADD SBOMS</app-button>
     </div>
-    <app-button class="add-button" icon="add" (click)="browse()">ADD SBOMS</app-button>
+    <div *ngIf="isLoading">
+        <mat-spinner/>
+    </div>
 </div>
