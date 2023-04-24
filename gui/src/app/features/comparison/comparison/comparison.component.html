@@ -10,7 +10,7 @@
   <div>
     <div *ngIf="path.length === 1">
       <app-accordion
-        *ngFor="let key of keys | slice:0:10"
+        *ngFor="let key of keys"
         [extra]="[display[key]?.length + ' Ver(s)']"
         (click)="increaseDepth(display[key], key)"
       >
