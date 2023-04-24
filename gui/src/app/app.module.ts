@@ -28,7 +28,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel/metrics-side-panel.component';
 import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
 import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-main.component';
-import {MatStepperModule} from '@angular/material/stepper';
+import { MatStepperModule } from '@angular/material/stepper';
+
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatSelectModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatStepperModule
   ],
   providers: [],
   bootstrap: [AppComponent],
