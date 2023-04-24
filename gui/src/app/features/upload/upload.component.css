@@ -1,34 +1,39 @@
-.upload-page{
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.upload-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  text-align: center;
 }
 
 .sbom {
-    padding: 0px 15px;
-    color: white;
-    background-color: var(--secondary);
-    gap: 10px;
-    width: 100%;
-    height: 50px;
-    border-radius: 12px;
-    align-items: center;
+  padding: 0px 15px;
+  color: white;
+  background-color: var(--secondary);
+  gap: 10px;
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  align-items: center;
 }
 
 .sbom > * {
-    margin-left: auto;
-    cursor: pointer;
+  margin-left: auto;
+  cursor: pointer;
 }
 
 .file {
-    justify-content: flex-start;
-    gap: 15px;
+  justify-content: flex-start;
+  gap: 15px;
 }
 
 .add-button {
-    margin-top: 100px;
+  margin-left: 0;
+  margin-top: 15px;
+  display: inline-block;
+}
+
+h1 {
+  text-align: center;
 }
