@@ -10,7 +10,7 @@
   <div>
     <div *ngIf="path.length === 1">
       <app-accordion
-        *ngFor="let key of keys | slice:0:10"
+        *ngFor="let key of keys"
         [extra]="[display[key]?.length + ' Ver(s)']"
         (click)="increaseDepth(display[key], key)"
       >
@@ -39,7 +39,7 @@
             <app-accordion
               *ngFor="let value of path[2][attribute]"
             >
-              <span title> {{ value.uniqueId }} </span>
+              <span title style="color: white"> {{ value.uniqueId }} </span>
             </app-accordion>
           </div>
         </app-accordion>
