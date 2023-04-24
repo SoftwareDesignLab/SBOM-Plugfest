@@ -135,4 +135,24 @@ public class QualityReportTest {
         qualityReport.addTestResult(test_results_one);
     }
 
+    /**
+     * append Tests
+     */
+
+    @Test
+    public void append_test() {
+        QualityReport qualityReport_one = new QualityReport(test_SBOM_a.getSerialNumber());
+        assertNotNull(qualityReport_one);
+
+        qualityReport_one.addTestResult(test_results_one);
+
+        QualityReport qualityReport_two = new QualityReport();
+        assertNotNull(qualityReport_two);
+
+        qualityReport_two.addTestResult(test_results_two);
+
+        qualityReport_one.append(qualityReport_two);
+
+    }
+
 }
