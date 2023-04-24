@@ -88,6 +88,10 @@ public class PURL {
         this.PURLString = PURLString;
     }
 
+    public String getPURLString() {
+        return PURLString;
+    }
+
     ///
     /// Overrides
     ///
