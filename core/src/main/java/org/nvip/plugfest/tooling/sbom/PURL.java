@@ -22,34 +22,6 @@ public class PURL {
 
     public PURL(){}
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public ComponentPackageManager getPackageManager() {
-        return pm;
-    }
-
-    public void setPackageManager(ComponentPackageManager pm) {
-        this.pm = pm;
-    }
-
-    public void setPURLString(String PURLString) {
-        this.PURLString = PURLString;
-    }
-
     /**
      * Helper function to convert the string representation to a class
      * given the object already contains a PURL String
@@ -84,10 +56,42 @@ public class PURL {
 
     }
 
-    /**
-     * This is represented by the original PURL string
-     * @return the PURL string
-     */
+    ///
+    /// Getters and Setters
+    ///
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public ComponentPackageManager getPackageManager() {
+        return pm;
+    }
+
+    public void setPackageManager(ComponentPackageManager pm) {
+        this.pm = pm;
+    }
+
+    public void setPURLString(String PURLString) {
+        this.PURLString = PURLString;
+    }
+
+    ///
+    /// Overrides
+    ///
+
     @Override
     public String toString() {
         return PURLString;

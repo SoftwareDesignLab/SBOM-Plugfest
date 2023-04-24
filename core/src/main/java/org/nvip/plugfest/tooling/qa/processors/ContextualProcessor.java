@@ -2,6 +2,8 @@ package org.nvip.plugfest.tooling.qa.processors;
 
 /**
  * Metrics that measure the relevance of data in the context of the SBOM
+ *
+ * @author Dylan Mulligan
  */
 public class ContextualProcessor extends AttributeProcessor {
     /**

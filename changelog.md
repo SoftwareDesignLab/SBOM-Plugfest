@@ -1,5 +1,19 @@
 # Plugfest Changelog
 
+## v3.0.0 -- 4/21/23
+### Translator
+- Now supports translating from a file's contents without needing the file on the system
+- Hotfix to allow translating SBOMs that have non-ASCII characters
+### Comparison
+- Comparison now maintains the list of SBOMs in which a quality appeared
+### API
+- Opened an API endpoint for QualityReport generating
+- Opened an API endpoint for ComparisonReport generating
+### Misc
+- Reformatted project into API and Core
+- General documentation and cleanup
+- Report objects can now be Jacksonized and sent to frontend
+
 ## v2.2.0 -- 4/14/23
 ### Comparison reports
 - Build a comparison report object to send to the frontend which will compare a list of SBOMs to some target SBOM

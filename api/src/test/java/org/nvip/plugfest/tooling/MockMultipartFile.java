@@ -20,6 +20,10 @@ public class MockMultipartFile implements MultipartFile {
     private final String path;
     private byte[] content;
 
+    /**
+     * Constructor
+     * @param path Path of the file
+     */
     public MockMultipartFile(String path){
 
         this.path = path;
@@ -38,6 +42,10 @@ public class MockMultipartFile implements MultipartFile {
         }
         content = s.toString().getBytes(StandardCharsets.UTF_8);
     }
+
+    ///
+    /// Getters and Setters
+    ///
 
     @Override
     public String getName() {
@@ -73,6 +81,10 @@ public class MockMultipartFile implements MultipartFile {
     public InputStream getInputStream() throws IOException {
         return null;
     }
+
+    ///
+    /// Overrides
+    ///
 
     @Override
     public void transferTo(File dest) throws IOException, IllegalStateException {

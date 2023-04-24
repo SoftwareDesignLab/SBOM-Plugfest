@@ -1,11 +1,3 @@
-/**
- * @file ComponentTest.java
- *
- * Test set for Component class
- *
- * @author Tyler Drake
- */
-
 package org.nvip.plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +11,12 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: ComponentTest.java
+ * Tests for Component
+ *
+ * @author Tyler Drake
+ */
 public class ComponentTest {
 
     /**

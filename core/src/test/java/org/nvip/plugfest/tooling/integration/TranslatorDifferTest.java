@@ -12,6 +12,12 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: TranslatorDifferTest.java
+ * Integration tests hitting both the translator package and the differ package
+ *
+ * @author Tyler Drake
+ */
 public class TranslatorDifferTest {
 
     private static final String TEST_SPDX_v2_3_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx";

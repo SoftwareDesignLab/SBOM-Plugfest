@@ -6,6 +6,12 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: ComponentConflictTests.java
+ * Tests for ComponentConflict
+ *
+ * @author Tyler Drake
+ */
 public class ComponentConflictTest {
 
     /**

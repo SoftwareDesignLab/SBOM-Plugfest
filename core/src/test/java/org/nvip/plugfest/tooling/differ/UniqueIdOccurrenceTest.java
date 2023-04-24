@@ -1,8 +1,6 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.differ;
 
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.differ.UniqueIdOccurrence;
-import org.nvip.plugfest.tooling.differ.UniqueIdentifierType;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,7 +9,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class UniqueIdOccurenceTest {
+/**
+ * File: UniqueIdOccurrenceTest.java
+ * Tests for UniqueIdOccurrence
+ *
+ * @author Juan Patino
+ */
+public class UniqueIdOccurrenceTest {
 
     public final static Set<Integer> testAppearances = new HashSet<>(Arrays.asList(5,2,4,5));
     public final UniqueIdOccurrence u1 = new UniqueIdOccurrence("Test", UniqueIdentifierType.CPE);

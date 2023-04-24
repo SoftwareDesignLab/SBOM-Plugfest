@@ -100,8 +100,8 @@ public class TranslatorCDXJSON {
 
                 // Get CPE, PURL, and SWIDs
                 if(cdx_component.getCpe() != null) { cpe_set.add(cdx_component.getCpe()) ; }
-                if(cdx_component.getPurl() != null) { cpe_set.add(cdx_component.getPurl()) ; }
-                if(cdx_component.getSwid() != null) { cpe_set.add(String.valueOf(cdx_component.getSwid())) ; }
+                if(cdx_component.getPurl() != null) { purl_set.add(new PURL(cdx_component.getPurl())) ; }
+                if(cdx_component.getSwid() != null) { swid_set.add(String.valueOf(cdx_component.getSwid())) ; }
 
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(

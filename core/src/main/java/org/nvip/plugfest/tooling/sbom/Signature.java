@@ -94,6 +94,10 @@ public class Signature {
         this.value = value;
     }
 
+    ///
+    /// Getters and Setters
+    ///
+
     public SignatureAlgorithm getAlgorithm() {
         return algorithm;
     }

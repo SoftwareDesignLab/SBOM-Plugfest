@@ -56,6 +56,9 @@ public class SBOM {
      */
     private Set<Signature> signature;
 
+    /**
+     * Default constructor
+     */
     public SBOM () {
         this.dependencyTree = new DependencyTree();
         this.signature = new HashSet<>();
@@ -290,6 +293,10 @@ public class SBOM {
     public void setSignature(Set<Signature> signature) {
         this.signature = signature;
     }
+
+    ///
+    /// Overrides
+    ///
 
     @Override
     public String toString() {

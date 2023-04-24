@@ -23,6 +23,10 @@ import java.util.Set;
 public class DataVerificationTest extends MetricTest {
 
     private static final int MAX_CONNECTION_TIMEOUT = 1000;
+
+    /**
+     * Constructor for DataVerificationTest
+     */
     protected DataVerificationTest() {
         super("Data Verification Test");
     }
@@ -38,27 +42,26 @@ public class DataVerificationTest extends MetricTest {
 
         final TestResults testResults = new TestResults(c); // Init TestResults for this component
 
+        //check if the component is missing a purl
         Set<PURL> purls = c.getPurls();
         if(purls.isEmpty()){
             testResults.addTest(new Test(false, "Component has no PURL"));
             return testResults;
         }
+        //if not run the test
         for (PURL p: c.getPurls()
              ) {
 
             try{
-
+                //pull the data from the purl and from the package manager
                 String[] fromOnline = extractedFromPURL(p);
                 String packageManagerName = p.getPackageManager().name().toLowerCase();
-
                 String name = p.getName();
                 String nameFoundOnline = fromOnline[0].toLowerCase();
-
                 String version = p.getVersion();
                 String versionFoundOnline = fromOnline[1].toLowerCase();
 
                 String publisher;
-
                 if (c.getPublisher() == null) {
                     publisher = "";
                 }
@@ -129,7 +132,7 @@ public class DataVerificationTest extends MetricTest {
         String[] columns = row.split("<td");
 
         String nameColumn = "";
-        String publisherColumn = "";//
+        String publisherColumn = "";
 
         for (String column: columns
              ) {

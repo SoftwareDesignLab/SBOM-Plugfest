@@ -1,11 +1,3 @@
-/**
- * @file SignatureTest.java
- *
- * Test set for Signature.java
- *
- * @author Tyler Drake
- */
-
 package org.nvip.plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +11,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * File: SignatureTest.java
+ * Tests for Signature
+ *
+ * @author Tyler Drake
+ */
 public class SignatureTest {
 
     /**
