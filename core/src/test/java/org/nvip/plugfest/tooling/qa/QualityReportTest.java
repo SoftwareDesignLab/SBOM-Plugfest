@@ -9,6 +9,7 @@ import org.nvip.plugfest.tooling.sbom.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class QualityReportTest {
@@ -28,8 +29,13 @@ public class QualityReportTest {
 
     private static final String TEST_MESSAGE_FOUR = "This is indeed again, a test.";
 
-    // TestResults Constants
+    private static final int TEST_PASSED_COMPONENTS_FAILING_TEST = 0;
 
+    private static final int TEST_PASSED_COMPONENTS_NO_TESTS = 0;
+
+    private static final int TEST_PASSED_COMPONENTS_ONE = 1;
+
+    private static final int TEST_PASSED_COMPONENTS_TWO = 2;
 
     /**
      * Test Variables
@@ -156,12 +162,64 @@ public class QualityReportTest {
 
     }
 
+    /**
+     * getPassedComponents Tests
+     */
+
     @Test
     public void getPassedComponents_test() {
         QualityReport qualityReport = new QualityReport();
         assertNotNull(qualityReport);
+        assertNotNull(qualityReport.getPassedComponents());
+    }
+
+    @Test
+    public void getPassedComponents_has_correct_passed_count_test() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport);
+
+        test_results_one.addTest(test_test_one); // passing test
+        test_results_one.addTest(test_test_two); // passing test
+        qualityReport.addTestResult(test_results_one);
+
         int passed = qualityReport.getPassedComponents();
-        assertNotNull(passed);
+        assertEquals(TEST_PASSED_COMPONENTS_ONE, passed);
+    }
+
+    @Test
+    public void getPassedComponents_does_not_count_components_with_failing_tests_test() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport);
+
+        test_results_one.addTest(test_test_one); // passing test
+        test_results_one.addTest(test_test_three); // failing test
+        qualityReport.addTestResult(test_results_one);
+
+        int passed = qualityReport.getPassedComponents();
+        assertEquals(TEST_PASSED_COMPONENTS_FAILING_TEST, passed);
+    }
+
+    @Test
+    public void getPassedComponents_has_correct_passed_count_multiple_components_test() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport);
+
+        test_results_one.addTest(test_test_one); // passing test
+        qualityReport.addTestResult(test_results_one);
+
+        test_results_two.addTest(test_test_two); // passing test
+        qualityReport.addTestResult(test_results_two);
+
+        int passed = qualityReport.getPassedComponents();
+        assertEquals(TEST_PASSED_COMPONENTS_TWO, passed);
+    }
+
+    @Test
+    public void getPassedComponents_returns_zero_if_no_tests() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport);
+        int passed = qualityReport.getPassedComponents();
+        assertEquals(TEST_PASSED_COMPONENTS_NO_TESTS, passed);
     }
 
 }
