@@ -10,8 +10,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * File: ComponentVersion
- *
+ * File: ComponentVersionTest.java
+ * Tests for ComponentVersion
  *
  * @author Juan Patino
  */

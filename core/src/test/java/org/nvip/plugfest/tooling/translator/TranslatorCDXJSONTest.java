@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * File: TranslatorCDXJSONTest.java
  * Tests for TranslatorCDXJSON
  *
- * @author
+ * @author Tyler Drake
  */
 public class TranslatorCDXJSONTest {
 
