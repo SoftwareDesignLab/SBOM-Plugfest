@@ -141,6 +141,7 @@ public class QualityReportTest {
 
     @Test
     public void append_test() {
+
         QualityReport qualityReport_one = new QualityReport(test_SBOM_a.getSerialNumber());
         assertNotNull(qualityReport_one);
 
@@ -153,6 +154,14 @@ public class QualityReportTest {
 
         qualityReport_one.append(qualityReport_two);
 
+    }
+
+    @Test
+    public void getPassedComponents_test() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport);
+        int passed = qualityReport.getPassedComponents();
+        assertNotNull(passed);
     }
 
 }
