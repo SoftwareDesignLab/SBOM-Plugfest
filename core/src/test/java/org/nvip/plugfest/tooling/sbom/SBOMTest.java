@@ -1,11 +1,3 @@
-/**
- * @file SBOMTest.java
- *
- * Test set for SBOM class
- *
- * @author Tyler Drake
- */
-
 package org.nvip.plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +8,12 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * File: SBOMTest.java
+ * Tests for SBOM
+ *
+ * @author Tyler Drake
+ */
 public class SBOMTest {
 
     /**

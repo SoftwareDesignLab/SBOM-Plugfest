@@ -12,12 +12,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.SBOMType;
-import org.nvip.plugfest.tooling.translator.TranslatorCDXXML;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+/**
+ * File: TranslatorCDXXMLTest.java
+ * Tests for TranslatorCDXXML
+ *
+ * @author Tyler Drake
+ */
 public class TranslatorCDXXMLTest {
 
     public static final String test_small_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine.xml";
