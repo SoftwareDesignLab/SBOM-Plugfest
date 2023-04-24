@@ -79,6 +79,10 @@ public class Comparison {
 
         // Loop through all components in SBOM and add them to comparisons list.
         for(Component current_component : current_sbom.getAllComponents()) {
+            // Do not compare unpackaged components
+            if (current_component.isUnpackaged()) {
+                continue;
+            }
 
             // Create a temporary ComponentVersion object for the current SBOM component
             ComponentVersion temporary_cv = generateComponentVersion(current_component, SBOM_index);
