@@ -18,9 +18,6 @@ public class QualityReportTest {
      * Test Constants
      */
 
-    // QualityReport Constants
-
-    // Test Class Constants
     private static final String TEST_MESSAGE = "This is a test.";
 
     private static final String TEST_MESSAGE_TWO = "This is also a test.";
@@ -36,6 +33,16 @@ public class QualityReportTest {
     private static final int TEST_PASSED_COMPONENTS_ONE = 1;
 
     private static final int TEST_PASSED_COMPONENTS_TWO = 2;
+
+    private static final String TO_STRING_RESULT =
+            "QualityReport{serialNumber=INVALID_SN,\n" +
+            "\n" +
+            "TEST RESULTS - TOTAL COMPONENTS PASSED: 1/1\n" +
+            "\n" +
+            "Component 'red' PASSED with 2/2 Tests Passed:\n" +
+            "  PASSED: This is a test.\n" +
+            "  PASSED: This is also a test.\n" +
+            "]}";
 
     /**
      * Test Variables
@@ -100,7 +107,6 @@ public class QualityReportTest {
     /**
      * Teardown
      */
-
     @AfterEach
     public void teardown() {
         test_SBOM_a = null;
@@ -220,6 +226,29 @@ public class QualityReportTest {
         assertNotNull(qualityReport);
         int passed = qualityReport.getPassedComponents();
         assertEquals(TEST_PASSED_COMPONENTS_NO_TESTS, passed);
+    }
+
+    /**
+     * toString Tests
+     */
+
+    @Test
+    public void toString_test() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport.toString());
+    }
+
+    @Test
+    public void toString_contains_correct_information_test() {
+        QualityReport qualityReport = new QualityReport();
+        assertNotNull(qualityReport.toString());
+
+        test_results_one.addTest(test_test_one); // passing test
+        test_results_one.addTest(test_test_two); // passing test
+        qualityReport.addTestResult(test_results_one);
+
+        String toString_result = qualityReport.toString();
+        assertEquals(TO_STRING_RESULT, toString_result);
     }
 
 }
