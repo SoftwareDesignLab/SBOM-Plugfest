@@ -11,7 +11,7 @@
                     </span>
                     <div body>
                         <div class="test" *ngFor="let test of testResult.tests">
-                            <div class="result" id="{{test.status ? 'pass' : 'fail'}}">
+                            <div class="result" id="{{test.status ? 'pass' : 'fail'}}" style="color: white">
                                 {{test.message}}
                             </div>
                         </div>
