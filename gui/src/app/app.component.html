@@ -1,11 +1,11 @@
-<mat-horizontal-stepper #stepper style="height: 100%; width: 100%" >
-  <mat-step>
+<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%" >
+  <mat-step [completed]="HasTwoValidSBOMS()">
     <ng-template matStepLabel>
       <mat-icon>drive_folder_upload</mat-icon>
       <div>Upload SBOMS</div>
     </ng-template>
     <app-upload></app-upload>
-    <button mat-button matStepperNext>Next</button>
+    <button *ngIf="HasTwoValidSBOMS()" mat-button matStepperNext>Next</button>
   </mat-step>
 
     <mat-step>
