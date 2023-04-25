@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * A class to store organized and formatted test results for an individual component.
  *
  * @author Ian Dunn
+ * @author Matt London
  */
 public class TestResults {
     /**
