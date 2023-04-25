@@ -129,26 +129,33 @@ public class Comparison {
                         new_set.remove(matching_cv);
 
                         // Update the ComponentVersion object with the extra CPEs
-                        temporary_cv.getCPEs().iterator().forEachRemaining(
+                        temporary_cv.getCPEs().entrySet().stream().forEach(
                                 cpe -> {
-                                    cpe.addAppearance(SBOM_index);
-                                    matching_cv.addCPE(cpe);
+                                    if(!matching_cv.getCPEs().containsKey(cpe.getKey())) {
+                                        matching_cv.addCPE(cpe.getValue());
+                                    }
+                                    matching_cv.getCPE(cpe.getKey()).addAppearance(SBOM_index);
                                 }
                         );
 
                         // Update the ComponentVersion object with extra PURLs
-                        temporary_cv.getPURLs().iterator().forEachRemaining(
+                        temporary_cv.getPURLs().entrySet().stream().forEach(
                                 purl -> {
-                                    purl.addAppearance(SBOM_index);
-                                    matching_cv.addPURL(purl);
+                                    if(!matching_cv.getPURLs().containsKey(purl.getKey())) {
+                                        matching_cv.addPURL(purl.getValue());
+                                    }
+                                    matching_cv.getPURL(purl.getKey()).addAppearance(SBOM_index);
+
                                 }
                         );
 
                         // Update the ComponentVersion object with extra SWIDs
-                        temporary_cv.getSWIDs().iterator().forEachRemaining(
+                        temporary_cv.getSWIDs().entrySet().stream().forEach(
                                 swid -> {
-                                    swid.addAppearance(SBOM_index);
-                                    matching_cv.addSWID(swid);
+                                    if(!matching_cv.getSWIDs().containsKey(swid.getKey())) {
+                                        matching_cv.addSWID(swid.getValue());
+                                    }
+                                    matching_cv.getSWID(swid.getKey()).addAppearance(SBOM_index);
                                 }
                         );
 
