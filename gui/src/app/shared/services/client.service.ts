@@ -9,7 +9,6 @@ import { Injectable } from '@angular/core';
 export class ClientService {
 
   private readonly SERVER_URL: string = 'http://localhost:8080/plugfest/';
-  private readonly NVIP_URL: string = "http://ec2-3-234-206-219.compute-1.amazonaws.com:8080/";
   private loggedIn: boolean = false;
   public showLogin: boolean = false;
 

@@ -45,12 +45,6 @@ export class ComparisonPageComponent {
     const dialogRef = this.dialog.open(ComparisonDialogComponent, {
       data: sbom,
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        //this.sboms = this.sboms.filter((s) => s !== sbom);
-      }
-    });
   }
 
   GetValidSBOMs() {

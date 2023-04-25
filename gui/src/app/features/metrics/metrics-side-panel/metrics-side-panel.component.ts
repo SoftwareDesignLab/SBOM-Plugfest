@@ -8,13 +8,13 @@ import { DataHandlerService } from '@services/data-handler.service';
 })
 export class MetricsSidePanelComponent {
 
-  constructor(private handeler: DataHandlerService) {}
+  constructor(private handler: DataHandlerService) {}
 
   GetSBOMs() {
-    return this.handeler.GetValidSBOMs();
+    return this.handler.GetValidSBOMs();
   }
 
   SetSelectedSBOM(bom: string) {
-    this.handeler.selectedQualityReport = bom;
+    this.handler.selectedQualityReport = bom;
   }
 }
