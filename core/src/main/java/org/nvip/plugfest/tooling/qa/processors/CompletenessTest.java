@@ -48,7 +48,7 @@ public class CompletenessTest extends MetricTest {
         /*
             Checks if publisher email is in form: "email@mail.com"
          */
-        this.publisherEmailRegex = Pattern.compile("<\\S*@\\S*\\.\\S*>$", Pattern.MULTILINE);
+        this.publisherEmailRegex = Pattern.compile("(?:(Person|Organization)?: (.*?))? ?<?(\\S+@\\S+\\.[^\\s>]+)>?", Pattern.MULTILINE);
 
         /*
             Regex101: https://regex101.com/r/wzJeIq/4
