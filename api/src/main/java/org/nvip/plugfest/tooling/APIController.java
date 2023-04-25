@@ -88,6 +88,11 @@ public class APIController {
 
         SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
 
+        // Check if the sbom is null
+        if (sbom == null) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
         //run the QA
         QualityReport report = pipeline.process(sbom);
 
