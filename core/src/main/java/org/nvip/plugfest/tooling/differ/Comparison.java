@@ -16,6 +16,7 @@ import java.util.*;
  * ComponentVersion objects.
  *
  * @author Tyler Drake
+ * @author Matt London
  */
 public class Comparison {
 

@@ -7,6 +7,7 @@ import java.util.Objects;
  * <b>Description</b>: Object representation of the Package URl for a component
  *
  * @author Juan Francisco Patino
+ * @author Matt London
  */
 public class PURL {
 
