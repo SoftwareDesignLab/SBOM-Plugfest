@@ -53,12 +53,16 @@ export class DataHandlerService {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
         this.loading.next(false);
+      },
+      (error) => {
+        this.metrics[path] = '';
+        this.loading.next(false);
       })
     });
   }
 
   GetValidSBOMs() {
-    return Object.keys(this.metrics).filter((x) => this.metrics[x] !== null);
+    return Object.keys(this.metrics).filter((x) => this.metrics[x] !== '');
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
