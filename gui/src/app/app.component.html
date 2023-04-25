@@ -5,7 +5,7 @@
       <div>Upload SBOMS</div>
     </ng-template>
     <app-upload></app-upload>
-    <button mat-button matStepperNext>Next</button>
+    <app-button label="Next" icon="navigate_next" backgroundColor="accent" (click)="stepper.next()">Next</app-button>
   </mat-step>
 
     <mat-step>

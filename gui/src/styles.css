@@ -5,6 +5,7 @@
     --primary: #333333;
     --secondary: #1B1E21;
     --bg: #191d20;
+    --gray: gray;
 }
 
 html, body { height: 100%; background-color: black; }

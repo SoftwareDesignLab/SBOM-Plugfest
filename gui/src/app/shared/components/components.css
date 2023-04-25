@@ -1,9 +1,12 @@
 .icon-container {
-    border-radius: 50%;
-    background-color: var(--accent);
+    border-radius: 50% !important;
     color: white;
     width: 32px;
     height: 32px;
+}
+
+icon.ng-star-inserted {
+    border-radius: 50px;
 }
 
 .button {
