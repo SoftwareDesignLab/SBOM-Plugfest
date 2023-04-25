@@ -1,0 +1,33 @@
+:root {
+    --accent: #58A5FF;
+    --green: #58ff82;
+    --red: #ff5858;
+    --primary: #333333;
+    --secondary: #1B1E21;
+    --bg: #191d20;
+}
+
+html, body { height: 100%; background-color: black; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.flex {
+    display: flex;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.hover:hover {
+    transition-duration: .35s;
+    transform: translate(0, -3px);
+}

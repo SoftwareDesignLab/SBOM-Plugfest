@@ -24,6 +24,9 @@
 ### Misc
 - General documentation and code cleanup
 
+### Visualization
+- Created sidebar and component display for SBOM differences with mockup data. 
+
 ## v2.1.0 -- 4/7/23
 ### Differ
 - None

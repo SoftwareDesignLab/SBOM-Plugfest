@@ -1,0 +1,32 @@
+<mat-horizontal-stepper #stepper style="height: 100%; width: 100%" >
+  <mat-step>
+    <ng-template matStepLabel>
+      <mat-icon>drive_folder_upload</mat-icon>
+      <div>Upload SBOMS</div>
+    </ng-template>
+    <app-upload></app-upload>
+    <button mat-button matStepperNext>Next</button>
+  </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>
+        <mat-icon>insert_chart_outlined</mat-icon>
+        <div>Metrics</div>
+      </ng-template>
+      <app-metrics-main></app-metrics-main>
+      <div class="stepper-buttons">
+        <button mat-button matStepperPrevious>Previous</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>
+        <mat-icon>compare_arrows</mat-icon>
+        <div>Compare</div>
+      </ng-template>
+      <app-comparison-page></app-comparison-page>
+      <div class="stepper-buttons">
+        <button mat-button matStepperPrevious>Previous</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
