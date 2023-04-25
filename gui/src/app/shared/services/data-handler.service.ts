@@ -52,7 +52,7 @@ export class DataHandlerService {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
-        this.loading.next(false);
+        this.loading.next(Object.keys(this.metrics).length !== this.filePaths.length)
       })
     });
   }

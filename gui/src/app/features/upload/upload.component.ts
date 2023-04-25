@@ -9,7 +9,7 @@ import { IpcRenderer } from 'electron';
 })
 export class UploadComponent {
   private ipc!: IpcRenderer;
-  isLoading = false;
+  isLoading: boolean = false;
   
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
