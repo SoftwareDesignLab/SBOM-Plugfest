@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 export class DataHandlerService {
 
   private ipc!: IpcRenderer;
-  private filePaths: string[] = [];
+  public filePaths: string[] = [];
 
   public metrics: { [id: string]: Object } = {};
   public comparison!: Comparison;
