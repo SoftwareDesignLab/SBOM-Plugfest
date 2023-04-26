@@ -38,11 +38,12 @@ public class APIController {
     }
 
     /**
-     * USAGE. Send POST request to /compare with a multipart/form-data body containing two+ SBOM files.
+     * USAGE. Send POST request to /compare with two+ SBOM files.
      * The first SBOM will be the baseline, and the rest will be compared to it.
      * The API will respond with an HTTP 200 and a serialized DiffReport object.
      *
-     * @param boms List of files to compare
+     * @param contentArray Array of SBOM file contents (the actual cyclonedx/spdx files) as a JSON string
+     * @param fileArray Array of file names as a JSON string
      * @return Wrapped Comparison object
      */
     @PostMapping("compare")
@@ -77,11 +78,12 @@ public class APIController {
     }
 
     /**
-     * USAGE. Send POST request to /qa with a single sbom file in plain text in the body.
+     * USAGE. Send POST request to /qa with a single sbom file
      * The API will respond with an HTTP 200 and a serialized report in the body.
      *
-     * @param bom - SBOM to run metrics on
-     * @return - wrapped QualityReport object
+     * @param contents - File content of the SBOM to run metrics on
+     * @param fileName - Name of the SBOM file
+     * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("qa")
     public ResponseEntity<QualityReport> qa(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName) {
@@ -99,6 +101,28 @@ public class APIController {
         //encode and send report
         try {
             return new ResponseEntity<>(report, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Send post request to /parse and it will convert the file contents to an SBOM object, returns null if failed to parse
+     *
+     * @param contents File contents of the SBOM file to parse
+     * @param fileName Name of the file that the SBOM contents came from
+     * @return SBOM object, null if failed to parse
+     */
+    @PostMapping("parse")
+    public ResponseEntity<SBOM> parse(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName) {
+        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
+
+        try {
+            // Explicitly return null if failed
+            if (sbom == null) {
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(sbom, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
