@@ -11,14 +11,13 @@ import { BehaviorSubject } from 'rxjs';
 export class DataHandlerService {
 
   private ipc!: IpcRenderer;
-  private filePaths: string[] = [];
+  public filePaths: string[] = [];
 
-  public metrics: { [id: string]: Object } = {};
+  public metrics: { [id: string]: Object | null } = {};
   public comparison!: Comparison;
 
   public loading = new BehaviorSubject<boolean>(false);
 
-  //TODO: Cleanup (yeah this shouldn't be here but midnight + demo + ratio)
   public selectedQualityReport!: string;
 
   constructor(private client: ClientService) { 
@@ -52,6 +51,10 @@ export class DataHandlerService {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
+        this.loading.next(false);
+      },
+      (error) => {
+        this.metrics[path] = null;
         this.loading.next(false);
       })
     });

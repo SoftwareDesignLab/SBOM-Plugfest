@@ -43,6 +43,7 @@ export class UploadComponent {
   }
 
   RemoveFile(file: string) {
-    //this.dataHandler.metrics 
+    this.dataHandler.filePaths = this.dataHandler.filePaths.filter((x) => x != file);
+    delete this.dataHandler.metrics[file];
   }
 }
