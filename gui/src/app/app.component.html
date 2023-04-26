@@ -1,14 +1,14 @@
 <mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%" >
-  <mat-step [completed]="HasTwoValidSBOMS()">
+  <mat-step [completed]="GetValidSBOMs().length >= 1">
     <ng-template matStepLabel>
       <mat-icon>drive_folder_upload</mat-icon>
       <div>Upload SBOMS</div>
     </ng-template>
     <app-upload></app-upload>
-    <button *ngIf="HasTwoValidSBOMS()" mat-button matStepperNext>Next</button>
+    <button *ngIf="GetValidSBOMs().length >= 1" mat-button matStepperNext>Next</button>
   </mat-step>
 
-    <mat-step>
+    <mat-step  [completed]="GetValidSBOMs().length >= 2">
       <ng-template matStepLabel>
         <mat-icon>insert_chart_outlined</mat-icon>
         <div>Metrics</div>
@@ -16,7 +16,7 @@
       <app-metrics-main></app-metrics-main>
       <div class="stepper-buttons">
         <button mat-button matStepperPrevious>Previous</button>
-        <button mat-button matStepperNext>Next</button>
+        <button *ngIf="GetValidSBOMs().length >= 2" mat-button matStepperNext>Next</button>
       </div>
     </mat-step>
     <mat-step>

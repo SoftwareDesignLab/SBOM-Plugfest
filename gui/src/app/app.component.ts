@@ -11,7 +11,7 @@ export class AppComponent {
 
   constructor(private dataHandeler: DataHandlerService) {}
 
-  HasTwoValidSBOMS() {
-    return this.dataHandeler.GetValidSBOMs().length >= 2;
+  GetValidSBOMs() {
+    return this.dataHandeler.GetValidSBOMs();
   }
 }
