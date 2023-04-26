@@ -9,9 +9,9 @@ import { DataHandlerService } from '@services/data-handler.service';
 export class AppComponent {
   title = 'app';
 
-  constructor(private dataHandeler: DataHandlerService) {}
+  constructor(private dataHandler: DataHandlerService) {}
 
   GetValidSBOMs() {
-    return this.dataHandeler.GetValidSBOMs();
+    return this.dataHandler.GetValidSBOMs();
   }
 }
