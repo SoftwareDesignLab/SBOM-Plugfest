@@ -16,4 +16,7 @@
   text-align: center;
 }
 
-
+.stepper-buttons.ng-star-inserted {
+  display: flex;
+  gap: 10px;
+}

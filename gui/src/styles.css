@@ -8,7 +8,7 @@
     --gray: gray;
 }
 
-html, body { height: 100%; background-color: black; }
+html, body { background-color: white; overflow: hidden;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .flex {
