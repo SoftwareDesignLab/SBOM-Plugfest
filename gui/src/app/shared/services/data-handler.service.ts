@@ -13,12 +13,11 @@ export class DataHandlerService {
   private ipc!: IpcRenderer;
   public filePaths: string[] = [];
 
-  public metrics: { [id: string]: Object } = {};
+  public metrics: { [id: string]: Object | null } = {};
   public comparison!: Comparison;
 
   public loading = new BehaviorSubject<boolean>(false);
 
-  //TODO: Cleanup (yeah this shouldn't be here but midnight + demo + ratio)
   public selectedQualityReport!: string;
 
   constructor(private client: ClientService) { 
@@ -55,14 +54,14 @@ export class DataHandlerService {
         this.loading.next(false);
       },
       (error) => {
-        this.metrics[path] = '';
+        this.metrics[path] = null;
         this.loading.next(false);
       })
     });
   }
 
   GetValidSBOMs() {
-    return Object.keys(this.metrics).filter((x) => this.metrics[x] !== '');
+    return Object.keys(this.metrics).filter((x) => this.metrics[x] !== null);
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
