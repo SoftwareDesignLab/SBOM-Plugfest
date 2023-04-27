@@ -2,10 +2,7 @@ package org.nvip.plugfest.tooling.differ;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,10 +17,11 @@ public class ComponentVersionTest {
     public final static ComponentVersion cv1 = new ComponentVersion("Test", "v1");
     public final static ComponentVersion cv2 = new ComponentVersion("Test", "v2");
     public final static Set<Integer> testAppearances = new HashSet<>(Arrays.asList(5,2,4,5));
-    public final static Set<UniqueIdOccurrence> testUIDOs =
-            new HashSet<>(List.of(new UniqueIdOccurrence("cpe", UniqueIdentifierType.CPE),
-                    new UniqueIdOccurrence("purl", UniqueIdentifierType.PURL),
-                        new UniqueIdOccurrence("swid", UniqueIdentifierType.SWID)));
+    public final static HashMap<String, UniqueIdOccurrence> testUIDOs =
+            new HashMap<>(Map.of(
+                    "cpe", new UniqueIdOccurrence("cpe", UniqueIdentifierType.CPE),
+                    "purl",new UniqueIdOccurrence("purl", UniqueIdentifierType.PURL),
+                        "swid", new UniqueIdOccurrence("swid", UniqueIdentifierType.SWID)));
 
     @Test
     public void componentVersionEqualsTest() {

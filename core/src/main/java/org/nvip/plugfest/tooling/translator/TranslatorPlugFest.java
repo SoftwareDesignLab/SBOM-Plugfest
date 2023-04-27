@@ -65,7 +65,7 @@ public class TranslatorPlugFest {
                 case ".xml"  -> sbom = TranslatorCDXXML.translatorCDXXMLContents(contents, filePath);
 
                 case ".json" -> {
-                    if (new JSONObject(new String(Files.readAllBytes(Paths.get(filePath)))).toMap().get("bomFormat").equals("CycloneDX")) {
+                    if (new JSONObject(contents).toMap().get("bomFormat").equals("CycloneDX")) {
                         sbom = TranslatorCDXJSON.translatorCDXJSONContents(contents, filePath);
                     }
                 }

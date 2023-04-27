@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataHandlerService } from '@services/data-handler.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+
+  constructor(private dataHandler: DataHandlerService) {}
+
+  GetValidSBOMs() {
+    return this.dataHandler.GetValidSBOMs();
+  }
 }

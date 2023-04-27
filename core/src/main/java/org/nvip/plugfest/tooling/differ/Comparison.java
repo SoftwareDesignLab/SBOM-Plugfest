@@ -16,7 +16,6 @@ import java.util.*;
  * ComponentVersion objects.
  *
  * @author Tyler Drake
- * @author Matt London
  */
 public class Comparison {
 
@@ -80,10 +79,6 @@ public class Comparison {
 
         // Loop through all components in SBOM and add them to comparisons list.
         for(Component current_component : current_sbom.getAllComponents()) {
-            // Do not compare unpackaged components
-            if (current_component.isUnpackaged()) {
-                continue;
-            }
 
             // Create a temporary ComponentVersion object for the current SBOM component
             ComponentVersion temporary_cv = generateComponentVersion(current_component, SBOM_index);
@@ -94,99 +89,99 @@ public class Comparison {
                 // Get that component's component version collection
                 Set<ComponentVersion> current_cv_list = comparisons.get(current_component.getName());
 
-                // There should only be one ComponentVersion that matches the current component, or none
-                ComponentVersion matching = null;
-                for (ComponentVersion cv : current_cv_list) {
-                    if (Objects.equals(cv.getComponentVersion(), current_component.getVersion())) {
-                        matching = cv;
-                        break;
-                    }
-                }
+                // Get all ComponentVersions that match the temporary ComponentVersion's version
+                List<ComponentVersion> matching_cv_list = current_cv_list
+                        .stream()
+                        .filter(x -> (Objects.equals(x.getComponentVersion(), current_component.getVersion()) || x.getComponentVersion().contains(current_component.getVersion())))
+                        .toList();
 
                 // If there are no matching ComponentVersion objects in the Set for that package name
                 // Else, find all matching ComponentVersion objects and add relevant information
-                if (matching == null) {
+                if (matching_cv_list.isEmpty()) {
 
                     // Get the old collection for this
                     HashSet<ComponentVersion> new_set = comparisons.get(current_component.getName());
 
-                    // Add this version in
+                    // Remove the old set for this key
+                    comparisons.remove(current_component.getName());
+
+                    // Add the new ComponentVersion to the set
                     new_set.add(temporary_cv);
+
+                    // Add which SBOM it appears in
+                    temporary_cv.addAppearance(SBOM_index);
+
+                    // Add the new set with the newly added ComponentVersion to the collection
+                    comparisons.put(current_component.getName(), new_set);
 
                 } else {
 
-                    // In this case we have a matching version so we should merge
-                    matching.addAppearance(SBOM_index);
+                    // Get the old collection for this
+                    HashSet<ComponentVersion> new_set = comparisons.get(current_component.getName());
 
-                    // Cycle through CPEs
-                    // Get the set
-                    Set<UniqueIdOccurrence> cpe_set = matching.getCPEs();
-                    for (String cpe : current_component.getCpes()) {
-                        boolean added = false;
-                        // Look for matches
-                        for (UniqueIdOccurrence existing_cpe: cpe_set) {
-                            if (Objects.equals(existing_cpe.getUniqueId(), cpe)) {
-                                existing_cpe.addAppearance(SBOM_index);
-                                added = true;
-                                break;
-                            }
-                        }
+                    // Remove the old set for this key
+                    comparisons.remove(current_component.getName());
 
-                        // In this case we need to create a new unique ID occurrence
-                        if (!added) {
-                            UniqueIdOccurrence new_cpe_uid = new UniqueIdOccurrence(cpe, UniqueIdentifierType.CPE);
-                            new_cpe_uid.addAppearance(SBOM_index);
-                            matching.addCPE(new_cpe_uid);
-                        }
+                    // Take all CPEs, PURLs, and SWIDs, that don't exist in the original ComponentVersion and add them in
+                    for (ComponentVersion matching_cv : matching_cv_list) {
+
+                        // Remove the old matching ComponentVersion object from the set
+                        new_set.remove(matching_cv);
+
+                        // Update the ComponentVersion object with the extra CPEs
+                        temporary_cv.getCPEs().entrySet().stream().forEach(
+                                cpe -> {
+                                    if(!matching_cv.getCPEs().containsKey(cpe.getKey())) {
+                                        matching_cv.addCPE(cpe.getValue());
+                                    }
+                                    matching_cv.getCPE(cpe.getKey()).addAppearance(SBOM_index);
+                                }
+                        );
+
+                        // Update the ComponentVersion object with extra PURLs
+                        temporary_cv.getPURLs().entrySet().stream().forEach(
+                                purl -> {
+                                    if(!matching_cv.getPURLs().containsKey(purl.getKey())) {
+                                        matching_cv.addPURL(purl.getValue());
+                                    }
+                                    matching_cv.getPURL(purl.getKey()).addAppearance(SBOM_index);
+
+                                }
+                        );
+
+                        // Update the ComponentVersion object with extra SWIDs
+                        temporary_cv.getSWIDs().entrySet().stream().forEach(
+                                swid -> {
+                                    if(!matching_cv.getSWIDs().containsKey(swid.getKey())) {
+                                        matching_cv.addSWID(swid.getValue());
+                                    }
+                                    matching_cv.getSWID(swid.getKey()).addAppearance(SBOM_index);
+                                }
+                        );
+
+                        // Add the appearance to ComponentVersion
+                        matching_cv.addAppearance(SBOM_index);
+
+                        // Add it back into the map
+                        new_set.add(matching_cv);
+
                     }
 
-                    // Repeat for PURL
-                    Set<UniqueIdOccurrence> purl_set = matching.getPURLs();
-                    for (PURL purl : current_component.getPurls()) {
-                        boolean added = false;
-                        // Look for matches
-                        for (UniqueIdOccurrence existing_purl: purl_set) {
-                            if (Objects.equals(existing_purl.getUniqueId(), purl.getPURLString())) {
-                                existing_purl.addAppearance(SBOM_index);
-                                added = true;
-                                break;
-                            }
-                        }
+                    // Add the new ComponentVersion to the set
+                    new_set.add(temporary_cv);
 
-                        // In this case we need to create a new unique ID occurrence
-                        if (!added) {
-                            UniqueIdOccurrence new_purl_uid = new UniqueIdOccurrence(purl.getPURLString(), UniqueIdentifierType.PURL);
-                            new_purl_uid.addAppearance(SBOM_index);
-                            matching.addPURL(new_purl_uid);
-                        }
-                    }
-
-                    // Repeat for SWID
-                    Set<UniqueIdOccurrence> swid_set = matching.getSWIDs();
-                    for (String swid : current_component.getSwids()) {
-                        boolean added = false;
-                        // Look for matches
-                        for (UniqueIdOccurrence existing_swid: swid_set) {
-                            if (Objects.equals(existing_swid.getUniqueId(), swid)) {
-                                existing_swid.addAppearance(SBOM_index);
-                                added = true;
-                                break;
-                            }
-                        }
-
-                        // In this case we need to create a new unique ID occurrence
-                        if (!added) {
-                            UniqueIdOccurrence new_swid_uid = new UniqueIdOccurrence(swid, UniqueIdentifierType.SWID);
-                            new_swid_uid.addAppearance(SBOM_index);
-                            matching.addSWID(new_swid_uid);
-                        }
-                    }
+                    // Add the new set with the newly added ComponentVersion to the collection
+                    comparisons.put(current_component.getName(), new_set);
 
                 }
 
             } else {
-                // In this case the name has not been encountered before
-                comparisons.put(current_component.getName(), new HashSet<>(Arrays.asList(temporary_cv)));
+
+                // Add which SBOM this ComponentVersion appears in
+                temporary_cv.addAppearance(SBOM_index);
+
+                // Add a new entry to the comparisons list along with the new ComponentVersion object
+                comparisons.put(temporary_cv.getComponentName(), new HashSet<>(Arrays.asList(temporary_cv)));
 
             }
 
