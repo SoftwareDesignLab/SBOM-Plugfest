@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.springframework.boot' version '3.0.6'
 }
 
 group = 'org.nvip.plugfest'
@@ -16,50 +17,24 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    }
-}
-
 dependencies {
 
     implementation project(':core')
 
-//    implementation('org.springframework.boot:spring-boot-autoconfigure:3.0.4')
-//    implementation('org.springframework:spring-web:6.0.7')
-//    implementation('org.springframework:spring-webmvc:6.0.7')
-//    implementation('org.springframework.boot:spring-boot-maven-plugin:3.0.4')
-//    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2')
-//    implementation('org.springframework.boot:spring-boot-starter-tomcat:3.0.5')
-//    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
-
-//    implementation('org.apache.tomcat.embed:tomcat-embed-core:10.1.5')
-
-    implementation('org.springframework.boot:spring-boot-starter-web:3.0.2') {
-//        exclude group: 'ch.qos.logback', module: 'logback-classic'
-    }
-    implementation('org.springframework.boot:spring-boot-starter-log4j2:3.0.2')
+    implementation('org.springframework.boot:spring-boot-starter-web:3.0.6')
     implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
 
     implementation project(path: ':core')
 
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation('org.junit.jupiter:junit-jupiter')
 }
 
 test {
     useJUnitPlatform()
 }
 
-jar {
-
-    manifest {
-        attributes 'Main-Class': 'org.nvip.plugfest.tooling.APIApplication'
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+bootJar {
+    mainClassName = 'org.nvip.plugfest.tooling.APIApplication'
 }
