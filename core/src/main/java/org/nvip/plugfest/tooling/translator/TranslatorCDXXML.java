@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -80,6 +82,7 @@ public class TranslatorCDXXML {
         NamedNodeMap sbomHead;
         NodeList sbomMeta;
         NodeList sbomComp;
+        NodeList sbomDependencies;
 
         // Get SBOM Metadata and Components
         try {
@@ -104,6 +107,16 @@ public class TranslatorCDXXML {
                             "File: " + file_path
             );
             sbomComp = null;
+        }
+
+        try {
+            sbomDependencies = ((Element) (sbom_xml_file.getElementsByTagName("dependencies")).item(0)).getElementsByTagName("dependency");
+        } catch (Exception e) {
+            System.err.println(
+                    "Warning: No dependencies tag found. If SBOM contains nested dependencies this is fine, if not please check the file format: " +
+                            "File: " + file_path
+            );
+            sbomDependencies = null;
         }
 
         // Get important SBOM items from header (schema, serial, version)
@@ -231,6 +244,33 @@ public class TranslatorCDXXML {
 
             }
 
+        }
+
+        Multimap dependency_map = ArrayListMultimap.create();
+
+        if (sbomDependencies!=null) {
+            for (int i = 0; i < sbomDependencies.getLength(); i++) {
+
+                // Next component
+                Node dependItem = sbomDependencies.item(i);
+
+                if (dependItem.hasChildNodes()) {
+
+                    // Get all elements from that node
+                    String parent = dependItem.getAttributes().getNamedItem("ref").toString().replaceAll("ref=", "");
+
+                    Element elem = (Element) dependItem;
+
+                    NodeList children = elem.getElementsByTagName("*");
+
+                    for (int m = 0 ; m < children.getLength() ; m++) {
+                        dependency_map.put(
+                                parent,
+                                children.item(m).getAttributes().item(0).toString().replaceAll("ref=", "")
+                        );
+                    }
+                }
+            }
         }
 
         // Return complete SBOM object
