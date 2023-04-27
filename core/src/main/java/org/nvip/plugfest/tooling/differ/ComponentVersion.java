@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.differ;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -27,17 +28,17 @@ public class ComponentVersion {
     /**
      * a set of all CPEs associated with this component version
      */
-    private Set<UniqueIdOccurrence> CPEs;
+    private HashMap<String, UniqueIdOccurrence> CPEs;
 
     /**
      * a set of all PURLs associated with this component version
      */
-    private Set<UniqueIdOccurrence> PURLs;
+    private HashMap<String, UniqueIdOccurrence> PURLs;
 
     /**
      * a set of all SWIDs associated with this component version
      */
-    private Set<UniqueIdOccurrence> SWIDs;
+    private HashMap<String, UniqueIdOccurrence> SWIDs;
 
     /**
      * a set of SBOM ID numbers where this component version appears
@@ -52,9 +53,9 @@ public class ComponentVersion {
     public ComponentVersion(String componentName, String version) {
         this.componentName = componentName;
         this.version = version;
-        this.CPEs = new HashSet<>();
-        this.PURLs = new HashSet<>();
-        this.SWIDs = new HashSet<>();
+        this.CPEs = new HashMap<>();
+        this.PURLs = new HashMap<>();
+        this.SWIDs = new HashMap<>();
         this.appearances = new HashSet<>();
     }
 
@@ -70,15 +71,27 @@ public class ComponentVersion {
         return this.version;
     }
 
-    public Set<UniqueIdOccurrence> getCPEs() {
+    public UniqueIdOccurrence getCPE(String cpe) {
+        return this.CPEs.get(cpe);
+    }
+
+    public UniqueIdOccurrence getPURL(String purl) {
+        return this.PURLs.get(purl);
+    }
+
+    public UniqueIdOccurrence getSWID(String swid) {
+        return this.SWIDs.get(swid);
+    }
+
+    public HashMap<String, UniqueIdOccurrence> getCPEs() {
         return this.CPEs;
     }
 
-    public Set<UniqueIdOccurrence> getPURLs() {
+    public HashMap<String, UniqueIdOccurrence> getPURLs() {
         return this.PURLs;
     }
 
-    public Set<UniqueIdOccurrence> getSWIDs() {
+    public HashMap<String, UniqueIdOccurrence> getSWIDs() {
         return this.SWIDs;
     }
 
@@ -95,15 +108,15 @@ public class ComponentVersion {
         this.version = version;
     }
 
-    public void setCPEs(Set<UniqueIdOccurrence> CPEs) {
+    public void setCPEs(HashMap<String, UniqueIdOccurrence> CPEs) {
         this.CPEs = CPEs;
     }
 
-    public void setPURLs(Set<UniqueIdOccurrence> PURLs) {
+    public void setPURLs(HashMap<String, UniqueIdOccurrence> PURLs) {
         this.PURLs = PURLs;
     }
 
-    public void setSWIDs(Set<UniqueIdOccurrence> SWIDs) {
+    public void setSWIDs(HashMap<String, UniqueIdOccurrence> SWIDs) {
         this.SWIDs = SWIDs;
     }
 
@@ -118,7 +131,7 @@ public class ComponentVersion {
      * @param CPE CPE to add.
      */
     public void addCPE(UniqueIdOccurrence CPE){
-        CPEs.add(CPE);
+        CPEs.put(CPE.getUniqueId(), CPE);
     }
 
 
@@ -127,7 +140,7 @@ public class ComponentVersion {
      * @param PURL PURL to add.
      */
     public void addPURL(UniqueIdOccurrence PURL){
-        PURLs.add(PURL);
+        PURLs.put(PURL.getUniqueId(), PURL);
     }
 
     /**
@@ -135,7 +148,7 @@ public class ComponentVersion {
      * @param SWID SWID to add.
      */
     public void addSWID(UniqueIdOccurrence SWID){
-        SWIDs.add(SWID);
+        SWIDs.put(SWID.getUniqueId(), SWID);
     }
 
     /**

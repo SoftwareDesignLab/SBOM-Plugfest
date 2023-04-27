@@ -22,7 +22,6 @@
       <app-accordion
         *ngFor="let version of path[1]"
         [extra]="[version?.appearances.length + ' Occurrence(s)']"
-        (click)="increaseDepth(version, version.componentVersion)"
       >
         <span title> {{ version.componentVersion }} </span>
       </app-accordion>
