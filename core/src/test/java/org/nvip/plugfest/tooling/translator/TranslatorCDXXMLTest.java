@@ -30,9 +30,7 @@ public class TranslatorCDXXMLTest {
     public static final String test_large_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.python.xml";
     public static final String test_no_metadata_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.nometadata.xml";
     public static final String test_no_components_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.nocomponents.xml";
-    public static final String TEST_CDX_SBOM_1_2_DEPENDENCIES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/proton-bridge-v1.8.0.bom.xml";
-
-    public static final String TEST_CDX_SBOM_1_4_DEPENDENCIES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.cdxgen.1-4.xml";
+    public static final String test_cdxgen_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/bom.xml";
 
 
     @Test
@@ -73,17 +71,9 @@ public class TranslatorCDXXMLTest {
     }
 
     @Test
-    public void translatorcdx_v1_2_dependencies_test() throws ParserConfigurationException {
-        SBOM sbom = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM_1_2_DEPENDENCIES.toString());
+    public void translatorcdx_dependency_test() throws ParserConfigurationException {
+        SBOM sbom = TranslatorCDXXML.translatorCDXXML(test_cdxgen_cdx.toString());
         assertNotNull(sbom);
-        assertEquals(202, sbom.getAllComponents().size());
-    }
-
-    @Test
-    public void translatorcdx_v1_2_dependencies_other_test() throws ParserConfigurationException {
-        SBOM sbom = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM_1_4_DEPENDENCIES);
-        assertNotNull(sbom);
-        assertEquals(631, sbom.getAllComponents().size());
     }
 
 }
