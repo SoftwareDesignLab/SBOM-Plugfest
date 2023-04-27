@@ -1,8 +1,5 @@
 package org.nvip.plugfest.tooling.sbom;
 
-import org.nvip.plugfest.tooling.metrics.Metric;
-import org.nvip.plugfest.tooling.qa.QualityReport;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
