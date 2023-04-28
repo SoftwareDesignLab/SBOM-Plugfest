@@ -236,13 +236,15 @@ public class TranslatorCDXXML {
                     // Set licenses for component
                     component.setLicenses(component_licenses);
 
+                    components.put(component.getUniqueID(), component);
+
                     // Add component to SBOM object
-                    UUID new_component = sbom.addComponent(top_component_uuid, component);
+                    //UUID new_component = sbom.addComponent(top_component_uuid, component);
 
                     // If there was no top level component, try to make the new component the head component
-                    top_component_uuid = top_component_uuid == null
-                            ? new_component
-                            : top_component_uuid;
+                    //top_component_uuid = top_component_uuid == null
+                    //        ? new_component
+                     //       : top_component_uuid;
                 }
 
             }
