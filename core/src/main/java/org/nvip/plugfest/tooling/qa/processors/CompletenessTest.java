@@ -143,12 +143,13 @@ public class CompletenessTest extends MetricTest {
      */
     private String getPublisherEmail(Component c) {
         if(c.getPublisher() == null) return null;
+        if (c.getPublisher().equals("")) return null;
         String publisher = c.getPublisher(); // Do this to make it more semantic
 
         int firstCharEmail = publisher.indexOf("<") + 1;
 
         if(firstCharEmail == 0) // If no "<", then there is no email that exists
-            return ""; // Return blank email
+            return null; // Return blank email
 
         return publisher.substring(
                 publisher.indexOf("<") + 1, // Will result in first character of email
