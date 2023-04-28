@@ -49,18 +49,10 @@ public class QAPipeline {
              qr.append(p.process(sbom));
          }
 
-         removeEmpty(qr);
+         // Remove all empty tests
+         qr.removeEmpty();
 
          // Return Master QR
          return qr;
-    }
-
-    /**
-     * Remove empty tests from the quality report
-     *
-     * @param qr Quality report to modify
-     */
-    private void removeEmpty(QualityReport qr) {
-        qr.removeEmpty();
     }
 }
