@@ -81,7 +81,7 @@ public class DataVerificationTest extends MetricTest {
                             packageManagerName, " database"));
 
                 if(!((publisher.contains(publisherFoundOnline)|| publisherFoundOnline.contains(publisher))))
-                    testResults.addTest(new Test(false,"Publisher Name", publisher,
+                    testResults.addTest(new Test(false,"Publisher Name ", publisher,
                             " does not match ", publisherFoundOnline," in ", packageManagerName, " database"));
             }
             catch(IOException e){
@@ -201,7 +201,7 @@ public class DataVerificationTest extends MetricTest {
         @return the HTML
      */
     private static htmlResult getHtmlResult(HttpURLConnection q) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(q.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(q.getInputStream(), "UTF-8"));
         String inputLine;
         StringBuffer response = new StringBuffer();
         while ((inputLine = in.readLine()) != null) {
@@ -226,6 +226,7 @@ public class DataVerificationTest extends MetricTest {
             final URL url = new URL(urlString);
             final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
             connection.setInstanceFollowRedirects(true);
             connection.setConnectTimeout(MAX_CONNECTION_TIMEOUT);
             connection.connect();
