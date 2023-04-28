@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.translator;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.cyclonedx.model.Dependency;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -17,10 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -53,6 +51,11 @@ public class TranslatorCDXXML {
         HashMap<String, String> header_materials = new HashMap<>();
         HashMap<String, String> sbom_materials = new HashMap<>();
         HashMap<String, String> sbom_component = new HashMap<>();
+        Multimap<String, String> dependencies = ArrayListMultimap.create();
+
+        // Components collection
+        // Key = bom-ref, Value = Component Object
+        HashMap<String, Component> components = new HashMap<>();
 
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -246,25 +249,29 @@ public class TranslatorCDXXML {
 
         }
 
-        Multimap dependency_map = ArrayListMultimap.create();
-
         if (sbomDependencies!=null) {
+
+            // Loop through each dependency in the NodeList
             for (int i = 0; i < sbomDependencies.getLength(); i++) {
 
-                // Next component
+                // Next dependency set
                 Node dependItem = sbomDependencies.item(i);
 
+                // If this component in the dependency list has dependencies listed
                 if (dependItem.hasChildNodes()) {
 
-                    // Get all elements from that node
+                    // Get the name of the parent component
                     String parent = dependItem.getAttributes().getNamedItem("ref").toString().replaceAll("ref=", "");
 
+                    // New element from parent Node
                     Element elem = (Element) dependItem;
 
+                    // Get all children nodes
                     NodeList children = elem.getElementsByTagName("*");
 
+                    // For each child node, add it to the Multimap with the parent as key
                     for (int m = 0 ; m < children.getLength() ; m++) {
-                        dependency_map.put(
+                        dependencies.put(
                                 parent,
                                 children.item(m).getAttributes().item(0).toString().replaceAll("ref=", "")
                         );
@@ -299,5 +306,51 @@ public class TranslatorCDXXML {
 
         return translatorCDXXMLContents(file_contents, file_path);
 
+    }
+
+    public static void dependencyBuilder(Map dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
+
+        // If top component is null, return. There is nothing to process.
+        if (parent == null) { return; }
+
+        if (visited != null) {
+            // Add this parent to the visited set
+            visited.add(parent.getUniqueID());
+        }
+
+        // Get the parent's dependencies as a list
+        String parent_id = parent.getUniqueID();
+        List<Dependency> children_ref = (List<Dependency>) dependencies.get(parent_id);
+
+        // If there are no
+        if( children_ref == null ) { return; }
+
+        // Cycle through each dependency the parent component has
+        for (Dependency child_ref: children_ref) {
+            // Retrieve the component the parent has a dependency for
+            Component child = (Component) components.get(child_ref.getRef());
+
+            // If component is already in the dependency tree, add it as a child to the parent
+            // Else, add it to the dependency tree while setting the parent
+            if(sbom.hasComponent(child.getUUID())) {
+                parent.addChild(child.getUUID());
+            } else {
+                sbom.addComponent(parent.getUUID(), child);
+            }
+
+            if (visited == null) {
+                // This means we are in the top level component
+                // Pass in a new hashset instead of the visited set
+                visited = new HashSet<>();
+                dependencyBuilder(dependencies, components, child, sbom, new HashSet<>());
+            }
+            else {
+                // Only explore if we haven't already visited this component
+                if (!visited.contains(child.getUniqueID())) {
+                    // Pass the child component as the new parent into dependencyBuilder
+                    dependencyBuilder(dependencies, components, child, sbom, visited);
+                }
+            }
+        }
     }
 }
