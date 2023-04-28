@@ -74,6 +74,14 @@ public class QualityReport {
         return passed;
     }
 
+    /**
+     * Remove empty TestResults from the QualityReport.
+     */
+    public void removeEmpty() {
+        // Remove testResults that are empty
+        testResults.removeIf(tr -> tr.getTests().isEmpty());
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("QualityReport{");
