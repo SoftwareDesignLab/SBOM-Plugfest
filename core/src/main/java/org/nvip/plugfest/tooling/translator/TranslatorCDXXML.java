@@ -35,7 +35,6 @@ public class TranslatorCDXXML {
 
     private static final Pattern package_id_pattern = Pattern.compile("package-id=([a-f0-9]{16})");
 
-
     /**
      * Translates a CycloneDX XML file into an SBOM object from the contents of an SBOM
      *
@@ -64,9 +63,13 @@ public class TranslatorCDXXML {
         // Key = unique id (bom-ref in this case), Value = unique id (bom-ref of the dependency)
         Multimap dependencies = ArrayListMultimap.create();
 
-        // Components collection
+        // Components collections
         // Key = unique id (bom-ref), Value = Component Object
         HashMap<String, Component> components = new HashMap<>();
+
+        // Collection of component names used by dependencyTree
+        Set<String> components_left = new HashSet<>();
+
 
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -157,7 +160,7 @@ public class TranslatorCDXXML {
 
                         // If package id is found, set it as the component's identifier
                         if (topCompAttributes.item(z).getNodeName().equalsIgnoreCase("bom-ref")) {
-                            sbom_component.put("bom-ref", topCompAttributes.item(z).getTextContent());
+                            sbom_component.put("bom-ref", topCompAttributes.item(z).getTextContent().replaceAll("@", ""));
                         }
 
                     }
@@ -236,7 +239,7 @@ public class TranslatorCDXXML {
 
                             // If package id is found, set it as the component's identifier
                             if (compAttributes.item(z).getNodeName().equalsIgnoreCase("bom-ref")) {
-                                component_items.put("bom-ref", compAttributes.item(z).getTextContent());
+                                component_items.put("bom-ref", compAttributes.item(z).getTextContent().replaceAll("@", ""));
                             }
 
                         }
@@ -291,6 +294,7 @@ public class TranslatorCDXXML {
                     component.setLicenses(component_licenses);
 
                     components.put(component.getUniqueID(), component);
+                    components_left.add(component.getUniqueID());
 
                 }
 
@@ -310,7 +314,7 @@ public class TranslatorCDXXML {
                 if (dependItem.hasChildNodes()) {
 
                     // Get the name of the parent component
-                    String parent = dependItem.getAttributes().getNamedItem("ref").getTextContent();
+                    String parent = dependItem.getAttributes().getNamedItem("ref").getTextContent().replaceAll("@", "");
 
                     // New element from parent Node
                     Element elem = (Element) dependItem;
@@ -322,7 +326,7 @@ public class TranslatorCDXXML {
                     for (int m = 0 ; m < children.getLength() ; m++) {
                         dependencies.put(
                                 parent,
-                                children.item(m).getAttributes().item(0).getTextContent()
+                                children.item(m).getAttributes().item(0).getTextContent().replaceAll("@", "")
                         );
                     }
                 }
@@ -332,9 +336,15 @@ public class TranslatorCDXXML {
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
         try {
-            dependencyBuilder(dependencies, components, top_component, sbom, null);
+            dependencyBuilder(dependencies, components, components_left, top_component, sbom, null);
         } catch (Exception e) {
             System.err.println("Error processing dependency tree.");
+        }
+
+        // This will take all the components that were not added in the dependencyTree through dependencyBuilder
+        // It will tack each remaining component to the top component by default
+        for(String comp : components_left) {
+            sbom.addComponent(top_component.getUUID(), components.get(comp));
         }
 
         // Return complete SBOM object
@@ -365,7 +375,14 @@ public class TranslatorCDXXML {
 
     }
 
-    public static void dependencyBuilder(Multimap dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
+    public static void dependencyBuilder(
+            Multimap dependencies,
+            HashMap components,
+            Collection components_left,
+            Component parent,
+            SBOM sbom,
+            Set<String> visited
+    ) {
 
         // If top component is null, return. There is nothing to process.
         if (parent == null) { return; }
@@ -377,10 +394,10 @@ public class TranslatorCDXXML {
 
         // Get the parent's dependencies as a list
         String parent_id = parent.getUniqueID();
-        Collection<Object> children_bom_ref = dependencies.get(parent_id);
+        Collection<Object> children_bom_refs = dependencies.get(parent_id);
 
         // Cycle through each dependency the parent component has
-        for (Object child_bom_ref : children_bom_ref) {
+        for (Object child_bom_ref : children_bom_refs) {
             // Retrieve the component the parent has a dependency for
             Component child = (Component) components.get(child_bom_ref);
 
@@ -392,17 +409,22 @@ public class TranslatorCDXXML {
                 sbom.addComponent(parent.getUUID(), child);
             }
 
+            if(components_left.contains(child_bom_ref)) {
+                components_left.remove(child_bom_ref);
+            }
+
+
             if (visited == null) {
                 // This means we are in the top level component
                 // Pass in a new hashset instead of the visited set
                 visited = new HashSet<>();
-                dependencyBuilder(dependencies, components, child, sbom, new HashSet<>());
+                dependencyBuilder(dependencies, components, components_left, child, sbom, new HashSet<>());
             }
             else {
                 // Only explore if we haven't already visited this component
                 if (!visited.contains(child.getUniqueID())) {
                     // Pass the child component as the new parent into dependencyBuilder
-                    dependencyBuilder(dependencies, components, child, sbom, visited);
+                    dependencyBuilder(dependencies, components, components_left, child, sbom, visited);
                 }
             }
         }
