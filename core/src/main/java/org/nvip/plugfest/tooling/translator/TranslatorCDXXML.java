@@ -1,9 +1,11 @@
 package org.nvip.plugfest.tooling.translator;
 
+import com.apicatalog.jsonld.flattening.NodeMap;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.cyclonedx.model.Dependency;
 import org.w3c.dom.*;
+import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -57,10 +59,13 @@ public class TranslatorCDXXML {
         HashMap<String, String> header_materials = new HashMap<>();
         HashMap<String, String> sbom_materials = new HashMap<>();
         HashMap<String, String> sbom_component = new HashMap<>();
+
+        // Dependencies
+        // Key = unique id (bom-ref in this case), Value = unique id (bom-ref of the dependency)
         Multimap dependencies = ArrayListMultimap.create();
 
         // Components collection
-        // Key = bom-ref, Value = Component Object
+        // Key = unique id (bom-ref), Value = Component Object
         HashMap<String, Component> components = new HashMap<>();
 
         // Initialize Document Builder
@@ -119,7 +124,7 @@ public class TranslatorCDXXML {
         }
 
         try {
-            sbomDependencies = sbom_xml_file.getElementsByTagNameNS("dependencies", "dependency");
+            sbomDependencies = ((Element) (sbom_xml_file.getElementsByTagName("dependencies")).item(0)).getElementsByTagName("dependency");
         } catch (Exception e) {
             System.err.println(
                     "Warning: No dependencies tag found. If SBOM contains nested dependencies this is fine, if not please check the file format: " +
@@ -138,7 +143,27 @@ public class TranslatorCDXXML {
 
         // Get important SBOM items from meta  (timestamp, tool info)
         for (int b = 0; b < sbomMeta.getLength(); b++) {
-            if (sbomMeta.item(b).getParentNode().getNodeName().contains("component")) {
+
+            if (sbomMeta.item(b).getNodeName().contains("component")) {
+                // If component has attributes
+
+                if (sbomMeta.item(b).hasAttributes()) {
+
+                    NamedNodeMap topCompAttributes = sbomMeta.item(b).getAttributes();
+
+                    // Cycle through each attribute node for that component node
+                    for (int z = 0; z < topCompAttributes.getLength(); z++) {
+
+
+                        // If package id is found, set it as the component's identifier
+                        if (topCompAttributes.item(z).getNodeName().equalsIgnoreCase("bom-ref")) {
+                            sbom_component.put("bom-ref", topCompAttributes.item(z).getTextContent());
+                        }
+
+                    }
+
+                    // Add the information to the component
+                }
                 sbom_component.put(
                         sbomMeta.item(b).getNodeName(),
                         sbomMeta.item(b).getTextContent()
@@ -173,7 +198,8 @@ public class TranslatorCDXXML {
         // Add the top level component as the root component
         try {
             top_component = new Component(sbom_component.get("name"), sbom_component.get("version"));
-            top_component_uuid = sbom.addComponent(null, top_component);
+            top_component.setUniqueID(sbom_component.get("bom-ref"));
+            sbom.addComponent(null, top_component);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Unable to set top level component. File: " + file_path);
@@ -207,8 +233,6 @@ public class TranslatorCDXXML {
                         // Cycle through each attribute node for that component node
                         for (int z = 0; z < compAttributes.getLength(); z++) {
 
-                            // Create new header
-                            String header_item = String.valueOf(compItem.getAttributes().item(z));
 
                             // If package id is found, set it as the component's identifier
                             if (compAttributes.item(z).getNodeName().equalsIgnoreCase("bom-ref")) {
@@ -220,19 +244,12 @@ public class TranslatorCDXXML {
                         // Add the information to the component
                     }
 
-
-
-
-
                     // Get all elements from that node
                     Element elem = (Element) compItem;
                     NodeList component_elements = elem.getElementsByTagName("*");
 
-
-
                     Set<PURL> purls = new HashSet<>();
                     Set<String> cpes = new HashSet<>();
-
 
                     // Iterate through each element in that component
                     for (int j = 0; j < component_elements.getLength(); j++) {
@@ -275,13 +292,6 @@ public class TranslatorCDXXML {
 
                     components.put(component.getUniqueID(), component);
 
-                    // Add component to SBOM object
-                    //UUID new_component = sbom.addComponent(top_component_uuid, component);
-
-                    // If there was no top level component, try to make the new component the head component
-                    //top_component_uuid = top_component_uuid == null
-                    //        ? new_component
-                     //       : top_component_uuid;
                 }
 
             }
@@ -300,7 +310,7 @@ public class TranslatorCDXXML {
                 if (dependItem.hasChildNodes()) {
 
                     // Get the name of the parent component
-                    String parent = dependItem.getAttributes().getNamedItem("ref").toString();
+                    String parent = dependItem.getAttributes().getNamedItem("ref").getTextContent();
 
                     // New element from parent Node
                     Element elem = (Element) dependItem;
@@ -312,7 +322,7 @@ public class TranslatorCDXXML {
                     for (int m = 0 ; m < children.getLength() ; m++) {
                         dependencies.put(
                                 parent,
-                                children.item(m).getAttributes().item(0).toString()
+                                children.item(m).getAttributes().item(0).getTextContent()
                         );
                     }
                 }
@@ -367,15 +377,12 @@ public class TranslatorCDXXML {
 
         // Get the parent's dependencies as a list
         String parent_id = parent.getUniqueID();
-        List<Dependency> children_ref = (List<Dependency>) dependencies.get(parent_id);
-
-        // If there are no
-        if( children_ref == null ) { return; }
+        Collection<Object> children_bom_ref = dependencies.get(parent_id);
 
         // Cycle through each dependency the parent component has
-        for (Dependency child_ref: children_ref) {
+        for (Object child_bom_ref : children_bom_ref) {
             // Retrieve the component the parent has a dependency for
-            Component child = (Component) components.get(child_ref.getRef());
+            Component child = (Component) components.get(child_bom_ref);
 
             // If component is already in the dependency tree, add it as a child to the parent
             // Else, add it to the dependency tree while setting the parent

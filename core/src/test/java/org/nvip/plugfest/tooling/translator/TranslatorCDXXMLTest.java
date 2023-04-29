@@ -30,7 +30,7 @@ public class TranslatorCDXXMLTest {
     public static final String test_large_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.python.xml";
     public static final String test_no_metadata_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.nometadata.xml";
     public static final String test_no_components_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.nocomponents.xml";
-    public static final String TEST_CDX_SBOM_1_2_DEPENDENCIES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/syft-0.78.0_ruby-slim-bullseye.cdx.xml";
+    public static final String TEST_CDX_SBOM_1_2_DEPENDENCIES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/proton-bridge-v1.8.0.bom.xml";
 
 
     @Test
@@ -74,6 +74,7 @@ public class TranslatorCDXXMLTest {
     public void translatorcdx_v1_2_dependencies_test() throws ParserConfigurationException {
         SBOM sbom = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM_1_2_DEPENDENCIES.toString());
         assertNotNull(sbom);
+        assertEquals(201, sbom.getAllComponents().size());
     }
 
 }
