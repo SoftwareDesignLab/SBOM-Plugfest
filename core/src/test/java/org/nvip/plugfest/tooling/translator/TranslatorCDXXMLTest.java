@@ -32,6 +32,8 @@ public class TranslatorCDXXMLTest {
     public static final String test_no_components_cdx = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.nocomponents.xml";
     public static final String TEST_CDX_SBOM_1_2_DEPENDENCIES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/proton-bridge-v1.8.0.bom.xml";
 
+    public static final String TEST_CDX_SBOM_1_4_DEPENDENCIES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.cdxgen.1-4.xml";
+
 
     @Test
     public void translatorcdx_small_file_test() throws ParserConfigurationException {
@@ -74,7 +76,14 @@ public class TranslatorCDXXMLTest {
     public void translatorcdx_v1_2_dependencies_test() throws ParserConfigurationException {
         SBOM sbom = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM_1_2_DEPENDENCIES.toString());
         assertNotNull(sbom);
-        assertEquals(201, sbom.getAllComponents().size());
+        assertEquals(202, sbom.getAllComponents().size());
+    }
+
+    @Test
+    public void translatorcdx_v1_2_dependencies_other_test() throws ParserConfigurationException {
+        SBOM sbom = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM_1_4_DEPENDENCIES);
+        assertNotNull(sbom);
+        assertEquals(631, sbom.getAllComponents().size());
     }
 
 }
