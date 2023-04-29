@@ -343,12 +343,13 @@ public class TranslatorCDXXML {
 
         // This will take all the components that were not added in the dependencyTree through dependencyBuilder
         // It will tack each remaining component to the top component by default
-        for(String comp : components_left) {
-            sbom.addComponent(top_component.getUUID(), components.get(comp));
+        for(String remaining_component : components_left) {
+            sbom.addComponent(top_component.getUUID(), components.get(remaining_component));
         }
 
         // Return complete SBOM object
         return sbom;
+
     }
 
     /**
@@ -375,6 +376,16 @@ public class TranslatorCDXXML {
 
     }
 
+    /**
+     * A simple recursive function to build a dependency tree out of the CDX XML SBOM
+     *
+     * @param dependencies      A map containing packaged components with their bom-ref IDs, pointing to dependencies
+     * @param components        A map containing each Component with their bom-ref ID as a key
+     * @param components_left   Components that haven't been added to the dependencyTree
+     * @param parent            Parent component to have dependencies connected to
+     * @param sbom              The SBOM object
+     * @param visited           A collection of visited nodes
+     */
     public static void dependencyBuilder(
             Multimap dependencies,
             HashMap components,
@@ -387,6 +398,7 @@ public class TranslatorCDXXML {
         // If top component is null, return. There is nothing to process.
         if (parent == null) { return; }
 
+        // If this is the first time visiting this node
         if (visited != null) {
             // Add this parent to the visited set
             visited.add(parent.getUniqueID());
@@ -398,6 +410,7 @@ public class TranslatorCDXXML {
 
         // Cycle through each dependency the parent component has
         for (Object child_bom_ref : children_bom_refs) {
+
             // Retrieve the component the parent has a dependency for
             Component child = (Component) components.get(child_bom_ref);
 
@@ -409,6 +422,8 @@ public class TranslatorCDXXML {
                 sbom.addComponent(parent.getUUID(), child);
             }
 
+            // If this is the first time this component is being added/referenced on dependencyTree
+            // Remove the component from remaining component list
             if(components_left.contains(child_bom_ref)) {
                 components_left.remove(child_bom_ref);
             }
