@@ -1,11 +1,8 @@
 package org.nvip.plugfest.tooling.translator;
 
-import com.apicatalog.jsonld.flattening.NodeMap;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import org.cyclonedx.model.Dependency;
 import org.w3c.dom.*;
-import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -15,15 +12,12 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.regex.MatchResult;
-import java.util.regex.Pattern;
-
 
 /**
  * file: TranslatorCDXXML.java
@@ -32,8 +26,6 @@ import java.util.regex.Pattern;
  * @author Tyler Drake
  */
 public class TranslatorCDXXML {
-
-    private static final Pattern package_id_pattern = Pattern.compile("package-id=([a-f0-9]{16})");
 
     /**
      * Translates a CycloneDX XML file into an SBOM object from the contents of an SBOM
@@ -44,6 +36,7 @@ public class TranslatorCDXXML {
      * @throws ParserConfigurationException if the DocumentBuilder cannot be created
      */
     public static SBOM translatorCDXXMLContents(String contents, String file_path) throws ParserConfigurationException {
+
         // New SBOM object
         SBOM sbom;
 
@@ -69,7 +62,6 @@ public class TranslatorCDXXML {
 
         // Collection of component names used by dependencyTree
         Set<String> components_left = new HashSet<>();
-
 
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -165,7 +157,6 @@ public class TranslatorCDXXML {
 
                     }
 
-                    // Add the information to the component
                 }
                 sbom_component.put(
                         sbomMeta.item(b).getNodeName(),
@@ -205,7 +196,7 @@ public class TranslatorCDXXML {
             sbom.addComponent(null, top_component);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Unable to set top level component. File: " + file_path);
+            System.err.println("Cannot find top level component in metadata. File: " + file_path);
             top_component = null;
         }
 
