@@ -122,7 +122,7 @@ public class TranslatorCDXXML {
             sbomDependencies = ((Element) (sbom_xml_file.getElementsByTagName("dependencies")).item(0)).getElementsByTagName("dependency");
         } catch (Exception e) {
             System.err.println(
-                    "Warning: No dependencies tag found. If SBOM contains nested dependencies this is fine, if not please check the file format: " +
+                    "Warning: No dependencies found. Dependency Tree may not build correctly. " +
                             "File: " + file_path
             );
             sbomDependencies = null;
@@ -163,7 +163,7 @@ public class TranslatorCDXXML {
                         sbomMeta.item(b).getTextContent()
                 );
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
-                if(author != "") { author += " ~ "; }
+                if(author != "") { author += " , "; }
                 author += sbomMeta.item(b).getTextContent();
             } else {
                 sbom_materials.put(
@@ -332,8 +332,8 @@ public class TranslatorCDXXML {
             System.err.println("Error processing dependency tree.");
         }
 
-        // This will take all the components that were not added in the dependencyTree through dependencyBuilder
-        // It will tack each remaining component to the top component by default
+        // This will take all the components that were not added in the dependencyTree through
+        // dependencyBuilder and will tack each remaining component to the top component by default
         for(String remaining_component : components_left) {
             sbom.addComponent(top_component.getUUID(), components.get(remaining_component));
         }
