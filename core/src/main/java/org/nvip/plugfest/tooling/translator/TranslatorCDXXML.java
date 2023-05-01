@@ -149,7 +149,6 @@ public class TranslatorCDXXML {
                     // Cycle through each attribute node for that component node
                     for (int z = 0; z < topCompAttributes.getLength(); z++) {
 
-
                         // If package id is found, set it as the component's identifier
                         if (topCompAttributes.item(z).getNodeName().equalsIgnoreCase("bom-ref")) {
                             sbom_component.put("bom-ref", topCompAttributes.item(z).getTextContent().replaceAll("@", ""));
