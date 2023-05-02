@@ -19,6 +19,8 @@ import { DataHandlerService } from "@services/data-handler.service";
 export class ComparisonPageComponent {
   collapsed: boolean = false;
 
+  sbomInfoOpened: string | null = null;
+
   sboms: string[] = ["a", "b"];
   targetSbom!: string;
   compareTo!: string;
@@ -60,6 +62,10 @@ export class ComparisonPageComponent {
 
   GetComparison() {
     return this.dataHandler.comparison;
+  }
+
+  getSBOMInfo(path: string) {
+    this.sbomInfoOpened = path;
   }
 }
 
