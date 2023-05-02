@@ -1,5 +1,16 @@
 # Plugfest Changelog
 
+## v3.1.0 -- 5/2/23
+### API
+- Fixed bug that prevented non-ASCII characters from being processed
+### Comparison
+- Fix bug that showed duplicate UIDs in the comparison report
+### Metrics
+- Added support for non-ASCII characters when pulling from package manager databases
+- Remove all empty tests to prevent duplicated component lists
+### GUI
+- Display which SBOM an identifier or quality came from
+
 ## v3.0.0 -- 4/21/23
 ### Translator
 - Now supports translating from a file's contents without needing the file on the system
