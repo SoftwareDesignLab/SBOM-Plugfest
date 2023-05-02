@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -8,5 +8,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 
 export class ModalComponent {
-  constructor(public dialogRef: MatDialogRef<ModalComponent>) {}
+  @Input() opened: boolean = false;
+  @Output() close = new EventEmitter<Boolean>();
+  
+  Close() {
+    this.close.emit(true);
+  }
 }
