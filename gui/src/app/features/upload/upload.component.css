@@ -37,3 +37,10 @@
 h1 {
   text-align: center;
 }
+
+.uploaded-files-container {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: var(--primary);
+  padding: 20px;
+}
