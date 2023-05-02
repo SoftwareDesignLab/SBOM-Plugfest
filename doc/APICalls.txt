@@ -27,35 +27,6 @@ Responses: [
     ]
 ]
 
-# TODO Fill in example with valid POST/Response
-Examples: [
-
-    GET /books
-    ===
-    Response: 200
-    [
-        {
-            name: "Clean Code",
-            authors: ["Robert C. Martin"]
-        },
-        {
-            name: "Design Patterns: Elements of Reusable Object-Oriented Software",
-            authors: ["Erich Gamma", "Richard Helm", "Ralph Johnson", "John Vlissides"]
-        }
-  ]
-
-    GET /books?author="Rob"
-    ===
-    Response: 200
-    [
-        {
-            name: "Clean Code",
-            authors: ["Robert C. Martin"]
-        }
-    ]
-]
-
-
 URI: /plugfest/qa
 Description: Takes in an SBOM and returns a quality report on the SBOM
 Request Type: POST
@@ -79,34 +50,6 @@ Responses: [
         {
             testResults: ArrayList<TestResults>
             serialNumber: String
-        }
-    ]
-]
-
-# TODO Fill in example with valid POST/Response
-Examples: [
-
-    GET /books
-    ===
-    Response: 200
-    [
-        {
-            name: "Clean Code",
-            authors: ["Robert C. Martin"]
-        },
-        {
-            name: "Design Patterns: Elements of Reusable Object-Oriented Software",
-            authors: ["Erich Gamma", "Richard Helm", "Ralph Johnson", "John Vlissides"]
-        }
-    ]
-
-    GET /books?author="Rob"
-    ===
-    Response: 200
-    [
-        {
-            name: "Clean Code",
-            authors: ["Robert C. Martin"]
         }
     ]
 ]
