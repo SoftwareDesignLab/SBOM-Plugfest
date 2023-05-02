@@ -79,6 +79,9 @@ public class TranslatorSPDX {
         // Key (SPDX_ID) = Component, Values (SPDX_ID) = Components it needs
         ArrayListMultimap<String, String> dependencies = ArrayListMultimap.create();
 
+        // Collection of component names used by dependencyTree
+        Set<String> components_left = new HashSet<>();
+
         // Collection of packages, used  for adding head components to top component if in the header (SPDXRef-DOCUMENT)
         // Value (SPDX_ID)
         List<String> packages = new ArrayList<>();
@@ -278,6 +281,7 @@ public class TranslatorSPDX {
 
                 // Add packaged component to components list
                 components.put(component.getUniqueID(), component);
+                components_left.add(component.getUniqueID());
 
                 // Add packaged component to packages list as well
                 packages.add(component.getUniqueID());
@@ -290,14 +294,7 @@ public class TranslatorSPDX {
                 String relationship = current_line.split(RELATIONSHIP_KEY, 2)[1];
 
                 // Split dependency relationship and store into relationships map depends on relationship type
-                if(current_line.contains("CONTAINS")) {
-
-                    dependencies.put(
-                            relationship.split(" CONTAINS ")[0],
-                            relationship.split(" CONTAINS ")[1]
-                    );
-
-                } else if (current_line.contains("DEPENDS_ON")) {
+                if (current_line.contains("DEPENDS_ON")) {
 
                     dependencies.put(
                             relationship.split(" DEPENDS_ON ")[0],
@@ -311,14 +308,7 @@ public class TranslatorSPDX {
                             relationship.split(" DEPENDENCY_OF ")[0]
                     );
 
-                } else if (current_line.contains("OTHER")) {
-
-                    dependencies.put(
-                            relationship.split(" OTHER ")[1],
-                            relationship.split(" OTHER ")[0]
-                    );
-
-                } else if (current_line.contains("DESCRIBES")) {
+                }  else if (current_line.contains("DESCRIBES")) {
 
                     // If document references itself as top component, make it the top component using sbom head information
                     // Otherwise, get the SPDXID for the component it references and make that the top component
@@ -366,9 +356,15 @@ public class TranslatorSPDX {
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
         try {
-            dependencyBuilder(dependencies, components, top_component, sbom, null);
+            dependencyBuilder(dependencies, components, components_left, top_component, sbom, null);
         } catch (Exception e) {
             System.err.println("Error processing dependency tree.");
+        }
+
+        // This will take all the components that were not added in the dependencyTree through
+        // dependencyBuilder and will tack each remaining component to the top component by default
+        for(String remaining_component : components_left) {
+            sbom.addComponent(top_component.getUUID(), components.get(remaining_component));
         }
 
         br.close();
@@ -406,7 +402,14 @@ public class TranslatorSPDX {
      * @param parent        Parent component to have dependencies connected to
      * @param sbom          The SBOM object
      */
-    public static void dependencyBuilder(Multimap dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
+    public static void dependencyBuilder(
+            Multimap dependencies,
+            HashMap components,
+            Collection components_left,
+            Component parent,
+            SBOM sbom,
+            Set<String> visited)
+    {
 
         // If top component is null, return. There is nothing to process.
         if (parent == null) { return; }
@@ -433,17 +436,24 @@ public class TranslatorSPDX {
                 sbom.addComponent(parent.getUUID(), child);
             }
 
+            // If this is the first time this component is being added/referenced on dependencyTree
+            // Remove the component from remaining component list
+            if(components_left.contains(child_SPDX)) {
+                components_left.remove(child_SPDX);
+            }
+
+
             if (visited == null) {
                 // This means we are in the top level component
                 // Pass in a new hashset instead of the visited set
                 visited = new HashSet<>();
-                dependencyBuilder(dependencies, components, child, sbom, new HashSet<>());
+                dependencyBuilder(dependencies, components, components_left, child, sbom, new HashSet<>());
             }
             else {
                 // Only explore if we haven't already visited this component
                 if (!visited.contains(child.getUniqueID())) {
                     // Pass the child component as the new parent into dependencyBuilder
-                    dependencyBuilder(dependencies, components, child, sbom, visited);
+                    dependencyBuilder(dependencies, components, components_left, child, sbom, visited);
                 }
             }
         }
