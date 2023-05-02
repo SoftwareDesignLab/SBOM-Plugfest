@@ -57,3 +57,12 @@
     margin-left: auto;
     cursor: pointer;
 }
+
+.item {
+    display: flex;
+    overflow-y: scroll;
+}
+
+.item > .name {
+    width: 75px;
+}

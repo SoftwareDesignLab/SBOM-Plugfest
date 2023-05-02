@@ -65,8 +65,7 @@ export class DataHandlerService {
   }
 
   getSBOMAlias(path: string) {
-    const index = this.filePaths.indexOf(path);
-    return `SBOM ${index}`;
+    return `SBOM ${path.split("\\").pop()}`;
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
