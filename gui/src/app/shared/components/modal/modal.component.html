@@ -1,14 +1,15 @@
 <div class="modal" *ngIf="opened">
     <div class="content">
-        <h2 mat-dialog-title>
-            <ng-content #title/>
-        </h2>
-        <mat-dialog-content>
-            <ng-content #content/>
-        </mat-dialog-content>
-        <mat-dialog-actions>
-            <ng-content #actions/>
-        </mat-dialog-actions>
+        <div class="title">
+            <ng-content select='[title]'/>
+        </div>
+        <div class="body">
+            <ng-content select='[content]'/>
+        </div>
+        <div class="actions">
+            <ng-content select='[actions]'/>
+        </div>
+        <div class="close" (click)="Close()">x</div>
     </div>
     <div class="click-off" (click)="Close()"></div>
 </div>
