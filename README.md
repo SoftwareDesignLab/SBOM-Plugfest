@@ -39,9 +39,9 @@
 - Java 17
   > Check: `java -version`
 
-## Quick Start
-1. `./gradlew jar`
-2. `java -jar app.jar [OPTIONS]`
+## Quick Start Backend
+1. `./gradlew bootJar`
+2. `java -jar .\api\build\libs\api-3.1.0.jar`
 
 ## Contributors
 - [Derek Garcia](mailto:dlg1206@rit.edu)
