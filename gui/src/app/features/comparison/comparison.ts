@@ -2,7 +2,7 @@
 
 /** @TODO */
 // 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT to create comparisons
-// 2. CONVERT JSON 
+// 2. CONVERT JSON
 //    - readonly arrays TO SETS
 //    - convert keys/values to maps
 interface SBOM {
@@ -21,7 +21,7 @@ interface ComponentConflict {
   conflicts?: readonly any[];
 }
 
-interface attributes {
+export interface attributes {
   uuid?: string | null;
   name?: string | null;
   publisher?: string | null;
@@ -29,7 +29,7 @@ interface attributes {
   cpes?: readonly attributes[] | readonly string[] | readonly [] | null;
   purls?: readonly attributes[] | attributes | readonly [];
   swids?: readonly string[] | readonly [];
-  uniqueID?: string | null;
+  uniqueId?: string | null;
   uniqueIDType?: string | null;
   children?: readonly string[] | readonly [];
   version?: string | null;
@@ -47,13 +47,13 @@ interface DiffReport {
   componentConflicts?: readonly ComponentConflict[];
 }
 
-interface ComponentVersion {
-  componentName?: string | null;
+export interface ComponentVersion {
+  componentName: string | null;
   componentVersion: string | null;
-  cpes?: readonly UniqueIdOccurrence[] | readonly [];
-  purls?: readonly UniqueIdOccurrence[] | readonly [];
-  swids?: readonly UniqueIdOccurrence[] | readonly [];
-  appearances?: readonly number[] | readonly []; // number meaning SBOM ID
+  cpes: {[key: string]: attributes} | {};
+  purls: {[key: string]: attributes} | {};
+  swids: {[key: string]: attributes} | {}
+  appearances: readonly number[] | readonly []; // number meaning SBOM ID
 }
 
 interface UniqueIdOccurrence {

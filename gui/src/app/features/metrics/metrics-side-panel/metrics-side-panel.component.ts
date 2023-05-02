@@ -17,4 +17,8 @@ export class MetricsSidePanelComponent {
   SetSelectedSBOM(bom: string) {
     this.handler.selectedQualityReport = bom;
   }
+
+    getSBOMAlias(path: string) {
+    return this.handler.getSBOMAlias(path);
+  }
 }

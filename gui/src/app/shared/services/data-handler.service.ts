@@ -20,7 +20,7 @@ export class DataHandlerService {
 
   public selectedQualityReport!: string;
 
-  constructor(private client: ClientService) { 
+  constructor(private client: ClientService) {
     if (window.require) {
       try {
         this.ipc = window.require('electron').ipcRenderer;
@@ -64,6 +64,11 @@ export class DataHandlerService {
     return Object.keys(this.metrics).filter((x) => this.metrics[x] !== null);
   }
 
+  getSBOMAlias(path: string) {
+    const index = this.filePaths.indexOf(path);
+    return `SBOM ${index}`;
+  }
+
   async Compare(main: string, others: string[]): Promise<any> {
     let toSend: { [path: string]: any } = {};
     let total = others.length + 1;
@@ -75,14 +80,14 @@ export class DataHandlerService {
       this.ipc.invoke('getFileData', path).then((data: any) => {
         toSend[path] = data;
         i++;
-  
+
         //last time running
         if(i == total) {
           console.log("last running");
-  
+
           let fileData: string[] = [];
           let filePaths: string[] = [];
-  
+
           //Ensure that the compare is first in list
           Object.keys(toSend).forEach((path) => {
             console.log("insert path: " + path);
@@ -94,13 +99,13 @@ export class DataHandlerService {
               filePaths.push(path);
             }
           })
-  
+
           this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
             this.comparison = result;
           })
-        } 
+        }
       })
     })
   }
-  
+
 }

@@ -1,29 +1,32 @@
 /** @Author Tina DiLorenzo, Justin Jantzi */
 
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { Comparison } from '../comparison';
-import { SBOM } from '@models/sbom';
+import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
+import { Comparison } from "../comparison";
+import { SBOM } from "@models/sbom";
 
 import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { DataHandlerService } from '@services/data-handler.service';
+} from "@angular/material/dialog";
+import { DataHandlerService } from "@services/data-handler.service";
 
 @Component({
-  selector: 'app-comparison-page',
-  templateUrl: './comparison-page.component.html',
-  styleUrls: ['./comparison-page.component.css'],
+  selector: "app-comparison-page",
+  templateUrl: "./comparison-page.component.html",
+  styleUrls: ["./comparison-page.component.css"],
 })
 export class ComparisonPageComponent {
   collapsed: boolean = false;
 
-  sboms: string[] = ['a', 'b'];
+  sboms: string[] = ["a", "b"];
   targetSbom!: string;
   compareTo!: string;
 
-  constructor(public dialog: MatDialog, private dataHandler: DataHandlerService) {}
+  constructor(
+    public dialog: MatDialog,
+    private dataHandler: DataHandlerService
+  ) {}
 
   /** @TODO create an api call where you would send the target sbom and compare */
   // it against all sboms rather than doing singular api calls for each one  */
@@ -51,13 +54,17 @@ export class ComparisonPageComponent {
     return this.dataHandler.GetValidSBOMs();
   }
 
+  getSBOMAlias(path: string) {
+    return this.dataHandler.getSBOMAlias(path);
+  }
+
   GetComparison() {
     return this.dataHandler.comparison;
   }
 }
 
 @Component({
-  selector: 'app-comparison-dialog',
+  selector: "app-comparison-dialog",
   template: `<app-dialog
     icon="delete"
     (clicked)="this.dialogRef.close(true)"
