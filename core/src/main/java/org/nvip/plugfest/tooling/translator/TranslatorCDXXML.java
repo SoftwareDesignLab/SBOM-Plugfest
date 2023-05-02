@@ -147,21 +147,28 @@ public class TranslatorCDXXML {
                     NamedNodeMap topCompAttributes = sbomMeta.item(b).getAttributes();
 
                     // Cycle through each attribute node for that component node
-                    for (int z = 0; z < topCompAttributes.getLength(); z++) {
+                    for (int x = 0; x < topCompAttributes.getLength(); x++) {
 
 
                         // If package id is found, set it as the component's identifier
-                        if (topCompAttributes.item(z).getNodeName().equalsIgnoreCase("bom-ref")) {
-                            sbom_component.put("bom-ref", topCompAttributes.item(z).getTextContent().replaceAll("@", ""));
+                        if (topCompAttributes.item(x).getNodeName().equalsIgnoreCase("bom-ref")) {
+                            sbom_component.put("bom-ref", topCompAttributes.item(x).getTextContent().replaceAll("@", ""));
                         }
 
                     }
 
                 }
-                sbom_component.put(
-                        sbomMeta.item(b).getNodeName(),
-                        sbomMeta.item(b).getTextContent()
-                );
+                if(sbomMeta.item(b).hasChildNodes()) {
+
+                    NodeList topCompNodes = sbomMeta.item(b).getChildNodes();
+
+                    for(int y = 0; y < topCompNodes.getLength(); y++) {
+                        sbom_component.put(
+                                topCompNodes.item(y).getNodeName(),
+                                topCompNodes.item(y).getTextContent()
+                        );
+                    }
+                }
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
                 if(author != "") { author += " , "; }
                 author += sbomMeta.item(b).getTextContent();
@@ -191,8 +198,14 @@ public class TranslatorCDXXML {
 
         // Add the top level component as the root component
         try {
-            top_component = new Component(sbom_component.get("name"), sbom_component.get("version"));
-            top_component.setUniqueID(sbom_component.get("bom-ref"));
+            top_component = new Component(
+                    sbom_component.get("name"),
+                    sbom_component.get("publisher") == null
+                            ? sbom_materials.get("author")
+                            : sbom_component.get("publisher"),
+                    sbom_component.get("version"),
+                    sbom_component.get("bom-ref")
+            );
             sbom.addComponent(null, top_component);
         } catch (Exception e) {
             e.printStackTrace();
