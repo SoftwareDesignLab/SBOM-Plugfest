@@ -1,3 +1,5 @@
+/** @Author Justin Jantzi */
+
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -11,6 +13,9 @@ export class ModalComponent {
   @Input() opened: boolean = false;
   @Output() close = new EventEmitter<Boolean>();
   
+  /**
+   * Closes the modal
+   */
   Close() {
     this.close.emit(true);
   }
