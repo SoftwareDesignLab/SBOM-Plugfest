@@ -4,13 +4,6 @@
   height: 84vh;
 }
 
-.addSBOMScenter {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: 10px;
-}
-
 .content {
   gap: 25px;
   overflow: hidden;
@@ -18,7 +11,7 @@
   align-items: center;
 }
 
-.content  > .header {
+.content > .header {
   margin-top: 25px;
 }
 
@@ -50,4 +43,24 @@
 .compare-item > .sbom > * {
   margin-left: auto;
   cursor: pointer;
+}
+.app-side-panel {
+  overflow: hidden;
+}
+
+.app-side-panel__content {
+  height: 100%;
+  position: relative;
+}
+
+.app-side-panel__content > .content {
+  height: 100%;
+}
+
+.addSBOMScenter { 
+  position: absolute;
+  margin-bottom: 10px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
