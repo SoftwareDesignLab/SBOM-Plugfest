@@ -188,11 +188,7 @@ public class TranslatorSPDX {
          * Parse through components, add them to components HashSet
          */
         // Loop through every Package until Relationships or end of file
-        while ( current_line != null
-                && !current_line.contains(RELATIONSHIP_TAG)
-                && !current_line.contains(RELATIONSHIP_KEY)
-        ) {
-            if (current_line.contains(RELATIONSHIP_TAG)) break;
+        while ( current_line != null ) {
 
             // Temporary component collection of materials
             HashMap<String, String> component_materials = new HashMap<>();
@@ -286,17 +282,9 @@ public class TranslatorSPDX {
                 // Add packaged component to packages list as well
                 packages.add(component.getUniqueID());
 
-            } else {
-                // if no package/component is found, get next line
-                current_line = br.readLine();
             }
-        }
-
-        // Parse through what is left (relationships, if there are any)
-        while(current_line != null) {
-
             // If relationship key is found
-            if(current_line.contains(RELATIONSHIP_KEY)) {
+            else if(current_line.contains(RELATIONSHIP_KEY)) {
 
                 // Split and get and value of the line
                 String relationship = current_line.split(RELATIONSHIP_KEY, 2)[1];
@@ -345,11 +333,16 @@ public class TranslatorSPDX {
                         dependencies.remove(top_component.getUniqueID(), top_component.getUniqueID());
                     }
                 }
+
+                current_line = br.readLine();
+
             }
-
-            current_line = br.readLine();
-
+            else {
+                // if no package/component is found, get next line
+                current_line = br.readLine();
+            }
         }
+
 
         // Create the new SBOM Object with top level data
         try {
