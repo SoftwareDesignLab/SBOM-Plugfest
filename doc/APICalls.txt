@@ -1,0 +1,55 @@
+URI: /plugfest/compare
+Description: Takes a list of SBOMs and generates a comparison between them
+Request Type: POST
+Params: [
+    {
+        Name: contents
+        Type: String
+        Required: True
+    },
+    {
+        Name: fileNames
+        Type: String
+        Required: True
+    }
+]
+Request Body: {}
+
+Responses: [
+  Response Code: 200
+  Response Body: [
+    {
+      targetSBOM: SBOM
+      sbomStream: List<SBOM>
+      diffReportList: List<DiffReport>
+      comparisons: Map<String, HashSet<ComponentVersion>>
+    }
+  ]
+]
+
+Examples: [
+
+  GET /books
+  ===
+  Response: 200
+  [
+    {
+      name: "Clean Code",
+      authors: ["Robert C. Martin"]
+    },
+    {
+      name: "Design Patterns: Elements of Reusable Object-Oriented Software",
+      authors: ["Erich Gamma", "Richard Helm", "Ralph Johnson", "John Vlissides"]
+    }
+  ]
+
+  GET /books?author="Rob"
+  ===
+  Response: 200
+  [
+    {
+      name: "Clean Code",
+      authors: ["Robert C. Martin"]
+    }
+  ]
+]
