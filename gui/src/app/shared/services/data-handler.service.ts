@@ -65,7 +65,7 @@ export class DataHandlerService {
   }
 
   getSBOMAlias(path: string) {
-    return `SBOM ${path.split("/").pop()}`;
+    return `SBOM ${path.split("\\").pop()}`;
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
