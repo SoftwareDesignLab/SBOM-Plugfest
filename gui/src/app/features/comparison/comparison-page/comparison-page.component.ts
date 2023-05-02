@@ -23,7 +23,6 @@ export class ComparisonPageComponent {
 
   sboms: string[] = ["a", "b"];
   targetSbom!: string;
-  compareTo!: string;
 
   constructor(
     public dialog: MatDialog,
@@ -36,14 +35,21 @@ export class ComparisonPageComponent {
     this.targetSbom = $event;
   }
 
-  /** @TODO replace with inserting the associated diff report */
-  selectComparison(value: string) {
-    this.compareTo = value;
-  }
-
   // Display diff report
   compare() {
-    this.dataHandler.Compare(this.targetSbom, [this.compareTo]);
+     // Get all the checkboxes in the DOM
+     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+     // Loop through each checkbox and check if it's selected and not disabled
+     const selectedCheckboxes = [];
+     for (let i = 0; i < checkboxes.length; i++) {
+       const checkbox = checkboxes[i] as HTMLInputElement;
+       if (checkbox.checked && !checkbox.disabled) {
+         selectedCheckboxes.push(checkbox.value);
+       }
+     }
+
+    this.dataHandler.Compare(this.targetSbom, selectedCheckboxes);
   }
 
   openDialog(sbom: SBOM): void {
