@@ -52,6 +52,15 @@ export class ComparisonPageComponent {
     this.dataHandler.Compare(this.targetSbom, selectedCheckboxes);
   }
 
+  setAllSelected(value: boolean) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      checkbox.checked = value;
+    }
+  }
+
   openDialog(sbom: SBOM): void {
     const dialogRef = this.dialog.open(ComparisonDialogComponent, {
       data: sbom,

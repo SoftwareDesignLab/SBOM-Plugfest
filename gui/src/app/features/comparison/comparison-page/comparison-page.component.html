@@ -15,7 +15,13 @@
         </div>
       </div>
       <div class="selection flex col">
-        <div class="header">Comparisons</div>
+        <div class="header flex">
+          <div class="flex center">Comparisons</div>
+          <div class="flex select-options">
+            <app-button (click)="setAllSelected(true)">Select All</app-button>
+            <app-button (click)="setAllSelected(false)">Unselect All</app-button>
+          </div>
+        </div>
         <div class="content flex col">
           <div
             class="compare-item flex"
