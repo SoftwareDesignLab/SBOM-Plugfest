@@ -62,6 +62,20 @@ export class ComparisonPageComponent {
     return this.dataHandler.GetValidSBOMs();
   }
 
+  GetDropdownSBOMs() {
+    let keys = this.GetValidSBOMs();
+    let data: { [id: string]: Object | null } = {};
+
+    for(let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = this.getSBOMAlias(key);
+
+      data[key] = value;
+    }
+
+    return data;
+  }
+
   getSBOMAlias(path: string) {
     return this.dataHandler.getSBOMAlias(path);
   }
