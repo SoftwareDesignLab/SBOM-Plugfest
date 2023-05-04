@@ -2,12 +2,13 @@
   <app-side-panel tabText="SBOM list">
     <form class="content flex col">
       <div class="header">SBOM LIST</div>
-      <div class="selection flex col">
+      <div class="flex col" style="width: calc(100% - 40px)">
         <div class="header flex">
           <span>Target</span>
         </div>
         <div class="content">
-          <app-dropdown
+          <app-dropdown 
+            class="dropdown"
             [options]="GetValidSBOMs()"
             key="name"
             (selectionChange)="targetSbom = $event"
@@ -16,7 +17,7 @@
       </div>
       <div class="selection flex col">
         <div class="header">Comparisons</div>
-        <div class="content flex col" style="max-height: 450px; overflow-y: auto;">
+        <div class="content flex col">
           <div
             class="compare-item flex"
             *ngFor="let sbom of GetValidSBOMs(); let i = index"
