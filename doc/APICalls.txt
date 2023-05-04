@@ -24,6 +24,12 @@ Responses: [
             diffReportList: List<DiffReport>
             comparisons: Map<String, HashSet<ComponentVersion>>
         }
+    ],
+    Response Code: 400
+    Response Body: [
+        {
+            message: String
+        }
     ]
 ]
 
@@ -33,12 +39,12 @@ Request Type: POST
 Params: [
     {
         Name: contents
-        Type: String
+        Type: JSON array of String
         Required: True
     },
     {
         Name: fileName
-        Type: String
+        Type: Json array of String
         Required: True
     }
 ]
@@ -51,5 +57,9 @@ Responses: [
             testResults: ArrayList<TestResults>
             serialNumber: String
         }
+    ],
+    Response Code: 200
+    Response Body: [
+        {}
     ]
 ]
