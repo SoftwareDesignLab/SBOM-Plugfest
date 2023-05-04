@@ -17,9 +17,9 @@ export class DataHandlerService {
   public lastSentFilePaths: string[] = [];
 
   public metrics: { [id: string]: Object | null } = {};
-  public comparison!: Comparison;
+  public loadingFiles: string[] = [];
 
-  public loading = new BehaviorSubject<boolean>(false);
+  public comparison!: Comparison;
 
   public selectedQualityReport!: string;
 
@@ -36,7 +36,7 @@ export class DataHandlerService {
   }
 
   AddFiles(paths: string[]) {
-    this.loading.next(true);
+    this.loadingFiles.push(...paths);
     this.filePaths.push(...paths);
 
     paths.forEach((path) => {
@@ -54,11 +54,11 @@ export class DataHandlerService {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
-        this.loading.next(false);
+        this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       },
       (error) => {
         this.metrics[path] = null;
-        this.loading.next(false);
+        this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       })
     });
   }
