@@ -19,7 +19,6 @@ export class MetricsBodyComponent {
   }
 
   getPassedPercent(testResult: any) {
-    console.log(testResult)
     return (testResult.successfulTests / testResult.tests.length * 100).toFixed(2);
   }
 }
