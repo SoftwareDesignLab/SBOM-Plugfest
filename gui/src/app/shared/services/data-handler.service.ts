@@ -21,6 +21,8 @@ export class DataHandlerService {
 
   public comparison!: Comparison;
 
+  private loadingComparison: boolean = false;
+
   public selectedQualityReport!: string;
 
   constructor(private client: ClientService) {
@@ -50,6 +52,10 @@ export class DataHandlerService {
     })
   }
 
+  IsLoadingComparison() {
+    return this.loadingComparison;
+  }
+
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
@@ -72,6 +78,8 @@ export class DataHandlerService {
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
+    this.loadingComparison = true;
+
     let toSend: { [path: string]: any } = {};
     let total = others.length + 1;
     let i = 0;
@@ -85,8 +93,6 @@ export class DataHandlerService {
 
         //last time running
         if(i == total) {
-          console.log("last running");
-
           let fileData: string[] = [];
           let filePaths: string[] = [];
 
@@ -111,6 +117,7 @@ export class DataHandlerService {
           
           this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
             this.comparison = result;
+            this.loadingComparison = false;
           })
         }
       })
