@@ -43,4 +43,6 @@ h1 {
   border-radius: 10px;
   background-color: var(--primary);
   padding: 20px;
+  max-height: 30vh;
+  overflow-y: scroll;
 }

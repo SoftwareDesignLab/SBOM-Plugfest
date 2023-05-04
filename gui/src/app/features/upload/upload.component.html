@@ -2,7 +2,7 @@
     <div *ngIf="!isLoading">
         <h1>UPLOAD SBOMS</h1>
         <div class="uploaded-files-container" #container *ngIf="ContainsFiles()">
-            <div class="uploaded-files flex col" *ngIf="ContainsFiles()" style="max-height: 500px; overflow-y: auto;">
+            <div class="uploaded-files flex col" *ngIf="ContainsFiles()">
                 <div class="file flex center" *ngFor="let item of GetFiles() | keyvalue">
                     <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"/>
                     <div class="sbom flex">
