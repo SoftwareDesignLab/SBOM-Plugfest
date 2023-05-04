@@ -37,6 +37,10 @@ export class ComparisonPageComponent {
 
   // Display diff report
   compare() {
+
+    if(this.IsLoadingComparison())
+      return;
+
      // Get all the checkboxes in the DOM
      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
@@ -95,6 +99,10 @@ export class ComparisonPageComponent {
 
   getSBOMInfo(path: string) {
     this.sbomInfoOpened = path;
+  }
+
+  IsLoadingComparison(): boolean {
+    return this.dataHandler.IsLoadingComparison();
   }
 }
 
