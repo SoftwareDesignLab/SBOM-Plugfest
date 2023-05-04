@@ -9,7 +9,6 @@ import { IpcRenderer } from 'electron';
 })
 export class UploadComponent {
   private ipc!: IpcRenderer;
-  isLoading = false;
   
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
@@ -21,7 +20,6 @@ export class UploadComponent {
     } else {
       console.warn('App not running inside Electron!');
     }
-    this.dataHandler.loading.subscribe(isLoading => this.isLoading = isLoading )
   }
 
   browse() {
@@ -35,11 +33,15 @@ export class UploadComponent {
   }
 
   ContainsFiles() {
-    return Object.keys(this.dataHandler.metrics).length > 0;
+    return Object.keys(this.dataHandler.metrics).length > 0 || this.GetLoadingFiles().length > 0;
   }
 
   GetFiles() {
     return this.dataHandler.metrics;
+  }
+
+  GetLoadingFiles() {
+    return this.dataHandler.loadingFiles;
   }
 
   RemoveFile(file: string) {
