@@ -15,7 +15,17 @@
   flex-shrink: 0;
 }
 
-.content > .header {
+.tab-content{
+  gap: 25px;
+  height: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.tab-content > .header {
   margin-top: 25px;
 }
 
