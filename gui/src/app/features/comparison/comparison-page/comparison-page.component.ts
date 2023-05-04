@@ -52,6 +52,15 @@ export class ComparisonPageComponent {
     this.dataHandler.Compare(this.targetSbom, selectedCheckboxes);
   }
 
+  setAllSelected(value: boolean) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      checkbox.checked = value;
+    }
+  }
+
   openDialog(sbom: SBOM): void {
     const dialogRef = this.dialog.open(ComparisonDialogComponent, {
       data: sbom,
@@ -60,6 +69,20 @@ export class ComparisonPageComponent {
 
   GetValidSBOMs() {
     return this.dataHandler.GetValidSBOMs();
+  }
+
+  GetDropdownSBOMs() {
+    let keys = this.GetValidSBOMs();
+    let data: { [id: string]: Object | null } = {};
+
+    for(let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = this.getSBOMAlias(key);
+
+      data[key] = value;
+    }
+
+    return data;
   }
 
   getSBOMAlias(path: string) {

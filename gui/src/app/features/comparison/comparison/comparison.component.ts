@@ -1,6 +1,7 @@
-/** @Author Tina DiLorenzo */
+/** @Author Tina DiLorenzo, Justin Jantzi */
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { Comparison, ComponentVersion, attributes } from "../comparison";
+import { DataHandlerService } from "@services/data-handler.service";
 
 @Component({
   selector: "app-comparison",
@@ -21,6 +22,13 @@ export class ComparisonComponent implements OnChanges {
     cpes: [],
     swids: [],
   };
+
+  constructor(private dataHandler: DataHandlerService) {}
+
+  getAliasFromIndex(index: any) {
+    let path = this.dataHandler.lastSentFilePaths[index];
+    return this.dataHandler.getSBOMAlias(path);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.comparison) {

@@ -1,4 +1,4 @@
-/** @Author Max Stein */
+/** @Author Max Stein, Justin Jantzi */
 
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
   styleUrls: ['../components.css']
 })
 export class DropdownComponent {
-  @Input() options: any[] = [];
+  @Input() options: { [id: string]: Object | null } = {};
   @Input() key: string = '';
   @Output() selectionChange = new EventEmitter<any>();
 

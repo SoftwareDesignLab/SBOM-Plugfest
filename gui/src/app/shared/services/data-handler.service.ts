@@ -1,3 +1,4 @@
+/**@author Justin Jantzi*/
 import { Injectable } from '@angular/core';
 import { ClientService } from './client.service';
 import { HttpParams } from '@angular/common/http';
@@ -12,6 +13,8 @@ export class DataHandlerService {
 
   private ipc!: IpcRenderer;
   public filePaths: string[] = [];
+
+  public lastSentFilePaths: string[] = [];
 
   public metrics: { [id: string]: Object | null } = {};
   public comparison!: Comparison;
@@ -103,6 +106,8 @@ export class DataHandlerService {
                 filePaths.push(path);
               }
           }
+
+          this.lastSentFilePaths = filePaths;
           
           this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
             this.comparison = result;

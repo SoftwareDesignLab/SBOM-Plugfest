@@ -28,6 +28,15 @@
 
 .tab-content > .header {
   margin-top: 25px;
+  align-items: center;
+  gap: 5px;
+}
+
+.select-options {
+  margin-left: auto;
+  margin-right: 10px;
+  align-items: center;
+  gap: 5px;
 }
 
 .selection {
