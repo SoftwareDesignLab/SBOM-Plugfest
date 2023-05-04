@@ -1,0 +1,55 @@
+URI: /plugfest/compare
+Description: Takes a list of SBOMs and generates a comparison between them
+Request Type: POST
+Params: [
+    {
+        Name: contents
+        Type: String
+        Required: True
+    },
+    {
+        Name: fileNames
+        Type: String
+        Required: True
+    }
+]
+Request Body: {}
+
+Responses: [
+    Response Code: 200
+    Response Body: [
+        {
+            targetSBOM: SBOM
+            sbomStream: List<SBOM>
+            diffReportList: List<DiffReport>
+            comparisons: Map<String, HashSet<ComponentVersion>>
+        }
+    ]
+]
+
+URI: /plugfest/qa
+Description: Takes in an SBOM and returns a quality report on the SBOM
+Request Type: POST
+Params: [
+    {
+        Name: contents
+        Type: String
+        Required: True
+    },
+    {
+        Name: fileName
+        Type: String
+        Required: True
+    }
+]
+Request Body: {}
+
+Responses: [
+    Response Code: 200
+    Response Body: [
+        {
+            testResults: ArrayList<TestResults>
+            serialNumber: String
+        }
+    ]
+]

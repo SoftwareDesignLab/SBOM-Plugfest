@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
+
+import { ModalComponent } from './shared/components/modal/modal.component';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
@@ -47,7 +49,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     ComparisonDialogComponent,
     MetricsSidePanelComponent,
     MetricsBodyComponent,
-    MetricsMainComponent
+    MetricsMainComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,

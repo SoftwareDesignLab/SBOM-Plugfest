@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalComponent } from '@components/modal/modal.component';
 import { DataHandlerService } from '@services/data-handler.service';
 
 @Component({
@@ -8,7 +10,9 @@ import { DataHandlerService } from '@services/data-handler.service';
 })
 export class MetricsSidePanelComponent {
 
-  constructor(private handler: DataHandlerService) {}
+  sbomInfoOpened: string | null = null;
+
+  constructor(private handler: DataHandlerService, public dialog: MatDialog) {}
 
   GetSBOMs() {
     return this.handler.GetValidSBOMs();
@@ -18,7 +22,11 @@ export class MetricsSidePanelComponent {
     this.handler.selectedQualityReport = bom;
   }
 
-    getSBOMAlias(path: string) {
+  getSBOMAlias(path: string) {
     return this.handler.getSBOMAlias(path);
+  }
+
+  getSBOMInfo(path: string) {
+    this.sbomInfoOpened = path;
   }
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.nvip.plugfest'
-version = '1.0'
+version = '3.1.0'
 
 application {
     mainClassName = 'org.nvip.plugfest.tooling.APIApplication'

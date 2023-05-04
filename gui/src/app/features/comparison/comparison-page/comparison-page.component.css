@@ -71,3 +71,12 @@
   padding: 10px;
   width: 100%;
 }
+
+.item {
+  display: flex;
+  overflow-y: scroll;
+}
+
+.item > .name {
+  width: 75px;
+}
