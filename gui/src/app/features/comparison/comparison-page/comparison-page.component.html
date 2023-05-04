@@ -9,7 +9,7 @@
         <div>
           <app-dropdown 
             class="dropdown"
-            [options]="GetValidSBOMs()"
+            [options]="GetDropdownSBOMs()"
             key="name"
             (selectionChange)="targetSbom = $event"
           />
