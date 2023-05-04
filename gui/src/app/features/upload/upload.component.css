@@ -37,3 +37,7 @@
 h1 {
   text-align: center;
 }
+
+.uploaded-files {
+  gap: 8px;
+}
