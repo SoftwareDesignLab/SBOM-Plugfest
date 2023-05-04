@@ -44,7 +44,7 @@
               <span title style="color: white"> {{ value.uniqueId }} </span>
               <div body>
                 <div *ngFor="let sbom of value.appearances">
-                  SBOM {{ sbom }}
+                  {{getAliasFromIndex(sbom)}}
                 </div>
               </div>
             </app-accordion>
