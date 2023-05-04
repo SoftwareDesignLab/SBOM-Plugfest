@@ -1,13 +1,11 @@
 /** Author: Tina DiLorenzo */
+import { SBOM } from "@models/sbom";
 
 /** @TODO */
 // 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT to create comparisons
 // 2. CONVERT JSON
 //    - readonly arrays TO SETS
 //    - convert keys/values to maps
-interface SBOM {
-  name: string;
-}
 
 interface SBOMConflict {
   conflictTypes?:  readonly any[];

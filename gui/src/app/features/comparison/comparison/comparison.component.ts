@@ -2,6 +2,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { Comparison, ComponentVersion, attributes } from "../comparison";
 import { DataHandlerService } from "@services/data-handler.service";
+import { SBOMComponent } from "@models/sbom";
 
 @Component({
   selector: "app-comparison",
@@ -13,6 +14,9 @@ export class ComparisonComponent implements OnChanges {
   @Input() comparedSBOMS: string[] = [];
 
   display: { [key: string]: readonly ComponentVersion[] } = {};
+  targetSBOM: {
+    [key: string]: SBOMComponent;
+  } = {};
   keys: string[] = [];
   path: any[] = [];
   pathTitles: string[] = [];
@@ -32,11 +36,27 @@ export class ComparisonComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.comparison) {
-      this.display = {...this.comparison?.comparisons};
+      this.display = { ...this.comparison?.comparisons };
       this.path = [this.comparison.comparisons];
       this.pathTitles = ["Components"];
       this.keys = Object.keys(this.display);
     }
+  }
+
+  getTargetSBOMValues() {
+    if (!this.comparison?.targetSbom) {
+      return;
+    }
+    const targetSBOM = this.comparison.targetSbom;
+
+    targetSBOM.allComponents?.forEach((component) => {
+      if (component.name) {
+        this.targetSBOM[component.name] = {
+          version: component.version,
+          
+        }
+      }
+    });
   }
 
   increaseDepth(newLocation: any, pathTitles: string) {
@@ -79,14 +99,14 @@ export class ComparisonComponent implements OnChanges {
                 ...Object.values(version.swids),
                 ...Object.values(version.cpes),
               ];
-             for (let attr of attributes) {
+              for (let attr of attributes) {
                 if (attr.appearances) {
                   if (attr?.appearances?.length < 2) {
                     isUnique = true;
                     break;
                   }
                 }
-              };
+              }
             }
           });
           if (!isUnique) {
@@ -98,12 +118,12 @@ export class ComparisonComponent implements OnChanges {
       this.display = this.display;
       this.keys = filtered;
     } else {
-      this.display = {...this.comparison?.comparisons};
+      this.display = { ...this.comparison?.comparisons };
       this.keys = Object.keys(this.comparison?.comparisons);
-      console.log(JSON.stringify(this.keys))
+      console.log(JSON.stringify(this.keys));
     }
-      this.filtered = !this.filtered;
-      this.pathTitles = ["Components"];
-      this.path = [this.display];
+    this.filtered = !this.filtered;
+    this.pathTitles = ["Components"];
+    this.path = [this.display];
   }
 }
