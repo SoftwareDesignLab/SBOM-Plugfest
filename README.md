@@ -39,21 +39,31 @@
 - Java 17
   > Check: `java -version`
 
-## Quick Start Backend
+## Quick Start
+### Backend
 1. `./gradlew bootJar`
 2. `java -jar .\api\build\libs\api-3.1.0.jar`
+### Frontend
+1. `cd gui`
+2. `npm install`
+3. `npm start`
 
 ## Contributors
-- [Derek Garcia](mailto:dlg1206@rit.edu)
-- [Matt London](mailto:mrl2534@rit.edu)
+**Principal Investigator:** [Mehdi Mirakhorli](mailto:mxmvse@rit.edu)
+
+**Senior Project Manager:** [Chris Enoch](mailto:ctevse@rit.edu)
+
+**Senior Developer Team Lead:** [Derek Garcia](mailto:dlg1206@rit.edu)
+
+**Developer Team Leads**
 - [Tina DiLorenzo](mailto:tnd3015@rit.edu)
+- [Matt London](mailto:mrl2534@rit.edu)
+- [Dylan Mulligan](mailto:dtm5568@rit.edu)
+
+**Developer Team**
 - [Tyler Drake](mailto:txd3634@rit.edu)
+- [Ian Dunn](mailto:itd3516@rit.edu)
 - [Asa Horn](mailto:aoh9470@rit.edu)
 - [Justin Jantzi](mailto:jwj7297@rit.edu)
 - [Juan Francisco Patino](mailto:jfp6815@rit.edu)
 - [Max Stein](mailto:mhs8558@rit.edu)
-- [Ian Dunn](mailto:itd3516@rit.edu)
-- [Henry Keena](mailto:htk4363@rit.edu)
-- [Henry Lu](mailto:hyl2415@rit.edu)
-- [Chris Enoch](mailto:cte6149@rit.edu)
-- [Ping Liu](mailto:htk4363@rit.edu)
