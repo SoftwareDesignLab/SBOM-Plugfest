@@ -24,10 +24,6 @@
   flex-direction: column;
 }
 
-.comparison .app-accordion {
-  margin: 10px;
-}
-
 .header {
   display: flex;
   justify-content: left;
@@ -37,10 +33,10 @@
   margin-bottom: 10px;
 }
 
-.buttons >  app-button {
+.buttons > app-button {
   margin-left: 3px;
 }
 
-.value {
-  margin-top: 20px
+#attribute-body {
+  padding-top: 20px;
 }

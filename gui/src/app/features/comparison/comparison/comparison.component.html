@@ -59,9 +59,8 @@
           [extra]="[(attribute.value?.length || 0) + ' Value(s)']"
         >
           <span title> {{ attribute.key }}</span>
-          <div body>
+          <div body id="attribute-body">
             <app-accordion
-              class="value"
               *ngFor="let value of attribute.value"
               [extra]="[getMatching(value)]"
               [color]="matches(value) ? 'var(--green)' : 'var(--red)'"
