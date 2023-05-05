@@ -49,7 +49,11 @@
       >
     </form>
   </app-side-panel>
-  <app-comparison [comparison]="GetComparison()" />
+  <div class="loading flex center" *ngIf="IsLoadingComparison()">
+    <mat-spinner/>
+  </div>
+
+  <app-comparison [comparison]="GetComparison()" *ngIf="!IsLoadingComparison()"/>
 </div>
 
 <app-modal [opened]="sbomInfoOpened !== null" (close)="this.sbomInfoOpened = null">
