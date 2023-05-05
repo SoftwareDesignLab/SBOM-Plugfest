@@ -1,14 +1,13 @@
 <div id="main-wrapper">
   <app-side-panel tabText="SBOM list">
-    <form class="tab-content flex col">
+    <form class="content flex col">
       <div class="header">SBOM LIST</div>
-      <div class="flex col" style="width: calc(100% - 40px)">
+      <div class="selection flex col">
         <div class="header flex">
           <span>Target</span>
         </div>
-        <div>
-          <app-dropdown 
-            class="dropdown"
+        <div class="content">
+          <app-dropdown
             [options]="GetDropdownSBOMs()"
             key="name"
             (selectionChange)="targetSbom = $event"

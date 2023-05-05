@@ -15,13 +15,13 @@ export class ComparisonComponent implements OnChanges {
 
   display: { [key: string]: readonly ComponentVersion[] } = {};
   targetSBOM: {
-    [key: string]: SBOMComponent;
+    [key: string]: string[];
   } = {};
   keys: string[] = [];
   path: any[] = [];
   pathTitles: string[] = [];
   filtered: boolean = false;
-  attributes: { [key: string]: attributes[] } = {
+  attributes: { [key: string]: attributes[] | undefined } = {
     purls: [],
     cpes: [],
     swids: [],
@@ -29,18 +29,19 @@ export class ComparisonComponent implements OnChanges {
 
   constructor(private dataHandler: DataHandlerService) {}
 
-  getAliasFromIndex(index: any) {
-    let path = this.dataHandler.lastSentFilePaths[index];
-    return this.dataHandler.getSBOMAlias(path);
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (this.comparison) {
       this.display = { ...this.comparison?.comparisons };
       this.path = [this.comparison.comparisons];
       this.pathTitles = ["Components"];
       this.keys = Object.keys(this.display);
+      this.getTargetSBOMValues();
     }
+  }
+
+  getAliasFromIndex(index: any) {
+    let path = this.dataHandler.lastSentFilePaths[index];
+    return this.dataHandler.getSBOMAlias(path);
   }
 
   getTargetSBOMValues() {
@@ -51,9 +52,11 @@ export class ComparisonComponent implements OnChanges {
 
     targetSBOM.allComponents?.forEach((component) => {
       if (component.name) {
-        this.targetSBOM[component.name] = {
-          version: component.version,
-          
+        if (!this.targetSBOM[component.name]) {
+          this.targetSBOM[component.name] = [];
+        }
+        if (component.version) {
+          this.targetSBOM[component.name].push(component.version);
         }
       }
     });

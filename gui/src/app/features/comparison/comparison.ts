@@ -35,7 +35,7 @@ export interface attributes {
   licenses?: readonly string[] | readonly [] | null;
   conflicts?: any[] | [];
   componentName?: string | null;
-  appearances?: readonly Number[] | readonly []
+  appearances?: readonly Number[]
   componentVersion?: readonly Number[] | readonly [] | string;
   packageManager?: string | null;
 }
