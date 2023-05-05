@@ -25,7 +25,7 @@
 }
 
 .comparison .app-accordion {
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
 .header {
@@ -37,9 +37,10 @@
   margin-bottom: 10px;
 }
 
-app-accordion {
-  margin-top: 5px;
-}
 .buttons >  app-button {
   margin-left: 3px;
+}
+
+.value {
+  margin-top: 20px
 }

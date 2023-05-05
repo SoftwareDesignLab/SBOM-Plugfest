@@ -34,7 +34,8 @@
     <div *ngIf="path.length === 2">
       <app-accordion
         *ngFor="let version of path[1]"
-        [extra]="[version?.appearances.length + ' Occurrence(s)']"
+        [extra]="[getMatching(version)]"
+        [color]="matches(version) ? 'var(--green)' : 'var(--red)'"
         (click)="increaseDepth(version, version.componentVersion)"
       >
         <span title>
@@ -60,8 +61,10 @@
           <span title> {{ attribute.key }}</span>
           <div body>
             <app-accordion
+              class="value"
               *ngFor="let value of attribute.value"
-              [extra]="[value.appearances?.length + ' Occurence(s)']"
+              [extra]="[getMatching(value)]"
+              [color]="matches(value) ? 'var(--green)' : 'var(--red)'"
             >
               <span title style="color: white">
                 {{
@@ -70,7 +73,8 @@
                       ? "*"
                       : ""
                     : ""
-                }} {{ value.uniqueId }}
+                }}
+                {{ value.uniqueId }}
               </span>
               <div body>
                 <div *ngFor="let sbom of value.appearances">

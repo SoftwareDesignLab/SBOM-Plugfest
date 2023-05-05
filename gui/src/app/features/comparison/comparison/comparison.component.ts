@@ -11,7 +11,6 @@ import { SBOMComponent } from "@models/sbom";
 })
 export class ComparisonComponent implements OnChanges {
   @Input() comparison: Comparison | null = null;
-  @Input() comparedSBOMS: string[] = [];
 
   display: { [key: string]: readonly ComponentVersion[] } = {};
   targetSBOM: {
@@ -61,7 +60,6 @@ export class ComparisonComponent implements OnChanges {
         }
       }
     });
-    console.log(this.targetSBOM);
   }
 
   increaseDepth(newLocation: any, pathTitles: string) {
@@ -83,6 +81,18 @@ export class ComparisonComponent implements OnChanges {
     }
   }
 
+  getMatching(obj: ComponentVersion | attributes): string {
+    return obj.appearances
+      ? `${obj.appearances.length} / ${this.dataHandler.lastSentFilePaths.length} Contain`
+      : "";
+  }
+
+  matches(obj: ComponentVersion | attributes): boolean {
+    return obj.appearances
+      ? obj.appearances.length / this.dataHandler.lastSentFilePaths.length === 1
+      : false;
+  }
+
   filterConflicts() {
     if (!this.comparison) {
       return;
@@ -93,9 +103,11 @@ export class ComparisonComponent implements OnChanges {
         (key) => {
           let isUnique = false;
           this.comparison?.comparisons[key].forEach((version) => {
-            // @TODO HOTFIX, REPLACE WHEN WE CAN ACTUALLY HAVE MORE THAN 2 SBOMS
             // Version is unique
-            if (version?.appearances?.length < 2) {
+            if (
+              version?.appearances?.length <
+              this.dataHandler.lastSentFilePaths.length
+            ) {
               isUnique = true;
             } else {
               // @TODO HOTFIX, replace with attributeslist typescript is being annoying.
@@ -106,7 +118,10 @@ export class ComparisonComponent implements OnChanges {
               ];
               for (let attr of attributes) {
                 if (attr.appearances) {
-                  if (attr?.appearances?.length < 2) {
+                  if (
+                    attr?.appearances?.length <
+                    this.dataHandler.lastSentFilePaths.length
+                  ) {
                     isUnique = true;
                     break;
                   }
@@ -125,24 +140,9 @@ export class ComparisonComponent implements OnChanges {
     } else {
       this.display = { ...this.comparison?.comparisons };
       this.keys = Object.keys(this.comparison?.comparisons);
-      console.log(JSON.stringify(this.keys));
     }
     this.filtered = !this.filtered;
     this.pathTitles = ["Components"];
     this.path = [this.display];
-  }
-
-  getVersion(version: ComponentVersion) {
-    if (version.componentVersion) {
-      const result =
-        this.targetSBOM[this.path[0]].indexOf(version.componentVersion) !== -1
-          ? "highlight"
-          : "noHighlight";
-      console.log(result);
-    }
-  }
-
-  log(obj: any) {
-    console.log(JSON.stringify(obj));
   }
 }
