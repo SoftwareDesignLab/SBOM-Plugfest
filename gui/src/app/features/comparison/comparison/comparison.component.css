@@ -1,9 +1,9 @@
 .comparison .path {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 .comparison .path:hover {
-    text-decoration: underline;
-    cursor: pointer;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 :host {
@@ -19,7 +19,7 @@
   padding: 30px;
   margin-top: 20px;
   border-radius: 15px;
-  background-color: #1B1E21;
+  background-color: #1b1e21;
   display: flex;
   flex-direction: column;
 }
@@ -37,4 +37,10 @@
   margin-bottom: 10px;
 }
 
+.highlight {
+  text-decoration: underline;
+}
 
+app-accordion {
+  margin-top: 5px;
+}

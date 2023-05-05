@@ -60,7 +60,7 @@ interface UniqueIdOccurrence {
 }
 
 export interface Comparison {
-  targetSbom?: SBOM;
+  targetSBOM?: SBOM;
   diffReports: readonly DiffReport[];
   comparisons: {[key: string]: readonly ComponentVersion[]};
 }

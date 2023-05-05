@@ -16,24 +16,31 @@
         *ngFor="let key of keys"
         [extra]="[display[key].length + ' Ver(s)']"
         (click)="increaseDepth(display[key], key)"
-        [class]="[targetSBOM[key] ? 'highlight' : 'noHighlight']"
       >
-        <span title> {{ key }} </span>
+        <span title [class]="[targetSBOM[key] ? 'highlight' : 'no-highlight']">
+          {{ key }}
+        </span>
       </app-accordion>
     </div>
 
     <div *ngIf="path.length === 2">
       <app-accordion
         *ngFor="let version of path[1]"
-        [class]="[
-          targetSBOM[path[0]].indexOf(version.componentVersion) !== -1
-            ? 'highlight'
-            : 'noHighlight'
-        ]"
         [extra]="[version?.appearances.length + ' Occurrence(s)']"
         (click)="increaseDepth(version, version.componentVersion)"
       >
-        <span title> {{ version.componentVersion }} </span>
+        <span
+          title
+          [class]="[
+            targetSBOM[path[1][0]]
+              ? targetSBOM[path[1][0]].indexOf(version.componentVersion) !== -1
+                ? 'highlight'
+                : 'no-highlight'
+              : 'no-highlight'
+          ]"
+        >
+          {{ version.componentVersion }}
+        </span>
       </app-accordion>
     </div>
 
@@ -48,15 +55,20 @@
             <app-accordion
               *ngFor="let value of attribute.value"
               [extra]="[value.appearances?.length + ' Occurence(s)']"
-              [class]="[
-                value.appearances
-                  ? value.appearances.indexOf(0) !== -1
-                    ? 'highlight'
-                    : 'noHighlight'
-                  : 'noHighlight'
-              ]"
             >
-              <span title style="color: white"> {{ value.uniqueId }} </span>
+              <span
+                title
+                [class]="[
+                  value.appearances
+                    ? value.appearances.indexOf(0) !== -1
+                      ? 'highlight'
+                      : 'no-highlight'
+                    : 'no-highlight'
+                ]"
+                style="color: white"
+              >
+                {{ value.uniqueId }}
+              </span>
               <div body>
                 <div *ngFor="let sbom of value.appearances">
                   {{ getAliasFromIndex(sbom) }}

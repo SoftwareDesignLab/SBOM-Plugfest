@@ -45,10 +45,10 @@ export class ComparisonComponent implements OnChanges {
   }
 
   getTargetSBOMValues() {
-    if (!this.comparison?.targetSbom) {
+    if (!this.comparison?.targetSBOM) {
       return;
     }
-    const targetSBOM = this.comparison.targetSbom;
+    const targetSBOM = this.comparison.targetSBOM;
 
     targetSBOM.allComponents?.forEach((component) => {
       if (component.name) {
@@ -60,6 +60,7 @@ export class ComparisonComponent implements OnChanges {
         }
       }
     });
+    console.log(this.targetSBOM);
   }
 
   increaseDepth(newLocation: any, pathTitles: string) {
@@ -128,5 +129,19 @@ export class ComparisonComponent implements OnChanges {
     this.filtered = !this.filtered;
     this.pathTitles = ["Components"];
     this.path = [this.display];
+  }
+
+  getVersion(version: ComponentVersion) {
+    if (version.componentVersion) {
+      const result =
+        this.targetSBOM[this.path[0]].indexOf(version.componentVersion) !== -1
+          ? "highlight"
+          : "noHighlight";
+      console.log(result);
+    }
+  }
+
+  log(obj: any) {
+    console.log(JSON.stringify(obj));
   }
 }

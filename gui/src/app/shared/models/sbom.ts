@@ -10,7 +10,7 @@ export interface SBOM {
   supplier?: string;
   timestamp?: string;
   publisher?: string;
-  allComponents?: SBOMComponent[] | [];
+  allComponents?: SBOMComponent[];
 
   // @TODO: implement fully later
   dependencyTree?: any;
