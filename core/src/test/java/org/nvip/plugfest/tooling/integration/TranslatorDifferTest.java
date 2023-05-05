@@ -38,7 +38,7 @@ public class TranslatorDifferTest {
 
     private static final int EXPECTED_CONFLICTS_SMALL_LARGE_SPDX = 447;
 
-    private static final int EXPECTED_CONFLICTS_SMALL_LARGE_CDX = 448;
+    private static final int EXPECTED_CONFLICTS_SMALL_LARGE_CDX = 449;
 
     private static final String EXPECTED_VERSION_MISTMATCH_SPDX_2_3_SPDX_2_2
             = "Schema Version Mismatch:\n" +
