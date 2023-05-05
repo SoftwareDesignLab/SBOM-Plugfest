@@ -402,7 +402,7 @@ public class TranslatorSPDX {
      * @param parent        Parent component to have dependencies connected to
      * @param sbom          The SBOM object
      */
-    public static void dependencyBuilder(
+    private static void dependencyBuilder(
             Multimap dependencies,
             HashMap components,
             Collection components_left,
