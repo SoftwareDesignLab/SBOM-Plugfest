@@ -3,7 +3,7 @@
 >
 > ## v3.1.1 -- 5/5/23
 > ### README
-> - Updated README.md with a more complete and recent description of features.
+> - Updated README.md with a more accurate and recent description of features.
 
 ## Differ
 - Compares two SBOMs supporting CycloneDX XML and SPDX Tag-Value
@@ -17,6 +17,9 @@
   - SWIDs
 - Summarizes the report in a Unix-diff-like print
 
+## Comparison
+- Generate detailed DiffReports from a target SBOM and a list of SBOMs. 
+
 ## Quality Assurance
 - Actionable Test
   - Tests fields to ensure data contained is usable.
@@ -27,7 +30,13 @@
   - Uses PURLs to search for information about the package using package manager APIs
   - Confirms that name and publisher match resource
   - Also checks to see if the assigned version number exists in resource
-
+  
+## Translator
+- Parse SBOMS from files and deserialize from formats:
+  - CycloneDX
+    > .xml and .json
+  - SPDX
+    > .spdx
 ## System Requirements
 - Java 17
   > Check: `java -version`
