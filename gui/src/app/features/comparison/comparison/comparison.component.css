@@ -40,7 +40,13 @@
 .highlight {
   text-decoration: underline;
 }
+.no-highlight {
+  border: 1px solid blue;
+}
 
 app-accordion {
-  margin-top: 5px;
+  margin-top: 3px;
+}
+.buttons >  app-button {
+  margin-left: 3px;
 }

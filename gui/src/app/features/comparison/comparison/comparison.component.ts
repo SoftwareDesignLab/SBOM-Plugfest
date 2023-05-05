@@ -21,6 +21,7 @@ export class ComparisonComponent implements OnChanges {
   path: any[] = [];
   pathTitles: string[] = [];
   filtered: boolean = false;
+  targetMarked: boolean = false;
   attributes: { [key: string]: attributes[] | undefined } = {
     purls: [],
     cpes: [],
