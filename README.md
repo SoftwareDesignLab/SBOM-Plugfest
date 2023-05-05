@@ -20,7 +20,7 @@
 ## Comparison
 - Generate detailed DiffReports from a target SBOM and a list of SBOMs. 
 
-## Quality Assurance
+## Quality Attributes
 - Actionable Test
   - Tests fields to ensure data contained is usable.
 - Completeness Test
