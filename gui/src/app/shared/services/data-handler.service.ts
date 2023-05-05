@@ -74,7 +74,8 @@ export class DataHandlerService {
   }
 
   getSBOMAlias(path: string) {
-    return `SBOM ${path.split("\\").pop()}`;
+    const pathChar =  path.indexOf('/') !== -1 ? '/' : '\\';
+    return path.split(pathChar).pop();
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
@@ -101,7 +102,7 @@ export class DataHandlerService {
           let keys = Object.keys(toSend);
 
           for(let i = 0; i < keys.length; i++) {
-              
+
             let path = keys[i];
 
               if(path === main) {
@@ -114,7 +115,7 @@ export class DataHandlerService {
           }
 
           this.lastSentFilePaths = filePaths;
-          
+
           this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
             this.comparison = result;
             this.loadingComparison = false;

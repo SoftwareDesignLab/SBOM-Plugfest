@@ -87,7 +87,7 @@ export class ComparisonPageComponent {
 
     for(let i = 0; i < keys.length; i++) {
       let key = keys[i];
-      let value = this.getSBOMAlias(key);
+      let value = this.getSBOMAlias(key) as string;
 
       data[key] = value;
     }
