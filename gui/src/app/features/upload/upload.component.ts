@@ -11,7 +11,7 @@ export class UploadComponent {
   private ipc!: IpcRenderer;
   isLoading = false;
   @ViewChild('container') container!: ElementRef;
-  
+
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
       try {
@@ -22,7 +22,6 @@ export class UploadComponent {
     } else {
       console.warn('App not running inside Electron!');
     }
-    this.dataHandler.loading.subscribe(isLoading => this.isLoading = isLoading )
   }
 
   browse() {
@@ -30,7 +29,7 @@ export class UploadComponent {
       if(files === undefined || files === null || files.length === 0) {
         this.scrollToEnd();
         return;
-        
+
       }
 
       this.dataHandler.AddFiles(files);
@@ -38,11 +37,15 @@ export class UploadComponent {
   }
 
   ContainsFiles() {
-    return Object.keys(this.dataHandler.metrics).length > 0;
+    return Object.keys(this.dataHandler.metrics).length > 0 || this.GetLoadingFiles().length > 0;
   }
 
   GetFiles() {
     return this.dataHandler.metrics;
+  }
+
+  GetLoadingFiles() {
+    return this.dataHandler.loadingFiles;
   }
 
   RemoveFile(file: string) {
