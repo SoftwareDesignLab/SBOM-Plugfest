@@ -65,5 +65,6 @@
 - [Ian Dunn](mailto:itd3516@rit.edu)
 - [Asa Horn](mailto:aoh9470@rit.edu)
 - [Justin Jantzi](mailto:jwj7297@rit.edu)
+- [Henry Orsagh](mailto:hco4630@rit.edu)
 - [Juan Francisco Patino](mailto:jfp6815@rit.edu)
 - [Max Stein](mailto:mhs8558@rit.edu)
