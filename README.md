@@ -1,16 +1,9 @@
 # PlugFest Tooling
 > A collection of tools to compare the usage and quality of different SBOM generators
 >
-> ## v3.1.0 -- 5/2/23
-> ### API
-> - Fixed bug that prevented non-ASCII characters from being processed
-> ### Comparison
-> - Fix bug that showed duplicate UIDs in the comparison report
-> ### Metrics
-> - Added support for non-ASCII characters when pulling from package manager databases
-> - Remove all empty tests to prevent duplicated component lists
-> ### GUI
-> - Display which SBOM an identifier or quality came from
+> ## v3.1.1 -- 5/5/23
+> ### README
+> - Updated README.md with a more complete and recent description of features.
 
 ## Differ
 - Compares two SBOMs supporting CycloneDX XML and SPDX Tag-Value
@@ -24,13 +17,13 @@
   - SWIDs
 - Summarizes the report in a Unix-diff-like print
 
-## Metrics
-- Appropriate Amount Test
-  - Checks to ensure that each attribute within an SBOM does not exceed the maximum line length in Java
+## Quality Assurance
+- Actionable Test
+  - Tests fields to ensure data contained is usable.
 - Completeness Test
   - Checks to make sure components have a name, publisher, version
   - Checks if attributes are formatted correctly and checks CPE and PURL formatting 
-- Timeliness Test
+- Data Verification Test
   - Uses PURLs to search for information about the package using package manager APIs
   - Confirms that name and publisher match resource
   - Also checks to see if the assigned version number exists in resource
