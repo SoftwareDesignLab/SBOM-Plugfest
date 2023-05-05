@@ -37,17 +37,27 @@ export class ComparisonPageComponent {
 
   // Display diff report
   compare() {
-     // Get all the checkboxes in the DOM
-     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-     // Loop through each checkbox and check if it's selected and not disabled
-     const selectedCheckboxes = [];
-     for (let i = 0; i < checkboxes.length; i++) {
-       const checkbox = checkboxes[i] as HTMLInputElement;
-       if (checkbox.checked && !checkbox.disabled) {
-         selectedCheckboxes.push(checkbox.value);
-       }
-     }
+    if(!this.targetSbom)
+      return;
+
+    if(this.IsLoadingComparison())
+      return;
+
+    // Get all the checkboxes in the DOM
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    // Loop through each checkbox and check if it's selected and not disabled
+    const selectedCheckboxes = [];
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      if (checkbox.checked && !checkbox.disabled) {
+        selectedCheckboxes.push(checkbox.value);
+      }
+    }
+
+    if(selectedCheckboxes.length === 0) 
+      return;
 
     this.dataHandler.Compare(this.targetSbom, selectedCheckboxes);
   }
@@ -95,6 +105,10 @@ export class ComparisonPageComponent {
 
   getSBOMInfo(path: string) {
     this.sbomInfoOpened = path;
+  }
+
+  IsLoadingComparison(): boolean {
+    return this.dataHandler.IsLoadingComparison();
   }
 }
 

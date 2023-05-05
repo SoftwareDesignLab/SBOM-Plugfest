@@ -39,3 +39,6 @@
   max-height: 30vh;
   overflow-y: scroll;
 }
+.uploaded-files {
+  gap: 8px;
+}

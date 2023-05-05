@@ -24,36 +24,56 @@
   - SWIDs
 - Summarizes the report in a Unix-diff-like print
 
-## Metrics
-- Appropriate Amount Test
-  - Checks to ensure that each attribute within an SBOM does not exceed the maximum line length in Java
+## Comparison
+- Generate detailed DiffReports from a target SBOM and a list of SBOMs. 
+
+## Quality Attributes
+- Actionable Test
+  - Tests fields to ensure data contained is usable.
 - Completeness Test
   - Checks to make sure components have a name, publisher, version
   - Checks if attributes are formatted correctly and checks CPE and PURL formatting 
-- Timeliness Test
+- Data Verification Test
   - Uses PURLs to search for information about the package using package manager APIs
   - Confirms that name and publisher match resource
   - Also checks to see if the assigned version number exists in resource
-
+  
+## Translator
+- Parse SBOMS from files and deserialize from formats:
+  - CycloneDX
+    > .xml and .json
+  - SPDX
+    > .spdx
 ## System Requirements
 - Java 17
   > Check: `java -version`
 
-## Quick Start Backend
+## Quick Start
+### Backend
 1. `./gradlew bootJar`
 2. `java -jar .\api\build\libs\api-3.1.0.jar`
+### Frontend
+1. `cd gui`
+2. `npm install`
+3. `npm start`
 
 ## Contributors
-- [Derek Garcia](mailto:dlg1206@rit.edu)
-- [Matt London](mailto:mrl2534@rit.edu)
+**Principal Investigator:** [Mehdi Mirakhorli](mailto:mxmvse@rit.edu)
+
+**Senior Project Manager:** [Chris Enoch](mailto:ctevse@rit.edu)
+
+**Senior Developer Team Lead:** [Derek Garcia](mailto:dlg1206@rit.edu)
+
+**Developer Team Leads**
 - [Tina DiLorenzo](mailto:tnd3015@rit.edu)
+- [Matt London](mailto:mrl2534@rit.edu)
+- [Dylan Mulligan](mailto:dtm5568@rit.edu)
+
+**Developer Team**
 - [Tyler Drake](mailto:txd3634@rit.edu)
+- [Ian Dunn](mailto:itd3516@rit.edu)
 - [Asa Horn](mailto:aoh9470@rit.edu)
 - [Justin Jantzi](mailto:jwj7297@rit.edu)
+- [Henry Orsagh](mailto:hco4630@rit.edu)
 - [Juan Francisco Patino](mailto:jfp6815@rit.edu)
 - [Max Stein](mailto:mhs8558@rit.edu)
-- [Ian Dunn](mailto:itd3516@rit.edu)
-- [Henry Keena](mailto:htk4363@rit.edu)
-- [Henry Lu](mailto:hyl2415@rit.edu)
-- [Chris Enoch](mailto:cte6149@rit.edu)
-- [Ping Liu](mailto:htk4363@rit.edu)
