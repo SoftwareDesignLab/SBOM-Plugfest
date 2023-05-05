@@ -1,4 +1,5 @@
 package org.nvip.plugfest.tooling.translator;
+import org.apache.commons.lang3.ObjectUtils;
 import org.nvip.plugfest.tooling.sbom.*;
 
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +42,8 @@ public class TranslatorCDXJSON {
 
         // Top level component for SBOM's dependencyTree
         Component top_component = null;
+
+        Set<String> components_left = new HashSet<>();
 
         // Initialize JSON Parser
         JsonParser parser = new JsonParser();
@@ -77,7 +81,7 @@ public class TranslatorCDXJSON {
                     top_component_meta.getName(),
                     top_component_meta.getPublisher(),
                     top_component_meta.getVersion(),
-                    top_component_meta.getBomRef()
+                    top_component_meta.getBomRef().replaceAll("@", "")
             );
         } catch(Exception e) {
             System.err.println("Could not create top-level component from MetaData.\n " +
@@ -123,10 +127,18 @@ public class TranslatorCDXJSON {
                 }
 
                 // Set the component's unique ID
-                new_component.setUniqueID(cdx_component.getBomRef());
+                try {
+                    new_component.setUniqueID(cdx_component.getBomRef().replaceAll("@", ""));
+                } catch (NullPointerException nullPointerException) {
+                    System.err.println("Could not find component Unique ID (bom-ref), defaulting to component name.");
+                    new_component.setUniqueID(cdx_component.getName());
+                } catch (Exception e) {
+                    System.err.println("Unexpected error trying to get Unique ID for component");
+                }
 
                 // Add component to component list
-                components.put(new_component.getUniqueID(), new_component);
+                components.put(new_component.getUniqueID().replaceAll("@", ""), new_component);
+                components_left.add(new_component.getUniqueID().replaceAll("@", ""));
 
                 // If a top component doesn't exist, make this new component the top component
                 top_component = top_component == null ? new_component : top_component;
@@ -146,23 +158,30 @@ public class TranslatorCDXJSON {
                     .stream()
                     .collect(
                             Collectors.toMap(
-                                    Dependency::getRef,
-                                    Dependency::getDependencies
+                                    x -> {
+                                        return x.getRef().replaceAll("@", "");
+                                    },
+                                    Dependency::getDependencies,
+                                    (x, y) -> x
                             )
                     );
         } catch (NullPointerException nullPointerException) {
-            // I failed, ourput error message and default dependencies to null
+            // It failed, output error message and default dependencies to null
             System.err.println("Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies = null;
+        } catch (IllegalStateException illegalStateException) {
+            System.out.println("Found duplicate keys LOL! bullshit. what asshat designed this SBOM?: " + file_path);
+            dependencies = null;
         }
 
+        System.out.println("OK");
 
         // If the dependency list isn't empty, call dependencyBuilder to construct dependencyTree
         // Otherwise, default the dependencyTree by adding all subcomponents as children to the top component
         if( dependencies != null ) {
             try {
-                dependencyBuilder(dependencies, components, top_component, sbom, null);
+                dependencyBuilder(dependencies, components, components_left, top_component, sbom, null);
             } catch (Exception e) {
                 System.out.println("Error building dependency tree. Dependency tree may be incomplete for: " + file_path);
             }
@@ -175,6 +194,12 @@ public class TranslatorCDXJSON {
                 System.out.println("Could not default default the dependency tree. Dependency tree may be empty.");
                 exception.printStackTrace();
             }
+        }
+
+        // This will take all the components that were not added in the dependencyTree through
+        // dependencyBuilder and will tack each remaining component to the top component by default
+        for(String remaining_component : components_left) {
+            sbom.addComponent(top_component.getUUID(), components.get(remaining_component));
         }
 
 
@@ -211,19 +236,26 @@ public class TranslatorCDXJSON {
      * @param parent        Parent component to have dependencies connected to
      * @param sbom          The SBOM object
      */
-    public static void dependencyBuilder(Map dependencies, HashMap components, Component parent, SBOM sbom, Set<String> visited) {
+    public static void dependencyBuilder(
+            Map dependencies,
+            HashMap components,
+            Collection components_left,
+            Component parent,
+            SBOM sbom,
+            Set<String> visited)
+    {
 
         // If top component is null, return. There is nothing to process.
         if (parent == null) { return; }
 
         if (visited != null) {
             // Add this parent to the visited set
-            visited.add(parent.getUniqueID());
+            visited.add(parent.getUniqueID().replaceAll("@", ""));
         }
 
         // Get the parent's dependencies as a list
-        String parent_id = parent.getUniqueID();
-        List<Dependency> children_ref = (List<Dependency>) dependencies.get(parent_id);
+        String parent_id = parent.getUniqueID().replaceAll("@", "");
+        List<Dependency> children_ref = (List<Dependency>) dependencies.get(parent_id.replaceAll("@", ""));
 
         // If there are no
         if( children_ref == null ) { return; }
@@ -231,7 +263,7 @@ public class TranslatorCDXJSON {
         // Cycle through each dependency the parent component has
         for (Dependency child_ref: children_ref) {
             // Retrieve the component the parent has a dependency for
-            Component child = (Component) components.get(child_ref.getRef());
+            Component child = (Component) components.get(child_ref.getRef().replaceAll("@", ""));
 
             // If component is already in the dependency tree, add it as a child to the parent
             // Else, add it to the dependency tree while setting the parent
@@ -241,17 +273,23 @@ public class TranslatorCDXJSON {
                 sbom.addComponent(parent.getUUID(), child);
             }
 
+            // If this is the first time this component is being added/referenced on dependencyTree
+            // Remove the component from remaining component list
+            if(components_left.contains(child_ref)) {
+                components_left.remove(child_ref);
+            }
+
             if (visited == null) {
                 // This means we are in the top level component
                 // Pass in a new hashset instead of the visited set
                 visited = new HashSet<>();
-                dependencyBuilder(dependencies, components, child, sbom, new HashSet<>());
+                dependencyBuilder(dependencies, components, components_left, child, sbom, new HashSet<>());
             }
             else {
                 // Only explore if we haven't already visited this component
                 if (!visited.contains(child.getUniqueID())) {
                     // Pass the child component as the new parent into dependencyBuilder
-                    dependencyBuilder(dependencies, components, child, sbom, visited);
+                    dependencyBuilder(dependencies, components, components_left, child, sbom, visited);
                 }
             }
         }
