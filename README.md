@@ -1,9 +1,16 @@
 # PlugFest Tooling
 > A collection of tools to compare the usage and quality of different SBOM generators
 >
-> ## v3.1.1 -- 5/5/23
-> ### README
-> - Updated README.md with a more accurate and recent description of features.
+> ## v3.1.0 -- 5/2/23
+> ### API
+> - Fixed bug that prevented non-ASCII characters from being processed
+> ### Comparison
+> - Fix bug that showed duplicate UIDs in the comparison report
+> ### Metrics
+> - Added support for non-ASCII characters when pulling from package manager databases
+> - Remove all empty tests to prevent duplicated component lists
+> ### GUI
+> - Display which SBOM an identifier or quality came from
 
 ## Differ
 - Compares two SBOMs supporting CycloneDX XML and SPDX Tag-Value
