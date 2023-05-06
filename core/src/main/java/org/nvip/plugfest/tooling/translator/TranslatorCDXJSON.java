@@ -171,11 +171,12 @@ public class TranslatorCDXJSON {
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies = null;
         } catch (IllegalStateException illegalStateException) {
-            System.out.println("Found duplicate keys LOL! bullshit. what asshat designed this SBOM?: " + file_path);
+            System.err.println("Error: duplicate keys found in dependencies and could not be handled in: " + file_path);
+            dependencies = null;
+        } catch (Exception exception) {
+            System.err.println("Error: unexpected error when attempting to get dependencies: " + file_path);
             dependencies = null;
         }
-
-        System.out.println("OK");
 
         // If the dependency list isn't empty, call dependencyBuilder to construct dependencyTree
         // Otherwise, default the dependencyTree by adding all subcomponents as children to the top component
