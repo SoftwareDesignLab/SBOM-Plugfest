@@ -1,7 +1,6 @@
 package org.nvip.plugfest.tooling.translator;
-import org.apache.commons.lang3.ObjectUtils;
-import org.nvip.plugfest.tooling.sbom.*;
 
+import org.nvip.plugfest.tooling.sbom.*;
 
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.*;
@@ -10,14 +9,10 @@ import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-
-import java.io.File;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 /**
