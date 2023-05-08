@@ -10,6 +10,7 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -44,7 +45,7 @@ public class TranslatorCDXJSON {
         JsonParser parser = new JsonParser();
 
         // Use JSON Parser to parse cdx.json file and store into cyclonedx Bom Object
-        Bom json_sbom = parser.parse(fileContents.getBytes());
+        Bom json_sbom = parser.parse(fileContents.getBytes(StandardCharsets.UTF_8));
 
         // Attempt to create the SBOM object. If information isn't found, cancel process and return a null object,
         try {
