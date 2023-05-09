@@ -73,16 +73,16 @@ public class DataVerificationTest extends MetricTest {
 
                 // check whatever is online at least contains this component, or vice versa
                 if(name == null || !((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
-                    testResults.addTest(new Test(false, "Name ", name, "does not match ",
-                            nameFoundOnline, " in ", packageManagerName));
+                    testResults.addTest(new Test(false, "Name '", name, "' does not match '",
+                            nameFoundOnline, "' in ", packageManagerName));
 
                 if(version == null || !versionFoundOnline.contains(version))
-                    testResults.addTest(new Test(false,"Version ",version," not found in ",
+                    testResults.addTest(new Test(false,"Version '",version,"' not found in ",
                             packageManagerName, " database"));
 
                 if(!((publisher.contains(publisherFoundOnline)|| publisherFoundOnline.contains(publisher))))
-                    testResults.addTest(new Test(false,"Publisher Name ", publisher,
-                            " does not match ", publisherFoundOnline," in ", packageManagerName, " database"));
+                    testResults.addTest(new Test(false,"Publisher Name '", publisher,
+                            "' does not match '", publisherFoundOnline,"' in ", packageManagerName, " database"));
             }
             catch(IOException e){
                 testResults.addTest(new Test(true,"Error accessing ",
