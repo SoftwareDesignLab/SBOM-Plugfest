@@ -2,6 +2,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { Comparison, ComponentVersion, attributes } from "../comparison";
 import { DataHandlerService } from "@services/data-handler.service";
+import { SBOMComponent } from "@models/sbom";
 
 @Component({
   selector: "app-comparison",
@@ -10,14 +11,17 @@ import { DataHandlerService } from "@services/data-handler.service";
 })
 export class ComparisonComponent implements OnChanges {
   @Input() comparison: Comparison | null = null;
-  @Input() comparedSBOMS: string[] = [];
 
   display: { [key: string]: readonly ComponentVersion[] } = {};
+  targetSBOM: {
+    [key: string]: string[];
+  } = {};
   keys: string[] = [];
   path: any[] = [];
   pathTitles: string[] = [];
   filtered: boolean = false;
-  attributes: { [key: string]: attributes[] } = {
+  targetMarked: boolean = false;
+  attributes: { [key: string]: attributes[] | undefined } = {
     purls: [],
     cpes: [],
     swids: [],
@@ -25,18 +29,37 @@ export class ComparisonComponent implements OnChanges {
 
   constructor(private dataHandler: DataHandlerService) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.comparison) {
+      this.display = { ...this.comparison?.comparisons };
+      this.path = [this.comparison.comparisons];
+      this.pathTitles = ["Components"];
+      this.keys = Object.keys(this.display);
+      this.getTargetSBOMValues();
+    }
+  }
+
   getAliasFromIndex(index: any) {
     let path = this.dataHandler.lastSentFilePaths[index];
     return this.dataHandler.getSBOMAlias(path);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.comparison) {
-      this.display = {...this.comparison?.comparisons};
-      this.path = [this.comparison.comparisons];
-      this.pathTitles = ["Components"];
-      this.keys = Object.keys(this.display);
+  getTargetSBOMValues() {
+    if (!this.comparison?.targetSBOM) {
+      return;
     }
+    const targetSBOM = this.comparison.targetSBOM;
+
+    targetSBOM.allComponents?.forEach((component) => {
+      if (component.name) {
+        if (!this.targetSBOM[component.name]) {
+          this.targetSBOM[component.name] = [];
+        }
+        if (component.version) {
+          this.targetSBOM[component.name].push(component.version);
+        }
+      }
+    });
   }
 
   increaseDepth(newLocation: any, pathTitles: string) {
@@ -58,6 +81,18 @@ export class ComparisonComponent implements OnChanges {
     }
   }
 
+  getMatching(obj: ComponentVersion | attributes): string {
+    return obj.appearances
+      ? `${obj.appearances.length} / ${this.dataHandler.lastSentFilePaths.length} Contain`
+      : "";
+  }
+
+  matches(obj: ComponentVersion | attributes): boolean {
+    return obj.appearances
+      ? obj.appearances.length / this.dataHandler.lastSentFilePaths.length === 1
+      : false;
+  }
+
   filterConflicts() {
     if (!this.comparison) {
       return;
@@ -68,9 +103,11 @@ export class ComparisonComponent implements OnChanges {
         (key) => {
           let isUnique = false;
           this.comparison?.comparisons[key].forEach((version) => {
-            // @TODO HOTFIX, REPLACE WHEN WE CAN ACTUALLY HAVE MORE THAN 2 SBOMS
             // Version is unique
-            if (version?.appearances?.length < 2) {
+            if (
+              version?.appearances?.length <
+              this.dataHandler.lastSentFilePaths.length
+            ) {
               isUnique = true;
             } else {
               // @TODO HOTFIX, replace with attributeslist typescript is being annoying.
@@ -79,14 +116,17 @@ export class ComparisonComponent implements OnChanges {
                 ...Object.values(version.swids),
                 ...Object.values(version.cpes),
               ];
-             for (let attr of attributes) {
+              for (let attr of attributes) {
                 if (attr.appearances) {
-                  if (attr?.appearances?.length < 2) {
+                  if (
+                    attr?.appearances?.length <
+                    this.dataHandler.lastSentFilePaths.length
+                  ) {
                     isUnique = true;
                     break;
                   }
                 }
-              };
+              }
             }
           });
           if (!isUnique) {
@@ -98,12 +138,11 @@ export class ComparisonComponent implements OnChanges {
       this.display = this.display;
       this.keys = filtered;
     } else {
-      this.display = {...this.comparison?.comparisons};
+      this.display = { ...this.comparison?.comparisons };
       this.keys = Object.keys(this.comparison?.comparisons);
-      console.log(JSON.stringify(this.keys))
     }
-      this.filtered = !this.filtered;
-      this.pathTitles = ["Components"];
-      this.path = [this.display];
+    this.filtered = !this.filtered;
+    this.pathTitles = ["Components"];
+    this.path = [this.display];
   }
 }
