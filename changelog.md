@@ -1,5 +1,15 @@
 # Plugfest Changelog
 
+## v3.2.0 -- 5/9/23
+### API
+- Fixed another bug preventing non-ASCII characters from being processed
+### Comparison
+- Allow marking of components as appearing in target SBOM
+### Metrics
+- Fix bug causing formatting issues with the data verification test
+### GUI
+- Added individual loading spinners for each uploaded SBOM
+
 ## v3.1.0 -- 5/2/23
 ### API
 - Fixed bug that prevented non-ASCII characters from being processed
