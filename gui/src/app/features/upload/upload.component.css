@@ -1,12 +1,15 @@
 .upload-page {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   height: 100%;
   margin-top: 2%;
-  max-width: 600px;
 }
 
 .sbom {
+  align-items: center;
   padding: 0px 15px;
   color: white;
   background-color: var(--secondary);
@@ -41,4 +44,8 @@
 }
 .uploaded-files {
   gap: 8px;
+}
+
+h1 {
+  text-align: center;
 }
