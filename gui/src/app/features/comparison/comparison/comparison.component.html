@@ -1,4 +1,14 @@
-<app-button (click)="filterConflicts()">{{filtered ? 'Show All' : 'Show Conflicts'}}</app-button>
+<div class="flex buttons">
+  <app-button *ngIf="keys && keys.length > 0" (click)="filterConflicts()">{{
+    filtered ? "Show All" : "Show Conflicts"
+  }}</app-button>
+
+  <app-button
+    *ngIf="keys && keys.length > 0"
+    (click)="targetMarked = !targetMarked"
+    >{{ targetMarked ? "Unmark" : "Mark" }} Target SBOM Values</app-button
+  >
+</div>
 <div *ngIf="comparison" class="comparison">
   <div class="header">
     <span
@@ -15,36 +25,59 @@
         [extra]="[display[key].length + ' Ver(s)']"
         (click)="increaseDepth(display[key], key)"
       >
-        <span title> {{ key }} </span>
+        <span title>
+          {{ targetSBOM[key] && targetMarked ? "*" : "" }} {{ key }}
+        </span>
       </app-accordion>
     </div>
 
     <div *ngIf="path.length === 2">
       <app-accordion
         *ngFor="let version of path[1]"
-        [extra]="[version?.appearances.length + ' Occurrence(s)']"
+        [extra]="[getMatching(version)]"
+        [color]="matches(version) ? 'var(--green)' : 'var(--red)'"
         (click)="increaseDepth(version, version.componentVersion)"
       >
-        <span title> {{ version.componentVersion }} </span>
+        <span title>
+          {{
+            targetSBOM[pathTitles[1]] && targetMarked
+              ? targetSBOM[pathTitles[1]].indexOf(version.componentVersion) !==
+                -1
+                ? "*"
+                : ""
+              : ""
+          }}
+          {{ version.componentVersion }}
+        </span>
       </app-accordion>
     </div>
 
     <div *ngIf="path.length === 3">
       <div *ngFor="let attribute of attributes | keyvalue">
         <app-accordion
-          *ngIf="attribute.value.length"
-          [extra]="[attribute.value.length + ' Value(s)']"
+          *ngIf="attribute.value?.length"
+          [extra]="[(attribute.value?.length || 0) + ' Value(s)']"
         >
           <span title> {{ attribute.key }}</span>
-          <div body>
+          <div body id="attribute-body">
             <app-accordion
               *ngFor="let value of attribute.value"
-              [extra]="[value.appearances?.length + ' Occurence(s)']"
+              [extra]="[getMatching(value)]"
+              [color]="matches(value) ? 'var(--green)' : 'var(--red)'"
             >
-              <span title style="color: white"> {{ value.uniqueId }} </span>
+              <span title style="color: white">
+                {{
+                  value.appearances && targetMarked
+                    ? value.appearances.indexOf(0) !== -1
+                      ? "*"
+                      : ""
+                    : ""
+                }}
+                {{ value.uniqueId }}
+              </span>
               <div body>
                 <div *ngFor="let sbom of value.appearances">
-                  SBOM {{ sbom }}
+                  {{ getAliasFromIndex(sbom) }}
                 </div>
               </div>
             </app-accordion>

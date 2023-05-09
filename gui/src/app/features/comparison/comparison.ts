@@ -1,13 +1,11 @@
 /** Author: Tina DiLorenzo */
+import { SBOM } from "@models/sbom";
 
 /** @TODO */
 // 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT to create comparisons
 // 2. CONVERT JSON
 //    - readonly arrays TO SETS
 //    - convert keys/values to maps
-interface SBOM {
-  name: string;
-}
 
 interface SBOMConflict {
   conflictTypes?:  readonly any[];
@@ -37,7 +35,7 @@ export interface attributes {
   licenses?: readonly string[] | readonly [] | null;
   conflicts?: any[] | [];
   componentName?: string | null;
-  appearances?: readonly Number[] | readonly []
+  appearances?: readonly Number[]
   componentVersion?: readonly Number[] | readonly [] | string;
   packageManager?: string | null;
 }
@@ -62,7 +60,7 @@ interface UniqueIdOccurrence {
 }
 
 export interface Comparison {
-  targetSbom?: SBOM;
+  targetSBOM?: SBOM;
   diffReports: readonly DiffReport[];
   comparisons: {[key: string]: readonly ComponentVersion[]};
 }

@@ -51,10 +51,11 @@ public class CompletenessTest extends MetricTest {
         this.publisherEmailRegex = Pattern.compile("(?:(Person|Organization)?: (.*?))? ?<?(\\S+@\\S+\\.[^\\s>]+)>?", Pattern.MULTILINE);
 
         /*
-            Regex101: https://regex101.com/r/wzJeIq/4
+            Regex101: https://regex101.com/r/BjMJCP/1
             Checks if version is in form: "12.*" | "4:*", version format varies a lot
+            Also supports git commit hashes (for example docker compose uses this)
          */
-        this.componentVersionRegex = Pattern.compile("^([0-9]+[\\.:\\-].*)", Pattern.MULTILINE);
+        this.componentVersionRegex = Pattern.compile("^(v?[0-9]+[\\.:\\-].*|[0-9a-fA-F]{7,40})$", Pattern.MULTILINE);
 
         // TODO for these patterns: check if name, version, etc matches component name, version, etc. Make classes?
 

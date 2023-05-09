@@ -37,7 +37,7 @@ icon.ng-star-inserted {
 .dropdown {
     background: var(--secondary);
     color: white;
-    width: 25%;
+    width: 100%;
     margin: auto;
     height: 50px;
     align-items: center;
@@ -77,3 +77,15 @@ WIP overriding style
 .accordion-title, .accordion-desc {
     color: white;
 }
+
+.mat-mdc-form-field {
+    --mat-mdc-form-field-floating-label-scale: 0.75;
+    /* display: inline-flex; */
+    flex-direction: column;
+    width: 100%;
+    text-align: left;
+}
+
+.mat-expansion-panel-header.mat-expanded:focus {
+    background-color: var(--gray);
+  }

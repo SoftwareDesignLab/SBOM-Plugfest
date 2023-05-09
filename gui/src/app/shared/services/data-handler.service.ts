@@ -1,3 +1,4 @@
+/**@author Justin Jantzi*/
 import { Injectable } from '@angular/core';
 import { ClientService } from './client.service';
 import { HttpParams } from '@angular/common/http';
@@ -13,10 +14,14 @@ export class DataHandlerService {
   private ipc!: IpcRenderer;
   public filePaths: string[] = [];
 
+  public lastSentFilePaths: string[] = [];
+
   public metrics: { [id: string]: Object | null } = {};
+  public loadingFiles: string[] = [];
+
   public comparison!: Comparison;
 
-  public loading = new BehaviorSubject<boolean>(false);
+  private loadingComparison: boolean = false;
 
   public selectedQualityReport!: string;
 
@@ -33,7 +38,7 @@ export class DataHandlerService {
   }
 
   AddFiles(paths: string[]) {
-    this.loading.next(true);
+    this.loadingFiles.push(...paths);
     this.filePaths.push(...paths);
 
     paths.forEach((path) => {
@@ -47,15 +52,19 @@ export class DataHandlerService {
     })
   }
 
+  IsLoadingComparison() {
+    return this.loadingComparison;
+  }
+
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
         this.metrics[path] = result;
-        this.loading.next(false);
+        this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       },
       (error) => {
         this.metrics[path] = null;
-        this.loading.next(false);
+        this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       })
     });
   }
@@ -65,11 +74,13 @@ export class DataHandlerService {
   }
 
   getSBOMAlias(path: string) {
-    const index = this.filePaths.indexOf(path);
-    return `SBOM ${index}`;
+    const pathChar =  path.indexOf('/') !== -1 ? '/' : '\\';
+    return path.split(pathChar).pop();
   }
 
   async Compare(main: string, others: string[]): Promise<any> {
+    this.loadingComparison = true;
+
     let toSend: { [path: string]: any } = {};
     let total = others.length + 1;
     let i = 0;
@@ -83,25 +94,31 @@ export class DataHandlerService {
 
         //last time running
         if(i == total) {
-          console.log("last running");
-
           let fileData: string[] = [];
           let filePaths: string[] = [];
 
           //Ensure that the compare is first in list
-          Object.keys(toSend).forEach((path) => {
-            console.log("insert path: " + path);
-            if(path === main) {
-              fileData.unshift(toSend[path]);
-              filePaths.unshift(path);
-            } else {
-              fileData.push(toSend[path]);
-              filePaths.push(path);
-            }
-          })
+
+          let keys = Object.keys(toSend);
+
+          for(let i = 0; i < keys.length; i++) {
+
+            let path = keys[i];
+
+              if(path === main) {
+                fileData.unshift(toSend[path]);
+                filePaths.unshift(path);
+              } else {
+                fileData.push(toSend[path]);
+                filePaths.push(path);
+              }
+          }
+
+          this.lastSentFilePaths = filePaths;
 
           this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
             this.comparison = result;
+            this.loadingComparison = false;
           })
         }
       })

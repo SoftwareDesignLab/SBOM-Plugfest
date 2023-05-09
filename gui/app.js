@@ -8,13 +8,17 @@ let filePath = undefined;
 
 function createWindow () {
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        minWidth: 800,
+        minHeight: 600,
+        show: false,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
         }
     })
+
+    mainWindow.maximize();
+    mainWindow.show();
 
     mainWindow.loadURL(
         url.format({

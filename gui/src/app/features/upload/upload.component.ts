@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { DataHandlerService } from '@services/data-handler.service';
 import { IpcRenderer } from 'electron';
 
@@ -10,7 +10,8 @@ import { IpcRenderer } from 'electron';
 export class UploadComponent {
   private ipc!: IpcRenderer;
   isLoading = false;
-  
+  @ViewChild('container') container!: ElementRef;
+
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
       try {
@@ -21,13 +22,14 @@ export class UploadComponent {
     } else {
       console.warn('App not running inside Electron!');
     }
-    this.dataHandler.loading.subscribe(isLoading => this.isLoading = isLoading )
   }
 
   browse() {
     this.ipc.invoke('selectFiles').then((files: string[]) => {
       if(files === undefined || files === null || files.length === 0) {
+        this.scrollToEnd();
         return;
+
       }
 
       this.dataHandler.AddFiles(files);
@@ -35,15 +37,25 @@ export class UploadComponent {
   }
 
   ContainsFiles() {
-    return Object.keys(this.dataHandler.metrics).length > 0;
+    return Object.keys(this.dataHandler.metrics).length > 0 || this.GetLoadingFiles().length > 0;
   }
 
   GetFiles() {
     return this.dataHandler.metrics;
   }
 
+  GetLoadingFiles() {
+    return this.dataHandler.loadingFiles;
+  }
+
   RemoveFile(file: string) {
     this.dataHandler.filePaths = this.dataHandler.filePaths.filter((x) => x != file);
     delete this.dataHandler.metrics[file];
+  }
+
+  private scrollToEnd() {
+    setTimeout(() => {
+      this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+    }, 0);
   }
 }

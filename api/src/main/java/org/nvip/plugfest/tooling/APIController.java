@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
@@ -86,7 +87,14 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("qa")
-    public ResponseEntity<QualityReport> qa(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName) {
+    public ResponseEntity<QualityReport> qa(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName, HttpServletRequest servletRequest) {
+        try {
+            servletRequest.setCharacterEncoding("UTF-8");
+        }
+        catch (Exception e) {
+            // This will not happen as we are hardcoding UTF-8
+            System.out.println("Failed to set encoding");
+        }
 
         SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
 

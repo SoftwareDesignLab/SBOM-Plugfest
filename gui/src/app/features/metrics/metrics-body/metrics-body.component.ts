@@ -17,4 +17,8 @@ export class MetricsBodyComponent {
 
     return this.handler.metrics[this.handler.selectedQualityReport];
   }
+
+  getPassedPercent(testResult: any) {
+    return (testResult.successfulTests / testResult.tests.length * 100).toFixed(2);
+  }
 }
