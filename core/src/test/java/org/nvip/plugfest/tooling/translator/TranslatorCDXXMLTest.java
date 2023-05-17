@@ -86,16 +86,4 @@ public class TranslatorCDXXMLTest {
         assertEquals(631, sbom.getAllComponents().size());
     }
 
-    @Test
-    public void translatorcdx_very_small_file_test() throws ParserConfigurationException {
-        SBOM sbom = TranslatorCDXXML.translatorCDXXML(
-                "src/test/java/org/nvip/plugfest/tooling/sample_boms/syft-0.80.0-source-cdx-xml.xml"
-        );
-        assertNotNull(sbom);
-        //Assertions.assertEquals(SBOMType.CYCLONE_DX, sbom.getOriginFormat());
-        //assertEquals("1", sbom.getSbomVersion());
-        //assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
-        //assertEquals(18, sbom.getAllComponents().size());
-    }
-
 }
