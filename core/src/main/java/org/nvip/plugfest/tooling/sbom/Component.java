@@ -88,6 +88,7 @@ public class Component {
         this.cpes = new HashSet<>();
         this.purls = new HashSet<>();
         this.swids = new HashSet<>();
+        this.hashes = new HashSet<>();
         this.componentConflicts = new HashSet<>();
         this.unpackaged = false;
     }
@@ -260,6 +261,16 @@ public class Component {
         this.purls.add(purl);
     }
 
+    public Set<Hash> getHashes() {
+        return this.hashes;
+    }
+
+    public void setHashes(Set<Hash> hashes) {
+        this.hashes = hashes;
+    }
+    public void addHash(Hash hash) {
+        this.hashes.add(hash);
+    }
     public Set<String> getSwids() {
         return swids;
     }
