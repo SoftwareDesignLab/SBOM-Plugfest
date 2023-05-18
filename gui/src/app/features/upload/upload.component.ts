@@ -36,6 +36,10 @@ export class UploadComponent {
     });
   }
 
+  getSBOMAlias(path: string) {
+    return this.dataHandler.getSBOMAlias(path);
+  }
+
   ContainsFiles() {
     return Object.keys(this.dataHandler.metrics).length > 0 || this.GetLoadingFiles().length > 0;
   }
