@@ -41,6 +41,11 @@ public class Component {
     private Set<String> swids;
 
     /**
+     * Stored Hash values for Components
+     */
+    private Set<Hash> hashes;
+
+    /**
      * Unique identifier for a component in an SBOM
      * For SPDX SBOMs this may be : SPDX_ID
      * For CDX SBOMs this may be : bom-ref
