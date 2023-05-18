@@ -2,9 +2,10 @@ const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
+const spawn = require('child_process').spawn;   // for backend
 
 let mainWindow = undefined;
-let filePath = undefined;
+let process_id; // string to store process id from spring stdout
 
 function createWindow () {
     mainWindow = new BrowserWindow({
@@ -33,24 +34,47 @@ function createWindow () {
     })
 }
 
-app.on('ready', function() {
+app.on('ready', async function() {
 
-    // let arg1 = app.commandLine.getSwitchValue("path");
+    // Launch backend
+    console.log("Building Backend Jar");
 
-    // if(arg1 === undefined || arg1 === '') {
-    //     console.error("Error: Aborting... 'path' argument for directory of SBOMs not set!");
-    //     app.quit();
-    //     return;
-    // }
+    let execCmd = `cd .. && gradlew run `; // Command to compile and run backend jar
+    console.log('> ' + execCmd);
+    const jarProcess = spawn(execCmd, { // Spawn a shell child process to run this command
+        shell: true
+    });
 
-    // filePath = arg1;
+    // Add listener for stdout data
+    jarProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`); // Print stdout data
 
-    //TODO: Launch backend with file path arg
+        if (data.includes('with PID')) { // Spring prints a line with the PID: see below multiline comment
 
+            let splitLine = data.toString().split(/[ ]+/); // Split line by spaces
+
+            process_id = splitLine[splitLine.indexOf("INFO") + 1]; // Get PID from spring stdout
+
+        }
+    });
+
+    // Print stderr data if any comes up
+    jarProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    // If backend shuts down prematurely, print exit code
+    jarProcess.on('close', (code) => {
+        console.log(`Backend process exited with code ${code}`);
+    });
+    // todo launch window only after backend is ready?
     createWindow();
 })
 
 app.on('window-all-closed', function () {
+    if(process_id) { // If spring is running, kill backend and log
+        console.log("Backend process killed " + (process.kill(process_id, 'SIGINT') ? "successfully" : "unsuccessfully"));
+    }
     if (process.platform !== 'darwin') app.quit()
 })
 
