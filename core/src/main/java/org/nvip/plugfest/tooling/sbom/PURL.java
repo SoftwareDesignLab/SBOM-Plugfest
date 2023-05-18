@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -11,8 +12,14 @@ import java.util.Objects;
  */
 public class PURL {
 
-    private String name;
-    private String version;
+    private String scheme;  // required
+    private String type;    // required
+    private String namespace;   // Optional and type-specific
+    private String name;    // required
+    private String version; // Optional
+
+    private HashMap<String, String> data;    // comprised of qualifiers:subpath, optional
+
     private ComponentPackageManager pm;
     private String PURLString;
 
