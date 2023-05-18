@@ -6,7 +6,7 @@
                 <div class="file flex center" *ngFor="let item of GetFiles() | keyvalue">
                     <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"/>
                     <div class="sbom flex">
-                        {{item.key}}
+                        {{getSBOMAlias(item.key)}}
                         <icon icon="delete" (click)="RemoveFile(item.key)"/>
                     </div>
                 </div>
@@ -14,7 +14,7 @@
             <div class="file flex center" *ngFor="let item of GetLoadingFiles()">
                 <mat-spinner style="width: 32px; height: 32px;"/>
                 <div class="sbom flex">
-                    {{item}}
+                    {{getSBOMAlias(item)}}
                 </div>
             </div>
         </div>
