@@ -5,6 +5,7 @@ import org.nvip.plugfest.tooling.differ.Comparer;
 import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorCDXXML;
+import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -64,11 +65,11 @@ public class TranslatorDifferTest {
     public void full_diff_report_from_SPDX_SBOMs() throws IOException {
 
         // Create first SBOM
-        SBOM test_sbom_one = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_DIFF_BOM);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_v2_3_DIFF_BOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -79,11 +80,11 @@ public class TranslatorDifferTest {
     @Test
     public void full_diff_report_from_v2_3_SPDX_and_v2_2_SPDX() throws IOException {
         // Create first SBOM
-        SBOM test_sbom_one = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_2_SBOM);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_v2_2_SBOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -96,17 +97,17 @@ public class TranslatorDifferTest {
     public void full_diff_report_from_v2_3_SPDX_and_empty_SPDX() throws IOException {
 
         // Create first SBOM
-        SBOM test_sbom_one = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorSPDX.translatorSPDX(TEST_SPDX_EMPTY);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_EMPTY);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
 
         assertNotNull(test_report);
-        assertEquals(16, test_report.getComponentConflicts().size());
+        assertEquals(17, test_report.getComponentConflicts().size());
 
 
     }
@@ -114,11 +115,11 @@ public class TranslatorDifferTest {
     @Test
     public void full_diff_report_from_small_SPDX_SBOM_and_large_SPDX_SBOM() throws IOException {
 
-        SBOM test_sbom_one = TranslatorSPDX.translatorSPDX(TEST_SPDX_LARGE_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_LARGE_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -138,11 +139,11 @@ public class TranslatorDifferTest {
     public void full_diff_report_from_CDX_SBOM() throws ParserConfigurationException {
 
         // Create first SBOM
-        SBOM test_sbom_one = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorCDXXML.translatorCDXXML(TEST_CDX_DIFF_SBOM);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_DIFF_SBOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -154,11 +155,11 @@ public class TranslatorDifferTest {
     @Test
     public void full_diff_report_from_small_CDX_SBOM_and_large_CDX_SBOM() throws ParserConfigurationException {
 
-        SBOM test_sbom_one = TranslatorCDXXML.translatorCDXXML(TEST_CDX_LARGE_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_LARGE_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create second SBOM
-        SBOM test_sbom_two = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_SBOM);
         assertNotNull(test_sbom_two);
 
         DiffReport test_report = Comparer.generateReport(test_sbom_one, test_sbom_two);
@@ -177,11 +178,11 @@ public class TranslatorDifferTest {
     public void full_diff_report_from_SPDX_and_CDX() throws IOException, ParserConfigurationException {
 
         // Create an SPDX SBOM
-        SBOM test_sbom_one = TranslatorSPDX.translatorSPDX(TEST_SPDX_v2_3_SBOM);
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_one);
 
         // Create a CDX SBOM
-        SBOM test_sbom_two = TranslatorCDXXML.translatorCDXXML(TEST_CDX_SBOM);
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_SBOM);
         assertNotNull(test_sbom_two);
 
         // Make a diff report of the SPDX against the CDX SBOM

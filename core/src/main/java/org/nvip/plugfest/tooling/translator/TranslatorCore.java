@@ -37,10 +37,13 @@ public abstract class TranslatorCore {
     protected HashMap<String, String> product_data;
 
     // Map holding all components found
-    protected HashMap<String, String> components;
+    protected HashMap<String, Component> components;
 
     // Map of dependencies in SBOM between components
     protected HashMap<String, ArrayList<String>> dependencies;
+
+    // Collection containing all remaining components not added to the dependencyTree
+    protected HashSet<String> remainder;
 
     /**
      * Generic Translator core constructor.
@@ -53,6 +56,7 @@ public abstract class TranslatorCore {
         product_data = new HashMap<>();
         components = new HashMap<>();
         dependencies = new HashMap<>();
+        remainder = new HashSet<>();
     }
 
     /**
@@ -154,6 +158,8 @@ public abstract class TranslatorCore {
                     sbom.addComponent(parent.getUUID(), child);
                 }
 
+                this.remainder.remove(child);
+
                 if (visited == null) {
                     // This means we are in the top level component
                     // Pass in a new hashset instead of the visited set
@@ -173,25 +179,22 @@ public abstract class TranslatorCore {
     /**
      * Defaults all dependencies in the SBOM by adding them as children to the current parent component.
      *
-     * @param components Components to be added as the children
      * @param parent     Parent (product) component
      */
-    protected void defaultDependencies(HashMap<String, Component> components, Component parent) {
+    protected void defaultDependencies(Component parent) {
 
-        // If there are no dependencies there is no reason to default, return.
-        if (dependencies == null) { return; }
+        // If there are no components left there is no reason to default, return.
+        if (this.remainder == null) { return; }
+
+        List<String> list = this.remainder.stream().toList();
 
         // Loop through all dependencies. If it is not null and is not present in the SBOM already, add it.
-        for(ArrayList<String> defaults : dependencies.values()) {
-            defaults.stream().forEach(
-                    x -> {
-                        if(components.get(x) != null && !sbom.hasComponent(components.get(x).getUUID())) {
-                            sbom.addComponent(parent.getUUID(), components.get(x));
-                        }
-                    }
-            );
+        for(String comp : list) {
+            if (comp != null && this.components.get(comp) != null && !sbom.hasComponent(this.components.get(comp).getUUID())) {
+                this.sbom.addComponent(parent.getUUID(), this.components.get(comp));
+                this.remainder.remove(comp.toString());
+            }
         }
-
     }
 
     /**
@@ -212,6 +215,11 @@ public abstract class TranslatorCore {
             dependencies.replace(key, oldDependencies);
         }
 
+    }
+
+    protected void loadComponent(String key, Component component) {
+        components.put(key, component);
+        remainder.add(key);
     }
 
     /**

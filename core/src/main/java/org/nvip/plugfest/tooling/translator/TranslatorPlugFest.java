@@ -19,6 +19,7 @@ import java.util.Arrays;
  * @author Matt London
  */
 public class TranslatorPlugFest {
+
     /**
      * Parse an SBOM using the appropriate translator and return the object
      *
@@ -48,27 +49,15 @@ public class TranslatorPlugFest {
 
         SBOM sbom = null;
 
-        // TODO check the contents of the file rather than trusting the file extension
-        // TODO address the parser exception rather than ignoring it
-
-        final String extension = filePath.substring(filePath.toLowerCase().lastIndexOf('.'));
-
         try {
 
-            //call the appropriate translator based on the file extension
-            switch (extension) {
+            String ext = filePath.substring(filePath.lastIndexOf('.') + 1);
 
-                case ".xml"  -> sbom = TranslatorCDXXML.translatorCDXXMLContents(contents, filePath);
-
-                case ".json" -> {
-                    if (new JSONObject(contents).toMap().get("bomFormat").equals("CycloneDX")) {
-                        sbom = TranslatorCDXJSON.translatorCDXJSONContents(contents, filePath);
-                    }
-                }
-
-                case ".spdx" -> sbom = TranslatorSPDX.translatorSPDXContents(contents, filePath);
-
-                default      -> System.err.println("\nInvalid SBOM format found at: " + filePath);
+            switch (ext) {
+                case "xml" -> sbom =  new TranslatorCDXXML().translate(filePath);
+                case "json" -> sbom =  new TranslatorCDXJSON().translate(filePath);
+                case "spdx" -> sbom =  new TranslatorSPDX().translate(filePath);
+                default -> System.err.println("\nError: Invalid SBOM format found in: " + filePath);
 
             }
 

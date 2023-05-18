@@ -97,7 +97,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 new_component.setUniqueID(cdx_component.getBomRef());
 
                 // Add component to component list
-                components.put(new_component.getUniqueID(), new_component);
+                this.loadComponent(new_component.getUniqueID(), new_component);
 
                 // If a top component doesn't exist, make this new component the top component
                 this.product = product == null ? new_component : product;
@@ -148,7 +148,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
             }
         }
 
-        this.defaultDependencies(components, this.product);
+        this.defaultDependencies(this.product);
 
         return this.sbom;
 
