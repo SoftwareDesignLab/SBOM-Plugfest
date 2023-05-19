@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -33,60 +34,59 @@ public class PURL {
     private List<String> namespace;   // Optional and type-specific
     private String name;    // required
     private String version; // Optional
-    private HashMap<String, String> qualifiers;    // Optional
+    private HashMap<String, String> qualifiers = null;    // Optional
+    private String subpath; // Optional
 
     private ComponentPackageManager pm;
     private String PURLString;
 
+    /**
+     * Create purl object from given purl String. Will error if purl fails
+     * @param PURL
+     */
     public PURL(String PURL){
         Pattern purlPattern= Pattern.compile(this.PURL_REGEX);
         try{
             Matcher matcher = purlPattern.matcher(PURL);
-//            boolean matchFound = ;
+
+            // Regex fails to match to string
             if(!matcher.find())
                 throw new Exception("Unable to parse purl \"" + PURL + "\"");
+
+            // Check for required fields
+            if(matcher.group(1) == null || matcher.group(2) == null || matcher.group(4) == null){
+                throw new Exception("Invalid purl, missing the following: "+
+                        ( matcher.group(1) == null ? "Schema " : "" ) +
+                        ( matcher.group(1) == null ? "Type " : "" ) +
+                        ( matcher.group(1) == null ? "Name " : "" )
+                );
+            }
+
+            // Build purl object
+            this.scheme = matcher.group(1);
+            this.type = matcher.group(2);
+            this.namespace = Arrays.stream(matcher.group(3).split("/")).toList();   // can be 0 - n namespaces
+            this.name = matcher.group(4);
+            this.version = matcher.group(5);
+
+            // Build qualifiers if present
+            if(matcher.group(6) != null){
+                this.qualifiers = new HashMap<>();
+                // Add all key=value pairs for the quantifier
+                for(String qualifier : matcher.group(6).split("&")){
+                    String[] keyVal = qualifier.split("=");
+                    this.qualifiers.put(keyVal[0], keyVal[1]);
+                }
+            }
+
+            this.subpath = matcher.group(7);
+
         } catch (Exception e){
-            System.err.println(e);
-            return;
+            System.err.println(e.getMessage());
         }
-        addFromString();
     }
 
     public PURL(){}
-
-    /**
-     * Helper function to convert the string representation to a class
-     * given the object already contains a PURL String
-     */
-    public void addFromString(){
-        assert PURLString != null;
-        addFromString(PURLString);
-    }
-
-    /**
-     * Helper function to convert the string representation to a class
-     * @param purl the PURL String
-     */
-    public void addFromString(String purl){
-        String p = purl.toLowerCase();
-        if(p.contains("alpine"))
-            setPackageManager(ComponentPackageManager.ALPINE);
-        else if(p.contains("debian"))
-            setPackageManager(ComponentPackageManager.DEBIAN);
-        else // add cases here as PMs are added
-            setPackageManager(ComponentPackageManager.PYTHON);
-
-        switch (this.pm){
-            case ALPINE:
-                String[] purlSplit = p.split("[/@]");
-                this.name = purlSplit[2];
-                purlSplit = p.split("[@?]");
-                this.version = purlSplit[1];
-                break;
-            case DEBIAN:
-        }
-
-    }
 
     ///
     /// Getters and Setters
