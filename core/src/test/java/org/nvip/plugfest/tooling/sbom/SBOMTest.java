@@ -131,6 +131,9 @@ public class SBOMTest {
 
     int test_hash_code = 770939883;
 
+    public SBOMTest() throws Exception {
+    }
+
     /**
      * Set-up/Teardown Methods
      */

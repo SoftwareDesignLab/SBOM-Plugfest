@@ -39,47 +39,43 @@ public class PURL {
      * Create purl object from given purl String. Will error if purl fails
      * @param PURL
      */
-    public PURL(String PURL){
+    public PURL(String PURL) throws Exception {
         Pattern purlPattern = new Pattern(this.PURL_REGEX, Pattern.MULTILINE);
-        try{
-            Matcher matcher = purlPattern.matcher(PURL);
 
-            // Regex fails to match to string
-            if(!matcher.find())
-                throw new Exception("Unable to parse purl \"" + PURL + "\"");
+        Matcher matcher = purlPattern.matcher(PURL);
 
-            // Check for required fields
-            if(matcher.group(1) == null || matcher.group(2) == null || matcher.group(4) == null){
-                throw new Exception("Invalid purl, missing the following: "+
-                        ( matcher.group(1) == null ? "Schema " : "" ) +
-                        ( matcher.group(1) == null ? "Type " : "" ) +
-                        ( matcher.group(1) == null ? "Name " : "" )
-                );
-            }
+        // Regex fails to match to string
+        if(!matcher.find())
+            throw new Exception("Unable to parse purl \"" + PURL + "\"");
 
-            // Build purl object
-            this.scheme = matcher.group(1);
-            this.type = matcher.group(2);
-            if(matcher.group(3) != null)
-                this.namespace = Arrays.stream(matcher.group(3).split("/")).toList();   // can be 0 - n namespaces
-            this.name = matcher.group(4);
-            this.version = matcher.group(5);
-
-            // Build qualifiers if present
-            if(matcher.group(6) != null){
-                this.qualifiers = new LinkedHashMap<>();
-                // Add all key=value pairs for the quantifier
-                for(String qualifier : matcher.group(6).split("&")){
-                    String[] keyVal = qualifier.split("=");
-                    this.qualifiers.put(keyVal[0], keyVal[1]);
-                }
-            }
-
-            this.subpath = matcher.group(7);
-
-        } catch (Exception e){
-            System.err.println(e.getMessage());
+        // Check for required fields
+        if(matcher.group(1) == null || matcher.group(2) == null || matcher.group(4) == null){
+            throw new Exception("Invalid purl, missing the following: "+
+                    ( matcher.group(1) == null ? "Schema " : "" ) +
+                    ( matcher.group(1) == null ? "Type " : "" ) +
+                    ( matcher.group(1) == null ? "Name " : "" )
+            );
         }
+
+        // Build purl object
+        this.scheme = matcher.group(1);
+        this.type = matcher.group(2);
+        if(matcher.group(3) != null)
+            this.namespace = Arrays.stream(matcher.group(3).split("/")).toList();   // can be 0 - n namespaces
+        this.name = matcher.group(4);
+        this.version = matcher.group(5);
+
+        // Build qualifiers if present
+        if(matcher.group(6) != null){
+            this.qualifiers = new LinkedHashMap<>();
+            // Add all key=value pairs for the quantifier
+            for(String qualifier : matcher.group(6).split("&")){
+                String[] keyVal = qualifier.split("=");
+                this.qualifiers.put(keyVal[0], keyVal[1]);
+            }
+        }
+
+        this.subpath = matcher.group(7);
     }
 
     ///

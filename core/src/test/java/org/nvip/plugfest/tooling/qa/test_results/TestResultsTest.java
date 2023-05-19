@@ -71,7 +71,7 @@ public class TestResultsTest {
      * Setup
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
 
         // Initialize component
         test_component_a = new Component(

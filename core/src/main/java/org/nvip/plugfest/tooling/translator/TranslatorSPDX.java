@@ -237,7 +237,10 @@ public class TranslatorSPDX extends TranslatorCore {
                         // Last element is the PURL
                         String purl = lineSplit[lineSplit.length - 1];
 
-                        purls.add(new PURL(purl));
+                        try {
+                            purls.add(new PURL(purl));
+                        } catch (Exception ignored){
+                        }
 
                         // Don't continue parsing after we add the special cases
                         continue;

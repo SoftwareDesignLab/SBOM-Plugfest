@@ -110,6 +110,9 @@ public class ComponentTest {
     String productIdentifier = "test";
     String productStatusDetails = "testing";
 
+    public ComponentTest() throws Exception {
+    }
+
     /**
      * Set-up/Tear down Methods
      */
@@ -260,7 +263,7 @@ public class ComponentTest {
     }
 
     @Test
-    public void getPurl_test() {
+    public void getPurl_test() throws Exception {
         assertEquals(new HashSet<>(List.of(new PURL[]{new PURL("pkg:generic/python@3.11.2")})), test_component.getPurls());
     }
 

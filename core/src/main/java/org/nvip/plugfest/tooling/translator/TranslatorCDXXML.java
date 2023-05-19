@@ -239,7 +239,10 @@ public class TranslatorCDXXML extends TranslatorCore {
                             cpes.add(component_elements.item(j).getTextContent());
                         }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("purl")) {
-                            purls.add(new PURL(component_elements.item(j).getTextContent()));
+                            try {
+                                purls.add(new PURL(component_elements.item(j).getTextContent()));
+                            } catch (Exception ignored){
+                            }
                         }
                         else {
                             component_items.put(
