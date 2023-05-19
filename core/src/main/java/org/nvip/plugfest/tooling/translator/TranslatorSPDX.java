@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.cyclonedx.exception.ParseException;
 import org.nvip.plugfest.tooling.sbom.Component;
+import org.nvip.plugfest.tooling.sbom.Hash;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -211,6 +212,7 @@ public class TranslatorSPDX extends TranslatorCore {
                 Set<String> cpes = new HashSet<>();
                 Set<PURL> purls = new HashSet<>();
                 Set<String> swids = new HashSet<>();
+                Set<Hash> hashes = new HashSet<>();
 
 
                 // While in the same package/component
@@ -241,6 +243,17 @@ public class TranslatorSPDX extends TranslatorCore {
 
                         // Don't continue parsing after we add the special cases
                         continue;
+                    }
+                    else if (current_line. contains("PackageChecksum: ")) {
+                        String hash_string = current_line.split("PackageChecksum: ", 2)[1];
+
+                        String[] fullHash = hash_string.split(": ");
+
+                        hashes.add(new Hash(fullHash[0], fullHash[1]));
+
+                        // Don't continue parsing after we add the special cases
+                        continue;
+
                     }
                     // TODO find examples of how SPDX represents SWID and implement that here
 
@@ -274,6 +287,10 @@ public class TranslatorSPDX extends TranslatorCore {
                 // Append CPEs and Purls
                 component.setCpes(cpes);
                 component.setPurls(purls);
+
+                if (hashes != null) {
+                    component.setHashes(hashes);
+                }
 
                 // License materials map
                 HashSet<String> licenses = new HashSet<>();
