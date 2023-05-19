@@ -1,23 +1,36 @@
 package org.nvip.plugfest.tooling.sbom;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * <b>File</b>: PURL.java<br>
  * <b>Description</b>: Object representation of the Package URl for a component
+ * Representation details can be found here: <a href="https://github.com/package-url/purl-spec/tree/master">...</a>
  *
  * @author Juan Francisco Patino
  * @author Matt London
+ * @author Derek Garcia
  */
 public class PURL {
 
+    // Purl scheme: scheme:type/namespace/name@version?qualifiers#subpath
+    private final String PURL_REGEX =
+            "(.*?):" +      // Get scheme
+            "(?:\\/*)" +    // Skip over any/all '/' characters
+            "([\\w\\d\\.\\+\\-]*)\\/" +                     // Get type
+            "(?(?=[\\w\\.\\+\\-\\%^@#?]*\\/)(.*?)\\/)" +    // Get namespaces if present
+            "([\\w\\.\\+\\-\\%]*)" +    //  Get name
+            "(?(?=.*@.*(?:\\?|#|$))@(.*?)(?=\\?|#|$))" +    // Get version, if present
+            "(?(?=.*\\?.*(?:#|$))\\?(.*?)(?=#|$))" +        // Get qualifiers if present
+            "(?(?=.*#.*$)#(.*?)$)";     // Get subpath, if present
+
     private String scheme;  // required
     private String type;    // required
-    private String namespace;   // Optional and type-specific
+    private List<String> namespace;   // Optional and type-specific
     private String name;    // required
     private String version; // Optional
-
     private HashMap<String, String> data;    // comprised of qualifiers:subpath, optional
 
     private ComponentPackageManager pm;
