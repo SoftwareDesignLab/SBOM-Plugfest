@@ -49,6 +49,9 @@ public class ComponentConflict {
         if (componentA.getUniqueID() != null && !componentA.getUniqueID().equals(componentB.getUniqueID())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_SPDXID_MISMATCH);
         }
+        if (componentA.getHashes() != null && !componentA.getHashes().equals(componentB.getHashes())) {
+            componentConflictTypes.add(ComponentConflictType.COMPONENT_HASH_MISTMATCH);
+        }
         if (componentA.getLicenses() != null && !componentA.getLicenses().equals(componentB.getLicenses())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_LICENSE_MISMATCH);
         }

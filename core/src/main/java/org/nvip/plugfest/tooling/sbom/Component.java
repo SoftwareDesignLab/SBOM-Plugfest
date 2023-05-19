@@ -160,6 +160,7 @@ public class Component {
         this.cpes = new HashSet<>(component.cpes);
         this.purls = new HashSet<>(component.purls);
         this.swids = new HashSet<>(component.swids);
+        this.hashes = new HashSet<>(component.hashes);
         this.children.addAll(component.children);
         this.version = component.version;
         this.vulnerabilities.addAll(component.vulnerabilities);
