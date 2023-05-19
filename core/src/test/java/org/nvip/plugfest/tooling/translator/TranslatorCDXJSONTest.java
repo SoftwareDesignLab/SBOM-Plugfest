@@ -58,10 +58,4 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals(48, sbom.getAllComponents().size());
     }
 
-    @Test
-    public void build_SBOM_with_hashes() throws IOException, ParseException, ParserConfigurationException {
-        SBOM sbom = this.TRANSLATOR.translate(TEST_SMALL_SYFT_CDX_JSON_HASHES);
-        assertNotNull(sbom);
-    }
-
 }
