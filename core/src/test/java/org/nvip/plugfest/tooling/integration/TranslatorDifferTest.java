@@ -52,6 +52,10 @@ public class TranslatorDifferTest {
 
     private static final String TEST_CDX_XML_HASH_TWO = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestTwo.xml";
 
+    private static final String TEST_CDX_JSON_HASH_ONE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestOne.json";
+
+    private static final String TEST_CDX_JSON_HASH_TWO = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestTwo.json";
+
 
     /*** Expected Results ***/
 
@@ -278,6 +282,57 @@ public class TranslatorDifferTest {
         Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
 
         assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+
+    }
+
+    @Test
+    public void full_diff_report_should_not_show_hash_conflicts_for_same_hashes_cdx_xml_test() {
+
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_XML_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_XML_HASH_ONE);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflict> conflictType_results = test_report_one.getComponentConflicts();
+
+        assertTrue(conflictType_results.isEmpty());
+
+    }
+
+    @Test
+    public void full_diff_report_should_show_hash_conflicts_cdx_json_test() {
+
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_JSON_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_JSON_HASH_TWO);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
+
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+
+    }
+
+    @Test
+    public void full_diff_report_should_not_show_hash_conflicts_for_same_hashes_cdx_json_test() {
+
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_JSON_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_JSON_HASH_ONE);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflict> conflictType_results = test_report_one.getComponentConflicts();
+
+        assertTrue(conflictType_results.isEmpty());
 
     }
 
