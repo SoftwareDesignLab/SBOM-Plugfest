@@ -3,10 +3,7 @@ package org.nvip.plugfest.tooling.sbom;
 import jregex.Matcher;
 import jregex.Pattern;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <b>File</b>: PURL.java<br>
@@ -35,7 +32,7 @@ public class PURL {
     private List<String> namespace;   // Optional and type-specific
     private String name;    // required
     private String version; // Optional
-    private HashMap<String, String> qualifiers = null;    // Optional
+    private LinkedHashMap<String, String> qualifiers = null;    // Optional
     private String subpath; // Optional
 
     private ComponentPackageManager pm;
@@ -73,7 +70,7 @@ public class PURL {
 
             // Build qualifiers if present
             if(matcher.group(6) != null){
-                this.qualifiers = new HashMap<>();
+                this.qualifiers = new LinkedHashMap<>();
                 // Add all key=value pairs for the quantifier
                 for(String qualifier : matcher.group(6).split("&")){
                     String[] keyVal = qualifier.split("=");
@@ -118,7 +115,29 @@ public class PURL {
 
     @Override
     public String toString() {
-        return PURLString;
+        // scheme:type/namespace/name@version?qualifiers#subpath
+        // Build namespaces
+        StringBuilder namespace = new StringBuilder();
+        if(this.namespace != null)
+            for(String n : this.namespace)
+                namespace.append("/").append(n);
+
+        // Build qualifiers
+        StringBuilder qualifiers = new StringBuilder();
+        if(this.qualifiers != null){
+            for(String key : this.qualifiers.keySet())
+                qualifiers.append(key).append("=").append(this.qualifiers.get(key)).append("&");
+            qualifiers.deleteCharAt(qualifiers.length() - 1);   // truncate last '&'
+        }
+
+        // build final purl
+        return this.scheme + ":"
+                + this.type +
+                namespace +
+                "/" + this.name +
+                (this.version != null ? "@" + this.version : "") +
+                (!qualifiers.isEmpty() ? "?" + qualifiers : "") +
+                (this.subpath != null ? "#" + this.subpath : "");
     }
 
     @Override
