@@ -3,6 +3,8 @@ package org.nvip.plugfest.tooling.sbom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <b>File</b>: PURL.java<br>
@@ -18,10 +20,10 @@ public class PURL {
     // Purl scheme: scheme:type/namespace/name@version?qualifiers#subpath
     private final String PURL_REGEX =
             "(.*?):" +      // Get scheme
-            "(?:\\/*)" +    // Skip over any/all '/' characters
-            "([\\w\\d\\.\\+\\-]*)\\/" +                     // Get type
+            "(?:/*)" +    // Skip over any/all '/' characters
+            "([\\w\\d.+\\-]*)/" +                     // Get type
             "(?(?=[\\w\\.\\+\\-\\%^@#?]*\\/)(.*?)\\/)" +    // Get namespaces if present
-            "([\\w\\.\\+\\-\\%]*)" +    //  Get name
+            "([\\w.+\\-%]*)" +    //  Get name
             "(?(?=.*@.*(?:\\?|#|$))@(.*?)(?=\\?|#|$))" +    // Get version, if present
             "(?(?=.*\\?.*(?:#|$))\\?(.*?)(?=#|$))" +        // Get qualifiers if present
             "(?(?=.*#.*$)#(.*?)$)";     // Get subpath, if present
@@ -31,13 +33,22 @@ public class PURL {
     private List<String> namespace;   // Optional and type-specific
     private String name;    // required
     private String version; // Optional
-    private HashMap<String, String> data;    // comprised of qualifiers:subpath, optional
+    private HashMap<String, String> qualifiers;    // Optional
 
     private ComponentPackageManager pm;
     private String PURLString;
 
     public PURL(String PURL){
-        this.PURLString = PURL;
+        Pattern purlPattern= Pattern.compile(this.PURL_REGEX);
+        try{
+            Matcher matcher = purlPattern.matcher(PURL);
+//            boolean matchFound = ;
+            if(!matcher.find())
+                throw new Exception("Unable to parse purl \"" + PURL + "\"");
+        } catch (Exception e){
+            System.err.println(e);
+            return;
+        }
         addFromString();
     }
 
