@@ -40,11 +40,20 @@ public class TranslatorDifferTest {
 
     private static final String TEST_CDX_LARGE_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.python.xml";
 
+    /*** SBOM files for hash tests ***/
+
     private static final String TEST_SPDX_HASH_ONE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestOne.spdx";
 
     private static final String TEST_SPDX_HASH_TWO = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestTwo.spdx";
 
     private static final String TEST_SPDX_HASH_THREE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestThree.spdx";
+
+    private static final String TEST_CDX_XML_HASH_ONE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestOne.xml";
+
+    private static final String TEST_CDX_XML_HASH_TWO = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestTwo.xml";
+
+
+    /*** Expected Results ***/
 
     private static final int EXPECTED_CONFLICTS_SMALL_LARGE_SPDX = 447;
 
@@ -208,7 +217,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_show_hash_conflicts() {
+    public void full_diff_report_should_show_hash_conflicts_spdx_test() {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
 
@@ -225,7 +234,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_show_hash_conflicts_different_algorithms() {
+    public void full_diff_report_should_show_hash_conflicts_different_algorithms_spdx_test() {
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
 
         SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_THREE);
@@ -241,7 +250,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_not_show_hash_conflict_for_same_hash() {
+    public void full_diff_report_should_not_show_hash_conflict_for_same_hash_spdx_test() {
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
 
         SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
@@ -254,4 +263,22 @@ public class TranslatorDifferTest {
 
         assertTrue(conflictType_results.isEmpty());
     }
+
+    @Test
+    public void full_diff_report_should_show_hash_conflicts_cdx_xml_test() {
+
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_XML_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_CDX_XML_HASH_TWO);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
+
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+
+    }
+
 }
