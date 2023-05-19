@@ -369,6 +369,12 @@ public class Component {
                 retval = retval && this.purls == null;
             }
 
+            if (otherComponent.hashes != null) {
+                retval = retval && otherComponent.hashes.equals(this.hashes);
+            } else {
+                retval = retval && this.hashes == null;
+            }
+
             if (otherComponent.swids != null) {
                 retval = retval && otherComponent.swids.equals(this.swids);
             } else {
