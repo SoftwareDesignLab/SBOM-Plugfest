@@ -3,6 +3,8 @@ package org.nvip.plugfest.tooling.integration;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.differ.Comparer;
 import org.nvip.plugfest.tooling.differ.DiffReport;
+import org.nvip.plugfest.tooling.sbom.ComponentConflict;
+import org.nvip.plugfest.tooling.sbom.ComponentConflictType;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorCDXXML;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
@@ -10,6 +12,7 @@ import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,6 +39,12 @@ public class TranslatorDifferTest {
     private static final String TEST_CDX_DIFF_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine-compare.xml";
 
     private static final String TEST_CDX_LARGE_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.python.xml";
+
+    private static final String TEST_SPDX_HASH_ONE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestOne.spdx";
+
+    private static final String TEST_SPDX_HASH_TWO = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestTwo.spdx";
+
+    private static final String TEST_SPDX_HASH_THREE = "src/test/java/org/nvip/plugfest/tooling/sample_boms/diffHashFile/sbom.hashTestThree.spdx";
 
     private static final int EXPECTED_CONFLICTS_SMALL_LARGE_SPDX = 447;
 
@@ -196,5 +205,53 @@ public class TranslatorDifferTest {
         // The versions should also be mismatching
         assertTrue(test_report.getSbomConflict().toString().contains(EXPECTED_VERSION_MISMATCH_SPDX_2_3_CDX_1_4));
 
+    }
+
+    @Test
+    public void full_diff_report_should_show_hash_conflicts() {
+
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_TWO);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
+
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+
+    }
+
+    @Test
+    public void full_diff_report_should_show_hash_conflicts_different_algorithms() {
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_THREE);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
+
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+
+    }
+
+    @Test
+    public void full_diff_report_should_not_show_hash_conflict_for_same_hash() {
+        SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
+
+        SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
+
+        DiffReport test_report_one = Comparer.generateReport(test_sbom_one, test_sbom_two);
+
+        assertNotNull(test_report_one);
+
+        Set<ComponentConflict> conflictType_results = test_report_one.getComponentConflicts();
+
+        assertTrue(conflictType_results.isEmpty());
     }
 }
