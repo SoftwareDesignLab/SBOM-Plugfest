@@ -1,11 +1,12 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import jregex.Matcher;
+import jregex.Pattern;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <b>File</b>: PURL.java<br>
@@ -45,7 +46,7 @@ public class PURL {
      * @param PURL
      */
     public PURL(String PURL){
-        Pattern purlPattern= Pattern.compile(this.PURL_REGEX);
+        Pattern purlPattern = new Pattern(this.PURL_REGEX, Pattern.MULTILINE);
         try{
             Matcher matcher = purlPattern.matcher(PURL);
 
@@ -65,7 +66,8 @@ public class PURL {
             // Build purl object
             this.scheme = matcher.group(1);
             this.type = matcher.group(2);
-            this.namespace = Arrays.stream(matcher.group(3).split("/")).toList();   // can be 0 - n namespaces
+            if(matcher.group(3) != null)
+                this.namespace = Arrays.stream(matcher.group(3).split("/")).toList();   // can be 0 - n namespaces
             this.name = matcher.group(4);
             this.version = matcher.group(5);
 

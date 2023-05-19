@@ -28,11 +28,15 @@ dependencies {
     // CDX Tool Dependency
     implementation 'org.cyclonedx:cyclonedx-core-java:7.3.2'
 
+    // Work around for Java regex limitations
+    implementation 'net.sourceforge.jregex:jregex:1.2_01'
+
     implementation 'org.apache.commons:commons-compress:1.21'
     implementation 'org.json:json:20210307'
     implementation 'org.glassfish.hk2:hk2-locator:3.0.3'
     implementation 'org.glassfish.hk2:hk2-utils:3.0.3'
     implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
+
 }
 
 test {
