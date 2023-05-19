@@ -24,6 +24,8 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
 
     public static final String TEST_ANOTHER_SMALL_SYFT_CDX_JSON = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdx.json";
 
+    public static final String TEST_SMALL_SYFT_CDX_JSON_HASHES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/bom.json";
+
 
     protected TranslatorCDXJSONTest() {
         super(new TranslatorCDXJSON());
@@ -54,6 +56,12 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(48, sbom.getAllComponents().size());
+    }
+
+    @Test
+    public void build_SBOM_with_hashes() throws IOException, ParseException, ParserConfigurationException {
+        SBOM sbom = this.TRANSLATOR.translate(TEST_SMALL_SYFT_CDX_JSON_HASHES);
+        assertNotNull(sbom);
     }
 
 }
