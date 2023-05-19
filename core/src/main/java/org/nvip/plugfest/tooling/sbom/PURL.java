@@ -35,9 +35,6 @@ public class PURL {
     private LinkedHashMap<String, String> qualifiers = null;    // Optional
     private String subpath; // Optional
 
-    private ComponentPackageManager pm;
-    private String PURLString;
-
     /**
      * Create purl object from given purl String. Will error if purl fails
      * @param PURL
@@ -86,27 +83,19 @@ public class PURL {
     }
 
     ///
-    /// Getters and Setters
+    /// Getters
     ///
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public ComponentPackageManager getPackageManager() {
-        return pm;
+    public String getType() {
+        return type;
     }
 
     ///
