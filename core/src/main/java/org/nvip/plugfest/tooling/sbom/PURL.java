@@ -88,8 +88,6 @@ public class PURL {
         }
     }
 
-    public PURL(){}
-
     ///
     /// Getters and Setters
     ///
@@ -112,18 +110,6 @@ public class PURL {
 
     public ComponentPackageManager getPackageManager() {
         return pm;
-    }
-
-    public void setPackageManager(ComponentPackageManager pm) {
-        this.pm = pm;
-    }
-
-    public void setPURLString(String PURLString) {
-        this.PURLString = PURLString;
-    }
-
-    public String getPURLString() {
-        return PURLString;
     }
 
     ///
