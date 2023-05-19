@@ -143,12 +143,28 @@ public class PURL {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PURL purl)) return false;
-        return Objects.equals(getName(), purl.getName()) && Objects.equals(getVersion(), purl.getVersion()) && pm == purl.pm && Objects.equals(PURLString, purl.PURLString);
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PURL purl = (PURL) o;
+
+        if (!scheme.equals(purl.scheme)) return false;
+        if (!type.equals(purl.type)) return false;
+        if (!Objects.equals(namespace, purl.namespace)) return false;
+        if (!name.equals(purl.name)) return false;
+        if (!Objects.equals(version, purl.version)) return false;
+        if (!Objects.equals(qualifiers, purl.qualifiers)) return false;
+        return Objects.equals(subpath, purl.subpath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getVersion(), pm, PURLString);
+        int result = scheme.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (qualifiers != null ? qualifiers.hashCode() : 0);
+        result = 31 * result + (subpath != null ? subpath.hashCode() : 0);
+        return result;
     }
 }
