@@ -82,6 +82,14 @@ public class PURL {
     /// Getters
     ///
 
+    public String getType() {
+        return type;
+    }
+
+    public List<String> getNamespace(){
+        return this.namespace;
+    }
+
     public String getName() {
         return name;
     }
@@ -90,9 +98,7 @@ public class PURL {
         return version;
     }
 
-    public String getType() {
-        return type;
-    }
+
 
     ///
     /// Overrides

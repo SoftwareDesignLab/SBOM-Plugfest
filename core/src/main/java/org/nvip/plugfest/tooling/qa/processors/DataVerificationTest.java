@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
+import jregex.Matcher;
+import jregex.Pattern;
 import org.nvip.plugfest.tooling.qa.test_results.Test;
 import org.nvip.plugfest.tooling.qa.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -11,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -66,13 +69,14 @@ public class DataVerificationTest extends MetricTest {
                 extractedResult fromOnline;
 
                 // Scrape website based on type
-                switch (p.getType().toLowerCase()){
-                    case "apk":
-                        fromOnline = extractFromApk(p);
-                        break;
+                switch (p.getType().toLowerCase()) {
+                    case "apk" -> fromOnline = extractFromApk(p);
+                    case "maven" -> fromOnline = extractFromMaven(p);
+
                     // Unknown or unsupported type
-                    default:
+                    default -> {
                         continue;
+                    }
                 }
 
                 // failed to get data
@@ -113,6 +117,10 @@ public class DataVerificationTest extends MetricTest {
                 "found online"));
         return testResults;
     }
+    //todo refactor following sections into a more structure for w/ classes
+    ///
+    /// apk
+    ///
 
     /**
      * Extract data for APK-based packages.
@@ -202,6 +210,50 @@ public class DataVerificationTest extends MetricTest {
         return found;
     }
 
+    ///
+    /// maven
+    ///
+
+    /**
+     * Extract data for maven based packages.
+     * Source: <a href="https://mvnrepository.com/">...</a>
+     *
+     * @param purl purl to use to query for info
+     * @return extractedResult with component name, version, and publisher that we were able to scrape
+     * @throws IOException issue with http connection
+     */
+    private extractedResult extractFromMaven(PURL purl) throws IOException {
+
+        // maven requires namespace
+        if(purl.getNamespace() == null || purl.getNamespace().size() == 0)
+            return null;
+
+        // maven requires version
+        if(purl.getVersion() == null)
+            return null;
+
+        // build namespace for request
+        StringBuilder namespaceUrl = new StringBuilder();
+        for(int i = 0; i < purl.getNamespace().size(); i++)
+            namespaceUrl.append(purl.getNamespace().get(i).toLowerCase()).append("/");
+
+        // Query page
+        HttpURLConnection q = queryURL("https://mvnrepository.com/artifact/" +
+                namespaceUrl +
+                purl.getName().toLowerCase() +
+                "/" + purl.getVersion());
+        htmlResult result = getHtmlResult(q);
+        String html = result.response().toString();
+        result.in().close();
+
+        Matcher m = new Pattern("<h2.*\"im-title\".*?>.*?>(.*?)<\\/a>.*?>(.*?)<.*<\\/h2>").matcher(html);
+
+        // couldn't find data
+        if(!m.find())
+            return null;
+
+        return new extractedResult(m.group(1), m.group(2), "PLACEHOLDER");  // todo get publisher name
+    }
     ///
     /// Http request section
     ///
