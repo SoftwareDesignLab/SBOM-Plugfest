@@ -49,12 +49,20 @@ public class DataVerificationTest extends MetricTest {
             return testResults;
         }
         //if not run the test
-        for (PURL p: c.getPurls()
-             ) {
+        for (PURL p: c.getPurls()){
 
             try{
+                // type from https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
+                String[] fromOnline = null;
+                switch (p.getType().toLowerCase()){
+                    case "apk":
+                        fromOnline = extractFromApk(p);
+                        break;
+                    // Unknown or unsupported type
+                    default:
+                        continue;
+                }
                 //pull the data from the purl and from the package manager
-                String[] fromOnline = extractedFromPURL(p);
                 String packageManagerName = p.getType().toLowerCase();
                 String name = p.getName();
                 String nameFoundOnline = fromOnline[0].toLowerCase();
@@ -99,25 +107,13 @@ public class DataVerificationTest extends MetricTest {
     }
 
     /**
-         Extract name, version, and publisher from package manager online
-         @param purl in the form of a string
-         @return component name, version(s), publisher name found online. Empty strings if not found
-    */
-    private static String[] extractedFromPURL(PURL purl) throws IOException {
-        return extractFromAlpine(purl.toString());
-        // todo: we don't test for Debian or Python pm yet
-    }
-
-    /**
         Extract name, version, and publisher from Alpine linux package manager online
         @param p PURl in the form of a string
         @return component name, version(s), publisher name found online. Empty strings if not found
      */
-    private static String[] extractFromAlpine(String p) throws IOException {
+    private String[] extractFromApk(PURL p) throws IOException {
 
-        String[] purlSplit = p.split("[/@]");
-        String nameFromPurl = purlSplit[2];
-        HttpURLConnection q = queryURL("https://pkgs.alpinelinux.org/packages?name=" + nameFromPurl);
+        HttpURLConnection q = queryURL("https://pkgs.alpinelinux.org/packages?name=" + p.getName());
         htmlResult result = getHtmlResult(q); // I had the IDE do this
         String html = result.response().toString();
         result.in().close();
@@ -152,7 +148,7 @@ public class DataVerificationTest extends MetricTest {
       @param table in the form of a string
       @return all version numbers from query
      */
-    private static String checkVersions(String table){
+    private String checkVersions(String table){
 
         StringBuilder versions = new StringBuilder();
         String[] rows = table.split("<tr>");
@@ -184,7 +180,7 @@ public class DataVerificationTest extends MetricTest {
         @param column table column in the form of a string
         @return specific word at the end of the column, right before '/a>'
      */
-    private static String getSpecific(String column) {
+    private String getSpecific(String column) {
         String[] elements = column.split("[<>]");
         String found = "";
         for(int i = 0; i < elements.length; i++){
@@ -195,33 +191,17 @@ public class DataVerificationTest extends MetricTest {
         }
         return found;
     }
-    /**
-        Given an http connection, return the HTML
-        @param q HTML connection
-        @return the HTML
-     */
-    private static htmlResult getHtmlResult(HttpURLConnection q) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(q.getInputStream(), "UTF-8"));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        return new htmlResult(in, response);
-    }
 
-    /**
-        Created by IDE for readability
-     */
-    private record htmlResult(BufferedReader in, StringBuffer response) {
-    }
+    ///
+    /// Http request section
+    ///
 
     /**
         Adapted from queryURL() from Parser.java in BenchmarkParser
         @param urlString the URL
         @return HTTP connection
      */
-    protected static HttpURLConnection queryURL(String urlString) throws IOException {
+    protected HttpURLConnection queryURL(String urlString) throws IOException {
         try {
             final URL url = new URL(urlString);
             final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -236,6 +216,28 @@ public class DataVerificationTest extends MetricTest {
             throw new SocketTimeoutException("Connection timed out...");
         }
     }
+
+    /**
+     Given an http connection, return the HTML
+     @param q HTML connection
+     @return the HTML
+     */
+    private htmlResult getHtmlResult(HttpURLConnection q) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(q.getInputStream(), "UTF-8"));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        return new htmlResult(in, response);
+    }
+
+    /**
+     Created by IDE for readability
+     */
+    private record htmlResult(BufferedReader in, StringBuffer response) {
+    }
+
 }
 
 
