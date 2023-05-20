@@ -25,6 +25,16 @@ public class DataVerificationTest extends MetricTest {
     private static final int MAX_CONNECTION_TIMEOUT = 1000;
 
     /**
+     * Utility record to track extracted results
+     *
+     * @param component name of component
+     * @param version version of component
+     * @param publisher name of publisher
+     */
+    private record extractedResult(String component, String version, String publisher) {
+    }
+
+    /**
      * Constructor for DataVerificationTest
      */
     protected DataVerificationTest() {
@@ -53,7 +63,7 @@ public class DataVerificationTest extends MetricTest {
 
             try{
                 // type from https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
-                String[] fromOnline = null;
+                extractedResult fromOnline = null;
                 switch (p.getType().toLowerCase()){
                     case "apk":
                         fromOnline = extractFromApk(p);
@@ -65,9 +75,9 @@ public class DataVerificationTest extends MetricTest {
                 //pull the data from the purl and from the package manager
                 String packageManagerName = p.getType().toLowerCase();
                 String name = p.getName();
-                String nameFoundOnline = fromOnline[0].toLowerCase();
+                String nameFoundOnline = fromOnline.component.toLowerCase();
                 String version = p.getVersion();
-                String versionFoundOnline = fromOnline[1].toLowerCase();
+                String versionFoundOnline = fromOnline.version.toLowerCase();
 
                 String publisher;
                 if (c.getPublisher() == null) {
@@ -77,7 +87,7 @@ public class DataVerificationTest extends MetricTest {
                     publisher = c.getPublisher().toLowerCase();
                 }
 
-                String publisherFoundOnline = fromOnline[2].toLowerCase().strip();
+                String publisherFoundOnline = fromOnline.publisher.toLowerCase().strip();
 
                 // check whatever is online at least contains this component, or vice versa
                 if(name == null || !((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
@@ -111,7 +121,7 @@ public class DataVerificationTest extends MetricTest {
         @param p PURl in the form of a string
         @return component name, version(s), publisher name found online. Empty strings if not found
      */
-    private String[] extractFromApk(PURL p) throws IOException {
+    private extractedResult extractFromApk(PURL p) throws IOException {
 
         HttpURLConnection q = queryURL("https://pkgs.alpinelinux.org/packages?name=" + p.getName());
         htmlResult result = getHtmlResult(q); // I had the IDE do this
@@ -120,7 +130,7 @@ public class DataVerificationTest extends MetricTest {
 
         // if name not found
         if(html.contains("not found"))
-            return new String[]{"", "", ""};
+            return null;
 
         // otherwise
         String table = html.split("<tbody>")[1];
@@ -130,8 +140,7 @@ public class DataVerificationTest extends MetricTest {
         String nameColumn = "";
         String publisherColumn = "";
 
-        for (String column: columns
-             ) {
+        for (String column: columns) {
 
             if(column.contains("package\">"))
                 nameColumn = column;
@@ -141,7 +150,7 @@ public class DataVerificationTest extends MetricTest {
                 break;
             }
         }
-        return new String[]{getSpecific(nameColumn), checkVersions(table), getSpecific(publisherColumn).strip()};
+        return new extractedResult(getSpecific(nameColumn), checkVersions(table), getSpecific(publisherColumn).strip());
     }
 
     /**
