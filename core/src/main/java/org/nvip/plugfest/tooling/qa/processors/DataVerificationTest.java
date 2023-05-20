@@ -115,9 +115,12 @@ public class DataVerificationTest extends MetricTest {
     }
 
     /**
-        Extract name, version, and publisher from Alpine linux package manager online
-        @param p PURl in the form of a string
-        @return component name, version(s), publisher name found online. Empty strings if not found
+     * Extract data for APK-based packages.
+     * Source: <a href="https://pkgs.alpinelinux.org/packages">...</a>
+     *
+     * @param p purl to use to query for info
+     * @return extractedResult with component name, version, and publisher that we were able to scrape
+     * @throws IOException issue with http connection
      */
     private extractedResult extractFromApk(PURL p) throws IOException {
 
