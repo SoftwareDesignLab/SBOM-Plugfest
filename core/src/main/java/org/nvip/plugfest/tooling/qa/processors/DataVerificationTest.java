@@ -63,7 +63,9 @@ public class DataVerificationTest extends MetricTest {
 
             try{
                 // type from https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
-                extractedResult fromOnline = null;
+                extractedResult fromOnline;
+
+                // Scrape website based on type
                 switch (p.getType().toLowerCase()){
                     case "apk":
                         fromOnline = extractFromApk(p);
@@ -72,35 +74,31 @@ public class DataVerificationTest extends MetricTest {
                     default:
                         continue;
                 }
-                //pull the data from the purl and from the package manager
-                String packageManagerName = p.getType().toLowerCase();
-                String name = p.getName();
-                String nameFoundOnline = fromOnline.component.toLowerCase();
-                String version = p.getVersion();
-                String versionFoundOnline = fromOnline.version.toLowerCase();
 
-                String publisher;
-                if (c.getPublisher() == null) {
-                    publisher = "";
-                }
-                else {
-                    publisher = c.getPublisher().toLowerCase();
-                }
+                // failed to get data
+                if (fromOnline == null)
+                    continue;
 
-                String publisherFoundOnline = fromOnline.publisher.toLowerCase().strip();
+                // pull the data from the purl and from the package manager
+                String onlineName = fromOnline.component.toLowerCase();
+                String onlineVersion = fromOnline.version.toLowerCase();
+                String onlinePublisher = fromOnline.publisher.toLowerCase().strip();
+
+                String type = p.getType().toLowerCase();
+                String publisher = (c.getPublisher() == null ? "" : c.getPublisher().toLowerCase() );
 
                 // check whatever is online at least contains this component, or vice versa
-                if(name == null || !((name.contains(nameFoundOnline)|| nameFoundOnline.contains(name))))
-                    testResults.addTest(new Test(false, "Name '", name, "' does not match '",
-                            nameFoundOnline, "' in ", packageManagerName));
+                if(p.getName() == null || !((p.getName().contains(onlineName)|| onlineName.contains(p.getName()))))
+                    testResults.addTest(new Test(false, "Name '", p.getName(), "' does not match '",
+                            onlineName, "' in ", type));
 
-                if(version == null || !versionFoundOnline.contains(version))
-                    testResults.addTest(new Test(false,"Version '",version,"' not found in ",
-                            packageManagerName, " database"));
+                if(p.getVersion() == null || !onlineVersion.contains(p.getVersion()))
+                    testResults.addTest(new Test(false,"Version '",p.getVersion(),"' not found in ",
+                            type, " database"));
 
-                if(!((publisher.contains(publisherFoundOnline)|| publisherFoundOnline.contains(publisher))))
+                if(!((publisher.contains(onlinePublisher)|| onlinePublisher.contains(publisher))))
                     testResults.addTest(new Test(false,"Publisher Name '", publisher,
-                            "' does not match '", publisherFoundOnline,"' in ", packageManagerName, " database"));
+                            "' does not match '", onlinePublisher,"' in ", type, " database"));
             }
             catch(IOException e){
                 testResults.addTest(new Test(true,"Error accessing ",
