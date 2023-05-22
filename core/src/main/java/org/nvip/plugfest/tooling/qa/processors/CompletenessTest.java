@@ -244,6 +244,12 @@ public class CompletenessTest extends MetricTest {
     }
 
 
+    /**
+     * Test if purl accuratly represents the component with the given information
+     *
+     * @param c The component to test the PURLs of
+     * @return A single Test instance, describing if the test passed or failed and how many PURLs were invalid.
+     */
     public Test testPURLRep(Component c) {
 
         int invalid = 0;
