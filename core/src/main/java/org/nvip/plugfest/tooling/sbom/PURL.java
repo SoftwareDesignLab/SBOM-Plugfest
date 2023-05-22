@@ -36,17 +36,19 @@ public class PURL {
     private String subpath; // Optional
 
     /**
-     * Create purl object from given purl String. Will error if purl fails
-     * @param PURL
+     * Create new purl object from a given purl identifier string
+     *
+     * @param purl Purl string to use to make objects
+     * @throws Exception purl given is invalid
      */
-    public PURL(String PURL) throws Exception {
+    public PURL(String purl) throws Exception {
         Pattern purlPattern = new Pattern(this.PURL_REGEX, Pattern.MULTILINE);
 
-        Matcher matcher = purlPattern.matcher(PURL);
+        Matcher matcher = purlPattern.matcher(purl);
 
         // Regex fails to match to string
         if(!matcher.find())
-            throw new Exception("Unable to parse purl \"" + PURL + "\"");
+            throw new Exception("Unable to parse purl \"" + purl + "\"");
 
         // Check for required fields
         if(matcher.group(1) == null || matcher.group(2) == null || matcher.group(4) == null){
