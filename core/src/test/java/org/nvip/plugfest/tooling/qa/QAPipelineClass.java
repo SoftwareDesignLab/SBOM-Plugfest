@@ -32,7 +32,7 @@ public class QAPipelineClass {
      */
 
     @Test
-    public void process_test() {
+    public void process_test() throws Exception {
         QAPipeline qaPipeline = new QAPipeline();
         assertNotNull(qaPipeline);
 

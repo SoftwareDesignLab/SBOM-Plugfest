@@ -1,96 +1,99 @@
 package org.nvip.plugfest.tooling.sbom;
 
-import java.util.Objects;
+import jregex.Matcher;
+import jregex.Pattern;
+
+import java.util.*;
 
 /**
  * <b>File</b>: PURL.java<br>
  * <b>Description</b>: Object representation of the Package URl for a component
+ * Representation details can be found here: <a href="https://github.com/package-url/purl-spec/tree/master">...</a>
  *
  * @author Juan Francisco Patino
  * @author Matt London
+ * @author Derek Garcia
  */
 public class PURL {
 
-    private String name;
-    private String version;
-    private ComponentPackageManager pm;
-    private String PURLString;
+    // Purl scheme: scheme:type/namespace/name@version?qualifiers#subpath
+    private final String PURL_REGEX =
+            "(.*?):" +      // Get scheme
+            "(?:/*)" +    // Skip over any/all '/' characters
+            "([\\w\\d.+\\-]*)/" +                     // Get type
+            "(?(?=[\\w\\.\\+\\-\\%^@#?]*\\/)(.*?)\\/)" +    // Get namespaces if present
+            "([\\w.+\\-%]*)" +    //  Get name
+            "(?(?=.*@.*(?:\\?|#|$))@(.*?)(?=\\?|#|$))" +    // Get version, if present
+            "(?(?=.*\\?.*(?:#|$))\\?(.*?)(?=#|$))" +        // Get qualifiers if present
+            "(?(?=.*#.*$)#(.*?)$)";     // Get subpath, if present
 
-    public PURL(String PURL){
-        this.PURLString = PURL;
-        addFromString();
-    }
-
-    public PURL(){}
-
-    /**
-     * Helper function to convert the string representation to a class
-     * given the object already contains a PURL String
-     */
-    public void addFromString(){
-        assert PURLString != null;
-        addFromString(PURLString);
-    }
+    private String scheme;  // required
+    private String type;    // required
+    private List<String> namespace;   // Optional and type-specific
+    private String name;    // required
+    private String version; // Optional
+    private LinkedHashMap<String, String> qualifiers = null;    // Optional
+    private String subpath; // Optional
 
     /**
-     * Helper function to convert the string representation to a class
-     * @param purl the PURL String
+     * Create new purl object from a given purl identifier string
+     *
+     * @param purl Purl string to use to make objects
+     * @throws Exception purl given is invalid
      */
-    public void addFromString(String purl){
-        String p = purl.toLowerCase();
-        if(p.contains("alpine"))
-            setPackageManager(ComponentPackageManager.ALPINE);
-        else if(p.contains("debian"))
-            setPackageManager(ComponentPackageManager.DEBIAN);
-        else // add cases here as PMs are added
-            setPackageManager(ComponentPackageManager.PYTHON);
+    public PURL(String purl) throws Exception {
+        Pattern purlPattern = new Pattern(this.PURL_REGEX, Pattern.MULTILINE);
 
-        switch (this.pm){
-            case ALPINE:
-                String[] purlSplit = p.split("[/@]");
-                this.name = purlSplit[2];
-                purlSplit = p.split("[@?]");
-                this.version = purlSplit[1];
-                break;
-            case DEBIAN:
+        Matcher matcher = purlPattern.matcher(purl);
+
+        // Regex fails to match to string
+        if(!matcher.find())
+            throw new Exception("Unable to parse purl \"" + purl + "\"");
+
+        // Check for required fields
+        if(matcher.group(1) == null || matcher.group(2) == null || matcher.group(4) == null){
+            throw new Exception("Invalid purl, missing the following: "+
+                    ( matcher.group(1) == null ? "Schema " : "" ) +
+                    ( matcher.group(1) == null ? "Type " : "" ) +
+                    ( matcher.group(1) == null ? "Name " : "" )
+            );
         }
 
+        // Build purl object
+        this.scheme = matcher.group(1);
+        this.type = matcher.group(2);
+        if(matcher.group(3) != null)
+            this.namespace = Arrays.stream(matcher.group(3).split("/")).toList();   // can be 0 - n namespaces
+        this.name = matcher.group(4);
+        this.version = matcher.group(5);
+
+        // Build qualifiers if present
+        if(matcher.group(6) != null){
+            this.qualifiers = new LinkedHashMap<>();
+            // Add all key=value pairs for the quantifier
+            for(String qualifier : matcher.group(6).split("&")){
+                String[] keyVal = qualifier.split("=");
+                this.qualifiers.put(keyVal[0], keyVal[1]);
+            }
+        }
+
+        this.subpath = matcher.group(7);
     }
 
     ///
-    /// Getters and Setters
+    /// Getters
     ///
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public ComponentPackageManager getPackageManager() {
-        return pm;
-    }
-
-    public void setPackageManager(ComponentPackageManager pm) {
-        this.pm = pm;
-    }
-
-    public void setPURLString(String PURLString) {
-        this.PURLString = PURLString;
-    }
-
-    public String getPURLString() {
-        return PURLString;
+    public String getType() {
+        return type;
     }
 
     ///
@@ -99,18 +102,56 @@ public class PURL {
 
     @Override
     public String toString() {
-        return PURLString;
+        // scheme:type/namespace/name@version?qualifiers#subpath
+        // Build namespaces
+        StringBuilder namespace = new StringBuilder();
+        if(this.namespace != null)
+            for(String n : this.namespace)
+                namespace.append("/").append(n);
+
+        // Build qualifiers
+        StringBuilder qualifiers = new StringBuilder();
+        if(this.qualifiers != null){
+            for(String key : this.qualifiers.keySet())
+                qualifiers.append(key).append("=").append(this.qualifiers.get(key)).append("&");
+            qualifiers.deleteCharAt(qualifiers.length() - 1);   // truncate last '&'
+        }
+
+        // build final purl
+        return this.scheme + ":"
+                + this.type +
+                namespace +
+                "/" + this.name +
+                (this.version != null ? "@" + this.version : "") +
+                (!qualifiers.isEmpty() ? "?" + qualifiers : "") +
+                (this.subpath != null ? "#" + this.subpath : "");
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PURL purl)) return false;
-        return Objects.equals(getName(), purl.getName()) && Objects.equals(getVersion(), purl.getVersion()) && pm == purl.pm && Objects.equals(PURLString, purl.PURLString);
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PURL purl = (PURL) o;
+
+        if (!scheme.equals(purl.scheme)) return false;
+        if (!type.equals(purl.type)) return false;
+        if (!Objects.equals(namespace, purl.namespace)) return false;
+        if (!name.equals(purl.name)) return false;
+        if (!Objects.equals(version, purl.version)) return false;
+        if (!Objects.equals(qualifiers, purl.qualifiers)) return false;
+        return Objects.equals(subpath, purl.subpath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getVersion(), pm, PURLString);
+        int result = scheme.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (qualifiers != null ? qualifiers.hashCode() : 0);
+        result = 31 * result + (subpath != null ? subpath.hashCode() : 0);
+        return result;
     }
 }

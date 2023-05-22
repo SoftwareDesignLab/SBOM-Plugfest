@@ -91,7 +91,7 @@ public class ComparisonTest {
      * assignComponents tests
      */
     @Test
-    public void assignComponents_should_build_comparisons_test() {
+    public void assignComponents_should_build_comparisons_test() throws Exception {
 
         SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
@@ -142,7 +142,7 @@ public class ComparisonTest {
     }
 
     @Test
-    public void assignComponents_should_merge_IDs_for_matching_componentVersions() {
+    public void assignComponents_should_merge_IDs_for_matching_componentVersions() throws Exception {
         SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
@@ -256,7 +256,7 @@ public class ComparisonTest {
      */
 
     @Test
-    public void comparison_should_show_component_appearances_correctly() {
+    public void comparison_should_show_component_appearances_correctly() throws Exception {
 
         /**
          * Create components

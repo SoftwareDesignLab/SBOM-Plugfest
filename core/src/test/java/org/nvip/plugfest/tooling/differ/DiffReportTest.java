@@ -100,7 +100,7 @@ public class DiffReportTest {
      *  - (3) 'ComponentConflict'
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
 
         // Initialize two SBOM objects
         test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",

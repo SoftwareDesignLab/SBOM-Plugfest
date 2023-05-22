@@ -55,7 +55,7 @@ public class DataVerificationTest extends MetricTest {
             try{
                 //pull the data from the purl and from the package manager
                 String[] fromOnline = extractedFromPURL(p);
-                String packageManagerName = p.getPackageManager().name().toLowerCase();
+                String packageManagerName = p.getType().toLowerCase();
                 String name = p.getName();
                 String nameFoundOnline = fromOnline[0].toLowerCase();
                 String version = p.getVersion();
@@ -86,7 +86,7 @@ public class DataVerificationTest extends MetricTest {
             }
             catch(IOException e){
                 testResults.addTest(new Test(true,"Error accessing ",
-                        p.getPackageManager().name().toLowerCase(),
+                        p.getType().toLowerCase(),
                         " database\n", e.getMessage()));
 
             }

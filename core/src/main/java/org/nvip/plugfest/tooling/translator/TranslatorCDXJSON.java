@@ -31,7 +31,6 @@ public class TranslatorCDXJSON extends TranslatorCore {
      * @param fileContents String of file contents
      * @param file_path Path to file
      * @return internal SBOM object
-     * @throws ParseException If file is not valid JSON
      */
     @Override
     protected SBOM translateContents(String fileContents, String file_path) throws ParseException {
@@ -69,7 +68,11 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 // Get CPE, PURL, and SWIDs
                 String cpe = cdx_component.getCpe() == null ? null : cdx_component.getCpe();
-                PURL purl = cdx_component.getPurl() == null ? null : new PURL(cdx_component.getPurl());
+                PURL purl = null;
+                try {
+                    purl = new PURL(cdx_component.getPurl());
+                } catch (Exception ignored){
+                }
                 String swid = cdx_component.getSwid() == null ? null : String.valueOf(cdx_component.getSwid());
 
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
