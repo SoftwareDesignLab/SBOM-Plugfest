@@ -1,4 +1,7 @@
 # Plugfest Changelog
+## v3.3.0-- 5/22/23
+### SBOM
+- updated PURL object to have more robust fields and utility
 
 ## v3.2.1-- 5/18/23
 ### GUI
