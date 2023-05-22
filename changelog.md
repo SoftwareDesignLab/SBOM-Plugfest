@@ -8,6 +8,11 @@
 - Frontend launches backend and kills process on exit
 - removed full filepath from upload screen
 
+## v3.2.1-- 5/18/23
+### GUI
+- Frontend launches backend and kills process on exit
+- removed full filepath from upload screen
+
 ## v3.2.0 -- 5/9/23
 ### API
 - Fixed another bug preventing non-ASCII characters from being processed
