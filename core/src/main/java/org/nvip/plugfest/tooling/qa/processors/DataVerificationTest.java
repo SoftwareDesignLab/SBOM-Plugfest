@@ -237,24 +237,24 @@ public class DataVerificationTest extends MetricTest {
         for(int i = 0; i < purl.getNamespace().size(); i++)
             namespaceUrl.append(purl.getNamespace().get(i).toLowerCase()).append("/");
 
-//        // Query page
-//        HttpURLConnection q = queryURL("https://mvnrepository.com/artifact/" +
-//                namespaceUrl +
-//                purl.getName().toLowerCase() +
-//                "/" + purl.getVersion());
-//        htmlResult result = getHtmlResult(q);
-//        String html = result.response().toString();
-//        result.in().close();
+        // Query page
+        HttpURLConnection q = queryURL("https://mvnrepository.com/artifact/" +
+                namespaceUrl +
+                purl.getName().toLowerCase() +
+                "/" + purl.getVersion());
+        htmlResult result = getHtmlResult(q);   // todo returns 403 using this url
+        String html = result.response().toString();
+        result.in().close();
 
-//        Matcher m = new Pattern("<h2.*\"im-title\".*?>.*?>(.*?)<\\/a>.*?>(.*?)<.*<\\/h2>").matcher(html);
+        Matcher m = new Pattern("<h2.*\"im-title\".*?>.*?>(.*?)<\\/a>.*?>(.*?)<.*<\\/h2>").matcher(html);
 
         // couldn't find data
-//        if(!m.find())
-//            return null;
+        if(!m.find())
+            return null;
 
-//        return new extractedResult(m.group(1), m.group(2), "PLACEHOLDER");  // todo get publisher name
-        return new extractedResult(purl.getName(), purl.getVersion(), namespaceUrl.toString());
+        return new extractedResult(m.group(1), m.group(2), "PLACEHOLDER");      // todo placeholder
     }
+
     ///
     /// Http request section
     ///
