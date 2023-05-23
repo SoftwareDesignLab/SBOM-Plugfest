@@ -103,6 +103,7 @@ public class CompletenessTest extends MetricTest {
 
         // Test PURLs
         testResults.addTest(testPURLs(c));
+        testResults.addTest(testPURLRep(c));
 
         // Return result
         return testResults;
@@ -239,6 +240,34 @@ public class CompletenessTest extends MetricTest {
         final int invalid = getNumInvalidStrings(purlStrings, purlRegex);
         if (invalid > 0) // If there are invalid PURLs, mark as failed
             return new Test(false, "Had ", Integer.toString(invalid), " PURL(s) with Invalid Format.");
+        return new Test(true, "PURL(s) have Valid Format."); // Test passed
+    }
+
+
+    /**
+     * Test if purl accuratly represents the component with the given information
+     *
+     * @param c The component to test the PURLs of
+     * @return A single Test instance, describing if the test passed or failed and how many PURLs were invalid.
+     */
+    public Test testPURLRep(Component c) {
+
+        int invalid = 0;
+        // test all stored purls
+        for (PURL p: c.getPurls()) {
+
+            // increment invalid if name, version, or publisher don't match
+            if(!p.getName().equals(c.getName()) ||
+                    !(p.getVersion() == null ? "" : p.getVersion()).equals(c.getVersion()) ||    // version can be null, not required for purl
+                    !(p.getNamespace() != null && p.getNamespace().contains(c.getVersion())))    // namespace can be null, not required for purl
+                invalid++;
+
+        }
+
+        // todo we can store more information
+        if (invalid > 0) // If there are invalid PURLs, mark as failed
+            return new Test(false, "Had ", Integer.toString(invalid), " PURL(s) with Invalid Format.");
+
         return new Test(true, "PURL(s) have Valid Format."); // Test passed
     }
 
