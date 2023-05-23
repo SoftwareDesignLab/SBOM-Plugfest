@@ -25,6 +25,7 @@ export class ComparisonComponent implements OnChanges {
     purls: [],
     cpes: [],
     swids: [],
+    hashes: [],
   };
 
   constructor(private dataHandler: DataHandlerService) {}
@@ -115,6 +116,7 @@ export class ComparisonComponent implements OnChanges {
                 ...Object.values(version.purls),
                 ...Object.values(version.swids),
                 ...Object.values(version.cpes),
+                ...Object.values(version.hashes),
               ];
               for (let attr of attributes) {
                 if (attr.appearances) {
