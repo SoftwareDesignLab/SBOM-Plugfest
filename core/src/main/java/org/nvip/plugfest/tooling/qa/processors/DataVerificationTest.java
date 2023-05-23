@@ -72,6 +72,7 @@ public class DataVerificationTest extends MetricTest {
                 switch (p.getType().toLowerCase()) {
                     case "apk" -> fromOnline = extractFromApk(p);
                     case "maven" -> fromOnline = extractFromMaven(p);
+                    case "pypi" -> fromOnline = extractFromPyPi(p);
 
                     // Unknown or unsupported type
                     default -> {
@@ -255,6 +256,22 @@ public class DataVerificationTest extends MetricTest {
         return new extractedResult(m.group(1), m.group(2), "PLACEHOLDER");      // todo placeholder
     }
 
+    ///
+    /// pypi
+    ///
+    private extractedResult extractFromPyPi(PURL purl) throws IOException {
+
+        // Query page
+        HttpURLConnection q = queryURL("https://pypi.org/project/" +
+                purl.getName().toLowerCase() +
+                (purl.getVersion() != null ? "/" + purl.getVersion() : ""));
+
+        // bad response
+        if(q.getResponseCode() != HttpURLConnection.HTTP_OK)
+            return null;
+
+        return new extractedResult(purl.getName(), (purl.getVersion() != null ? "/" + purl.getVersion() : ""), "PLACEHOLDER");      // todo placeholder
+    }
     ///
     /// Http request section
     ///
