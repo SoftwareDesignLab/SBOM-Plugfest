@@ -253,6 +253,23 @@ public class ComponentConflict {
                         conflictString.append("      - ").append(swid).append("\n");
                     }
                     break;
+                case COMPONENT_HASH_MISTMATCH:
+                    conflictString.append("    Hashes:\n");
+                    // Get differences
+                    Set<Hash> hashA = new HashSet<>(componentA.getHashes());
+                    Set<Hash> hashB = new HashSet<>(componentB.getHashes());
+
+                    hashA.removeAll(componentB.getHashes());
+                    hashB.removeAll(componentA.getHashes());
+
+                    for (Hash hash : hashA) {
+                        conflictString.append("      + ").append(hash).append("\n");
+                    }
+
+                    for (Hash hash : hashB) {
+                        conflictString.append("      - ").append(hash).append("\n");
+                    }
+                    break;
                 case COMPONENT_SPDXID_MISMATCH:
                     // TODO Skip this one for now because we need to first confirm both components are from SPDXID
 //                    conflictString.append(" SPDXID: ").append(componentA.getSPDXID()).append(" vs ").append(componentB.getSPDXID());
