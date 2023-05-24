@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
+import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
+import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
@@ -14,29 +16,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * File: APIController.java
  * REST API Controller for SBOM Comparison and QA
  *
- * @author Juan Francisco Patino, Asa Horn, Justin Jantzi
+ * @author Juan Francisco Patino
+ * @author Asa Horn
+ * @author Justin Jantzi
+ * @author Derek Garcia
  */
 @RestController
 @RequestMapping("plugfest")
 public class APIController {
-
-    /**
-     *  Hold a pipeline object for QAReports
-     */
-    private static QAPipeline pipeline;
-
-    /**
-     * default constructor. Makes a QAPipeline
-     */
-    public APIController() {
-        pipeline = new QAPipeline();
-    }
 
     /**
      * USAGE. Send POST request to /compare with two+ SBOM files.
@@ -100,11 +95,16 @@ public class APIController {
 
         // Check if the sbom is null
         if (sbom == null) {
+            // todo return why sbom failed to parse, not just null
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
+        // todo get tests/processors from user that they want to run?
+        Set<AttributeProcessor> processors = new HashSet<>();
+        processors.add(new ContextualProcessor());
+
         //run the QA
-        QualityReport report = pipeline.process(sbom);
+        QualityReport report = QAPipeline.process(sbom, processors);
 
         //encode and send report
         try {
