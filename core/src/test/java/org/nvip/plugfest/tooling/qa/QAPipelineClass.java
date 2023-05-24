@@ -1,6 +1,8 @@
 package org.nvip.plugfest.tooling.qa;
 
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
+import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.HashSet;
@@ -33,8 +35,6 @@ public class QAPipelineClass {
 
     @Test
     public void process_test() throws Exception {
-        QAPipeline qaPipeline = new QAPipeline();
-        assertNotNull(qaPipeline);
 
         // Create and SBOM with some components
         SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
@@ -55,7 +55,9 @@ public class QAPipelineClass {
         test_SBOM.addComponent(test_component_a.getUUID(), test_component_b);
 
         // Throw the SBOM into the QA Pipeline
-        QualityReport test_quality_report = qaPipeline.process(test_SBOM);
+        Set<AttributeProcessor> processors = new HashSet<>();
+        processors.add(new ContextualProcessor());
+        QualityReport test_quality_report = QAPipeline.process(test_SBOM, processors);
 
         // Make sure quality report is an actual QualityReport and is not null
         assertNotNull(test_quality_report);
