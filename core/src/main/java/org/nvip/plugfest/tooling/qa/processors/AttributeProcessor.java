@@ -38,7 +38,7 @@ public abstract class AttributeProcessor {
      */
     public QualityReport process(SBOM sbom) {
         // Init quality report
-        QualityReport qr = new QualityReport();
+//        QualityReport qr = new QualityReport();
 
         // Run all Components through each test individually
         final Component[] components = sbom.getAllComponents().toArray(new Component[0]);
@@ -58,10 +58,10 @@ public abstract class AttributeProcessor {
             }
 
             // Add test results to QualityReport
-            qr.addTestResult(results);
+//            qr.addTestResult(results);
         }
 
         // Return built QualityReport
-        return qr;
+        return null;
     }
 }
