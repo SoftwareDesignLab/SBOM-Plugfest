@@ -2,8 +2,6 @@ package org.nvip.plugfest.tooling.qa;
 
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
-import org.nvip.plugfest.tooling.qa.processors.IntrinsicProcessor;
-import org.nvip.plugfest.tooling.qa.processors.RepresentationProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.HashSet;
@@ -27,8 +25,6 @@ public class QAPipeline {
         // TODO: Move processors initialization App so they can be chosen there
         processors = new HashSet<>();
         processors.add(new ContextualProcessor());
-        processors.add(new IntrinsicProcessor());
-        processors.add(new RepresentationProcessor());
         // Add new processor here
 
     }
