@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
-import org.nvip.plugfest.tooling.qa.processors.old.AttributeProcessor;
-import org.nvip.plugfest.tooling.qa.processors.old.ContextualProcessor;
+import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
+import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
@@ -104,7 +104,7 @@ public class APIController {
         processors.add(new ContextualProcessor());
 
         //run the QA
-        QualityReport report = QAPipeline.process(fileName, sbom, null);
+        QualityReport report = QAPipeline.process(sbom, processors);
 
         //encode and send report
         try {
