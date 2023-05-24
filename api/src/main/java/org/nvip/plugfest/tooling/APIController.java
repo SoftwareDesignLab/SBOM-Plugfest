@@ -104,7 +104,7 @@ public class APIController {
         processors.add(new ContextualProcessor());
 
         //run the QA
-        QualityReport report = QAPipeline.process(sbom, processors);
+        QualityReport report = QAPipeline.process(fileName, sbom, processors);
 
         //encode and send report
         try {
