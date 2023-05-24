@@ -19,22 +19,20 @@ public class QAPipeline {
     /**
      * Run a given sbom against all processor tests within this pipeline
      *
+     * @param fileName Unique filename used to ID the SBOM
      * @param sbom SBOM to run tests against
      * @param processors Collection of Processors to run against SBOM
      * @return QualityReport containing all results
      */
-    public static QualityReport process(SBOM sbom, Set<AttributeProcessor> processors){
+    public static QualityReport process(String fileName, SBOM sbom, Set<AttributeProcessor> processors){
          // Init QualityReport
-         QualityReport qr = new QualityReport(sbom.getSerialNumber());
+         QualityReport qr = new QualityReport(fileName);
 
          // Run all added processors
          for (AttributeProcessor p : processors) {
              // Add results to master report object
-             qr.append(p.process(sbom));
+//             qr.massUpdate(p.process(sbom));
          }
-
-         // Remove all empty tests
-         qr.removeEmpty();
 
          // Return Master QR
          return qr;
