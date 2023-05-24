@@ -14,12 +14,12 @@ import java.util.ArrayList;
  * @author Derek Garcia
  */
 public class QualityReport {
-    /** Test results from the QAPipeline */
-    @JsonProperty("testResults") private final ArrayList<TestResults> testResults;
-    /**
-     * The serial number of the SBOM that was tested
-     */
-    @JsonProperty("serialNumber") private final String serialNumber;
+
+    @JsonProperty("serialNumber")
+    private final String serialNumber;
+    @JsonProperty("testResults")
+    private final ArrayList<TestResults> testResults;
+
 
     /**
      * Create new QualityReport object with the SBOM serialNumber.

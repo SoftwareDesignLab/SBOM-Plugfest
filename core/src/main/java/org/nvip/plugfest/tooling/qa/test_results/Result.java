@@ -11,8 +11,8 @@ import java.util.HashMap;
  * @author Derek Garcia
  */
 public class Result {
-    @JsonProperty("testName")
-    private final String testName;
+    @JsonProperty("type")
+    private final String type;
 
     @JsonProperty("pass")
     private final boolean pass;
@@ -27,12 +27,12 @@ public class Result {
     /**
      * Create new result of a test
      *
-     * @param testName Name of the parent test
+     * @param type Type of the parent processor
      * @param pass Whether the test passed or not
      * @param message test message
      */
-    public Result(String testName, boolean pass, String message){
-        this.testName = testName;
+    public Result(String type, boolean pass, String message){
+        this.type = type;
         this.pass = pass;
         this.message = message;
     }
