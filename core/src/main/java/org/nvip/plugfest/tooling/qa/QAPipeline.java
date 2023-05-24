@@ -1,8 +1,10 @@
 package org.nvip.plugfest.tooling.qa;
 
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
+import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -10,29 +12,41 @@ import java.util.Set;
  *
  * @author Dylan Mulligan
  * @author Matt London
- * @author Derek Garcia
  */
 public class QAPipeline {
+
+    /** All processors that will run tests against this pipeline */
+    private final Set<AttributeProcessor> processors;
+
+    /**
+     * Construct the pipeline with all specific processors
+     */
+    public QAPipeline(){
+        // TODO: Move processors initialization App so they can be chosen there
+        processors = new HashSet<>();
+        processors.add(new ContextualProcessor());
+        // Add new processor here
+
+    }
 
     /**
      * Run a given sbom against all processor tests within this pipeline
      *
-     * @param fileName Unique filename used to ID the SBOM
      * @param sbom SBOM to run tests against
-     * @param processors Collection of Processors to run against SBOM
      * @return QualityReport containing all results
      */
-    public static QualityReport process(String fileName, SBOM sbom, Set<AttributeProcessor> processors){
+    public QualityReport process(SBOM sbom){
          // Init QualityReport
-         QualityReport qr = new QualityReport(fileName);
+         QualityReport qr = new QualityReport(sbom.getSerialNumber());
 
          // Run all added processors
          for (AttributeProcessor p : processors) {
              // Add results to master report object
-             qr.updateAttribute(p.getAttributeName(), p.process(sbom));
-
-//             qr.massUpdate(p.process(sbom));
+             qr.append(p.process(sbom));
          }
+
+         // Remove all empty tests
+         qr.removeEmpty();
 
          // Return Master QR
          return qr;
