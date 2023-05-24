@@ -12,30 +12,18 @@ import java.util.Set;
  *
  * @author Dylan Mulligan
  * @author Matt London
+ * @author Derek Garcia
  */
 public class QAPipeline {
-
-    /** All processors that will run tests against this pipeline */
-    private final Set<AttributeProcessor> processors;
-
-    /**
-     * Construct the pipeline with all specific processors
-     */
-    public QAPipeline(){
-        // TODO: Move processors initialization App so they can be chosen there
-        processors = new HashSet<>();
-        processors.add(new ContextualProcessor());
-        // Add new processor here
-
-    }
 
     /**
      * Run a given sbom against all processor tests within this pipeline
      *
      * @param sbom SBOM to run tests against
+     * @param processors Collection of Processors to run against SBOM
      * @return QualityReport containing all results
      */
-    public QualityReport process(SBOM sbom){
+    public static QualityReport process(SBOM sbom, Set<AttributeProcessor> processors){
          // Init QualityReport
          QualityReport qr = new QualityReport(sbom.getSerialNumber());
 
