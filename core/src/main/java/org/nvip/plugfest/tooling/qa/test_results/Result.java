@@ -1,7 +1,5 @@
 package org.nvip.plugfest.tooling.qa.test_results;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -12,12 +10,12 @@ import java.util.HashMap;
  *
  * @author Derek Garcia
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result {
-    @JsonIgnore
+    @JsonProperty("testName")
     private final String testName;
+
     @JsonProperty("pass")
-    private final int pass;
+    private final boolean pass;
 
     @JsonProperty("message")
     private final String message;
@@ -29,11 +27,11 @@ public class Result {
     /**
      * Create new result of a test
      *
-     * @param testName name of the parent test
+     * @param testName Name of the parent test
      * @param pass Whether the test passed or not
      * @param message test message
      */
-    public Result(String testName, int pass, String message){
+    public Result(String testName, boolean pass, String message){
         this.testName = testName;
         this.pass = pass;
         this.message = message;
@@ -53,9 +51,5 @@ public class Result {
 
         // add to table
         this.additionalInfo.put(key, value);
-    }
-
-    public String getTestName() {
-        return this.testName;
     }
 }
