@@ -10,21 +10,15 @@ import java.util.List;
 
 public abstract class AttributeProcessor {
 
-    private final String attributeName;
-
-    protected final List<MetricTest> tests = new ArrayList<>();
-
-    protected AttributeProcessor(String attributeName){
-        this.attributeName = attributeName;
-    }
-
+    protected List<MetricTest> metricTests = new ArrayList<>();
+    protected String attributeName;
     public List<Result> process(SBOM sbom){
         List<Result> results = new ArrayList<>();
-        for(MetricTest test : this.tests)
-            results.add(test.test(sbom));
 
+        for(MetricTest test : this.metricTests){
+            results.addAll(test.test(sbom));
+        }
         return results;
-
     }
 
     public String getAttributeName() {

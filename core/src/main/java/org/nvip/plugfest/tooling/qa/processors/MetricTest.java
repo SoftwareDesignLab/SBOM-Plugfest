@@ -3,6 +3,19 @@ package org.nvip.plugfest.tooling.qa.processors;
 import org.nvip.plugfest.tooling.qa.test_results.Result;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-public interface MetricTest {
-    Result test(Object o);
+import java.util.List;
+
+public abstract class MetricTest {
+
+    protected boolean isEmptyOrNull(Object o){
+        if(o == null)
+            return true;
+
+        if(o instanceof String)
+            return o.equals("");
+
+        return false;
+    }
+
+    public abstract List<Result> test(SBOM sbom);
 }
