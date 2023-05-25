@@ -29,6 +29,9 @@ public class QAPipeline {
          // Run all added processors
          for (AttributeProcessor p : processors) {
              // Add results to master report object
+             /*
+             qr.addAttribute(p.getName(), p.process(sbom))
+              */
 //             qr.massUpdate(p.process(sbom));
          }
 

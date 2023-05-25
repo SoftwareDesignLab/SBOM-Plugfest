@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.qa.processors;
+package org.nvip.plugfest.tooling.qa.processors.old;
 
 import org.nvip.plugfest.tooling.qa.test_results.Test;
 import org.nvip.plugfest.tooling.qa.test_results.TestResults;

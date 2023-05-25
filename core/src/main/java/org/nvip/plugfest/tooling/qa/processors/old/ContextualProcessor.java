@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.qa.processors;
+package org.nvip.plugfest.tooling.qa.processors.old;
 
 /**
  * Metrics that measure the relevance of data in the context of the SBOM
