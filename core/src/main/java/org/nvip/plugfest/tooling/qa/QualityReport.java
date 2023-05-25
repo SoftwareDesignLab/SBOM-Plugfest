@@ -46,9 +46,9 @@ public class QualityReport {
                 // Create new array for new test
                 this.testResults.computeIfAbsent(testName, k -> new ArrayList<>());
                 // update results
-                this.testResults.get(testName).add(result);
+//                this.testResults.get(testName).add(result);
             }
-            update(testName, r);
+//            update(testName, r);
         }
 
         private void update(String testName, Result result){

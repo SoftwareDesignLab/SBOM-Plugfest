@@ -13,6 +13,8 @@ import java.util.HashMap;
 public class Result {
     private final String testName;
 
+    @JsonProperty("type")
+    private final String  type;
     @JsonProperty("pass")
     private final boolean pass;
 
@@ -30,8 +32,9 @@ public class Result {
      * @param pass Whether the test passed or not
      * @param message test message
      */
-    public Result(String testName, boolean pass, String message){
+    public Result(String testName, String type, boolean pass, String message){
         this.testName = testName;
+        this.type = type;
         this.pass = pass;
         this.message = message;
     }
