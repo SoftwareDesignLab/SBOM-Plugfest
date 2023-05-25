@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * QualityReport is a collection of TestResults objects that relate to a particular SBOM
+ * JSON-friendly object to report Metric findings
  *
  * @author Dylan Mulligan
  * @author Matt London
@@ -17,43 +17,14 @@ import java.util.List;
  */
 @JsonPropertyOrder({"uid", "attributeResults" })
 public class QualityReport {
-
-
-    private class TestResults {
-
-        @JsonProperty("testResults")
-        private final HashMap<String, ArrayList<Result>> testResults = new HashMap<>();
-
-//        public TestResults(String testName){
-//            this.testName = testName;
-//        }
-
-        public void massUpdate(String testName, List<Result> results){
-            for(Result r : results){
-                // Create new array for new test
-                this.testResults.computeIfAbsent(testName, k -> new ArrayList<>());
-                // update results
-//                this.testResults.get(testName).add(result);
-            }
-//            update(testName, r);
-        }
-
-        private void update(String testName, Result result){
-
-        }
-
-    }
-
-
     @JsonProperty
     private final String uid;
-
     @JsonProperty
     private final HashMap<String, HashMap<String, ArrayList<Result>>> attributeResults = new HashMap<>();
 
 
     /**
-     * Create new QualityReport object with the SBOM serialNumber.
+     * Create new QualityReport object with a form of UID
      *
      * @param uid unique identifier for the quality report
      */
@@ -61,16 +32,21 @@ public class QualityReport {
         this.uid = uid;
     }
 
-
+    /**
+     * Update an attribute with result details
+     *
+     * @param attributeName Name of attribute
+     * @param results List of test results
+     */
     public void updateAttribute(String attributeName, List<Result> results){
         // init test results
         HashMap<String, ArrayList<Result>> testResults =
                 this.attributeResults.computeIfAbsent(attributeName, k -> new HashMap<>());
 
+        // Add each test and result to the attribute
         for(Result r : results){
             testResults.computeIfAbsent(r.getTestName(), k -> new ArrayList<>());
             testResults.get(r.getTestName()).add(r);
         }
-
     }
 }

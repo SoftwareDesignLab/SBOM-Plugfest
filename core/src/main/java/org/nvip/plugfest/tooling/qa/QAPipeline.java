@@ -27,12 +27,8 @@ public class QAPipeline {
          QualityReport qr = new QualityReport(fileName);
 
          // Run all added processors
-         for (AttributeProcessor p : processors) {
-             // Add results to master report object
+         for (AttributeProcessor p : processors)
              qr.updateAttribute(p.getAttributeName(), p.process(sbom));
-
-//             qr.massUpdate(p.process(sbom));
-         }
 
          // Return Master QR
          return qr;

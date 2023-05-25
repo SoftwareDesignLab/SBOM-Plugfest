@@ -55,6 +55,10 @@ public class Result {
         this.additionalInfo.put(key, value);
     }
 
+    ///
+    /// Getters
+    ///
+
     public String getTestName() {
         return this.testName;
     }
