@@ -1,0 +1,62 @@
+{
+  targetSbom: 'SBOM A',
+  comparisonSbom: 'SBOM B',
+  components: [
+    {
+      info: { name: 'librsvg2-common', ccurrence: 2, matching: 1 },
+      versions: [
+        {
+          info: { name: '2.50.3+dfsg-1', occurrences: 2, matching: 1 },
+          attributes: [
+            {
+              info: { name: 'PURL', occurrences: 2, matching: 1 },
+              values: [
+                {
+                  name: 'pkg:deb/debian/librsvg2-common@2.50.3+dfsg-1?arch=amd64&upstream=librsvg&distro=debian-11',
+                  occurrences: 2,
+                  matching: 1,
+                },
+              ],
+            },
+            {
+              info: { name: 'CPE', occurrences: 2, matching: 1 },
+              values: [
+                {
+                  name: 'cpe:2.3:a:librsvg2_common:librsvg2-common:2.50.3\\+dfsg-1:*:*:*:*:*:*:*',
+                  occurrences: 2,
+                  matching: 1,
+                },
+                {
+                  name: 'cpe:2.3:a:librsvg2-common:librsvg2-common:2.50.3\\+dfsg-1:*:*:*:*:*:*:*',
+                  occurrences: 2,
+                  matching: 1,
+                },
+                {
+                  name: 'cpe:2.3:a:librsvg2_common:librsvg2_common:2.50.3\\+dfsg-1:*:*:*:*:*:*:*',
+                  occurrences: 2,
+                  matching: 1,
+                },
+                {
+                  name: 'cpe:2.3:a:librsvg2-common:librsvg2_common:2.50.3\\+dfsg-1:*:*:*:*:*:*:*',
+                  occurrences: 2,
+                  matching: 1,
+                },
+                {
+                  name: 'cpe:2.3:a:librsvg2:librsvg2-common:2.50.3\\+dfsg-1:*:*:*:*:*:*:*',
+                  occurrences: 2,
+                  matching: 1,
+                },
+                {
+                  name: 'cpe:2.3:a:librsvg2:librsvg2_common:2.50.3\\+dfsg-1:*:*:*:*:*:*:*',
+                  occurrences: 2,
+                  matching: 1,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
+  ]
+}
