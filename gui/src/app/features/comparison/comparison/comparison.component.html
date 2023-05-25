@@ -11,6 +11,7 @@
 </div>
 <div *ngIf="comparison" class="comparison">
   <div class="header">
+    <app-button icon="arrow_back" (click)="decreaseDepth(path.length - 2)" [backgroundColor]="path.length === 1 ? 'var(--gray)' : 'var(--accent)'" />
     <div>
       <span
         class="path"
@@ -19,7 +20,6 @@
         >{{ title.trim() + "/" }}</span
       >
     </div>
-    <app-button icon="arrow_back" (click)="decreaseDepth(path.length - 2)" [backgroundColor]="path.length === 1 ? 'var(--gray)' : 'var(--accent)'" />
   </div>
   <div>
     <div *ngIf="path.length === 1">
