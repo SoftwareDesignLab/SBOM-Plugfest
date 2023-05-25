@@ -25,7 +25,8 @@ public class EmptyOrNullTest extends MetricTest {
 
         return results;
     }
-    
+
+    // test SBOm fields
     private List<Result> testSBOMFields(SBOM sbom){
         List<Result> results = new ArrayList<>();
         Result r;
@@ -65,6 +66,7 @@ public class EmptyOrNullTest extends MetricTest {
         return results;
     }
 
+    // test component fields
     private List<Result> testComponentFields(Component c){
 
         List<Result> results = new ArrayList<>();
@@ -136,7 +138,8 @@ public class EmptyOrNullTest extends MetricTest {
         return results;
     }
 
-    
+
+    // check if object is empty or not
     private Result resultEmptyOrNull(Object o){
         if(o == null)
             return new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
