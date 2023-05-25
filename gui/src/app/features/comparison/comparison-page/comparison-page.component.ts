@@ -110,6 +110,11 @@ export class ComparisonPageComponent {
   IsLoadingComparison(): boolean {
     return this.dataHandler.IsLoadingComparison();
   }
+
+  toggleCheckbox(index: number) {
+    const checkbox = document.getElementsByName('comparison')[index] as HTMLInputElement;
+    checkbox.checked = !checkbox.checked;
+  }
 }
 
 @Component({

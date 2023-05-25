@@ -71,9 +71,13 @@
   cursor: pointer;
 }
 
+.compare-item > .sbom:hover{
+  background-color: gray;
+}
+
 .compare-item input[type="checkbox"] {
-  transform: scale(1.5); /* Increase the size */
-  margin-right: 10px; /* Adjust the spacing */
+  transform: scale(1.5); 
+  margin-right: 10px;
 }
 
 .app-side-panel {
