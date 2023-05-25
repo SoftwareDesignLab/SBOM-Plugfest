@@ -4,11 +4,6 @@ import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { Comparison } from "../comparison";
 import { SBOM } from "@models/sbom";
 
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from "@angular/material/dialog";
 import { DataHandlerService } from "@services/data-handler.service";
 
 @Component({
@@ -24,10 +19,7 @@ export class ComparisonPageComponent {
   sboms: string[] = ["a", "b"];
   targetSbom!: string;
 
-  constructor(
-    public dialog: MatDialog,
-    private dataHandler: DataHandlerService
-  ) {}
+  constructor(private dataHandler: DataHandlerService) {}
 
   /** @TODO create an api call where you would send the target sbom and compare */
   // it against all sboms rather than doing singular api calls for each one  */
@@ -71,12 +63,6 @@ export class ComparisonPageComponent {
     }
   }
 
-  openDialog(sbom: SBOM): void {
-    const dialogRef = this.dialog.open(ComparisonDialogComponent, {
-      data: sbom,
-    });
-  }
-
   GetValidSBOMs() {
     return this.dataHandler.GetValidSBOMs();
   }
@@ -110,28 +96,4 @@ export class ComparisonPageComponent {
   IsLoadingComparison(): boolean {
     return this.dataHandler.IsLoadingComparison();
   }
-}
-
-@Component({
-  selector: "app-comparison-dialog",
-  template: `<app-dialog
-    icon="delete"
-    (clicked)="this.dialogRef.close(true)"
-    buttonText="delete"
-  >
-    <span title>SBOM details</span>
-    <div body>
-      Identifier: {{ data.name }} Timestamp: {{ data.timestamp }} Publisher:
-      {{ data.publisher }}
-      <app-button (click)="this.dialogRef.close(false)">Close</app-button>
-    </div>
-  </app-dialog>`,
-  styles: [],
-})
-export class ComparisonDialogComponent {
-  @Output() removeSbom: EventEmitter<SBOM> = new EventEmitter<SBOM>();
-  constructor(
-    public dialogRef: MatDialogRef<ComparisonDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: SBOM
-  ) {}
 }
