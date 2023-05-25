@@ -73,15 +73,4 @@ public class QualityReport {
         }
 
     }
-
-    //    private static void updateResultMap(HashMap<String, Object> resultMap, String key, Object value){
-//        resultMap.computeIfAbsent(key, k -> new ArrayList<>());
-//        resultMap.get(key)(value);
-//    }
-
-
-
-
-
-
 }
