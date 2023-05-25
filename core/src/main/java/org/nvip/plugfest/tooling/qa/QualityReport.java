@@ -2,11 +2,10 @@ package org.nvip.plugfest.tooling.qa;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.nvip.plugfest.tooling.qa.test_results.Result;
-import org.nvip.plugfest.tooling.qa.test_results.TestResults;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 /**
  * QualityReport is a collection of TestResults objects that relate to a particular SBOM
@@ -18,10 +17,52 @@ import java.util.Set;
  */
 public class QualityReport {
 
+    private class AttributeResults {
+        @JsonProperty("attributeName")
+        private final String attributeName;
+
+        @JsonProperty("attributeResults")
+        private final List<TestResults> testResults = new ArrayList<>();
+
+        public AttributeResults(String attributeName){
+            this.attributeName = attributeName;
+        }
+
+    }
+
+    private class TestResults {
+        @JsonProperty("testName")
+        private final String testName;
+
+        @JsonProperty("testResults")
+        private final HashMap<String, ArrayList<Result>> testResults = new HashMap<>();
+
+        public TestResults(String testName){
+            this.testName = testName;
+        }
+
+        public void massUpdate(String testName, List<Result> results){
+            for(Result r : results){
+                // Create new array for new test
+                this.testResults.computeIfAbsent(testName, k -> new ArrayList<>());
+                // update results
+                this.testResults.get(testName).add(result);
+            }
+            update(testName, r);
+        }
+
+        private void update(String testName, Result result){
+
+        }
+
+    }
+
     @JsonProperty("uid")
     private final String uid;
-    @JsonProperty("tests")
-    private final HashMap<String, ArrayList<Result>> testResults = new HashMap<>();
+
+    @JsonProperty("attributeTests")
+    private final List<AttributeResults> attributeResults = new ArrayList<>();
+
 
 
     /**
@@ -33,15 +74,14 @@ public class QualityReport {
         this.uid = uid;
     }
 
-    public void massUpdate(String testName, Set<Result> results){
-        for(Result r : results)
-            update(testName, r);
+
+    public void addAttribute(String attribute, List<Result> results){
+
     }
 
-    private void update(String testName, Result result){
-        // Create new array for new test
-        this.testResults.computeIfAbsent(testName, k -> new ArrayList<>());
-        // update results
-        this.testResults.get(testName).add(result);
-    }
+
+
+
+
+
 }
