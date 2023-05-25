@@ -26,7 +26,7 @@
         (click)="increaseDepth(display[key], key)"
       >
         <div title class="title">
-          <mat-icon *ngIf="targetSBOM[key] && targetMarked" aria-hidden="true" fontIcon="radio_button_checked" class="in-target"/>
+          <mat-icon *ngIf="targetSBOM[key] && targetMarked" aria-hidden="true" [fontIcon]="icon" class="in-target"/>
           <span> {{ key }}</span>
         </div>
       </app-accordion>
@@ -39,17 +39,14 @@
         [color]="matches(version) ? 'var(--green)' : 'var(--red)'"
         (click)="increaseDepth(version, version.componentVersion)"
       >
-        <span title>
-          {{
-            targetSBOM[pathTitles[1]] && targetMarked
-              ? targetSBOM[pathTitles[1]].indexOf(version.componentVersion) !==
-                -1
-                ? "*"
-                : ""
-              : ""
-          }}
-          {{ version.componentVersion }}
-        </span>
+        <div title class="title" >
+          <mat-icon
+            *ngIf="targetMarked && targetSBOM[pathTitles[1]].indexOf(version.componentVersion) !==-1"
+            aria-hidden="true"
+            [fontIcon]="icon"
+            class="in-target"/>
+          <span> {{ version.componentVersion }}</span>
+        </div>
       </app-accordion>
     </div>
 
@@ -66,16 +63,14 @@
               [extra]="[getMatching(value)]"
               [color]="matches(value) ? 'var(--green)' : 'var(--red)'"
             >
-              <span title style="color: white">
-                {{
-                  value.appearances && targetMarked
-                    ? value.appearances.indexOf(0) !== -1
-                      ? "*"
-                      : ""
-                    : ""
-                }}
-                {{ value.uniqueId }}
-              </span>
+              <div title class="title" >
+                <mat-icon
+                  *ngIf="targetMarked && (value.appearances ? value.appearances.indexOf(0) !== -1 : 0)"
+                  aria-hidden="true"
+                  [fontIcon]="icon"
+                  class="in-target"/>
+                <span> {{ value.uniqueId }}</span>
+              </div>
               <div body>
                 <div *ngFor="let sbom of value.appearances">
                   {{ getAliasFromIndex(sbom) }}
