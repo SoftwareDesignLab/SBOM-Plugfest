@@ -1,10 +1,8 @@
 package org.nvip.plugfest.tooling.qa;
 
-import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
-import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
+import org.nvip.plugfest.tooling.qa.processors.old.AttributeProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
