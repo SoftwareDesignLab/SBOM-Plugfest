@@ -9,7 +9,7 @@ import { DataHandlerService } from '@services/data-handler.service';
   styleUrls: ['./metrics-side-panel.component.css']
 })
 export class MetricsSidePanelComponent {
-
+  selectedSBOM: any;
   sbomInfoOpened: string | null = null;
 
   constructor(private handler: DataHandlerService, public dialog: MatDialog) {}
@@ -20,6 +20,7 @@ export class MetricsSidePanelComponent {
 
   SetSelectedSBOM(bom: string) {
     this.handler.selectedQualityReport = bom;
+    this.selectedSBOM = bom;
   }
 
   getSBOMAlias(path: string) {

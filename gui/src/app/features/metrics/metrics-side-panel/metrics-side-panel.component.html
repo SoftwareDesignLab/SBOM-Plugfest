@@ -4,14 +4,11 @@
     <div class="selection flex col">
       <div class="header">Select SBOM</div>
       <div class="content flex col" style="max-height: 600px; overflow-y: auto;">
-        <div
-          class="compare-item flex"
-          *ngFor="let item of GetSBOMs(); let i = index"
-        >
-          <input type="radio" name="sbom" (click)="SetSelectedSBOM(item)" />
-          <div class="sbom flex">
+        <div class="compare-item flex" *ngFor="let item of GetSBOMs(); let i = index"
+          (click)="SetSelectedSBOM(item)" [class.selected]="item === selectedSBOM">
+          <div class="sbom flex" [class.selected]="item === selectedSBOM">
             {{ getSBOMAlias(item) }}
-            <icon icon="question_mark" (click)="getSBOMInfo(item)"/>
+            <icon icon="question_mark" (click)="getSBOMInfo(item)"></icon>
           </div>
         </div>
       </div>
