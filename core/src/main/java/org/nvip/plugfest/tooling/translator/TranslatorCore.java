@@ -45,6 +45,8 @@ public abstract class TranslatorCore {
     // Collection containing all remaining components not added to the dependencyTree
     protected HashSet<String> remainder;
 
+    protected static final String COMPONENT_DEFAULT = "N/A";
+
     /**
      * Generic Translator core constructor.
      *
@@ -232,6 +234,10 @@ public abstract class TranslatorCore {
     protected void defaultTopComponent(String key, ArrayList values) {
         values.remove(key);
         dependencies.put(key, values);
+    }
+
+    protected String evaluateOrDefault(String value, String defaultVal) {
+        return value == null ? defaultVal : value;
     }
 
     /**

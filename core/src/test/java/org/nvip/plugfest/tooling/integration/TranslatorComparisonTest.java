@@ -37,7 +37,7 @@ public class TranslatorComparisonTest {
         assertNotNull(test_sbom_two);
         assertEquals("1", test_sbom_two.getSbomVersion());
         assertEquals("1.4", test_sbom_two.getSpecVersion());
-        assertEquals(17, test_sbom_two.getAllComponents().size());
+        assertEquals(18, test_sbom_two.getAllComponents().size());
 
         Comparison test_comparison = new Comparison(Arrays.asList(test_sbom_one, test_sbom_one));
 

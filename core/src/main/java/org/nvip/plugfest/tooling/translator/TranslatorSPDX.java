@@ -268,10 +268,10 @@ public class TranslatorSPDX extends TranslatorCore {
                 }
                 // Create new component from required information
                 Component component = new Component(
-                        component_materials.get("PackageName"),
-                        supplier,
-                        component_materials.get("PackageVersion"),
-                        component_materials.get("SPDXID")
+                        evaluateOrDefault(component_materials.get("PackageName"), COMPONENT_DEFAULT),
+                        evaluateOrDefault(supplier, COMPONENT_DEFAULT),
+                        evaluateOrDefault(component_materials.get("PackageVersion"), COMPONENT_DEFAULT),
+                        evaluateOrDefault(component_materials.get("SPDXID"), UUID.randomUUID().toString())
                 );
 
                 // Append CPEs and Purls

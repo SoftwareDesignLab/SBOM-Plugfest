@@ -255,10 +255,10 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     // Create a new component with required information
                     Component component = new Component(
-                            component_items.get("name"),
-                            component_items.get("publisher"),
-                            component_items.get("version"),
-                            component_items.get("bom-ref")
+                            evaluateOrDefault(component_items.get("name"), COMPONENT_DEFAULT),
+                            evaluateOrDefault(component_items.get("publisher"), COMPONENT_DEFAULT),
+                            evaluateOrDefault(component_items.get("version"), COMPONENT_DEFAULT),
+                            evaluateOrDefault(component_items.get("bom-ref"), UUID.randomUUID().toString())
                     );
 
                     // Set CPEs and PURLs

@@ -35,7 +35,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(17, sbom.getAllComponents().size());
+        assertEquals(18, sbom.getAllComponents().size());
     }
 
     @Test

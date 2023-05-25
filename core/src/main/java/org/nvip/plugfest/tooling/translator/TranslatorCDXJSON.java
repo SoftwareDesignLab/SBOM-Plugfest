@@ -1,4 +1,5 @@
 package org.nvip.plugfest.tooling.translator;
+import org.apache.commons.lang3.ObjectUtils;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.BomReference;
@@ -77,13 +78,17 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(
-                        cdx_component.getName(),
-                        cdx_component.getPublisher(),
-                        cdx_component.getVersion(),
-                        Collections.singleton(cpe),
-                        Collections.singleton(purl),
-                        Collections.singleton(swid)
+                        evaluateOrDefault(cdx_component.getName(), COMPONENT_DEFAULT),
+                        evaluateOrDefault(cdx_component.getPublisher(), COMPONENT_DEFAULT),
+                        evaluateOrDefault(cdx_component.getVersion(), COMPONENT_DEFAULT),
+                        evaluateOrDefault(cdx_component.getBomRef(), UUID.randomUUID().toString())
                 );
+
+
+                new_component.setCpes(Collections.singleton(cpe));
+                new_component.setPurls(Collections.singleton(purl));
+                new_component.setSwids(Collections.singleton(swid));
+
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
                 try {
@@ -95,9 +100,6 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     System.err.println("An error occurred while getting licenses: \n");
                     e.printStackTrace();
                 }
-
-                // Set the component's unique ID
-                new_component.setUniqueID(cdx_component.getBomRef());
 
                 // Add component to component list
                 this.loadComponent(new_component.getUniqueID(), new_component);
