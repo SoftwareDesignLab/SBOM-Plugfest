@@ -1,6 +1,6 @@
 package org.nvip.plugfest.tooling.qa;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.nvip.plugfest.tooling.qa.test_results.Result;
 
 import java.util.ArrayList;
@@ -15,31 +15,18 @@ import java.util.List;
  * @author Ian Dunn
  * @author Derek Garcia
  */
+@JsonPropertyOrder({"uid", "attributeResults" })
 public class QualityReport {
 
-    private class AttributeResults {
-        @JsonProperty("attributeName")
-        private final String attributeName;
-
-        @JsonProperty("attributeResults")
-        private final List<TestResults> testResults = new ArrayList<>();
-
-        public AttributeResults(String attributeName){
-            this.attributeName = attributeName;
-        }
-
-    }
 
     private class TestResults {
-        @JsonProperty("testName")
-        private final String testName;
 
         @JsonProperty("testResults")
         private final HashMap<String, ArrayList<Result>> testResults = new HashMap<>();
 
-        public TestResults(String testName){
-            this.testName = testName;
-        }
+//        public TestResults(String testName){
+//            this.testName = testName;
+//        }
 
         public void massUpdate(String testName, List<Result> results){
             for(Result r : results){
@@ -57,12 +44,12 @@ public class QualityReport {
 
     }
 
-    @JsonProperty("uid")
+
+    @JsonProperty
     private final String uid;
 
-    @JsonProperty("attributeTests")
-    private final List<AttributeResults> attributeResults = new ArrayList<>();
-
+    @JsonProperty
+    private final HashMap<String, HashMap<String, ArrayList<Result>>> attributeResults = new HashMap<>();
 
 
     /**
@@ -75,9 +62,22 @@ public class QualityReport {
     }
 
 
-    public void addAttribute(String attribute, List<Result> results){
+    public void updateAttribute(String attributeName, List<Result> results){
+        // init test results
+        HashMap<String, ArrayList<Result>> testResults =
+                this.attributeResults.computeIfAbsent(attributeName, k -> new HashMap<>());
+
+        for(Result r : results){
+            testResults.computeIfAbsent(r.getTestName(), k -> new ArrayList<>());
+            testResults.get(r.getTestName()).add(r);
+        }
 
     }
+
+    //    private static void updateResultMap(HashMap<String, Object> resultMap, String key, Object value){
+//        resultMap.computeIfAbsent(key, k -> new ArrayList<>());
+//        resultMap.get(key)(value);
+//    }
 
 
 
