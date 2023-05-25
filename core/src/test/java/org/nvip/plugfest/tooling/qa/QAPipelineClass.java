@@ -1,12 +1,6 @@
 package org.nvip.plugfest.tooling.qa;
 
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
-import org.nvip.plugfest.tooling.qa.processors.ContextualProcessor;
-import org.nvip.plugfest.tooling.sbom.*;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
