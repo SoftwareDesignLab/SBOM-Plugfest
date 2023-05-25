@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa.test_results;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.HashMap;
  *
  * @author Derek Garcia
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result {
     private final String testName;
 
