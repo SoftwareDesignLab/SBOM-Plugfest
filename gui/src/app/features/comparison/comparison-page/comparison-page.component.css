@@ -70,6 +70,17 @@
   margin-left: auto;
   cursor: pointer;
 }
+
+.compare-item > .sbom:hover{
+  background-color: gray;
+  cursor: pointer;
+}
+
+.compare-item input[type="checkbox"] {
+  transform: scale(1.5); 
+  margin-right: 10px;
+}
+
 .app-side-panel {
   overflow: hidden;
 }
