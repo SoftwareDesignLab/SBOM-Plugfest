@@ -7,6 +7,8 @@ import java.util.List;
 
 public abstract class MetricTest {
 
+    // todo maybe remove?
+    // utility to check if object is empty or null
     protected boolean isEmptyOrNull(Object o){
         if(o == null)
             return true;
@@ -16,9 +18,6 @@ public abstract class MetricTest {
 
         return false;
     }
-
-
-
 
     public abstract List<Result> test(SBOM sbom);
 }
