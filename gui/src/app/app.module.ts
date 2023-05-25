@@ -23,7 +23,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComparisonComponent } from './features/comparison/comparison/comparison.component';
 import {
   ComparisonPageComponent,
-  ComparisonDialogComponent,
 } from './features/comparison/comparison-page/comparison-page.component';
 import { DialogComponent } from '@components/dialog/dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -46,7 +45,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     UploadComponent,
     ComparisonComponent,
     DialogComponent,
-    ComparisonDialogComponent,
     MetricsSidePanelComponent,
     MetricsBodyComponent,
     MetricsMainComponent,

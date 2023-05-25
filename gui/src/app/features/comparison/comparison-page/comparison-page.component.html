@@ -36,7 +36,6 @@
             />
             <div class="sbom flex">
               {{ getSBOMAlias(sbom) }}
-              <icon icon="question_mark" (click)="getSBOMInfo(sbom)"/>
             </div>
           </div>
         </div>
@@ -55,15 +54,3 @@
 
   <app-comparison [comparison]="GetComparison()" *ngIf="!IsLoadingComparison()"/>
 </div>
-
-<app-modal [opened]="sbomInfoOpened !== null" (close)="this.sbomInfoOpened = null">
-  <div title>
-    SBOM DETAILS
-  </div>
-  <div content>
-    <div class="item">
-      <div class="name">File Path:</div>
-      <div class="value">{{this.sbomInfoOpened}}</div>
-    </div>
-  </div>
-</app-modal>
