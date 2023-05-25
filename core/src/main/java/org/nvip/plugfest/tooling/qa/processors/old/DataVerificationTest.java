@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.qa.processors;
+package org.nvip.plugfest.tooling.qa.processors.old;
 
 import jregex.Matcher;
 import jregex.Pattern;
@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.List;
 import java.util.Set;
 
 /**
