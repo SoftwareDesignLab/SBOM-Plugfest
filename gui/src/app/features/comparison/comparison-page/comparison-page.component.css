@@ -70,6 +70,12 @@
   margin-left: auto;
   cursor: pointer;
 }
+
+.compare-item input[type="checkbox"] {
+  transform: scale(1.5); /* Increase the size */
+  margin-right: 10px; /* Adjust the spacing */
+}
+
 .app-side-panel {
   overflow: hidden;
 }
