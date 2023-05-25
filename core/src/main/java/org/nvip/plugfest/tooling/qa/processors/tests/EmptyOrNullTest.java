@@ -13,47 +13,65 @@ public class EmptyOrNullTest extends MetricTest {
     
     @Override
     public List<Result> test(SBOM sbom) {
-        List<Result> results = new ArrayList<>();
 
-        results.add(resultEmptyOrNull(sbom.getSpecVersion()));
-        results.add(resultEmptyOrNull(sbom.getSpecVersion()));
-        results.add(resultEmptyOrNull(sbom.getSerialNumber()));
-        results.add(resultEmptyOrNull(sbom.getSupplier()));
-        results.add(resultEmptyOrNull(sbom.getTimestamp()));
+        List<Result> results = new ArrayList<>(testSBOMFields(sbom));
 
-        results.addAll(collectionEmptyOrNull(sbom.getSignature()));
-
-        for(Component c : sbom.getAllComponents()){
-            if(c.isUnpackaged()) continue;
-
-            results.add(resultEmptyOrNull(c.getName()));
-            results.add(resultEmptyOrNull(c.getPublisher()));
-            results.add(resultEmptyOrNull(c.getVersion()));
-            results.addAll(collectionEmptyOrNull(c.getLicenses()));
-            results.addAll(collectionEmptyOrNull(c.getCpes()));
-            results.addAll(collectionEmptyOrNull(c.getPurls()));
-            results.addAll(collectionEmptyOrNull(c.getSwids()));
-            results.add(resultEmptyOrNull(c.getUniqueID()));
-
-        }
-
-        return results;
-    }
-
-    private List<Result> collectionEmptyOrNull(Object collection){
-        List<Result> results = new ArrayList<>();
-
-        if(!(collection instanceof List) && !(collection instanceof Set)){
-            results.add(resultEmptyOrNull(collection));
-            return results;
-        }
-
-        for(Object o : ((Collection<?>) collection).toArray())
-            results.addAll(collectionEmptyOrNull(o));
+//        for(Component c : sbom.getAllComponents()){
+//            if(c.isUnpackaged()) continue;
+//
+//            results.add(testField(c.getName(), "name"));
+//            results.add(testField(c.getPublisher(), "publisher"));
+//            results.add(testField(c.getVersion(), "version"));
+//            results.addAll(collectionEmptyOrNull(c.getLicenses()));
+//            results.addAll(collectionEmptyOrNull(c.getCpes()));
+//            results.addAll(collectionEmptyOrNull(c.getPurls()));
+//            results.addAll(collectionEmptyOrNull(c.getSwids()));
+//            results.add(testField(c.getUniqueID(), "uniqueID"));
+//
+//        }
 
         return results;
     }
     
+    private List<Result> testSBOMFields(SBOM sbom){
+        List<Result> results = new ArrayList<>();
+        Result r;
+        r = resultEmptyOrNull(sbom.getSpecVersion());
+        r.addContext(sbom,"specVersion");
+        results.add(r);
+
+        r = resultEmptyOrNull(sbom.getSerialNumber());
+        r.addContext(sbom,"serialNumber");
+        results.add(r);
+
+        r = resultEmptyOrNull(sbom.getSupplier());
+        r.addContext(sbom,"supplier");
+        results.add(r);
+
+        r = resultEmptyOrNull(sbom.getTimestamp());
+        r.addContext(sbom,"timestamp");
+        results.add(r);
+
+        if(sbom.getSignature() == null){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
+            r.addContext(sbom,"signatures");
+            results.add(r);
+
+        } else if (sbom.getSignature().isEmpty()) {
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Signatures are empty");
+            r.addContext(sbom,"signatures");
+            results.add(r);
+        } else {
+            for(Signature s : sbom.getSignature()){
+                r = resultEmptyOrNull(s);
+                r.addContext(sbom,"signature");
+                results.add(r);
+            }
+        }
+
+        return results;
+    }
+
     
     private Result resultEmptyOrNull(Object o){
         if(o == null)
@@ -62,7 +80,7 @@ public class EmptyOrNullTest extends MetricTest {
         if(o instanceof String){
             if(!o.equals("")) {
                 Result r = new Result(TEST_NAME, Result.STATUS.PASS, "Value is not an empty string");
-                r.updateInfo("value", o.toString());
+                r.updateInfo(Result.Context.STRING_VALUE, o.toString());
                 return r;
             }
             return new Result(TEST_NAME, Result.STATUS.FAIL, "Value is an empty string");

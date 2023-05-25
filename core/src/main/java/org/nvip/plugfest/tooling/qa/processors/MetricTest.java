@@ -17,5 +17,8 @@ public abstract class MetricTest {
         return false;
     }
 
+
+
+
     public abstract List<Result> test(SBOM sbom);
 }
