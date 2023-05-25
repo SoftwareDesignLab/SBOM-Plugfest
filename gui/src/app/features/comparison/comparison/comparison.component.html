@@ -26,7 +26,7 @@
         (click)="increaseDepth(display[key], key)"
       >
         <div title class="title">
-          <mat-icon *ngIf="targetSBOM[key] && targetMarked" aria-hidden="true" [fontIcon]="icon" class="in-target"/>
+          <mat-icon aria-hidden="true" [fontIcon]="icon" class="in-target" [ngStyle]="{'opacity':  targetSBOM[key] && targetMarked ? '1' : '0'}"/>
           <span> {{ key }}</span>
         </div>
       </app-accordion>
