@@ -75,6 +75,7 @@ export class ComparisonComponent implements OnChanges {
   }
 
   decreaseDepth(index: number) {
+    if (index < 0) return;
     if (index < this.path.length - 1) {
       this.pathTitles = this.pathTitles.slice(0, index + 1);
       this.path = this.path.slice(0, index + 1);

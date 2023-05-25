@@ -8,21 +8,9 @@
           (click)="SetSelectedSBOM(item)" [class.selected]="item === selectedSBOM">
           <div class="sbom flex" [class.selected]="item === selectedSBOM">
             {{ getSBOMAlias(item) }}
-            <icon icon="question_mark" (click)="getSBOMInfo(item)"></icon>
           </div>
         </div>
       </div>
     </div>
   </div>
 </app-side-panel>
-<app-modal [opened]="sbomInfoOpened !== null" (close)="this.sbomInfoOpened = null">
-  <div title>
-    SBOM DETAILS
-  </div>
-  <div content>
-    <div class="item">
-      <div class="name">File Path:</div>
-      <div class="value">{{this.sbomInfoOpened}}</div>
-    </div>
-  </div>
-</app-modal>
