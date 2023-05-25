@@ -14,6 +14,17 @@ import java.util.HashMap;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result {
+
+    // Status utility enums
+    public enum STATUS {
+        PASS(1),
+        FAIL(0),
+        ERROR(-1);
+
+        STATUS(int numVal) {
+        }
+    }
+
     @JsonIgnore
     private final String testName;
     @JsonProperty("pass")
@@ -33,9 +44,9 @@ public class Result {
      * @param pass Whether the test passed or not
      * @param message test message
      */
-    public Result(String testName, int pass, String message){
+    public Result(String testName, STATUS pass, String message){
         this.testName = testName;
-        this.pass = pass;
+        this.pass = pass.ordinal();
         this.message = message;
     }
 
