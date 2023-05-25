@@ -40,3 +40,13 @@
 #attribute-body {
   padding-top: 20px;
 }
+
+.in-target{
+  margin-top: 4px;
+  font-size: large;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+}

@@ -25,9 +25,10 @@
         [extra]="[display[key].length + ' Ver(s)']"
         (click)="increaseDepth(display[key], key)"
       >
-        <span title>
-          {{ targetSBOM[key] && targetMarked ? "*" : "" }} {{ key }}
-        </span>
+        <div title class="title">
+          <mat-icon *ngIf="targetSBOM[key] && targetMarked" aria-hidden="true" fontIcon="radio_button_checked" class="in-target"/>
+          <span> {{ key }}</span>
+        </div>
       </app-accordion>
     </div>
 
