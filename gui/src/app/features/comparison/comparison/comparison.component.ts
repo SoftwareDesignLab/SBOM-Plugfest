@@ -26,6 +26,7 @@ export class ComparisonComponent implements OnChanges {
     cpes: [],
     swids: [],
   };
+  icon =  'check_circle'
 
   constructor(private dataHandler: DataHandlerService) {}
 
