@@ -7,7 +7,7 @@
                     <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"/>
                     <div class="sbom flex">
                         {{getSBOMAlias(item.key)}}
-                        <icon icon="delete" (click)="RemoveFile(item.key)"/>
+                        <input type="checkbox"/>
                     </div>
                 </div>
             </div>
@@ -18,6 +18,14 @@
                 </div>
             </div>
         </div>
-        <app-button backgroundColor="var(--accent)" class="add-button" icon="add" (click)="browse()">ADD SBOMS</app-button>
+        <div class="buttons flex" style="margin-top: 15px;" *ngIf="ContainsFiles()">
+            <app-button (click)="SelectAll()">Select All</app-button>
+            <app-button (click)="DeselectAll()">Deselect All</app-button>
+            <app-button icon="delete" (click)="DeleteSelected()">Delete Selected</app-button>
+        </div>
+        <div class="buttons flex">
+            <app-button backgroundColor="var(--accent)" class="add-button" icon="add" (click)="browse()">Add SBOMs</app-button>
+            <app-button *ngIf="GetValidSBOMs().length >= 1" icon="navigate_next" backgroundColor="var(--accent)">Next</app-button>
+        </div>
     </div>
 </div>

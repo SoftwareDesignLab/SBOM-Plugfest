@@ -52,6 +52,38 @@ export class UploadComponent {
     return this.dataHandler.loadingFiles;
   }
 
+  GetValidSBOMs() {
+    return this.dataHandler.GetValidSBOMs();
+  }
+
+  SelectAll() {
+    this.setAllSelected(true);
+  }
+
+  DeselectAll() {
+    this.setAllSelected(false);
+  }
+
+  DeleteSelected() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      if (checkbox.checked && !checkbox.disabled) {
+        this.RemoveFile(checkbox.value);
+      }
+    }
+  }
+
+  setAllSelected(value: boolean) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      checkbox.checked = value;
+    }
+  }
+
   RemoveFile(file: string) {
     this.dataHandler.filePaths = this.dataHandler.filePaths.filter((x) => x != file);
     delete this.dataHandler.metrics[file];
