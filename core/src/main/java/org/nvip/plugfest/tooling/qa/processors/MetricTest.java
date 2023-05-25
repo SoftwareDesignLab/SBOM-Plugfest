@@ -4,5 +4,5 @@ import org.nvip.plugfest.tooling.qa.test_results.Result;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 public interface MetricTest {
-    Result test(Object o);
+    Result test(SBOM sbom);
 }
