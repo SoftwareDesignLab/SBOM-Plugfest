@@ -3,6 +3,8 @@ package org.nvip.plugfest.tooling.qa.test_results;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.nvip.plugfest.tooling.sbom.Component;
+import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.HashMap;
 
@@ -21,8 +23,22 @@ public class Result {
         FAIL(0),
         ERROR(-1);
 
-        STATUS(int numVal) {
+        private final int code;
+
+        STATUS(int code) {
+            this.code = code;
         }
+
+        public int getCode() {
+            return this.code;
+        }
+    }
+
+    public enum Context{
+        TYPE,
+        FIELD_NAME,
+        STRING_VALUE,
+        IDENTIFIER
     }
 
     @JsonIgnore
@@ -46,24 +62,27 @@ public class Result {
      */
     public Result(String testName, STATUS pass, String message){
         this.testName = testName;
-        this.pass = pass.ordinal();
+        this.pass = pass.getCode();
         this.message = message;
     }
-
-
-    /**
-     * Update additional info field with extra data
-     *
-     * @param key key for table
-     * @param value value for key
-     */
-    public void updateInfo(String key, String value){
-        // create additional info field if it doesn't exist
+    public void updateInfo(Context context, String value){
         if(this.additionalInfo == null)
             this.additionalInfo = new HashMap<>();
+        this.additionalInfo.put(context.toString(), value);
+    }
 
-        // add to table
-        this.additionalInfo.put(key, value);
+    public void addContext(Object o, String fieldName){
+        if(o instanceof SBOM){
+            updateInfo(Context.TYPE, "SBOM");
+            updateInfo(Context.IDENTIFIER, ((SBOM) o).getSerialNumber());
+        }
+
+        if(o instanceof Component){
+            updateInfo(Context.TYPE, "Component");
+            updateInfo(Context.IDENTIFIER, ((Component) o).getName());
+        }
+
+        updateInfo(Context.FIELD_NAME, fieldName);
     }
 
     ///
