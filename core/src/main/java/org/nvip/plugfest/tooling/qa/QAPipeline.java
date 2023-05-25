@@ -1,6 +1,6 @@
 package org.nvip.plugfest.tooling.qa;
 
-import org.nvip.plugfest.tooling.qa.processors.old.AttributeProcessor;
+import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.Set;
@@ -29,9 +29,8 @@ public class QAPipeline {
          // Run all added processors
          for (AttributeProcessor p : processors) {
              // Add results to master report object
-             /*
-             qr.addAttribute(p.getName(), p.process(sbom))
-              */
+             qr.updateAttribute(p.getAttributeName(), p.process(sbom));
+
 //             qr.massUpdate(p.process(sbom));
          }
 
