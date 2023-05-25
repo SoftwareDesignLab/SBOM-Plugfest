@@ -73,6 +73,7 @@
 
 .compare-item > .sbom:hover{
   background-color: gray;
+  cursor: pointer;
 }
 
 .compare-item input[type="checkbox"] {

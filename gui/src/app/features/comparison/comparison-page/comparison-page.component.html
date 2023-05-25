@@ -26,10 +26,8 @@
         <div class="content flex col">
           <div class="compare-item flex" *ngFor="let sbom of GetValidSBOMs(); let i = index">
             <input type="checkbox" name="comparison" [value]="sbom" [disabled]="sbom === targetSbom" />
-            <div class="sbom flex">
-              <div (click)="toggleCheckbox(i)">
-                {{ getSBOMAlias(sbom) }}
-              </div>
+            <div class="sbom flex" (click)="toggleCheckbox(i)">
+              {{ getSBOMAlias(sbom) }}
               <icon icon="question_mark" (click)="getSBOMInfo(sbom)" />
             </div>
           </div>          
