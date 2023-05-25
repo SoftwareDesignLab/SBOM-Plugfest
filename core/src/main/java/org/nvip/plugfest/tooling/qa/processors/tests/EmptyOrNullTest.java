@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.qa.processors.tests;
 import org.nvip.plugfest.tooling.qa.processors.MetricTest;
 import org.nvip.plugfest.tooling.qa.test_results.Result;
 import org.nvip.plugfest.tooling.sbom.Component;
+import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.Signature;
 
@@ -16,19 +17,11 @@ public class EmptyOrNullTest extends MetricTest {
 
         List<Result> results = new ArrayList<>(testSBOMFields(sbom));
 
-//        for(Component c : sbom.getAllComponents()){
-//            if(c.isUnpackaged()) continue;
-//
-//            results.add(testField(c.getName(), "name"));
-//            results.add(testField(c.getPublisher(), "publisher"));
-//            results.add(testField(c.getVersion(), "version"));
-//            results.addAll(collectionEmptyOrNull(c.getLicenses()));
-//            results.addAll(collectionEmptyOrNull(c.getCpes()));
-//            results.addAll(collectionEmptyOrNull(c.getPurls()));
-//            results.addAll(collectionEmptyOrNull(c.getSwids()));
-//            results.add(testField(c.getUniqueID(), "uniqueID"));
-//
-//        }
+        for(Component c : sbom.getAllComponents()){
+            if(c.isUnpackaged()) continue;
+            results.addAll(testComponentFields(c));
+
+        }
 
         return results;
     }
@@ -68,6 +61,77 @@ public class EmptyOrNullTest extends MetricTest {
                 results.add(r);
             }
         }
+
+        return results;
+    }
+
+    private List<Result> testComponentFields(Component c){
+
+        List<Result> results = new ArrayList<>();
+        Result r;
+        r = resultEmptyOrNull(c.getName());
+        r.addContext(c,"name");
+        results.add(r);
+
+        r = resultEmptyOrNull(c.getPublisher());
+        r.addContext(c,"publisher");
+        results.add(r);
+
+        r = resultEmptyOrNull(c.getVersion());
+        r.addContext(c,"version");
+        results.add(r);
+
+        if(c.getLicenses() == null){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
+            r.addContext(c,"licenses");
+            results.add(r);
+        } else {
+            for(String l : c.getLicenses()){
+                r = resultEmptyOrNull(l);
+                r.addContext(c,"license");
+                results.add(r);
+            }
+        }
+
+        if(c.getCpes() == null){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
+            r.addContext(c,"cpes");
+            results.add(r);
+        } else {
+            for(String l : c.getCpes()){
+                r = resultEmptyOrNull(l);
+                r.addContext(c,"cpe");
+                results.add(r);
+            }
+        }
+
+        if(c.getPurls() == null){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
+            r.addContext(c,"purls");
+            results.add(r);
+        } else {
+            for(PURL p : c.getPurls()){
+                r = resultEmptyOrNull(p);
+                r.addContext(c,"purl");
+                results.add(r);
+            }
+        }
+
+        if(c.getSwids() == null){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
+            r.addContext(c,"swids");
+            results.add(r);
+        } else {
+            for(String s : c.getSwids()){
+                r = resultEmptyOrNull(s);
+                r.addContext(c,"swid");
+                results.add(r);
+            }
+        }
+
+        r = resultEmptyOrNull(c.getUniqueID());
+        r.addContext(c,"uniqueID");
+        results.add(r);
 
         return results;
     }
