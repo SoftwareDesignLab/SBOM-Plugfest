@@ -54,13 +54,12 @@ public class HasLicenseDataTest extends MetricTest{
         }
         // licenses are present, check for data
         else{
-            //TODO Do we want to check for valid SPDX license inside
-            // this test?
 
             // spdx licenses are under PackageLicenseConcluded and
             // PackageLicenseDeclared
             if(type == SBOMType.SPDX){
-                //TODO
+                //TODO check for PackageLicenseConcluded or
+                // PackageLicenseDeclared
             }
             // cyclonedx licenses are under id or name
             else{
