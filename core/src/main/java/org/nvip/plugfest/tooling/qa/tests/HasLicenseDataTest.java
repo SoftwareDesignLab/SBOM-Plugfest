@@ -27,6 +27,14 @@ public class HasLicenseDataTest extends MetricTest{
         // create a list to hold each result of sbom components
         List<Result> results = new ArrayList<>();
         SBOMType type = sbom.getOriginFormat();
+
+        if(type == SBOMType.Other){
+            Result r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SBOM " +
+                    "Type");
+            r.addContext(sbom, "SBOM Type");
+            results.add(r);
+            return results;
+        }
         // for every component, test for license data
         for(Component c : sbom.getAllComponents()){
             results.addAll(testComponentLicense(c, type));
@@ -46,14 +54,19 @@ public class HasLicenseDataTest extends MetricTest{
         }
         // licenses are present, check for data
         else{
+            //TODO Do we want to check for valid SPDX license inside
+            // this test?
+
             // spdx licenses are under PackageLicenseConcluded and
             // PackageLicenseDeclared
             if(type == SBOMType.SPDX){
-
+                //TODO
             }
             // cyclonedx licenses are under id or name
             else{
-
+                for(String l : c.getLicenses()){
+                    // TODO check if ID or Name is not null and return
+                }
             }
         }
         return results;
