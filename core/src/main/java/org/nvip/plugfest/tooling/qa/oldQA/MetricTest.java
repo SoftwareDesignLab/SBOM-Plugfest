@@ -1,6 +1,6 @@
-package org.nvip.plugfest.tooling.qa.processors;
+package org.nvip.plugfest.tooling.qa.oldQA;
 
-import org.nvip.plugfest.tooling.qa.test_results.TestResults;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.Component;
 
 /**

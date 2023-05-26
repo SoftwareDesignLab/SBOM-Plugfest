@@ -1,9 +1,9 @@
-package org.nvip.plugfest.tooling.qa.processors;
+package org.nvip.plugfest.tooling.qa.oldQA;
 
 import jregex.Matcher;
 import jregex.Pattern;
-import org.nvip.plugfest.tooling.qa.test_results.Test;
-import org.nvip.plugfest.tooling.qa.test_results.TestResults;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.Test;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 
@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.List;
 import java.util.Set;
 
 /**
