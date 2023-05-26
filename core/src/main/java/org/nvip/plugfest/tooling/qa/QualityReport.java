@@ -1,7 +1,7 @@
 package org.nvip.plugfest.tooling.qa;
 
 import com.fasterxml.jackson.annotation.*;
-import org.nvip.plugfest.tooling.qa.test_results.Result;
+import org.nvip.plugfest.tooling.qa.tests.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;

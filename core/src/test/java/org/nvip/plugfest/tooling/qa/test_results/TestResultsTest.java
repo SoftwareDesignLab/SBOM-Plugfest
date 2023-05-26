@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.qa.test_results;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.*;
@@ -58,13 +59,13 @@ public class TestResultsTest {
 
     private Component test_component_b;
 
-    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_a;
+    private org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_a;
 
-    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_b;
+    private org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_b;
 
-    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_c;
+    private org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_c;
 
-    private org.nvip.plugfest.tooling.qa.test_results.Test test_test_d;
+    private org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_d;
 
 
     /**
@@ -84,13 +85,13 @@ public class TestResultsTest {
                 Set.of("cpe2.3::test_blue_cpe"), Set.of(new PURL("pkg:bluepackage/blue@1.1.0")), Set.of("random_blue_swid")
         );
 
-        test_test_a = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE);
+        test_test_a = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(true, TEST_MESSAGE);
 
-        test_test_b = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_TWO);
+        test_test_b = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(true, TEST_MESSAGE_TWO);
 
-        test_test_c = new org.nvip.plugfest.tooling.qa.test_results.Test(false, TEST_MESSAGE_THREE);
+        test_test_c = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(false, TEST_MESSAGE_THREE);
 
-        test_test_d = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_FOUR);
+        test_test_d = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(true, TEST_MESSAGE_FOUR);
 
 
     }
@@ -174,7 +175,7 @@ public class TestResultsTest {
         TestResults test_tr = new TestResults(test_component_a);
         assertNotNull(test_tr);
         test_tr.addTest(test_test_a);
-        List<org.nvip.plugfest.tooling.qa.test_results.Test> getTestResults = test_tr.getTests();
+        List<org.nvip.plugfest.tooling.qa.oldQA.test_results.Test> getTestResults = test_tr.getTests();
         assertNotNull(getTestResults);
     }
 
@@ -183,7 +184,7 @@ public class TestResultsTest {
         TestResults test_tr = new TestResults(test_component_a);
         assertNotNull(test_tr);
         test_tr.addTest(test_test_a);
-        List<org.nvip.plugfest.tooling.qa.test_results.Test> getTestResults = test_tr.getTests();
+        List<org.nvip.plugfest.tooling.qa.oldQA.test_results.Test> getTestResults = test_tr.getTests();
         assertNotNull(getTestResults);
         assertEquals(test_test_a, getTestResults.get(0));
     }
@@ -192,7 +193,7 @@ public class TestResultsTest {
     public void TestResult_getTest_should_be_empty_for_TestResult_with_no_tests_test() {
         TestResults test_tr = new TestResults(test_component_a);
         assertNotNull(test_tr);
-        List<org.nvip.plugfest.tooling.qa.test_results.Test> getTestResults = test_tr.getTests();
+        List<org.nvip.plugfest.tooling.qa.oldQA.test_results.Test> getTestResults = test_tr.getTests();
         assertTrue(getTestResults.isEmpty());
     }
 
@@ -202,7 +203,7 @@ public class TestResultsTest {
         TestResults test_tr = new TestResults(null);
         assertNotNull(test_tr);
         test_tr.addTest(test_test_a);
-        List<org.nvip.plugfest.tooling.qa.test_results.Test> getTestResults = test_tr.getTests();
+        List<org.nvip.plugfest.tooling.qa.oldQA.test_results.Test> getTestResults = test_tr.getTests();
         assertNotNull(getTestResults);
         assertEquals(test_test_a, getTestResults.get(0));
     }
@@ -255,17 +256,17 @@ public class TestResultsTest {
 
         test_tr_two.addTests(test_tr_one);
 
-        ArrayList<org.nvip.plugfest.tooling.qa.test_results.Test> expected = new ArrayList<>();
+        ArrayList<org.nvip.plugfest.tooling.qa.oldQA.test_results.Test> expected = new ArrayList<>();
         expected.add(test_test_a);
         expected.add(test_test_b);
         expected.add(test_test_c);
         expected.add(test_test_d);
-        ArrayList<org.nvip.plugfest.tooling.qa.test_results.Test> result = test_tr_two.getTests();
+        ArrayList<org.nvip.plugfest.tooling.qa.oldQA.test_results.Test> result = test_tr_two.getTests();
 
-        for(org.nvip.plugfest.tooling.qa.test_results.Test current_test : result) {
+        for(org.nvip.plugfest.tooling.qa.oldQA.test_results.Test current_test : result) {
             assertTrue(expected.contains(current_test));
         }
-        for(org.nvip.plugfest.tooling.qa.test_results.Test current_test : expected) {
+        for(org.nvip.plugfest.tooling.qa.oldQA.test_results.Test current_test : expected) {
             assertTrue(expected.contains(current_test));
         }
     }

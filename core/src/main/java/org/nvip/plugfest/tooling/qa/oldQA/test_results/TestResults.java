@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.qa.test_results;
+package org.nvip.plugfest.tooling.qa.oldQA.test_results;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.nvip.plugfest.tooling.sbom.Component;

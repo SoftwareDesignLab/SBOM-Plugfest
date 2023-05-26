@@ -1,9 +1,9 @@
-package org.nvip.plugfest.tooling.qa.processors.old;
+package org.nvip.plugfest.tooling.qa.oldQA;
 
 import jregex.Matcher;
 import jregex.Pattern;
-import org.nvip.plugfest.tooling.qa.test_results.Test;
-import org.nvip.plugfest.tooling.qa.test_results.TestResults;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.Test;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 
