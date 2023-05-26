@@ -1,13 +1,10 @@
 <div class="metrics-body flex col center">
-    <div class="graphs">
-        <!--Not a priority atm-->
-    </div>
     <div class="results" *ngIf="GetQualityReport() && GetQualityReport().testResults.length > 0">
         <app-accordion title="TEST RESULTS" [extra]="[(GetQualityReport() ? GetQualityReport().testResults.length : '0') + ' COMPONENTS']" style="flex-direction: column;">
             <div body>
                 <app-accordion *ngFor="let testResult of GetQualityReport()?.testResults" style="flex-direction: column;" [extra]="[ getPassedPercent(testResult) + '% Passed' ]">
                     <div title class="title">
-                       {{testResult.component.name}}aaaaaaaaaassadfasdfsadfasdfawsdfasfasdfdfdafsdfdfasdf
+                    <span>{{testResult.component.name}}</span>
                     </div>
                     <div body>
                         <div class="tests">
