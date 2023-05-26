@@ -183,7 +183,7 @@ public class EmptyOrNullTest extends MetricTest {
     private Result resultEmptyOrNull(Object o){
         // Null check
         if(o == null)
-            return new Result(TEST_NAME, Result.STATUS.FAIL, "Value is Null");
+            return new Result(TEST_NAME, Result.STATUS.FAIL, "Value is null");
 
         // Test for empty string
         if(o instanceof String){

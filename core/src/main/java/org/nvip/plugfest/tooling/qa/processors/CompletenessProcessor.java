@@ -8,7 +8,7 @@ import org.nvip.plugfest.tooling.qa.tests.EmptyOrNullTest;
  * Collection of tests to ensure the SBOM's data fields are complete
  * @author Derek Garcia
  */
-public class CompletenessProcessor extends AttributeProcessor {
+public class CompletenessProcessor extends AttributeProcessor{
 
     /**
      * Create new preset collection of tests
