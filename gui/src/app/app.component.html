@@ -1,10 +1,10 @@
-<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%" >
+<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%">
   <mat-step [completed]="GetValidSBOMs().length >= 1">
     <ng-template matStepLabel>
       <mat-icon>drive_folder_upload</mat-icon>
       <div>Upload SBOMS</div>
     </ng-template>
-    <app-upload></app-upload>
+    <app-upload [stepper]="stepper"></app-upload>
     <app-button *ngIf="GetValidSBOMs().length >= 1 && stepper.selectedIndex !== 0" icon="navigate_next" backgroundColor="var(--accent)" (click)="stepper.next()">Next</app-button>
   </mat-step>
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { DataHandlerService } from '@services/data-handler.service';
 import { IpcRenderer } from 'electron';
 
@@ -11,6 +11,7 @@ export class UploadComponent {
   private ipc!: IpcRenderer;
   isLoading = false;
   @ViewChild('container') container!: ElementRef;
+  @Input() stepper: any;
 
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
@@ -93,5 +94,9 @@ export class UploadComponent {
     setTimeout(() => {
       this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
     }, 0);
+  }
+
+  NextStepper() {
+    this.stepper.next();
   }
 }
