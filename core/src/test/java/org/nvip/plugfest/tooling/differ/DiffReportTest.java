@@ -100,7 +100,7 @@ public class DiffReportTest {
      *  - (3) 'ComponentConflict'
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
 
         // Initialize two SBOM objects
         test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
@@ -285,7 +285,7 @@ public class DiffReportTest {
 
 
     @Test
-    public void diffReport_should_show_hash_conflicts() {
+    public void diffReport_should_show_hash_conflicts() throws Exception {
 
         Component test_component_f = new Component(
                 "gold", "gold_publisher", "3.1.0",
