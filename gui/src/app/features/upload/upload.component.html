@@ -7,7 +7,7 @@
                     <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"/>
                     <div class="sbom flex">
                         {{getSBOMAlias(item.key)}}
-                        <input type="checkbox"/>
+                        <input type="checkbox" [value]="item.key"/>
                     </div>
                 </div>
             </div>
