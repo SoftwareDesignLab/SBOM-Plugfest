@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.qa.test_results;
+package org.nvip.plugfest.tooling.qa.tests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,14 +17,18 @@ import java.util.HashMap;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result {
 
-    // Status utility enums
+    /**
+     * Result test statuses
+     */
     public enum STATUS {
         PASS(1),
         FAIL(0),
         ERROR(-1);
 
+        /*
+        Utilities to convert to ints
+         */
         private final int code;
-
         STATUS(int code) {
             this.code = code;
         }
@@ -34,6 +38,9 @@ public class Result {
         }
     }
 
+    /**
+     * Enums to update the additional info section
+     */
     public enum Context{
         TYPE,
         FIELD_NAME,
@@ -65,23 +72,43 @@ public class Result {
         this.pass = pass.getCode();
         this.message = message;
     }
+
+    /**
+     * Update the additional Info section with data
+     *
+     * @param context Key context enum
+     * @param value Value to set at that field
+     */
     public void updateInfo(Context context, String value){
+        // Create new hashmap if one doesn't exist
         if(this.additionalInfo == null)
             this.additionalInfo = new HashMap<>();
+        // add value
         this.additionalInfo.put(context.toString(), value);
     }
 
+    /**
+     * Utility to add context based on the given object
+     *
+     * @param o Object to reference
+     * @param fieldName name of field to update
+     */
     public void addContext(Object o, String fieldName){
+        // add SBOM context
         if(o instanceof SBOM){
             updateInfo(Context.TYPE, "SBOM");
             updateInfo(Context.IDENTIFIER, ((SBOM) o).getSerialNumber());
         }
 
+        // add Component context
         if(o instanceof Component){
             updateInfo(Context.TYPE, "Component");
-            updateInfo(Context.IDENTIFIER, ((Component) o).getName());
+            updateInfo(Context.IDENTIFIER, ((Component) o).getName());  // todo better identifier?
         }
 
+        // todo Other objects? ie Purl, CPE, Signatures, etc
+
+        // add field info
         updateInfo(Context.FIELD_NAME, fieldName);
     }
 

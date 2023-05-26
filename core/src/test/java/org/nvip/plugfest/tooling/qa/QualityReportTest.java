@@ -3,7 +3,7 @@ package org.nvip.plugfest.tooling.qa;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.qa.test_results.TestResults;
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.HashSet;
@@ -60,13 +60,13 @@ public class QualityReportTest {
 
     Component test_component_b;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_one;
+    org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_one;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_two;
+    org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_two;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_three;
+    org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_three;
 
-    org.nvip.plugfest.tooling.qa.test_results.Test test_test_four;
+    org.nvip.plugfest.tooling.qa.oldQA.test_results.Test test_test_four;
 
     TestResults test_results_one;
 
@@ -94,13 +94,13 @@ public class QualityReportTest {
         );
 
         // Create some Tests
-        test_test_one = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE);
+        test_test_one = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(true, TEST_MESSAGE);
 
-        test_test_two = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_TWO);
+        test_test_two = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(true, TEST_MESSAGE_TWO);
 
-        test_test_three = new org.nvip.plugfest.tooling.qa.test_results.Test(false, TEST_MESSAGE_THREE);
+        test_test_three = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(false, TEST_MESSAGE_THREE);
 
-        test_test_four = new org.nvip.plugfest.tooling.qa.test_results.Test(true, TEST_MESSAGE_FOUR);
+        test_test_four = new org.nvip.plugfest.tooling.qa.oldQA.test_results.Test(true, TEST_MESSAGE_FOUR);
 
         // Create TestResults
         test_results_one = new TestResults(test_component_a);

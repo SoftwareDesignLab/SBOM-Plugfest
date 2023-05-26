@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.qa.test_results;
 
+import org.nvip.plugfest.tooling.qa.oldQA.test_results.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
