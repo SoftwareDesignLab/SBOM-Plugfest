@@ -285,7 +285,7 @@ public class DiffReportTest {
 
 
     @Test
-    public void diffReport_should_show_hash_conflicts() {
+    public void diffReport_should_show_hash_conflicts() throws Exception {
 
         Component test_component_f = new Component(
                 "gold", "gold_publisher", "3.1.0",
