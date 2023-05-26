@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.qa.processors;
 
 
 import org.nvip.plugfest.tooling.qa.tests.HasLicenseDataTest;
+import org.nvip.plugfest.tooling.qa.tests.ValidSPDXLicenseTest;
 
 /**
  * file: LicensingProcessor.java
@@ -17,10 +18,6 @@ public class LicensingProcessor extends AttributeProcessor{
     public LicensingProcessor(){
         this.attributeName = "Licensing";
         this.metricTests.add(new HasLicenseDataTest());
-        /*
-            TODO
-             hasLicenseData: Check if component has license data
-             validSPDXLicense: check if existing spdx license
-         */
+        this.metricTests.add(new ValidSPDXLicenseTest());
     }
 }

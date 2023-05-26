@@ -4,6 +4,9 @@ package org.nvip.plugfest.tooling.qa.tests;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -35,7 +38,7 @@ public class ValidSPDXLicenseTest extends MetricTest{
         return results;
     }
 
-    private List<Result> testSPDXLicense(Component c){
+    private List<Result> testSPDXLicense(Component c) {
         List<Result> results = new ArrayList<>();
         Result r;
         // if no licenses are declared, test automatically fails
@@ -44,6 +47,51 @@ public class ValidSPDXLicenseTest extends MetricTest{
                     "Detected");
             r.addContext(c, "licenses");
             results.add(r);
+        }
+        else{
+            StringBuilder link = new StringBuilder("https://spdx.org/licenses/");
+            URL url;
+            // for every license id
+            for(String l : c.getLicenses()){
+                try {
+                    // build the link with the given license
+                    link.append("https://spdx.org/licenses/").append(l)
+                            .append(".html");
+                    // set this link as a new URL
+                    url = new URL(link.toString());
+                    // set up a connection
+                    HttpURLConnection huc =
+                            (HttpURLConnection) url.openConnection();
+                    huc.setRequestMethod("GET");
+                    // get the response code from this url
+                    int responseCode = huc.getResponseCode();
+                    // if the response code is 200 (HTTP is okay), it is a
+                    // valid SPDX License
+                    if(responseCode == HttpURLConnection.HTTP_OK){
+                        r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid " +
+                                "SPDX License");
+                        r.addContext(c, "license");
+                        results.add(r);
+                    }
+                    // the url was not valid, so it is not a valid SPDX License
+                    else{
+                        r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid " +
+                                "SPDX License");
+                        r.addContext(c, "license");
+                        results.add(r);
+                    }
+                    // reset link string builder
+                    link.setLength(0);
+                }
+                // an issue with the url connection or link occurred
+                catch(IOException e){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid " +
+                            "SPDX License");
+                    r.addContext(c, "license");
+                    results.add(r);
+                    link.setLength(0);
+                }
+            }
         }
         return results;
     }
