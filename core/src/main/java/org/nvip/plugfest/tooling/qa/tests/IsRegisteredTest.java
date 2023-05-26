@@ -1,7 +1,6 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
-import org.nvip.plugfest.tooling.qa.oldQA.DataVerificationTest;
-import org.nvip.plugfest.tooling.qa.oldQA.test_results.Test;
+
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
