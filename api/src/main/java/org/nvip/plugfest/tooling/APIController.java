@@ -33,36 +33,58 @@ import java.util.Set;
 @RequestMapping("plugfest")
 public class APIController {
 
+    private static List<SBOM> COMPARE_QUEUE = new ArrayList<>();
+
     /**
-     * USAGE. Send POST request to /compare with two+ SBOM files.
-     * The first SBOM will be the baseline, and the rest will be compared to it.
-     * The API will respond with an HTTP 200 and a serialized DiffReport object.
+     * Send post request to /updateQueue to add a file to the compare queue
+     * todo better endpoint name?
      *
-     * @param contentArray Array of SBOM file contents (the actual cyclonedx/spdx files) as a JSON string
-     * @param fileArray Array of file names as a JSON string
-     * @return Wrapped Comparison object
+     * @param fileName Name of the file that the SBOM contents came from
+     * @param contents File contents of the SBOM file to parse
+     * @return Status Message
+     */
+    @PostMapping("/updateQueue")
+    public ResponseEntity<String> updateQueue(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents) {
+        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
+        try {
+            // report failure if failed to parse SBOM
+            if (sbom == null)
+                return new ResponseEntity<>("Failed to parse SBOM", HttpStatus.BAD_REQUEST);    // todo better status code?
+            // Add to queue
+            COMPARE_QUEUE.add(sbom);    // todo better way to store sboms? trying to avoid making stateful
+            // report success
+            return new ResponseEntity<>("SBOM Enqueued", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * USAGE. Send POST request to /compare given SBOM file against the current comparison Queue
+     *
+     * @param fileName Name of SBOM file
+     * @param contents Content of SBOM
+     * @return Wrapped Comparison object or error message
      */
     @PostMapping("compare")
-    public ResponseEntity<Comparison> compare(@RequestParam("contents") String contentArray, @RequestParam("fileNames") String fileArray) throws IOException {
+    public ResponseEntity<?> compare(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents) throws IOException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<String> contents = objectMapper.readValue(contentArray, new TypeReference<List<String>>(){});
-        List<String> fileNames = objectMapper.readValue(fileArray, new TypeReference<List<String>>(){});
+        // Check queue is ready
+        if(COMPARE_QUEUE.isEmpty())
+            return new ResponseEntity<>("Comparison Queue is empty", HttpStatus.BAD_REQUEST);   // todo better status code?
 
-        // Convert the SBOMs to SBOM objects
-        ArrayList<SBOM> sboms = new ArrayList<>();
+        // Convert given SBOM file
+        SBOM target = TranslatorPlugFest.translateContents(contents, fileName);
+        if(target == null)
+            return new ResponseEntity<>("Failed to parse SBOM", HttpStatus.BAD_REQUEST);   // todo better status code?
 
-        for (int i = 0; i < contents.size(); i++) {
-            // Get contents of the file
-            sboms.add(TranslatorPlugFest.translateContents(contents.get(i), fileNames.get(i)));
-        }
+        // Add to queue
+        COMPARE_QUEUE.add(0, target);   // todo shouldn't assume head of queue is target
 
-        if(sboms.size() < 2){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Comparison report = new Comparison(sboms); // report to return
+        // Run comparison
+        Comparison report = new Comparison(COMPARE_QUEUE); // report to return
         report.runComparison();
+        COMPARE_QUEUE.clear();      // flush list
 
         //encode and send report
         try {
@@ -70,7 +92,6 @@ public class APIController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -116,7 +137,7 @@ public class APIController {
 
     /**
      * Send post request to /parse and it will convert the file contents to an SBOM object, returns null if failed to parse
-     *
+     * todo make translation a private method that calls use?
      * @param contents File contents of the SBOM file to parse
      * @param fileName Name of the file that the SBOM contents came from
      * @return SBOM object, null if failed to parse
