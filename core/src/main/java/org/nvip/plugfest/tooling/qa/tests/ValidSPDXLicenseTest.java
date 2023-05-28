@@ -38,6 +38,13 @@ public class ValidSPDXLicenseTest extends MetricTest{
         return results;
     }
 
+    /**
+     * Test a component's licenses to see if it is a valid SPDX license
+     * via url
+     * @param c the component to be tested
+     * @return a collection of results for each license of a component and
+     * its validity
+     */
     private List<Result> testSPDXLicense(Component c) {
         List<Result> results = new ArrayList<>();
         Result r;
@@ -70,16 +77,14 @@ public class ValidSPDXLicenseTest extends MetricTest{
                     if(responseCode == HttpURLConnection.HTTP_OK){
                         r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid " +
                                 "SPDX License");
-                        r.addContext(c, "license");
-                        results.add(r);
                     }
                     // the url was not valid, so it is not a valid SPDX License
                     else{
                         r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid " +
                                 "SPDX License");
-                        r.addContext(c, "license");
-                        results.add(r);
                     }
+                    r.addContext(c, "license");
+                    results.add(r);
                     // reset link string builder
                     link.setLength(0);
                 }
