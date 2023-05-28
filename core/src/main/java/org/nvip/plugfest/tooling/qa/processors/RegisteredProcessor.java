@@ -1,7 +1,8 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
 
-import org.xml.sax.helpers.AttributesImpl;
+import org.nvip.plugfest.tooling.qa.tests.IsRegisteredTest;
+
 
 /**
  * file: RegisteredProcessor.java

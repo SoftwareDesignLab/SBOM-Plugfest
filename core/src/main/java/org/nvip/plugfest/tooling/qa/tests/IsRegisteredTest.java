@@ -50,7 +50,7 @@ public class IsRegisteredTest extends MetricTest{
             // check all purl based on its type
             for(PURL p : c.getPurls()){
                 // holds the response code from the purl
-                int response;
+                int response = 0;
                 try{
                     switch(p.getType().toLowerCase()) {
                         // TODO More cases need to be added for PURL types
@@ -92,7 +92,7 @@ public class IsRegisteredTest extends MetricTest{
     /**
      * Extract data for maven based packages.
      * Source: <a href="https://mvnrepository.com/">...</a>
-     * @param purl purl to use to query for info
+     * @param p purl to use to query for info
      * @return an int response code when opening up a connection with the PURL
      * @throws IOException issue with http connection
      */
@@ -123,15 +123,15 @@ public class IsRegisteredTest extends MetricTest{
     /**
      * Extract data for python based packages.
      * Source: <a href="https://pypi.org/project/">...</a>
-     * @param purl purl to use to query for info
+     * @param p purl to use to query for info
      * @return an int response code when opening up a connection with the PURL
      * @throws IOException issue with http connection
      */
     public int extractFromPyPi(PURL p) throws IOException {
         // Query page
         URL url = new URL ("https://pypi.org/project/" +
-                purl.getName().toLowerCase() +
-                (purl.getVersion() != null ? "/" + purl.getVersion() : ""));
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         huc.setRequestMethod("GET");
         // get the response code from this url
