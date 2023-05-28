@@ -72,7 +72,7 @@ public class IsRegisteredTest extends MetricTest{
                 }
                 // if the response code is 200 (HTTP_OK), then
                 // package manager is valid
-                if(response == 200){
+                if(response == HttpURLConnection.HTTP_OK){
                     r = new Result(TEST_NAME, Result.STATUS.PASS,
                             "Package Manager is valid");
                     r.addContext(c, "PURL Validation");
