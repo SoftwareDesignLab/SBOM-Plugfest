@@ -44,7 +44,6 @@ public class IsRegisteredTest extends MetricTest{
                     "Component has no PURL");
             r.addContext(c, "PURL Validation");
             purlResults.add(r);
-            return purlResults;
         }
         else{
             // check all purl based on its type
@@ -75,18 +74,16 @@ public class IsRegisteredTest extends MetricTest{
                 if(response == HttpURLConnection.HTTP_OK){
                     r = new Result(TEST_NAME, Result.STATUS.PASS,
                             "Package Manager is valid");
-                    r.addContext(c, "PURL Validation");
-                    purlResults.add(r);
                 } else{
                     r = new Result(TEST_NAME, Result.STATUS.FAIL,
                             "Package Manager is invalid");
-                    r.addContext(c, "PURL Validation");
-                    purlResults.add(r);
                 }
+                r.addContext(c, "PURL Validation");
+                purlResults.add(r);
 
             }
-            return purlResults;
         }
+        return purlResults;
     }
 
     /**
