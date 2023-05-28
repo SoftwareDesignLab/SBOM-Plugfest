@@ -11,7 +11,7 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class RegisteredProcessor extends AttributeProcessor{
     public RegisteredProcessor(){
-        // todo
-        // isRegistered: Check packagemanager using purl to look for value, just a 200 return
+        this.attributeName = "Registered";
+        this.metricTests.add(new IsRegisteredTest());
     }
 }

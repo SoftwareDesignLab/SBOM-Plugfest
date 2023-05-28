@@ -53,6 +53,7 @@ public class IsRegisteredTest extends MetricTest{
                 int response;
                 try{
                     switch(p.getType().toLowerCase()) {
+                        // TODO More cases need to be added for PURL types
                         case "maven" -> response =  extractFromMaven(p);
                         case "pypi" -> response = extractFromPyPi(p);
                         // an invalid PURL type
