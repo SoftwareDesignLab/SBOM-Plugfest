@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 
+import org.cyclonedx.model.License;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -56,9 +57,11 @@ public class ValidSPDXLicenseTest extends MetricTest{
             results.add(r);
         }
         else{
-            StringBuilder link = new StringBuilder("https://spdx.org/licenses/");
+            StringBuilder link = new StringBuilder();
             URL url;
             // for every license id
+            //TODO only held as a string, if ID is not the identifier, this fails
+            // Can also check if the license provides a url as well
             for(String l : c.getLicenses()){
                 try {
                     // build the link with the given license
