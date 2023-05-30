@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.cyclonedx.exception.ParseException;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -356,7 +357,8 @@ public class TranslatorSPDX extends TranslatorCore {
         try {
             this.dependencyBuilder(components, this.product, null);
         } catch (Exception e) {
-            System.err.println("Error processing dependency tree.");
+            Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         this.defaultDependencies(this.product);

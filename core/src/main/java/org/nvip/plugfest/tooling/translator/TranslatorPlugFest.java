@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.json.JSONObject;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class TranslatorPlugFest {
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         return translateContents(contents, path);
@@ -57,13 +58,13 @@ public class TranslatorPlugFest {
                 case "xml" -> sbom =  new TranslatorCDXXML().translate(filePath);
                 case "json" -> sbom =  new TranslatorCDXJSON().translate(filePath);
                 case "spdx" -> sbom =  new TranslatorSPDX().translate(filePath);
-                default -> System.err.println("\nError: Invalid SBOM format found in: " + filePath);
+                default -> Debug.log(Debug.LOG_TYPE.ERROR, "Invalid SBOM format found in: " + filePath);
 
             }
 
         }
         catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         return sbom;

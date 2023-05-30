@@ -4,6 +4,7 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.parsers.JsonParser;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.translator.TranslatorCore;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.PURL;
@@ -92,8 +93,9 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     // Getting a NullPointerException on licenses is fine. It just means the component had none.
                 } catch (Exception e) {
                     // This may be an actual error
-                    System.err.println("An error occurred while getting licenses: \n");
-                    e.printStackTrace();
+                    Debug.log(Debug.LOG_TYPE.ERROR, "An error occurred while getting licenses:");
+                    Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+//                    e.printStackTrace();
                 }
 
                 // Set the component's unique ID
@@ -133,7 +135,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     );
         } catch (NullPointerException nullPointerException) {
             // If dependencies fail, default
-            System.err.println("Could not find dependencies from CycloneDX Object. " +
+            Debug.log(Debug.LOG_TYPE.ERROR, "Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies.put(
                     this.product.getUniqueID(),
@@ -147,7 +149,8 @@ public class TranslatorCDXJSON extends TranslatorCore {
             try {
                 this.dependencyBuilder(components, this.product, null);
             } catch (Exception e) {
-                System.out.println("Error building dependency tree. Dependency tree may be incomplete for: " + file_path);
+                Debug.log(Debug.LOG_TYPE.WARN, "Error building dependency tree. Dependency tree may be incomplete " +
+                        "for: " + file_path);
             }
         }
 
