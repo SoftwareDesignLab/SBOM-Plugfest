@@ -56,13 +56,15 @@ public class APIController {
             @RequestParam("targetIndex") Integer targetIndex,
             @RequestBody SBOMArgument[] sboms)
     {
+        // todo check parameters so that we can return BAD_REQUEST?
+
         // Attempt to load comparison queue
         List<SBOM> compareQueue = new ArrayList<>();
         for(SBOMArgument sbom : sboms){
             try{
                 compareQueue.add(TranslatorPlugFest.translateContents(sbom.contents, sbom.fileName));
-            } catch (Exception e){
-                return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);  // todo better status code?
+            } catch (TranslatorException e){
+                return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -104,7 +106,7 @@ public class APIController {
         try {
             sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
         } catch (TranslatorException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // TODO better status code?
+            return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // Check if the sbom is null
