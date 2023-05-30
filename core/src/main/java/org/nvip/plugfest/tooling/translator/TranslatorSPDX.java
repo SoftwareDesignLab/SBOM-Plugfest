@@ -97,7 +97,7 @@ public class TranslatorSPDX extends TranslatorCore {
          */
         try{
             // Get next line until end of file is found or un-packaged tag not found
-            while ( (current_line = br.readLine()) != null // TODO handle exceptions throughout the file
+            while ( (current_line = br.readLine()) != null
                     && !current_line.contains(UNPACKAGED_TAG)
                     && !current_line.contains(PACKAGE_TAG)
                     && !current_line.contains(RELATIONSHIP_TAG)
