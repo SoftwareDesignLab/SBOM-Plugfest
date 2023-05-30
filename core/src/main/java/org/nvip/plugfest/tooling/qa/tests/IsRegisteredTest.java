@@ -57,16 +57,18 @@ public class IsRegisteredTest extends MetricTest{
                 // holds the response code from the purl
                 int response = 0;
                 try{
+                    // extract method based on package manger type
                     switch(p.getType().toLowerCase()) {
                         // TODO More cases need to be added for PURL types
                         case "maven" -> response =  extractFromMaven(p);
                         case "pypi" -> response = extractFromPyPi(p);
                         case "nuget" -> response = extractFromNuget(p);
                         case "cargo" -> response = extractFromCargo(p);
-                        // an invalid PURL type
+                        case "golang" -> response = extractFromGo(p);
+                        // an invalid package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                                    "PURL is not a valid type");
+                                    "Package Manager is not valid");
                             r.addContext(c, "PURL Validation");
                             purlResults.add(r);
                         }
@@ -183,6 +185,24 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://crates.io/crates/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        huc.setRequestMethod("GET");
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+    /**
+     * Extract data from Golang based packages
+     * Source: <a href="https://proxy.golang.org/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    public int extractFromGo(PURL p) throws IOException{
+        // Query go page
+        // package name and version are required
+        URL url = new URL ("https://proxy.golang.org/" +
+                p.getName().toLowerCase() + "@v/" +
+                p.getVersion() + ".info");
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         huc.setRequestMethod("GET");
         // get the response code from this url
