@@ -1,7 +1,6 @@
 package org.nvip.plugfest.tooling;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
@@ -31,38 +30,44 @@ import java.util.Set;
  * @author Derek Garcia
  */
 @RestController
-@RequestMapping("plugfest")
+@RequestMapping("/plugfest")
 public class APIController {
 
     /**
-     * USAGE. Send POST request to /compare with two+ SBOM files.
-     * The first SBOM will be the baseline, and the rest will be compared to it.
-     * The API will respond with an HTTP 200 and a serialized DiffReport object.
-     *
-     * @param contentArray Array of SBOM file contents (the actual cyclonedx/spdx files) as a JSON string
-     * @param fileArray Array of file names as a JSON string
-     * @return Wrapped Comparison object
+     * Utility Class for sending SBOM JSON objects
+     * todo better name?
      */
-    @PostMapping("compare")
-    public ResponseEntity<Comparison> compare(@RequestParam("contents") String contentArray, @RequestParam("fileNames") String fileArray) throws IOException {
+    private static class SBOMArgument{
+        @JsonProperty
+        private String fileName;
+        @JsonProperty
+        private String contents;
+    }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<String> contents = objectMapper.readValue(contentArray, new TypeReference<List<String>>(){});
-        List<String> fileNames = objectMapper.readValue(fileArray, new TypeReference<List<String>>(){});
-
-        // Convert the SBOMs to SBOM objects
-        ArrayList<SBOM> sboms = new ArrayList<>();
-
-        for (int i = 0; i < contents.size(); i++) {
-            // Get contents of the file
-            sboms.add(TranslatorPlugFest.translateContents(contents.get(i), fileNames.get(i)));
+    /**
+     * USAGE. Send POST request to /compare with a collection of SBOM Json objects and a selected target
+     *
+     * @param targetIndex index of the target SBOM
+     * @param sboms collection of SBOMs to compare
+     * @return Wrapped Comparison object or error message
+     */
+    @PostMapping("/compare")
+    public ResponseEntity<?> compare(
+            @RequestParam("targetIndex") Integer targetIndex,
+            @RequestBody SBOMArgument[] sboms)
+    {
+        // Attempt to load comparison queue
+        List<SBOM> compareQueue = new ArrayList<>();
+        for(SBOMArgument sbom : sboms){
+            try{
+                compareQueue.add(TranslatorPlugFest.translateContents(sbom.contents, sbom.fileName));
+            } catch (Exception e){
+                return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);  // todo better status code?
+            }
         }
 
-        if(sboms.size() < 2){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Comparison report = new Comparison(sboms); // report to return
+        // Run comparison
+        Comparison report = new Comparison(targetIndex, compareQueue); // report to return
         report.runComparison();
 
         //encode and send report
@@ -71,19 +76,21 @@ public class APIController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
      * USAGE. Send POST request to /qa with a single sbom file
      * The API will respond with an HTTP 200 and a serialized report in the body.
      *
-     * @param contents - File content of the SBOM to run metrics on
-     * @param fileName - Name of the SBOM file
+     * @param servletRequest
+     * @param sbomArgument JSON object of sbom details
      * @return - wrapped QualityReport object, null if failed
      */
-    @PostMapping("qa")
-    public ResponseEntity<QualityReport> qa(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName, HttpServletRequest servletRequest) {
+    @PostMapping("/qa")
+    public ResponseEntity<QualityReport> qa(
+            HttpServletRequest servletRequest,
+            @RequestBody SBOMArgument sbomArgument)
+    {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -92,7 +99,7 @@ public class APIController {
             System.out.println("Failed to set encoding");
         }
 
-        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
+        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
 
         // Check if the sbom is null
         if (sbom == null) {
@@ -106,7 +113,7 @@ public class APIController {
         processors.add(new RegisteredProcessor());
 
         //run the QA
-        QualityReport report = QAPipeline.process(fileName, sbom, processors);
+        QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
 
         //encode and send report
         try {
@@ -118,14 +125,14 @@ public class APIController {
 
     /**
      * Send post request to /parse and it will convert the file contents to an SBOM object, returns null if failed to parse
-     *
-     * @param contents File contents of the SBOM file to parse
-     * @param fileName Name of the file that the SBOM contents came from
+     * todo make translation a private method that calls use?
+     * @param sbomArgument JSON object of sbom details
      * @return SBOM object, null if failed to parse
      */
-    @PostMapping("parse")
-    public ResponseEntity<SBOM> parse(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName) {
-        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
+    @PostMapping("/parse")
+    public ResponseEntity<SBOM> parse(@RequestBody SBOMArgument sbomArgument)
+    {
+        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
 
         try {
             // Explicitly return null if failed
@@ -137,5 +144,5 @@ public class APIController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
+

@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.differ;
 
+import org.nvip.plugfest.tooling.sbom.Hash;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -41,6 +43,11 @@ public class ComponentVersion {
     private HashMap<String, UniqueIdOccurrence> SWIDs;
 
     /**
+     * a set of all Hash values associated with this component version
+     */
+    private HashMap<String, UniqueIdOccurrence> hashes;
+
+    /**
      * a set of SBOM ID numbers where this component version appears
      */
     private Set<Integer> appearances;
@@ -56,6 +63,7 @@ public class ComponentVersion {
         this.CPEs = new HashMap<>();
         this.PURLs = new HashMap<>();
         this.SWIDs = new HashMap<>();
+        this.hashes = new HashMap<>();
         this.appearances = new HashSet<>();
     }
 
@@ -83,6 +91,8 @@ public class ComponentVersion {
         return this.SWIDs.get(swid);
     }
 
+    public UniqueIdOccurrence getHash(String hash) { return this.hashes.get(hash); }
+
     public HashMap<String, UniqueIdOccurrence> getCPEs() {
         return this.CPEs;
     }
@@ -94,6 +104,8 @@ public class ComponentVersion {
     public HashMap<String, UniqueIdOccurrence> getSWIDs() {
         return this.SWIDs;
     }
+
+    public HashMap<String, UniqueIdOccurrence> getHashes() { return this.hashes; }
 
     public Set<Integer> getAppearances() {
         return this.appearances;
@@ -119,6 +131,8 @@ public class ComponentVersion {
     public void setSWIDs(HashMap<String, UniqueIdOccurrence> SWIDs) {
         this.SWIDs = SWIDs;
     }
+
+    public void setHashes(HashMap<String, UniqueIdOccurrence> hashes) { this.hashes = hashes; }
 
     public void setAppearances(Set<Integer> appearances) {
         this.appearances = appearances;
@@ -149,6 +163,13 @@ public class ComponentVersion {
      */
     public void addSWID(UniqueIdOccurrence SWID){
         SWIDs.put(SWID.getUniqueId(), SWID);
+    }
+
+    /**
+     * Adds a Hash to the ComponentVersion's Hash set.
+     */
+    public void addHash(UniqueIdOccurrence hash){
+        hashes.put(hash.getUniqueId(), hash);
     }
 
     /**

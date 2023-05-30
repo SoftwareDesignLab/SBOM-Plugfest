@@ -1,15 +1,12 @@
 package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.parsers.JsonParser;
-import org.nvip.plugfest.tooling.translator.TranslatorCore;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 

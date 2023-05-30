@@ -1,7 +1,9 @@
 package org.nvip.plugfest.tooling.differ;
 
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflictType;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
 
@@ -21,19 +23,19 @@ public class ComparisonTest {
     @Test
     public void runComparison_should_create_list_of_reports_test() {
 
-        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM_target = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+        SBOM test_SBOM_a = new SBOM(SBOM.Type.CYCLONE_DX, "1.2", "2", "supplier_two",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_b = new SBOM(SBOMType.SPDX, "2", "2", "supplier",
+        SBOM test_SBOM_b = new SBOM(SBOM.Type.SPDX, "2", "2", "supplier",
                 "b9fc484b-41c4-4589-b3ef-c57bba20078c", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_c = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier_three",
+        SBOM test_SBOM_c = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier_three",
                 "urn:uuid:1b53623d-a11a-1111-1a11-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -43,7 +45,7 @@ public class ComparisonTest {
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_list);
+        Comparison test_comparison = new Comparison(0, test_SBOM_list);
 
         test_comparison.runComparison();
 
@@ -93,11 +95,11 @@ public class ComparisonTest {
     @Test
     public void assignComponents_should_build_comparisons_test() throws Exception {
 
-        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM_target = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -126,7 +128,7 @@ public class ComparisonTest {
         test_list.add(test_SBOM_target);
         test_list.add(test_SBOM);
 
-        Comparison test_comparison = new Comparison(test_list);
+        Comparison test_comparison = new Comparison(0, test_list);
 
         assertNotNull(test_comparison);
 
@@ -143,12 +145,12 @@ public class ComparisonTest {
 
     @Test
     public void assignComponents_should_merge_IDs_for_matching_componentVersions() throws Exception {
-        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM_target = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
 
-        SBOM test_SBOM = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1a11111a-a11a-1111-1a11-a11a1a111a11", "2023-01-01T00:00:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -171,7 +173,7 @@ public class ComparisonTest {
         test_list.add(test_SBOM_target);
         test_list.add(test_SBOM);
 
-        Comparison test_comparison = new Comparison(test_list);
+        Comparison test_comparison = new Comparison(0, test_list);
 
         assertNotNull(test_comparison);
 
@@ -199,14 +201,14 @@ public class ComparisonTest {
      */
     @Test
     public void getTargetSBOM_should_return_target_sbom() {
-        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM_target = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
         List<SBOM> test_list = new ArrayList<>();
         test_list.add(test_SBOM_target);
 
-        Comparison test_comparison = new Comparison(test_list);
+        Comparison test_comparison = new Comparison(0, test_list);
 
         SBOM test_get_target = test_comparison.getTargetSBOM();
 
@@ -219,19 +221,19 @@ public class ComparisonTest {
      */
     @Test
     public void getDiffReports_should_return_diff_reports() {
-        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM_target = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+        SBOM test_SBOM_a = new SBOM(SBOM.Type.CYCLONE_DX, "1.2", "2", "supplier_two",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_b = new SBOM(SBOMType.SPDX, "2", "2", "supplier",
+        SBOM test_SBOM_b = new SBOM(SBOM.Type.SPDX, "2", "2", "supplier",
                 "b9fc484b-41c4-4589-b3ef-c57bba20078c", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        SBOM test_SBOM_c = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier_three",
+        SBOM test_SBOM_c = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier_three",
                 "urn:uuid:1b53623d-a11a-1111-1a11-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -241,7 +243,7 @@ public class ComparisonTest {
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_list);
+        Comparison test_comparison = new Comparison(0, test_SBOM_list);
 
         test_comparison.runComparison();
 
@@ -283,7 +285,7 @@ public class ComparisonTest {
          */
 
         // This SBOM will have Test Component A (red) as head component, which relies on Component C (Yellow)
-        SBOM test_SBOM_target = new SBOM(SBOMType.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM test_SBOM_target = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
         test_SBOM_target.addComponent(null, test_component_a);
@@ -291,7 +293,7 @@ public class ComparisonTest {
 
 
         // This SBOM has Component B (blue) as the head component, which also relies on Component C (Yellow)
-        SBOM test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+        SBOM test_SBOM_a = new SBOM(SBOM.Type.CYCLONE_DX, "1.2", "2", "supplier_two",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
         test_SBOM_a.addComponent(null, test_component_b);
@@ -302,7 +304,7 @@ public class ComparisonTest {
         test_SBOM_list.add(test_SBOM_target);
         test_SBOM_list.add(test_SBOM_a);
 
-        Comparison test_comparison = new Comparison(test_SBOM_list);
+        Comparison test_comparison = new Comparison(0, test_SBOM_list);
 
         test_comparison.runComparison();
 
