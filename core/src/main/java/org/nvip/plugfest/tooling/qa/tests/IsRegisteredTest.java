@@ -2,7 +2,7 @@ package org.nvip.plugfest.tooling.qa.tests;
 
 
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.IOException;
@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * file: IsRegisteredTest.java
+ *
+ * Test each component in a given SBOM if it is registered with a
+ * given package manager through its PURL
+ */
 public class IsRegisteredTest extends MetricTest{
 
     private static final String TEST_NAME = "IsRegistered";
@@ -40,7 +46,7 @@ public class IsRegisteredTest extends MetricTest{
         Set<PURL> purls = c.getPurls();
         // if no purls are present, the test automatically fails
         if(purls.isEmpty()){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+            r = new Result(TEST_NAME, Result.STATUS.ERROR,
                     "Component has no PURL");
             r.addContext(c, "PURL Validation");
             purlResults.add(r);
@@ -55,16 +61,17 @@ public class IsRegisteredTest extends MetricTest{
                         // TODO More cases need to be added for PURL types
                         case "maven" -> response =  extractFromMaven(p);
                         case "pypi" -> response = extractFromPyPi(p);
+                        case "nuget" -> response = extractFromNuget(p);
                         // an invalid PURL type
                         default -> {
-                            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                            r = new Result(TEST_NAME, Result.STATUS.ERROR,
                                     "PURL is not a valid type");
                             r.addContext(c, "PURL Validation");
                             purlResults.add(r);
                         }
                     }
                 }catch(IOException e){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
                             "PURL had an error");
                     r.addContext(c, "PURL Validation");
                     purlResults.add(r);
@@ -73,10 +80,12 @@ public class IsRegisteredTest extends MetricTest{
                 // package manager is valid
                 if(response == HttpURLConnection.HTTP_OK){
                     r = new Result(TEST_NAME, Result.STATUS.PASS,
-                            "Package Manager is valid");
+                            "Package is registered with package " +
+                                    "manager");
                 } else{
                     r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                            "Package Manager is invalid");
+                            "Package is not registered with " +
+                                    "package manager");
                 }
                 r.addContext(c, "PURL Validation");
                 purlResults.add(r);
@@ -127,6 +136,26 @@ public class IsRegisteredTest extends MetricTest{
     public int extractFromPyPi(PURL p) throws IOException {
         // Query page
         URL url = new URL ("https://pypi.org/project/" +
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "/" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        huc.setRequestMethod("GET");
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from C# NuGet based packages
+     * Source: <a href="https://www.nuget.org/packages/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    public int extractFromNuget(PURL p) throws IOException{
+        // Query nuget page
+        // package name is required, add the version if it is
+        // included in the purl
+        URL url = new URL ("https://www.nuget.org/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
