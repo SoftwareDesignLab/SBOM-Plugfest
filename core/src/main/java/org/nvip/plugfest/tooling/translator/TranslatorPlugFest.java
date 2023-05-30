@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.json.JSONObject;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class TranslatorPlugFest {
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage()); // TODO throw error
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         return translateContents(contents, path);
@@ -52,12 +53,12 @@ public class TranslatorPlugFest {
         try {
             TranslatorCore translator = getTranslator(contents, filePath);
 
-            if (translator == null) System.err.println("Error translating file: " + filePath + ".\nReason: Invalid " +
+            if (translator == null) Debug.log(Debug.LOG_TYPE.ERROR, "Error translating file: " + filePath + ".\nReason: Invalid " +
                     "SBOM file contents (could not assume schema)."); // TODO throw error
             else sbom = translator.translateContents(contents, filePath);
         }
         catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         return sbom;

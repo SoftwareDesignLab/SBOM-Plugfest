@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.translator;
 
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
@@ -50,17 +51,18 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbom_xml_file = documentBuilder.parse(new InputSource(new StringReader(contents)));
         } catch (NullPointerException nullPointerException) {
-            System.err.println("Error: NullPointerException found. File contents may be null in: " + file_path);
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, "NullPointerException found. File contents may be null in: " + file_path);
             return null;
         } catch (SAXException saxException) {
-            System.err.println("Error: SAXException found. File must be a properly formatted Cyclone-DX XML file: " + file_path);
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, "SAXException found. File must be a properly formatted Cyclone-DX XML file: " + file_path);
             return null;
         } catch (IOException ioException) {
-            System.err.println("Error: IOException found. File information could not be found in: " + file_path);
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, "IOException found. File information could not be found in: " + file_path);
             return null;
         } catch (Exception e) {
-            System.err.println("Error: Issue detected with file: " + file_path);
-            e.printStackTrace();
+            Debug.log(Debug.LOG_TYPE.ERROR, "Issue detected with file: " + file_path);
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+//            e.printStackTrace();
             return null;
         }
 
@@ -76,34 +78,30 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbomHead = sbom_xml_file.getElementsByTagName("bom").item(0).getAttributes();
         } catch (Exception e) {
-            System.err.println("Error: Invalid format, 'bom' not found in: " + file_path);
+            Debug.log(Debug.LOG_TYPE.ERROR, "Invalid format, 'bom' not found in: " + file_path);
             return null;
         }
 
         try {
             sbomMeta = ((Element) (sbom_xml_file.getElementsByTagName("metadata")).item(0)).getElementsByTagName("*");
         } catch (Exception e) {
-            System.err.println("Warning: 'metadata' not found in: " + file_path);
+            Debug.log(Debug.LOG_TYPE.ERROR, "'metadata' not found in: " + file_path);
             sbomMeta = null;
         }
 
         try {
             sbomComp = ((Element) (sbom_xml_file.getElementsByTagName("components")).item(0)).getElementsByTagName("component");
         } catch (Exception e) {
-            System.err.println(
-                    "Warning: no components found. If this is not intended, please check file format. " +
-                            "File: " + file_path
-            );
+            Debug.log(Debug.LOG_TYPE.WARN, "No components found. If this is not intended, please check file " +
+                    "format. File: " + file_path);
             sbomComp = null;
         }
 
         try {
             sbomDependencies = ((Element) (sbom_xml_file.getElementsByTagName("dependencies")).item(0)).getElementsByTagName("dependency");
         } catch (Exception e) {
-            System.err.println(
-                    "Warning: No dependencies found. Dependency Tree may not build correctly. " +
-                            "File: " + file_path
-            );
+            Debug.log(Debug.LOG_TYPE.WARN, "No dependencies found. Dependency Tree may not build correctly. " +
+                    "File: " + file_path);
             sbomDependencies = null;
         }
 
@@ -291,13 +289,14 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             dependencyBuilder(components, this.product,null);
         } catch (Exception e) {
-            System.err.println("Error processing dependency tree.");
+            Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
         }
 
         try {
             defaultDependencies(this.product);
         } catch (Exception e) {
-            System.err.println("Something went wrong with defaulting dependencies. A dependency tree may not exist.");
+            Debug.log(Debug.LOG_TYPE.ERROR, "Something went wrong with defaulting dependencies. A dependency tree may" +
+                    " not exist.");
         }
 
         // Return complete SBOM object

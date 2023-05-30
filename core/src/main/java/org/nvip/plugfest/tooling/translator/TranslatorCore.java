@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.cyclonedx.exception.ParseException;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -87,11 +88,11 @@ public abstract class TranslatorCore {
                     null
             );
         } catch (Exception e) {
-            System.err.println(
-                    "Error: Internal SBOM could not be created. Cancelling translation for this SBOM. \n " +
+            Debug.log(Debug.LOG_TYPE.ERROR, "Error: Internal SBOM could not be created. Cancelling translation for this SBOM. \n " +
                     "File: " + this.FILE_EXTN + "\n"
             );
-            e.printStackTrace();
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+//            e.printStackTrace();
             sbom = null;
             System.exit(0);
         }
@@ -108,7 +109,8 @@ public abstract class TranslatorCore {
                 );
                 sbom.addComponent(null, product);
             } catch (Exception e) {
-                System.err.println("Error: Could not create top component from SBOM metadata. File: " + this.FILE_EXTN);
+                Debug.log(Debug.LOG_TYPE.ERROR,
+                        "Error: Could not create top component from SBOM metadata. File: " + this.FILE_EXTN);
             }
         } else {
             sbom.addComponent(null, product);
@@ -254,7 +256,7 @@ public abstract class TranslatorCore {
         try {
             contents = new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            System.err.println("Could not read file: " + filePath);
+            Debug.log(Debug.LOG_TYPE.ERROR, "Could not read file: " + filePath);
             return null;
         }
 
