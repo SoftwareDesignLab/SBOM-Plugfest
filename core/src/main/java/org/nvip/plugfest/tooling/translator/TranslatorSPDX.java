@@ -67,7 +67,7 @@ public class TranslatorSPDX extends TranslatorCore {
      */
     // TODO: Break into sub-methods
     @Override
-    protected SBOM translateContents(String fileContents, String file_path) throws IOException, ParseException {
+    protected SBOM translateContents(String fileContents, String file_path) throws TranslatorException {
 
         // Top level component information
         String sbom_serial_number;
@@ -94,7 +94,7 @@ public class TranslatorSPDX extends TranslatorCore {
          * Parse through top level SBOM data
          */
         // Get next line until end of file is found or un-packaged tag not found
-        while ( (current_line = br.readLine()) != null
+        while ( (current_line = br.readLine()) != null // TODO handle exceptions throughout the file
                 && !current_line.contains(UNPACKAGED_TAG)
                 && !current_line.contains(PACKAGE_TAG)
                 && !current_line.contains(RELATIONSHIP_TAG)
