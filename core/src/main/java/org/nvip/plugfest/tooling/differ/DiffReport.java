@@ -341,11 +341,12 @@ public class DiffReport {
                 }
 
                 // todo use better identifiers than name
+                String targetIdentifier = conflict.getComponentA() == null ? "MISSING" : conflict.getComponentA().getName();
+                String conflictIdentifier = conflict.getComponentB() == null ? "MISSING" : conflict.getComponentB().getName();
                 this.diffReport.addComponentConflict(
-                        conflict.getComponentA().getName(),
-                        conflict.getComponentB().getName(),
+                        targetIdentifier,
+                        conflictIdentifier,
                         new ConflictData(ct.name(), targetValue, otherValue));
-               
             }
         }
     }
