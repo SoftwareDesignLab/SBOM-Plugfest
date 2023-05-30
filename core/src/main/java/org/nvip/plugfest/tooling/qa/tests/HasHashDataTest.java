@@ -1,12 +1,15 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 import org.nvip.plugfest.tooling.sbom.Component;
+import org.nvip.plugfest.tooling.sbom.Hash;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HasHashDataTest extends MetricTest{
+
+    private static final String TEST_NAME = "HasHashData";
 
     /**
      * Test all SBOM components for hashes
@@ -16,12 +19,15 @@ public class HasHashDataTest extends MetricTest{
      */
     @Override
     public List<Result> test(SBOM sbom) {
+        // list to hold results for each component
         List<Result> results = new ArrayList<>();
 
+        // for every component in the sbom, check for hash values
         for(Component c: sbom.getAllComponents()){
             results.add(hasHashData(c));
         }
 
+        // return list of results for all components
         return results;
     }
 
@@ -32,9 +38,23 @@ public class HasHashDataTest extends MetricTest{
      */
     public Result hasHashData(Component c){
         Result r;
-        int hashes;
+        // get the list of hashes from the component
+        List<Hash> hashList= new ArrayList<>(c.getHashes());
+        // if the hash list is empty, no hashes are present, test fails
+        if(hashList.isEmpty()){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component does " +
+                    "not contain hashes");
+        }
+        // hashes are present for the component, count how many hashes
+        // the component has
+        else{
+            String message = String.format("Component contains %d hashes",
+                    hashList.size());
+            r = new Result(TEST_NAME, Result.STATUS.PASS, message);
+        }
+        r.addContext(c, "Contains Hashes");
 
-        return null;
+        return r;
 
     }
 }
