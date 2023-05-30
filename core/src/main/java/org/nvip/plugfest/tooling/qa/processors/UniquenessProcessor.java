@@ -10,7 +10,6 @@ public class UniquenessProcessor extends AttributeProcessor {
 
         /*
         TODO
-         hasHashData: Check for hash values, +1 for each field is has
          validHashData: Check to see hash matches schema
          accuratePURL: Purl matches stored component data
          accurateCPE: CPE matches stored component data
