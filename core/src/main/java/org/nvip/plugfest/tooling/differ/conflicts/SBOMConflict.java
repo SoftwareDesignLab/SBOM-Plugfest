@@ -1,4 +1,6 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.differ.conflicts;
+
+import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.HashSet;
 import java.util.Set;

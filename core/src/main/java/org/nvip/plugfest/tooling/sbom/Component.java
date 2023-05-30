@@ -1,5 +1,8 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
+
 import java.util.*;
 
 /**

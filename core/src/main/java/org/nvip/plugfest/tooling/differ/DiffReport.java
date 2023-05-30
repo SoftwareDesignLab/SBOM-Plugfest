@@ -1,7 +1,7 @@
 package org.nvip.plugfest.tooling.differ;
 
-import org.nvip.plugfest.tooling.sbom.ComponentConflict;
-import org.nvip.plugfest.tooling.sbom.SBOMConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflict;
 
 import java.util.Set;
 
