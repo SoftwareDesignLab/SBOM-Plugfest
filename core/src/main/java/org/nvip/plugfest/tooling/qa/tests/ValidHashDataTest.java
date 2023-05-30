@@ -71,7 +71,7 @@ public class ValidHashDataTest extends MetricTest{
                     r = new Result(TEST_NAME, Result.STATUS.PASS, "Hash is " +
                             "a valid type");
                 }
-                r.addContext(c, "Hash Validation");
+                r.addContext(h, "Hash Validation");
                 hashResults.add(r);
             }
 

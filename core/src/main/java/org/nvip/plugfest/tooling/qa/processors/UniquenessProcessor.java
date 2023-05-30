@@ -11,7 +11,6 @@ public class UniquenessProcessor extends AttributeProcessor {
         this.metricTests.add(new ValidHashDataTest());
         /*
         TODO
-         validHashData: Check to see hash matches schema
          accuratePURL: Purl matches stored component data
          accurateCPE: CPE matches stored component data
          accurateSWID: SWID matches stored swid data
