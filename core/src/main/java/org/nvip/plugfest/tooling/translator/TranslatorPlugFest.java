@@ -25,15 +25,16 @@ public class TranslatorPlugFest {
      * Parse an SBOM using the appropriate translator and return the object
      *
      * @param path Path to the SBOM to translate
-     * @return SBOM object, null if failed
+     * @return SBOM object
+     * @throws TranslatorException if translation failed
      */
-    public static SBOM translate(String path) {
+    public static SBOM translate(String path) throws TranslatorException {
         // Read the contents at path into a string
         String contents = null;
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+            throw new TranslatorException(e.getMessage());
         }
 
         return translateContents(contents, path);
@@ -44,21 +45,23 @@ public class TranslatorPlugFest {
      *
      * @param contents contents of the bom
      * @param filePath path to the bom
-     * @return SBOM object, null if failed
+     * @return SBOM object
+     * @throws TranslatorException if translation failed
      */
-    public static SBOM translateContents(String contents, String filePath) {
+    public static SBOM translateContents(String contents, String filePath) throws TranslatorException {
 
         SBOM sbom = null;
 
         try {
             TranslatorCore translator = getTranslator(contents, filePath);
 
-            if (translator == null) Debug.log(Debug.LOG_TYPE.ERROR, "Error translating file: " + filePath + ".\nReason: Invalid " +
-                    "SBOM file contents (could not assume schema)."); // TODO throw error
-            else sbom = translator.translateContents(contents, filePath);
+            if (translator == null) throw new TranslatorException("Invalid SBOM file contents (could not assume " +
+                "schema). File: " + filePath);
+
+            sbom = translator.translateContents(contents, filePath);
         }
         catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+            throw new TranslatorException(e.getMessage());
         }
 
         return sbom;

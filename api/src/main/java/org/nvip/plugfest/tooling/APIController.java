@@ -8,6 +8,7 @@ import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,7 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<QualityReport> qa(
+    public ResponseEntity<?> qa(
             HttpServletRequest servletRequest,
             @RequestBody SBOMArgument sbomArgument)
     {
@@ -98,7 +99,13 @@ public class APIController {
             System.out.println("Failed to set encoding");
         }
 
-        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+        SBOM sbom;
+
+        try {
+            sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+        } catch (TranslatorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // TODO better status code?
+        }
 
         // Check if the sbom is null
         if (sbom == null) {
@@ -128,9 +135,15 @@ public class APIController {
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<SBOM> parse(@RequestBody SBOMArgument sbomArgument)
+    public ResponseEntity<?> parse(@RequestBody SBOMArgument sbomArgument)
     {
-        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+        SBOM sbom;
+
+        try {
+            sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+        } catch (TranslatorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // TODO better status code?
+        }
 
         try {
             // Explicitly return null if failed
