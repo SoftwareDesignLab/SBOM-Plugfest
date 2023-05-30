@@ -3,8 +3,8 @@ package org.nvip.plugfest.tooling.integration;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.differ.Comparer;
 import org.nvip.plugfest.tooling.differ.DiffReport;
-import org.nvip.plugfest.tooling.sbom.ComponentConflict;
-import org.nvip.plugfest.tooling.sbom.ComponentConflictType;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflictType;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 
