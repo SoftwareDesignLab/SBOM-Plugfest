@@ -3,7 +3,7 @@ package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.BufferedReader;

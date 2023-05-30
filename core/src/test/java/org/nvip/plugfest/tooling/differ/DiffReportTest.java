@@ -4,7 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflictType;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflictType;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -103,11 +108,11 @@ public class DiffReportTest {
     public void setup() throws Exception {
 
         // Initialize two SBOM objects
-        test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+        test_SBOM_a = new SBOM(SBOM.Type.CYCLONE_DX, "1.2", "2", "supplier_two",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        test_SBOM_b = new SBOM(SBOMType.SPDX, "2", "2", "supplier",
+        test_SBOM_b = new SBOM(SBOM.Type.SPDX, "2", "2", "supplier",
                 "b9fc484b-41c4-4589-b3ef-c57bba20078c", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -138,6 +143,7 @@ public class DiffReportTest {
                 "purple", "purple_publisher", "2.1.2",
                 Set.of("cpe2.3::test_purple_cpe"), Set.of(new PURL("pkg:purplepackage/yellow@2.3.7")), Set.of("random_purple_swid")
         );
+
 
         // Conflict with two different components
         test_component_conflict_one = new ComponentConflict(test_component_a, test_component_b);
@@ -279,6 +285,47 @@ public class DiffReportTest {
         assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_CPE_MISMATCH));
         assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_PURL_MISMATCH));
         assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_PURL_MISMATCH));
+
+    }
+
+
+    @Test
+    public void diffReport_should_show_hash_conflicts() throws Exception {
+
+        Component test_component_f = new Component(
+                "gold", "gold_publisher", "3.1.0",
+                Set.of("cpe2.3::test_gold_cpe"), Set.of(new PURL("pkg:goldpackage/gold@2.1.2")), Set.of("random_gold_swid")
+        );
+
+        Component test_component_g = new Component(
+                "gold", "gold_publisher", "3.1.0",
+                Set.of("cpe2.3::test_gold_cpe"), Set.of(new PURL("pkg:goldpackage/gold@2.1.2")), Set.of("random_gold_swid")
+        );
+
+        Hash f_hash = new Hash("SHA256", "c7be1ed902fb8dd4d48997c6452f5d7e509fbcdbe2808b16bcf4edce4c07d14e");
+
+        test_component_f.setHashes(Set.of(f_hash));
+
+        Hash g_hash = new Hash("SHA256", "b1f8f3b5f2b528b0b6fbd6c511cbd7403d292c3cd52cb135cba270835e80c6ad");
+
+        test_component_g.setHashes(Set.of(g_hash));
+
+        // Create the conflict
+        ComponentConflict test_component_conflict_hash = new ComponentConflict(test_component_f, test_component_g);
+
+        Set<ComponentConflict> test_conflicts = new HashSet<>(
+                Arrays.asList(test_component_conflict_hash)
+        );
+
+        DiffReport test_report = new DiffReport(test_SBOM_conflict, test_conflicts);
+
+        assertNotNull(test_report);
+
+        Set<ComponentConflictType> conflictType_results = test_report.getComponentConflicts().iterator().next().getConflictTypes();
+
+        assertEquals(1, conflictType_results.size());
+
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISMATCH));
 
     }
 

@@ -1,7 +1,8 @@
 package org.nvip.plugfest.tooling.differ;
 
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
+import org.nvip.plugfest.tooling.sbom.Hash;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.*;
@@ -34,11 +35,13 @@ public class Comparison {
     /**
      * Default constructor for Comparison
      *
+     * @param targetIndex index of the target SBOM
      * @param stream a list of SBOMs
      */
-    public Comparison(List<SBOM> stream) {
-        this.targetSBOM = stream.get(0);
-        this.sbomStream = stream.subList(1, stream.size());
+    public Comparison(Integer targetIndex, List<SBOM> stream) {
+        this.targetSBOM = stream.get(targetIndex);
+        stream.remove(targetIndex);
+        this.sbomStream = stream;
         this.diffReportList = new ArrayList<>();
         this.comparisons = new HashMap<>();
     }
@@ -173,6 +176,16 @@ public class Comparison {
                                 }
                         );
 
+                        // Update the ComponentVersion object with extra Hashes
+                        temporary_cv.getHashes().entrySet().stream().forEach(
+                                hash -> {
+                                    if(!matching_cv.getHashes().containsKey(hash.getKey())) {
+                                        matching_cv.addHash(hash.getValue());
+                                    }
+                                    matching_cv.getHash(hash.getKey()).addAppearance(SBOM_index);
+                                }
+                        );
+
                         // Add the appearance to ComponentVersion
                         matching_cv.addAppearance(SBOM_index);
 
@@ -244,6 +257,16 @@ public class Comparison {
                 UniqueIdOccurrence new_swid_uid = new UniqueIdOccurrence(swid, UniqueIdentifierType.SWID);
                 new_swid_uid.addAppearance(SBOM_index);
                 new_cv.addSWID(new_swid_uid);
+            }
+
+        }
+        for (Hash hash : component.getHashes()) {
+
+            if(hash != null) {
+                // Create new UniqueIDOccurrence object for the Hash, then add it to the ComponentVersion object
+                UniqueIdOccurrence new_hash_uid = new UniqueIdOccurrence(hash.toString(), UniqueIdentifierType.HASH);
+                new_hash_uid.addAppearance(SBOM_index);
+                new_cv.addHash(new_hash_uid);
             }
 
         }

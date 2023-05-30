@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,15 +37,8 @@ public class TranslatorCDXXML extends TranslatorCore {
      */
     @Override
     protected SBOM translateContents(String contents, String file_path) throws ParserConfigurationException {
-
-        // Data for author
-        String author = "";
-
         // Top level SBOM materials
         HashMap<String, String> header_materials = new HashMap<>();
-        HashMap<String, String> sbom_materials = new HashMap<>();
-        HashMap<String, String> sbom_component = new HashMap<>();
-
 
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -91,8 +85,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbomMeta = ((Element) (sbom_xml_file.getElementsByTagName("metadata")).item(0)).getElementsByTagName("*");
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "Invalid format, 'metadata' not found in: " + file_path);
-            return null;
+            Debug.log(Debug.LOG_TYPE.ERROR, "'metadata' not found in: " + file_path ".");
+            sbomMeta = null;
         }
 
         try {
@@ -120,61 +114,12 @@ public class TranslatorCDXXML extends TranslatorCore {
         }
 
         // Get important SBOM items from meta  (timestamp, tool info)
-        for (int b = 0; b < sbomMeta.getLength(); b++) {
-
-            if (sbomMeta.item(b).getNodeName().contains("component")) {
-                // If component has attributes
-
-                if (sbomMeta.item(b).hasAttributes()) {
-
-                    NamedNodeMap topCompAttributes = sbomMeta.item(b).getAttributes();
-
-                    // Cycle through each attribute node for that component node
-                    for (int x = 0; x < topCompAttributes.getLength(); x++) {
-
-
-                        // If package id is found, set it as the component's identifier
-                        if (topCompAttributes.item(x).getNodeName().equalsIgnoreCase("bom-ref")) {
-                            sbom_component.put("bom-ref", topCompAttributes.item(x).getTextContent().replaceAll("@", ""));
-                        }
-
-                    }
-
-                }
-                if(sbomMeta.item(b).hasChildNodes()) {
-
-                    NodeList topCompNodes = sbomMeta.item(b).getChildNodes();
-
-                    for(int y = 0; y < topCompNodes.getLength(); y++) {
-                        sbom_component.put(
-                                topCompNodes.item(y).getNodeName(),
-                                topCompNodes.item(y).getTextContent()
-                        );
-                    }
-                }
-            } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
-                if(author != "") { author += " , "; }
-                author += sbomMeta.item(b).getTextContent();
-            } else {
-                sbom_materials.put(
-                        sbomMeta.item(b).getNodeName(),
-                        sbomMeta.item(b).getTextContent()
-                );
-            }
-        }
+        resolveMetadata(sbomMeta); // TODO if false is returned, warn that no metadata has been found
 
         bom_data.put("format", "cyclonedx");
         bom_data.put("specVersion", header_materials.get("xmlns"));
         bom_data.put("sbomVersion", header_materials.get("version"));
-        bom_data.put("author", author == "" ? sbom_materials.get("vendor") : author);
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
-        bom_data.put("timestamp", sbom_materials.get("timestamp"));
-
-        product_data.put("name" , sbom_component.get("name"));
-        product_data.put("publisher", sbom_component.get("publisher") == null
-                ? sbom_materials.get("author") : sbom_component.get("publisher"));
-        product_data.put("version", sbom_component.get("version"));
-        product_data.put("id", sbom_component.get("bom-ref"));
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
@@ -223,6 +168,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     Set<PURL> purls = new HashSet<>();
                     Set<String> cpes = new HashSet<>();
+                    Set<Hash> hashes = new HashSet<>();
 
                     // Iterate through each element in that component
                     for (int j = 0; j < component_elements.getLength(); j++) {
@@ -242,6 +188,30 @@ public class TranslatorCDXXML extends TranslatorCore {
                             } catch (Exception ignored){
                             }
                         }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
+                            hashes.add(
+                                    new Hash(
+                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
+                                            component_elements.item(j).getTextContent()
+                                    )
+                            );
+                        }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
+                            hashes.add(
+                                    new Hash(
+                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
+                                            component_elements.item(j).getTextContent()
+                                    )
+                            );
+                        }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
+                            hashes.add(
+                                    new Hash(
+                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
+                                            component_elements.item(j).getTextContent()
+                                    )
+                            );
+                        }
                         else {
                             component_items.put(
                                     component_elements.item(j).getNodeName(),
@@ -259,9 +229,10 @@ public class TranslatorCDXXML extends TranslatorCore {
                             component_items.get("bom-ref")
                     );
 
-                    // Set CPEs and PURLs
+                    // Set CPEs, PURLs, and Hashes
                     component.setCpes(cpes);
                     component.setPurls(purls);
+                    component.setHashes(hashes);
 
                     // Set licenses for component
                     component.setLicenses(component_licenses);
@@ -332,4 +303,68 @@ public class TranslatorCDXXML extends TranslatorCore {
         return this.sbom;
     }
 
+    private boolean resolveMetadata(NodeList sbomMeta) {
+        if(sbomMeta == null) return false;
+
+        // Collected data
+        String author = "";
+        HashMap<String, String> sbom_materials = new HashMap<>();
+        HashMap<String, String> sbom_component = new HashMap<>();
+
+        for (int b = 0; b < sbomMeta.getLength(); b++) {
+
+            if (sbomMeta.item(b).getNodeName().contains("component")) {
+                // If component has attributes
+
+                if (sbomMeta.item(b).hasAttributes()) {
+
+                    NamedNodeMap topCompAttributes = sbomMeta.item(b).getAttributes();
+
+                    // Cycle through each attribute node for that component node
+                    for (int x = 0; x < topCompAttributes.getLength(); x++) {
+
+
+                        // If package id is found, set it as the component's identifier
+                        if (topCompAttributes.item(x).getNodeName().equalsIgnoreCase("bom-ref")) {
+                            sbom_component.put("bom-ref", topCompAttributes.item(x).getTextContent().replaceAll("@", ""));
+                        }
+
+                    }
+
+                }
+                if(sbomMeta.item(b).hasChildNodes()) {
+
+                    NodeList topCompNodes = sbomMeta.item(b).getChildNodes();
+
+                    for(int y = 0; y < topCompNodes.getLength(); y++) {
+                        sbom_component.put(
+                                topCompNodes.item(y).getNodeName(),
+                                topCompNodes.item(y).getTextContent()
+                        );
+                    }
+                }
+            } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
+                if(!author.equals("")) { author += " , "; }
+                author += sbomMeta.item(b).getTextContent();
+            } else {
+                sbom_materials.put(
+                        sbomMeta.item(b).getNodeName(),
+                        sbomMeta.item(b).getTextContent()
+                );
+            }
+        }
+
+
+        // Update data used to construct SBOM
+        bom_data.put("author", author.equals("") ? sbom_materials.get("vendor") : author);
+        bom_data.put("timestamp", sbom_materials.get("timestamp"));
+
+        product_data.put("name" , sbom_component.get("name"));
+        product_data.put("publisher", sbom_component.get("publisher") == null
+                ? sbom_materials.get("author") : sbom_component.get("publisher"));
+        product_data.put("version", sbom_component.get("version"));
+        product_data.put("id", sbom_component.get("bom-ref"));
+
+        return true;
+    }
 }
