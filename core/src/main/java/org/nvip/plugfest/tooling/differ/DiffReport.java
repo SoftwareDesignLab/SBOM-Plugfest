@@ -14,7 +14,7 @@ import static org.nvip.plugfest.tooling.sbom.ComponentConflictType.*;
  * @author Matt London
  * @author Derek Garcia
  */
-@JsonPropertyOrder({"target", "diffreport" })
+@JsonPropertyOrder({"target", "diffreport"})
 public class DiffReport {
 
     /**
@@ -80,10 +80,17 @@ public class DiffReport {
     private HashMap<String, ConflictBody> diffReport = new HashMap<>();
     private final SBOM targetSBOM;
 
+    /**
+     * Create a new DiffReport of a target SBOM
+     *
+     * @param targetUID UID of target SBOM
+     * @param targetSBOM Target SBOM to reference
+     */
     public DiffReport(String targetUID, SBOM targetSBOM){
         this.targetUID = targetUID;
         this.targetSBOM = targetSBOM;
     }
+
 
     /**
      * Generate a report of the differences between two SBOMs and store the results
@@ -99,7 +106,6 @@ public class DiffReport {
         compareComponents(otherSBOM.getAllComponents(), body);
         // Update diff report
         this.diffReport.put(otherUID, body);
-
     }
 
     /**
@@ -150,7 +156,6 @@ public class DiffReport {
 
             // add details to diff report
             body.addSBOMConflict(new ConflictData(conflictType.name(), targetValue, otherValue));
-
         }
     }
 
