@@ -119,7 +119,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         }
 
         // Get important SBOM items from meta  (timestamp, tool info)
-        resolveMetadata(sbomMeta); // TODO if false is returned, warn that no metadata has been found
+        resolveMetadata(sbomMeta);
 
         bom_data.put("format", "cyclonedx");
         bom_data.put("specVersion", header_materials.get("xmlns"));
@@ -308,8 +308,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         return this.sbom;
     }
 
-    private boolean resolveMetadata(NodeList sbomMeta) {
-        if(sbomMeta == null) return false;
+    private void resolveMetadata(NodeList sbomMeta) {
+        if(sbomMeta == null) return;
 
         // Collected data
         String author = "";
@@ -369,7 +369,5 @@ public class TranslatorCDXXML extends TranslatorCore {
                 ? sbom_materials.get("author") : sbom_component.get("publisher"));
         product_data.put("version", sbom_component.get("version"));
         product_data.put("id", sbom_component.get("bom-ref"));
-
-        return true;
     }
 }
