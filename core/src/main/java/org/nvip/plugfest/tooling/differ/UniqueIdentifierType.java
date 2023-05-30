@@ -9,5 +9,5 @@ public enum UniqueIdentifierType {
     CPE,
     PURL,
     SWID,
-    Hash
+    HASH
 }

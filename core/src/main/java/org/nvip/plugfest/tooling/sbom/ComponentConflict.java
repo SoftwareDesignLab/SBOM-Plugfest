@@ -50,7 +50,7 @@ public class ComponentConflict {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_SPDXID_MISMATCH);
         }
         if (componentA.getHashes() != null && !componentA.getHashes().equals(componentB.getHashes())) {
-            componentConflictTypes.add(ComponentConflictType.COMPONENT_HASH_MISTMATCH);
+            componentConflictTypes.add(ComponentConflictType.COMPONENT_HASH_MISMATCH);
         }
         if (componentA.getLicenses() != null && !componentA.getLicenses().equals(componentB.getLicenses())) {
             componentConflictTypes.add(ComponentConflictType.COMPONENT_LICENSE_MISMATCH);
@@ -253,7 +253,7 @@ public class ComponentConflict {
                         conflictString.append("      - ").append(swid).append("\n");
                     }
                     break;
-                case COMPONENT_HASH_MISTMATCH:
+                case COMPONENT_HASH_MISMATCH:
                     conflictString.append("    Hashes:\n");
                     // Get differences
                     Set<Hash> hashA = new HashSet<>(componentA.getHashes());

@@ -6,9 +6,7 @@ import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.sbom.ComponentConflict;
 import org.nvip.plugfest.tooling.sbom.ComponentConflictType;
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import org.nvip.plugfest.tooling.translator.TranslatorCDXXML;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
-import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -233,7 +231,7 @@ public class TranslatorDifferTest {
 
         Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
 
-        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISMATCH));
 
     }
 
@@ -249,7 +247,7 @@ public class TranslatorDifferTest {
 
         Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
 
-        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISMATCH));
 
     }
 
@@ -281,7 +279,7 @@ public class TranslatorDifferTest {
 
         Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
 
-        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISMATCH));
 
     }
 
@@ -315,7 +313,7 @@ public class TranslatorDifferTest {
 
         Set<ComponentConflictType> conflictType_results = test_report_one.getComponentConflicts().iterator().next().getConflictTypes();
 
-        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISMATCH));
 
     }
 

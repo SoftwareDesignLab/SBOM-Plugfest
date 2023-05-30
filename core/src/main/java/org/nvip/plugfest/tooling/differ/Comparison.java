@@ -262,7 +262,7 @@ public class Comparison {
 
             if(hash != null) {
                 // Create new UniqueIDOccurrence object for the Hash, then add it to the ComponentVersion object
-                UniqueIdOccurrence new_hash_uid = new UniqueIdOccurrence(hash.toString(), UniqueIdentifierType.Hash);
+                UniqueIdOccurrence new_hash_uid = new UniqueIdOccurrence(hash.toString(), UniqueIdentifierType.HASH);
                 new_hash_uid.addAppearance(SBOM_index);
                 new_cv.addHash(new_hash_uid);
             }

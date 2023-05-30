@@ -320,7 +320,7 @@ public class DiffReportTest {
 
         assertEquals(1, conflictType_results.size());
 
-        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISTMATCH));
+        assertTrue(conflictType_results.contains(ComponentConflictType.COMPONENT_HASH_MISMATCH));
 
     }
 

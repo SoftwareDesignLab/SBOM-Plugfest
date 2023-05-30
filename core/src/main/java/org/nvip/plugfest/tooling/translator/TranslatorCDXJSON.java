@@ -90,14 +90,11 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 List<org.cyclonedx.model.Hash> cdx_hashes;
                 Set<Hash> hashes = new HashSet<>();
 
-                try {
+                // Attempt to get hashes
+                if(cdx_component.getHashes() != null) {
                     cdx_hashes = cdx_component.getHashes();
-                } catch (NullPointerException nullPointerException) {
+                } else {
                     cdx_hashes = null;
-                    // No hashes found
-                } catch (Exception e) {
-                    cdx_hashes = null;
-                    System.err.println("Issue gathering hashes from component: " + cdx_component.getName());
                 }
 
                 // Get Hashes
