@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorCDXJSON;
+import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,7 +23,8 @@ public class TranslatorComparisonTest {
 
 
     @Test
-    public void translator_comparison_cdx_json_test() throws ParseException, IOException, ParserConfigurationException {
+    public void translator_comparison_cdx_json_test() throws ParseException, IOException,
+            ParserConfigurationException, TranslatorException {
 
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_MEDIUM_CDX_JSON);

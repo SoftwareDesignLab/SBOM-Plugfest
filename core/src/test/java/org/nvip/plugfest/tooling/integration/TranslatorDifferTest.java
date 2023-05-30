@@ -6,6 +6,7 @@ import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
 import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflictType;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -82,7 +83,7 @@ public class TranslatorDifferTest {
      */
 
     @Test
-    public void full_diff_report_from_SPDX_SBOMs() throws IOException {
+    public void full_diff_report_from_SPDX_SBOMs() throws TranslatorException {
 
         // Create first SBOM
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
@@ -98,7 +99,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_from_v2_3_SPDX_and_v2_2_SPDX() throws IOException {
+    public void full_diff_report_from_v2_3_SPDX_and_v2_2_SPDX() throws TranslatorException {
         // Create first SBOM
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test_sbom_one);
@@ -114,7 +115,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_from_v2_3_SPDX_and_empty_SPDX() throws IOException {
+    public void full_diff_report_from_v2_3_SPDX_and_empty_SPDX() throws TranslatorException {
 
         // Create first SBOM
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
@@ -133,7 +134,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_from_small_SPDX_SBOM_and_large_SPDX_SBOM() throws IOException {
+    public void full_diff_report_from_small_SPDX_SBOM_and_large_SPDX_SBOM() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_LARGE_SBOM);
         assertNotNull(test_sbom_one);
@@ -156,7 +157,7 @@ public class TranslatorDifferTest {
      */
 
     @Test
-    public void full_diff_report_from_CDX_SBOM() throws ParserConfigurationException {
+    public void full_diff_report_from_CDX_SBOM() throws TranslatorException {
 
         // Create first SBOM
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_SBOM);
@@ -173,7 +174,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_from_small_CDX_SBOM_and_large_CDX_SBOM() throws ParserConfigurationException {
+    public void full_diff_report_from_small_CDX_SBOM_and_large_CDX_SBOM() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_LARGE_SBOM);
         assertNotNull(test_sbom_one);
@@ -195,7 +196,7 @@ public class TranslatorDifferTest {
      */
 
     @Test
-    public void full_diff_report_from_SPDX_and_CDX() throws IOException, ParserConfigurationException {
+    public void full_diff_report_from_SPDX_and_CDX() throws TranslatorException {
 
         // Create an SPDX SBOM
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_v2_3_SBOM);
@@ -219,7 +220,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_show_hash_conflicts_spdx_test() {
+    public void full_diff_report_should_show_hash_conflicts_spdx_test() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
 
@@ -236,7 +237,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_show_hash_conflicts_different_algorithms_spdx_test() {
+    public void full_diff_report_should_show_hash_conflicts_different_algorithms_spdx_test() throws TranslatorException {
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
 
         SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_THREE);
@@ -252,7 +253,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_not_show_hash_conflict_for_same_hash_spdx_test() {
+    public void full_diff_report_should_not_show_hash_conflict_for_same_hash_spdx_test() throws TranslatorException {
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
 
         SBOM test_sbom_two = TranslatorPlugFest.translate(TEST_SPDX_HASH_ONE);
@@ -267,7 +268,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_show_hash_conflicts_cdx_xml_test() {
+    public void full_diff_report_should_show_hash_conflicts_cdx_xml_test() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_XML_HASH_ONE);
 
@@ -284,7 +285,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_not_show_hash_conflicts_for_same_hashes_cdx_xml_test() {
+    public void full_diff_report_should_not_show_hash_conflicts_for_same_hashes_cdx_xml_test() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_XML_HASH_ONE);
 
@@ -301,7 +302,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_show_hash_conflicts_cdx_json_test() {
+    public void full_diff_report_should_show_hash_conflicts_cdx_json_test() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_JSON_HASH_ONE);
 
@@ -318,7 +319,7 @@ public class TranslatorDifferTest {
     }
 
     @Test
-    public void full_diff_report_should_not_show_hash_conflicts_for_same_hashes_cdx_json_test() {
+    public void full_diff_report_should_not_show_hash_conflicts_for_same_hashes_cdx_json_test() throws TranslatorException {
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_CDX_JSON_HASH_ONE);
 
