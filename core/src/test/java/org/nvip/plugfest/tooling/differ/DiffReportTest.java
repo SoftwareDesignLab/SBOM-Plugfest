@@ -4,7 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflictType;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflictType;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -103,11 +108,11 @@ public class DiffReportTest {
     public void setup() throws Exception {
 
         // Initialize two SBOM objects
-        test_SBOM_a = new SBOM(SBOMType.CYCLONE_DX, "1.2", "2", "supplier_two",
+        test_SBOM_a = new SBOM(SBOM.Type.CYCLONE_DX, "1.2", "2", "supplier_two",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
-        test_SBOM_b = new SBOM(SBOMType.SPDX, "2", "2", "supplier",
+        test_SBOM_b = new SBOM(SBOM.Type.SPDX, "2", "2", "supplier",
                 "b9fc484b-41c4-4589-b3ef-c57bba20078c", "2023-01-02T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
