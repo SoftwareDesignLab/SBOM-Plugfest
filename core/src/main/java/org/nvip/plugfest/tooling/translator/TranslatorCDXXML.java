@@ -225,6 +225,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     Set<PURL> purls = new HashSet<>();
                     Set<String> cpes = new HashSet<>();
+                    Set<Hash> hashes = new HashSet<>();
 
                     // Iterate through each element in that component
                     for (int j = 0; j < component_elements.getLength(); j++) {
@@ -244,6 +245,30 @@ public class TranslatorCDXXML extends TranslatorCore {
                             } catch (Exception ignored){
                             }
                         }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
+                            hashes.add(
+                                    new Hash(
+                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
+                                            component_elements.item(j).getTextContent()
+                                    )
+                            );
+                        }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
+                            hashes.add(
+                                    new Hash(
+                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
+                                            component_elements.item(j).getTextContent()
+                                    )
+                            );
+                        }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
+                            hashes.add(
+                                    new Hash(
+                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
+                                            component_elements.item(j).getTextContent()
+                                    )
+                            );
+                        }
                         else {
                             component_items.put(
                                     component_elements.item(j).getNodeName(),
@@ -261,9 +286,10 @@ public class TranslatorCDXXML extends TranslatorCore {
                             component_items.get("bom-ref")
                     );
 
-                    // Set CPEs and PURLs
+                    // Set CPEs, PURLs, and Hashes
                     component.setCpes(cpes);
                     component.setPurls(purls);
+                    component.setHashes(hashes);
 
                     // Set licenses for component
                     component.setLicenses(component_licenses);

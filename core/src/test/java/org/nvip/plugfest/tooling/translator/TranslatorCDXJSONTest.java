@@ -24,6 +24,8 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
 
     public static final String TEST_ANOTHER_SMALL_SYFT_CDX_JSON = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdx.json";
 
+    public static final String TEST_SMALL_SYFT_CDX_JSON_HASHES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/bom.json";
+
 
     protected TranslatorCDXJSONTest() {
         super(new TranslatorCDXJSON());
