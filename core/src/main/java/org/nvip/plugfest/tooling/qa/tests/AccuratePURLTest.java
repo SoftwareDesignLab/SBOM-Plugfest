@@ -1,7 +1,7 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
@@ -45,7 +45,6 @@ public class AccuratePURLTest extends MetricTest{
                     "not contain PURLs");
             r.addContext(c, "Matching PURLs");
             purlResults.add(r);
-            return purlResults;
         }
         // purls are present in the component, test each purl for matching
         // info with component
@@ -77,8 +76,8 @@ public class AccuratePURLTest extends MetricTest{
 
             }
 
-            return purlResults;
         }
+        return purlResults;
 
     }
 }
