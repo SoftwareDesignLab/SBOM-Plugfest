@@ -1,8 +1,8 @@
 package org.nvip.plugfest.tooling.differ;
 
 import org.nvip.plugfest.tooling.sbom.Component;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.Hash;
-import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.*;
