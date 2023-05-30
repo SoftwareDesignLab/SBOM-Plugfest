@@ -38,7 +38,7 @@ public class IsRegisteredTest extends MetricTest{
         return results;
     }
 
-    public List<Result> testComponentPURLs(Component c){
+    private List<Result> testComponentPURLs(Component c){
         List<Result> purlResults = new ArrayList<>();
         Result r;
 
@@ -66,6 +66,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "cargo" -> response = extractFromCargo(p);
                         case "golang" -> response = extractFromGo(p);
                         case "npm" -> response = extractFromNPM(p);
+                        case "composer" -> response = extractFromComposer(p);
                         // an invalid package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -110,7 +111,7 @@ public class IsRegisteredTest extends MetricTest{
      * @return an int response code when opening up a connection with the PURL
      * @throws IOException issue with http connection
      */
-    public int extractFromMaven(PURL p) throws IOException{
+    private int extractFromMaven(PURL p) throws IOException{
         // maven requires namespace
         if(p.getNamespace() == null || p.getNamespace().size() == 0)
             return 404;
@@ -129,7 +130,6 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
         // get the response code from this url
         return huc.getResponseCode();
     }
@@ -141,13 +141,12 @@ public class IsRegisteredTest extends MetricTest{
      * @return an int response code when opening up a connection with the PURL
      * @throws IOException issue with http connection
      */
-    public int extractFromPyPi(PURL p) throws IOException {
+    private int extractFromPyPi(PURL p) throws IOException {
         // Query page
         URL url = new URL ("https://pypi.org/project/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
         // get the response code from this url
         return huc.getResponseCode();
     }
@@ -159,7 +158,7 @@ public class IsRegisteredTest extends MetricTest{
      * @return an int response code when opening up a connection with PURL info
      * @throws IOException issue with http connection
      */
-    public int extractFromNuget(PURL p) throws IOException{
+    private int extractFromNuget(PURL p) throws IOException{
         // Query nuget page
         // package name is required, add the version if it is
         // included in the purl
@@ -167,7 +166,6 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
         // get the response code from this url
         return huc.getResponseCode();
     }
@@ -179,7 +177,7 @@ public class IsRegisteredTest extends MetricTest{
      * @return an int response code when opening up a connection with PURL info
      * @throws IOException issue with http connection
      */
-    public int extractFromCargo(PURL p) throws IOException{
+    private int extractFromCargo(PURL p) throws IOException{
         // Query cargo page
         // package name is required, add the version if it is
         // included in the purl
@@ -187,7 +185,6 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
         // get the response code from this url
         return huc.getResponseCode();
     }
@@ -198,14 +195,13 @@ public class IsRegisteredTest extends MetricTest{
      * @return an int response code when opening up a connection with PURL info
      * @throws IOException issue with http connection
      */
-    public int extractFromGo(PURL p) throws IOException{
+    private int extractFromGo(PURL p) throws IOException{
         // Query go page
         // package name and version are required
         URL url = new URL ("https://proxy.golang.org/" +
                 p.getName().toLowerCase() + "@v/" +
                 p.getVersion() + ".info");
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
         // get the response code from this url
         return huc.getResponseCode();
     }
@@ -217,7 +213,7 @@ public class IsRegisteredTest extends MetricTest{
      * @return an int response code when opening up a connection with PURL info
      * @throws IOException issue with http connection
      */
-    public int extractFromNPM(PURL p) throws IOException{
+    private int extractFromNPM(PURL p) throws IOException{
         // Query npm registry page
         // package name is required, add the version if it is
         // included in the purl
@@ -225,7 +221,30 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from Composer PHP based packages
+     * Source: <a href="https://packagist.org/packages/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromComposer(PURL p) throws IOException{
+
+        // concat namespace for the url
+        String namespace = String.join("/", p.getNamespace());
+
+        // Query composer packages page
+        // package namespace and name is required, add the version if it is
+        // included in the purl
+        URL url = new URL ("https://packagist.org/packages/" +
+                namespace + "/" +
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "#v" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
         return huc.getResponseCode();
     }
