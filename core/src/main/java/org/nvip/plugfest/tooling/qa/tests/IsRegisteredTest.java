@@ -68,6 +68,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "npm" -> response = extractFromNPM(p);
                         case "composer" -> response = extractFromComposer(p);
                         case "gem" -> response = extractFromGem(p);
+                        case "hackage" -> response = extractFromHackage(p);
                         // an invalid package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -268,4 +269,22 @@ public class IsRegisteredTest extends MetricTest{
         return huc.getResponseCode();
     }
 
+    /**
+     * Extract data from Haskell Hackage based packages
+     * Source: <a href="https://hackage.haskell.org/package/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromHackage(PURL p) throws IOException{
+        // Query Haskell Hackage packages page
+        // package name is required, add the version if it is
+        // included in the purl
+        URL url = new URL ("https://hackage.haskell.org/package/" +
+                p.getName().toLowerCase() + "/" +
+                (p.getVersion() != null ? "-" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
 }
