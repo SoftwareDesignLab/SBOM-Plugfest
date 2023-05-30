@@ -1,7 +1,6 @@
 package org.nvip.plugfest.tooling;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
@@ -103,7 +102,7 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("qa")
-    public ResponseEntity<QualityReport> qa(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName, HttpServletRequest servletRequest) {
+    public ResponseEntity<QualityReport> qa(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents, HttpServletRequest servletRequest) {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -143,7 +142,7 @@ public class APIController {
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("parse")
-    public ResponseEntity<SBOM> parse(@RequestParam("contents") String contents, @RequestParam("fileName") String fileName) {
+    public ResponseEntity<SBOM> parse(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents) {
         SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
 
         try {
@@ -156,5 +155,5 @@ public class APIController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
+
