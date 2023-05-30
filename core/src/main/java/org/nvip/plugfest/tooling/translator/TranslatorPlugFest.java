@@ -50,22 +50,37 @@ public class TranslatorPlugFest {
         SBOM sbom = null;
 
         try {
+            TranslatorCore translator = getTranslator(contents, filePath);
 
-            String ext = filePath.substring(filePath.lastIndexOf('.') + 1);
+            if (translator == null) System.err.println("Error translating file: " + filePath + ".\nReason: Invalid " +
+                    "SBOM file contents (could not assume schema).");
 
-            switch (ext) {
-                case "xml" -> sbom =  new TranslatorCDXXML().translate(filePath);
-                case "json" -> sbom =  new TranslatorCDXJSON().translate(filePath);
-                case "spdx" -> sbom =  new TranslatorSPDX().translate(filePath);
-                default -> System.err.println("\nError: Invalid SBOM format found in: " + filePath);
-
-            }
-
+            sbom = translator.translate(filePath);
         }
         catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
 
         return sbom;
+    }
+
+    private static TranslatorCore getTranslator(String contents, String filePath) {
+        String ext = filePath.substring(filePath.lastIndexOf('.') + 1).trim().toLowerCase();
+
+        switch (ext.toLowerCase()) {
+            case "json" -> {
+                if (contents.contains("\"bomFormat\": \"CycloneDX\"")) return new TranslatorCDXJSON();
+//                else if (contents.contains("\"SPDXID\" : \"SPDXRef-DOCUMENT\"")) return new TranslatorSPDXJSON();
+                else return null;
+            }
+            case "xml" -> {
+                if (contents.contains("<bom xmlns=\"http://cyclonedx.org/schema/bom/")) return new TranslatorCDXXML();
+//                else if (contents.contains("<SPDXID>SPDXRef-DOCUMENT</SPDXID>")) return new TranslatorSPDXXML();
+                else return null;
+            }
+//            case "yml" -> { return new TranslatorSPDXYAML(); }
+            case "spdx" -> { return new TranslatorSPDX(); }
+            default -> { return null; }
+        }
     }
 }
