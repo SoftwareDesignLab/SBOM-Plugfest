@@ -3,6 +3,8 @@ package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.SBOMType;
 import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
@@ -25,6 +27,8 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
      */
 
     private static final String TEST_SPDX_v2_3_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx";
+    private static final String TEST_SPDX_v2_3_SBOM_NOMETADATA = "src/test/java/org/nvip/plugfest/tooling/sample_boms" +
+            "/sbom.alpine.2-3.nometadata.spdx";
 
     private static final String TEST_SPDX_v2_2_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.docker.2-2.spdx";
 
@@ -42,9 +46,11 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
      * Tests
      */
 
-    @Test
-    public void builder_makes_SBOM_test() throws IOException, ParseException, ParserConfigurationException {
-        SBOM test = this.TRANSLATOR.translate(TEST_SPDX_v2_3_SBOM);
+    @ParameterizedTest
+    @ValueSource(strings = { TEST_SPDX_v2_3_SBOM, TEST_SPDX_v2_3_SBOM_NOMETADATA })
+    public void builder_makes_SBOM_test(String pathToSBOM) throws IOException, ParseException,
+            ParserConfigurationException {
+        SBOM test = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(test);
         Assertions.assertEquals(SBOMType.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
