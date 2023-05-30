@@ -23,7 +23,7 @@ public class AccuratePURLTest extends MetricTest{
         List<Result> results = new ArrayList<>();
 
         for(Component c: sbom.getAllComponents()){
-
+            results.addAll(matchingPURLs(c));
         }
 
         return results;
@@ -56,12 +56,18 @@ public class AccuratePURLTest extends MetricTest{
             for(PURL p: componentPURL){
                 String name = p.getName();
                 String version = p.getVersion();
+                //TODO Check PURL Namespace and component group?
+                // Looks like component group is not saved info
 
+                // if purl's name and version matches the component's
+                // name and version, info matches with component and
+                // test passes
                 if(name.equals(componentName) &&
                         version.equals(componentVersion)){
                     r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL " +
                             "matches component data");
                 }
+                // information was not matching, test fails
                 else{
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
                             " does not match component data");
@@ -70,10 +76,9 @@ public class AccuratePURLTest extends MetricTest{
                 purlResults.add(r);
 
             }
+
+            return purlResults;
         }
 
-
-
-        return null;
     }
 }
