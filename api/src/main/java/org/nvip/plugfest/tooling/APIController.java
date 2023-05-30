@@ -29,8 +29,31 @@ import java.util.Set;
  * @author Derek Garcia
  */
 @RestController
-@RequestMapping("plugfest")
+@RequestMapping("/plugfest")
 public class APIController {
+
+    /**
+     * Utility Class for sending SBOM JSON objects
+     * todo better name?
+     */
+    private static class SBOMArgument{
+        @JsonProperty
+        private String fileName;
+        @JsonProperty
+        private String contents;
+
+        ///
+        /// Getters
+        ///
+
+        public String getFileName(){
+            return this.fileName;
+        }
+
+        public String getContents() {
+            return this.contents;
+        }
+    }
 
     private static List<SBOM> COMPARE_QUEUE = new ArrayList<>();
 
@@ -65,8 +88,11 @@ public class APIController {
      * @param contents Content of SBOM
      * @return Wrapped Comparison object or error message
      */
-    @PostMapping("compare")
-    public ResponseEntity<?> compare(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents) throws IOException {
+    @PostMapping("/compare")
+    public ResponseEntity<?> compare(
+            @RequestParam("fileName") String fileName,
+            @RequestParam("contents") String contents)
+    {
 
         // Check queue is ready
         if(COMPARE_QUEUE.isEmpty())
@@ -101,8 +127,12 @@ public class APIController {
      * @param fileName - Name of the SBOM file
      * @return - wrapped QualityReport object, null if failed
      */
-    @PostMapping("qa")
-    public ResponseEntity<QualityReport> qa(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents, HttpServletRequest servletRequest) {
+    @PostMapping("/qa")
+    public ResponseEntity<QualityReport> qa(
+            @RequestParam("fileName") String fileName,
+            @RequestParam("contents") String contents,
+            HttpServletRequest servletRequest)
+    {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -141,8 +171,11 @@ public class APIController {
      * @param fileName Name of the file that the SBOM contents came from
      * @return SBOM object, null if failed to parse
      */
-    @PostMapping("parse")
-    public ResponseEntity<SBOM> parse(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents) {
+    @PostMapping("/parse")
+    public ResponseEntity<SBOM> parse(
+            @RequestParam("fileName") String fileName,
+            @RequestParam("contents") String contents)
+    {
         SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
 
         try {
