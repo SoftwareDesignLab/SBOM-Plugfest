@@ -54,7 +54,7 @@ public class APIController {
             @RequestBody SBOMArgument[] sboms)
     {
         // Attempt to load comparison queue
-        LinkedList<SBOM> compareQueue = new LinkedList<>();
+        List<SBOM> compareQueue = new ArrayList<>();
         for(SBOMArgument sbom : sboms){
             try{
                 compareQueue.add(TranslatorPlugFest.translateContents(sbom.contents, sbom.fileName));
@@ -70,8 +70,10 @@ public class APIController {
         DiffReport dr = new DiffReport(sboms[targetIndex].fileName, targetSBOM);
 
         // Compare against all sboms in the queue
-        while(!compareQueue.isEmpty())
-            dr.compare(compareQueue.pop());
+        for(int i = 0; i < compareQueue.size(); i++)
+            dr.compare(sboms[i].fileName, compareQueue.get(i));
+
+
 
         //encode and send report
         try {
