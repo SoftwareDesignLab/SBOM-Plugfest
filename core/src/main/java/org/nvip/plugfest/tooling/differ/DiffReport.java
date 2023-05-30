@@ -36,7 +36,7 @@ public class DiffReport {
     /**
      * Utility class for organizing conflict data
      */
-    private static class ConflictOrganizer {
+    private static class ConflictBody {
         @JsonProperty
         private final List<ConflictData> sbomConflicts = new ArrayList<>();
         @JsonProperty
@@ -75,7 +75,7 @@ public class DiffReport {
     @JsonProperty("target")
     private String targetUID;
     @JsonProperty
-    private ConflictOrganizer diffReport = new ConflictOrganizer();   // todo could get rid of ConflictOrganizer
+    private HashMap<String, ConflictBody> diffReport = new HashMap<>();
     private final SBOM targetSBOM;
 
     public DiffReport(String targetUID, SBOM targetSBOM){
@@ -86,15 +86,17 @@ public class DiffReport {
     /**
      * Generate a report of the differences between two SBOMs and store the results
      *
+     * @param otherUID UID of other SBOM
      * @param otherSBOM other SBOM to compare against
      */
-    public void compare(SBOM otherSBOM) {
-
+    public void compare(String otherUID, SBOM otherSBOM) {
+        ConflictBody body = new ConflictBody();
         // Compare SBOM level differences
-        compareSBOMs(otherSBOM);
-
+        compareSBOMs(otherSBOM, body);
         // Compare Component level Differences
-        compareComponents(otherSBOM.getAllComponents());
+        compareComponents(otherSBOM.getAllComponents(), body);
+        // Update diff report
+        this.diffReport.put(otherUID, body);
 
     }
 
@@ -102,8 +104,9 @@ public class DiffReport {
      * Compare the target SBOM with another SBOM and update the report
      *
      * @param otherSBOM Other SBOM to compare to
+     * @param body Conflict body object to update with data
      */
-    private void compareSBOMs(SBOM otherSBOM){
+    private void compareSBOMs(SBOM otherSBOM, ConflictBody body){
         // Compare SBOMs
         SBOMConflict sbomConflict = new SBOMConflict(this.targetSBOM, otherSBOM);
 
@@ -144,7 +147,7 @@ public class DiffReport {
             }
 
             // add details to diff report
-            this.diffReport.addSBOMConflict(new ConflictData(conflictType.name(), targetValue, otherValue));
+            body.addSBOMConflict(new ConflictData(conflictType.name(), targetValue, otherValue));
 
         }
     }
@@ -154,8 +157,9 @@ public class DiffReport {
      * Compare the target SBOM with another SBOM and update the report
      *
      * @param otherComponents Other SBOM components to compare to
+     * @param body Conflict body object to update with data
      */
-    private void compareComponents(Set<Component> otherComponents){
+    private void compareComponents(Set<Component> otherComponents, ConflictBody body){
         Set<ComponentConflict> componentConflicts = new HashSet<>();
 
         Set<Component> targetComponents = this.targetSBOM.getAllComponents();
@@ -235,14 +239,14 @@ public class DiffReport {
                         licenseA.removeAll(conflict.getComponentA().getLicenses());
                         licenseB.removeAll(conflict.getComponentA().getLicenses());
                         for (String license : licenseA) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentA().getName(),
                                     conflict.getComponentB().getName(),
                                     new ConflictData(COMPONENT_LICENSE_MISMATCH.name(), license, null)
                             );
                         }
                         for (String license : licenseB) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentB().getName(),
                                     conflict.getComponentA().getName(),
                                     new ConflictData(COMPONENT_LICENSE_MISMATCH.name(), null, license)
@@ -267,14 +271,14 @@ public class DiffReport {
                         cpeA.removeAll(conflict.getComponentA().getCpes());
                         cpeB.removeAll(conflict.getComponentA().getCpes());
                         for (String cpe : cpeA) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentA().getName(),
                                     conflict.getComponentB().getName(),
                                     new ConflictData(COMPONENT_CPE_MISMATCH.name(), cpe, null)
                             );
                         }
                         for (String cpe : cpeB) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentB().getName(),
                                     conflict.getComponentA().getName(),
                                     new ConflictData(COMPONENT_CPE_MISMATCH.name(), null, cpe)
@@ -291,14 +295,14 @@ public class DiffReport {
                         purlA.removeAll(conflict.getComponentA().getPurls());
                         purlB.removeAll(conflict.getComponentA().getPurls());
                         for (PURL purl : purlA) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentA().getName(),
                                     conflict.getComponentB().getName(),
                                     new ConflictData(COMPONENT_PURL_MISMATCH.name(), purl.toString(), null)
                             );
                         }
                         for (PURL purl : purlB) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentB().getName(),
                                     conflict.getComponentA().getName(),
                                     new ConflictData(COMPONENT_PURL_MISMATCH.name(), null, purl.toString())
@@ -315,14 +319,14 @@ public class DiffReport {
                         swidA.removeAll(conflict.getComponentA().getSwids());
                         swidB.removeAll(conflict.getComponentA().getSwids());
                         for (String swid : swidA) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentA().getName(),
                                     conflict.getComponentB().getName(),
                                     new ConflictData(COMPONENT_SWID_MISMATCH.name(), swid, null)
                             );
                         }
                         for (String swid : swidB) {
-                            this.diffReport.addComponentConflict(
+                            body.addComponentConflict(
                                     conflict.getComponentB().getName(),
                                     conflict.getComponentA().getName(),
                                     new ConflictData(COMPONENT_SWID_MISMATCH.name(), null, swid)
@@ -343,7 +347,7 @@ public class DiffReport {
                 // todo use better identifiers than name
                 String targetIdentifier = conflict.getComponentA() == null ? "MISSING" : conflict.getComponentA().getName();
                 String conflictIdentifier = conflict.getComponentB() == null ? "MISSING" : conflict.getComponentB().getName();
-                this.diffReport.addComponentConflict(
+                body.addComponentConflict(
                         targetIdentifier,
                         conflictIdentifier,
                         new ConflictData(ct.name(), targetValue, otherValue));
