@@ -39,7 +39,8 @@ public class Comparison {
      */
     public Comparison(Integer targetIndex, List<SBOM> stream) {
         this.targetSBOM = stream.get(targetIndex);
-        this.sbomStream = stream.subList(1, stream.size());
+        stream.remove(targetIndex);
+        this.sbomStream = stream;
         this.diffReportList = new ArrayList<>();
         this.comparisons = new HashMap<>();
     }
