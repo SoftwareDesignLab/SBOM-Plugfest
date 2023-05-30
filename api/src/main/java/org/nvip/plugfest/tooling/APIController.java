@@ -147,6 +147,8 @@ public class APIController {
 
         try {
             // Explicitly return null if failed
+            // TODO translateContents should only fail, not return null. Is this
+            //  still needed?
             if (sbom == null) {
                 return new ResponseEntity<>(null, HttpStatus.OK);
             }
