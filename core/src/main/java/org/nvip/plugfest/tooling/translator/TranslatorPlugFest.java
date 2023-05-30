@@ -32,7 +32,7 @@ public class TranslatorPlugFest {
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage()); // TODO throw error
         }
 
         return translateContents(contents, path);
@@ -53,7 +53,7 @@ public class TranslatorPlugFest {
             TranslatorCore translator = getTranslator(contents, filePath);
 
             if (translator == null) System.err.println("Error translating file: " + filePath + ".\nReason: Invalid " +
-                    "SBOM file contents (could not assume schema).");
+                    "SBOM file contents (could not assume schema)."); // TODO throw error
             else sbom = translator.translateContents(contents, filePath);
         }
         catch (Exception e) {
@@ -66,7 +66,7 @@ public class TranslatorPlugFest {
     private static TranslatorCore getTranslator(String contents, String filePath) {
         String ext = filePath.substring(filePath.lastIndexOf('.') + 1).trim().toLowerCase();
 
-        switch (ext.toLowerCase()) {
+        switch (ext.toLowerCase()) { // TODO possibly scan for an entire file header to ensure validity?
             case "json" -> {
                 if (contents.contains("\"bomFormat\": \"CycloneDX\"")) return new TranslatorCDXJSON();
 //                else if (contents.contains("\"SPDXID\" : \"SPDXRef-DOCUMENT\"")) return new TranslatorSPDXJSON();
