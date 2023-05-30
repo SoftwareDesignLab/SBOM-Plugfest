@@ -45,7 +45,7 @@ public class ComparisonTest {
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_list);
+        Comparison test_comparison = new Comparison(0, test_SBOM_list);
 
         test_comparison.runComparison();
 
@@ -128,7 +128,7 @@ public class ComparisonTest {
         test_list.add(test_SBOM_target);
         test_list.add(test_SBOM);
 
-        Comparison test_comparison = new Comparison(test_list);
+        Comparison test_comparison = new Comparison(0, test_list);
 
         assertNotNull(test_comparison);
 
@@ -173,7 +173,7 @@ public class ComparisonTest {
         test_list.add(test_SBOM_target);
         test_list.add(test_SBOM);
 
-        Comparison test_comparison = new Comparison(test_list);
+        Comparison test_comparison = new Comparison(0, test_list);
 
         assertNotNull(test_comparison);
 
@@ -208,7 +208,7 @@ public class ComparisonTest {
         List<SBOM> test_list = new ArrayList<>();
         test_list.add(test_SBOM_target);
 
-        Comparison test_comparison = new Comparison(test_list);
+        Comparison test_comparison = new Comparison(0, test_list);
 
         SBOM test_get_target = test_comparison.getTargetSBOM();
 
@@ -243,7 +243,7 @@ public class ComparisonTest {
         test_SBOM_list.add(test_SBOM_b);
         test_SBOM_list.add(test_SBOM_c);
 
-        Comparison test_comparison = new Comparison(test_SBOM_list);
+        Comparison test_comparison = new Comparison(0, test_SBOM_list);
 
         test_comparison.runComparison();
 
@@ -304,7 +304,7 @@ public class ComparisonTest {
         test_SBOM_list.add(test_SBOM_target);
         test_SBOM_list.add(test_SBOM_a);
 
-        Comparison test_comparison = new Comparison(test_SBOM_list);
+        Comparison test_comparison = new Comparison(0, test_SBOM_list);
 
         test_comparison.runComparison();
 
