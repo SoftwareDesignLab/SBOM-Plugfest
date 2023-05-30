@@ -41,75 +41,33 @@ public class APIController {
         private String fileName;
         @JsonProperty
         private String contents;
-
-        ///
-        /// Getters
-        ///
-
-        public String getFileName(){
-            return this.fileName;
-        }
-
-        public String getContents() {
-            return this.contents;
-        }
-    }
-
-    private static List<SBOM> COMPARE_QUEUE = new ArrayList<>();
-
-    /**
-     * Send post request to /updateQueue to add a file to the compare queue
-     * todo better endpoint name?
-     *
-     * @param fileName Name of the file that the SBOM contents came from
-     * @param contents File contents of the SBOM file to parse
-     * @return Status Message
-     */
-    @PostMapping("/updateQueue")
-    public ResponseEntity<String> updateQueue(@RequestParam("fileName") String fileName, @RequestParam("contents") String contents) {
-        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
-        try {
-            // report failure if failed to parse SBOM
-            if (sbom == null)
-                return new ResponseEntity<>("Failed to parse SBOM", HttpStatus.BAD_REQUEST);    // todo better status code?
-            // Add to queue
-            COMPARE_QUEUE.add(sbom);    // todo better way to store sboms? trying to avoid making stateful
-            // report success
-            return new ResponseEntity<>("SBOM Enqueued", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
-     * USAGE. Send POST request to /compare given SBOM file against the current comparison Queue
+     * USAGE. Send POST request to /compare with a collection of SBOM Json objects and a selected target
      *
-     * @param fileName Name of SBOM file
-     * @param contents Content of SBOM
+     * @param targetIndex index of the target SBOM
+     * @param sboms collection of SBOMs to compare
      * @return Wrapped Comparison object or error message
      */
     @PostMapping("/compare")
     public ResponseEntity<?> compare(
-            @RequestParam("fileName") String fileName,
-            @RequestParam("contents") String contents)
+            @RequestParam("targetIndex") Integer targetIndex,
+            @RequestBody SBOMArgument[] sboms)
     {
-
-        // Check queue is ready
-        if(COMPARE_QUEUE.isEmpty())
-            return new ResponseEntity<>("Comparison Queue is empty", HttpStatus.BAD_REQUEST);   // todo better status code?
-
-        // Convert given SBOM file
-        SBOM target = TranslatorPlugFest.translateContents(contents, fileName);
-        if(target == null)
-            return new ResponseEntity<>("Failed to parse SBOM", HttpStatus.BAD_REQUEST);   // todo better status code?
-
-        // Add to queue
-        COMPARE_QUEUE.add(0, target);   // todo shouldn't assume head of queue is target
+        // Attempt to load comparison queue
+        List<SBOM> compareQueue = new ArrayList<>();
+        for(SBOMArgument sbom : sboms){
+            try{
+                compareQueue.add(TranslatorPlugFest.translateContents(sbom.contents, sbom.fileName));
+            } catch (Exception e){
+                return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);  // todo better status code?
+            }
+        }
 
         // Run comparison
-        Comparison report = new Comparison(COMPARE_QUEUE); // report to return
+        Comparison report = new Comparison(targetIndex, compareQueue); // report to return
         report.runComparison();
-        COMPARE_QUEUE.clear();      // flush list
 
         //encode and send report
         try {

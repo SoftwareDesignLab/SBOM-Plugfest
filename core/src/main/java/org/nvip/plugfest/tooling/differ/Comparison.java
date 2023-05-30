@@ -34,10 +34,11 @@ public class Comparison {
     /**
      * Default constructor for Comparison
      *
+     * @param targetIndex index of the target SBOM
      * @param stream a list of SBOMs
      */
-    public Comparison(List<SBOM> stream) {
-        this.targetSBOM = stream.get(0);
+    public Comparison(Integer targetIndex, List<SBOM> stream) {
+        this.targetSBOM = stream.get(targetIndex);
         this.sbomStream = stream.subList(1, stream.size());
         this.diffReportList = new ArrayList<>();
         this.comparisons = new HashMap<>();
