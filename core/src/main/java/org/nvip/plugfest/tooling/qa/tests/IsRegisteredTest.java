@@ -67,6 +67,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "golang" -> response = extractFromGo(p);
                         case "npm" -> response = extractFromNPM(p);
                         case "composer" -> response = extractFromComposer(p);
+                        case "gem" -> response = extractFromGem(p);
                         // an invalid package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -248,4 +249,23 @@ public class IsRegisteredTest extends MetricTest{
         // get the response code from this url
         return huc.getResponseCode();
     }
+    /**
+     * Extract data from Rubygems Gem based packages
+     * Source: <a href="https://rubygems.org/gems/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromGem(PURL p) throws IOException{
+        // Query Gem packages page
+        // package name is required, add the version if it is
+        // included in the purl
+        URL url = new URL ("https://rubygems.org/gems/" +
+                p.getName().toLowerCase() + "/" +
+                (p.getVersion() != null ? "versions/" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
 }
