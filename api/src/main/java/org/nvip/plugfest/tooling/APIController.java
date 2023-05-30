@@ -69,9 +69,9 @@ public class APIController {
         // Run comparison
         DiffReport dr = new DiffReport(sboms[targetIndex].fileName, targetSBOM);
 
-        while(!compareQueue.isEmpty()){
-            compareQueue.pop();
-        }
+        // Compare against all sboms in the queue
+        while(!compareQueue.isEmpty())
+            dr.compare(compareQueue.pop());
 
         //encode and send report
         try {
