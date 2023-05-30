@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.differ;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.nvip.plugfest.tooling.sbom.*;
 
 import java.util.*;
@@ -13,6 +14,7 @@ import static org.nvip.plugfest.tooling.sbom.ComponentConflictType.*;
  * @author Matt London
  * @author Derek Garcia
  */
+@JsonPropertyOrder({"target", "diffreport" })
 public class DiffReport {
 
     /**
