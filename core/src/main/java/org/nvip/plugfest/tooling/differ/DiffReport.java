@@ -1,7 +1,9 @@
 package org.nvip.plugfest.tooling.differ;
 
-import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
-import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflict;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.nvip.plugfest.tooling.sbom.ComponentConflict;
+import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.SBOMConflict;
 
 import java.util.Set;
 
@@ -9,8 +11,13 @@ import java.util.Set;
  * Class to hold results of a diff comparison between two SBOMs
  *
  * @author Matt London
+ * @author Derek Garcia
  */
 public class DiffReport {
+    @JsonProperty("target")
+    private String targetUID;
+
+    private SBOM targetSBOM;
     /** Stores conflicts in non-trivial information within these sboms */
     private SBOMConflict sbomConflict;
     /** Stores conflicts between components in two SBOMs */
@@ -24,6 +31,11 @@ public class DiffReport {
     public DiffReport(SBOMConflict sbomConflict, Set<ComponentConflict> componentConflicts) {
         this.sbomConflict = sbomConflict;
         this.componentConflicts = componentConflicts;
+    }
+
+    public DiffReport(String targetUID, SBOM targetSBOM){
+        this.targetUID = targetUID;
+        this.targetSBOM = targetSBOM;
     }
 
     ///
