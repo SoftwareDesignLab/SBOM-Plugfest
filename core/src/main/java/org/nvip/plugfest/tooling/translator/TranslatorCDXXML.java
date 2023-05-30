@@ -85,7 +85,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbomMeta = ((Element) (sbom_xml_file.getElementsByTagName("metadata")).item(0)).getElementsByTagName("*");
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "'metadata' not found in: " + file_path ".");
+            Debug.log(Debug.LOG_TYPE.ERROR, "'metadata' not found in: " + file_path);
             sbomMeta = null;
         }
 
