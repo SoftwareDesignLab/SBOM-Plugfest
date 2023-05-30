@@ -14,6 +14,31 @@ import java.util.Set;
  * @author Derek Garcia
  */
 public class DiffReport {
+
+    /**
+     * Utility class for storing conflict data
+     */
+    private static class Conflict{
+        @JsonProperty
+        private final String type;
+        @JsonProperty
+        private final String target;
+        @JsonProperty
+        private final String current;
+
+        /**
+         * Create new conflict and record differences
+         *
+         * @param type Type of conflict
+         * @param target data stored in the target SBOM
+         * @param current data stored in the current SBOM
+         */
+        public Conflict(String type, String target, String current){
+            this.type = type;
+            this.target = target;
+            this.current = current;
+        }
+    }
     @JsonProperty("target")
     private String targetUID;
 
