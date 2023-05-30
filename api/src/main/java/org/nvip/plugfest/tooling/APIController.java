@@ -57,6 +57,7 @@ public class APIController {
             @RequestBody SBOMArgument[] sboms)
     {
         // todo check parameters so that we can return BAD_REQUEST?
+        // todo this is resolved in SVIP API Utils package ^. import them now?
 
         // Attempt to load comparison queue
         List<SBOM> compareQueue = new ArrayList<>();
