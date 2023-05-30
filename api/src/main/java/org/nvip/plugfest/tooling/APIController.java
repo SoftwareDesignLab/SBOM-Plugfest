@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
-import org.nvip.plugfest.tooling.differ.Comparison;
 import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
