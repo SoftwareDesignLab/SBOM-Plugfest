@@ -81,15 +81,14 @@ public class APIController {
      * USAGE. Send POST request to /qa with a single sbom file
      * The API will respond with an HTTP 200 and a serialized report in the body.
      *
-     * @param contents - File content of the SBOM to run metrics on
-     * @param fileName - Name of the SBOM file
+     * @param servletRequest
+     * @param sbomArgument JSON object of sbom details
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
     public ResponseEntity<QualityReport> qa(
-            @RequestParam("fileName") String fileName,
-            @RequestParam("contents") String contents,
-            HttpServletRequest servletRequest)
+            HttpServletRequest servletRequest,
+            @RequestBody SBOMArgument sbomArgument)
     {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
@@ -99,7 +98,7 @@ public class APIController {
             System.out.println("Failed to set encoding");
         }
 
-        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
+        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
 
         // Check if the sbom is null
         if (sbom == null) {
@@ -112,7 +111,7 @@ public class APIController {
         processors.add(new CompletenessProcessor());
 
         //run the QA
-        QualityReport report = QAPipeline.process(fileName, sbom, processors);
+        QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
 
         //encode and send report
         try {
@@ -125,16 +124,13 @@ public class APIController {
     /**
      * Send post request to /parse and it will convert the file contents to an SBOM object, returns null if failed to parse
      * todo make translation a private method that calls use?
-     * @param contents File contents of the SBOM file to parse
-     * @param fileName Name of the file that the SBOM contents came from
+     * @param sbomArgument JSON object of sbom details
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<SBOM> parse(
-            @RequestParam("fileName") String fileName,
-            @RequestParam("contents") String contents)
+    public ResponseEntity<SBOM> parse(@RequestBody SBOMArgument sbomArgument)
     {
-        SBOM sbom = TranslatorPlugFest.translateContents(contents, fileName);
+        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
 
         try {
             // Explicitly return null if failed
