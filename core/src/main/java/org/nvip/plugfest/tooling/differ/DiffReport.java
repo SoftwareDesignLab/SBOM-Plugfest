@@ -2,11 +2,17 @@ package org.nvip.plugfest.tooling.differ;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflictType;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflict;
+import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflictType;
+import org.nvip.plugfest.tooling.sbom.Component;
+import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
 
-import static org.nvip.plugfest.tooling.sbom.ComponentConflictType.*;
+import static org.nvip.plugfest.tooling.differ.conflicts.ComponentConflictType.*;
 
 /**
  * Class to hold results of a diff comparison between two SBOMs
