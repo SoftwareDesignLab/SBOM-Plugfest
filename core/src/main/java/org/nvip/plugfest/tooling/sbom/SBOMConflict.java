@@ -107,7 +107,7 @@ public class SBOMConflict {
     /// Getters and Setters
     ///
 
-    public Set getConflicts() {
+    public Set<SBOMConflictType> getConflicts() {
         return this.conflictTypes;
     }
 

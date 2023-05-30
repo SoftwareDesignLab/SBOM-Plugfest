@@ -63,7 +63,7 @@ public class Comparison {
             assignComponents(current_sbom, SBOM_index++);
 
             //generate a DiffReport for the current sbom and target sbom
-            diffReportList.add(Comparer.generateReport(targetSBOM, current_sbom));
+//            diffReportList.add(Comparer.generateReport(targetSBOM, current_sbom));
 
         }
 
