@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.differ.conflicts;
 
 /**
  * Enum to represent the type of conflict between two components

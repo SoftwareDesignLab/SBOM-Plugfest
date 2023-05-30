@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
 

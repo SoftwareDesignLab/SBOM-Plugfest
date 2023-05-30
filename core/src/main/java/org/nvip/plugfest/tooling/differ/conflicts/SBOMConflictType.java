@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.differ.conflicts;
 
 /**
  * Types of conflicts that can occur in an SBOM
