@@ -98,6 +98,11 @@ public class DiffReport {
 
     }
 
+    /**
+     * Compare the target SBOM with another SBOM and update the report
+     *
+     * @param otherSBOM Other SBOM to compare to
+     */
     private void compareSBOMs(SBOM otherSBOM){
         // Compare SBOMs
         SBOMConflict sbomConflict = new SBOMConflict(this.targetSBOM, otherSBOM);
@@ -144,6 +149,12 @@ public class DiffReport {
         }
     }
 
+
+    /**
+     * Compare the target SBOM with another SBOM and update the report
+     *
+     * @param otherComponents Other SBOM components to compare to
+     */
     private void compareComponents(Set<Component> otherComponents){
         Set<ComponentConflict> componentConflicts = new HashSet<>();
 
@@ -337,7 +348,5 @@ public class DiffReport {
                
             }
         }
-        
-        
     }
 }
