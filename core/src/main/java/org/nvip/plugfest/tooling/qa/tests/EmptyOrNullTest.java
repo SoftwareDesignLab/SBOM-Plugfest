@@ -1,7 +1,7 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.Signature;
 

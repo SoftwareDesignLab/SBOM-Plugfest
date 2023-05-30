@@ -12,6 +12,14 @@ import java.util.UUID;
  * @author Kevin LaPorte
  */
 public class SBOM {
+
+    // Common SBOM Schemas
+    public enum Type {
+        CYCLONE_DX,
+        SPDX,
+        Other
+    }
+
     /**
      * Dependency tree of the components
      */
@@ -20,7 +28,7 @@ public class SBOM {
     /**
      * Type of SBOM which this object came from (whatever the bom.xml, bom.json was formatted in)
      */
-    private SBOMType originFormat;
+    private Type originFormat;
 
     /**
      * Specification version of the origin format
@@ -110,7 +118,7 @@ public class SBOM {
      * @param timestamp:    Timestamp of when this SBOM was created
      * @param signature:    signature to verify the SBOM
      */
-    public SBOM(SBOMType originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber,
+    public SBOM(Type originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber,
                 String timestamp, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = originFormat;
         this.specVersion = specVersion;
@@ -200,15 +208,15 @@ public class SBOM {
      * @param format SBOM Format string to convert to Format Enum
      * @return SBOM Type
      */
-    public SBOMType assignOriginFormat(String format) {
+    public Type assignOriginFormat(String format) {
         if (format != null) {
             if (format.toLowerCase().contains("cyclonedx")) {
-                return SBOMType.CYCLONE_DX;
+                return Type.CYCLONE_DX;
             } else if (format.toLowerCase().contains("spdx")) {
-                return SBOMType.SPDX;
+                return Type.SPDX;
             }
         }
-        return SBOMType.Other;
+        return Type.Other;
     }
 
     /**
@@ -239,11 +247,11 @@ public class SBOM {
     /// Getters and Setters
     ///
 
-    public SBOMType getOriginFormat() {
+    public Type getOriginFormat() {
         return originFormat;
     }
 
-    public void setOriginFormat(SBOMType originFormat) {
+    public void setOriginFormat(Type originFormat) {
         this.originFormat = originFormat;
     }
 

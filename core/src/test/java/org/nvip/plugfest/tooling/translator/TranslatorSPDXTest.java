@@ -4,7 +4,7 @@ import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import org.nvip.plugfest.tooling.sbom.SBOMType;
+import org.nvip.plugfest.tooling.sbom.SBOM.Type;
 import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,7 +46,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     public void builder_makes_SBOM_test() throws IOException, ParseException, ParserConfigurationException {
         SBOM test = this.TRANSLATOR.translate(TEST_SPDX_v2_3_SBOM);
         assertNotNull(test);
-        Assertions.assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        Assertions.assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(17, test.getAllComponents().size());
@@ -56,7 +56,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     public void builder_makes_SBOM_from_SPDX_2_2_test() throws IOException, ParseException, ParserConfigurationException {
         SBOM test = this.TRANSLATOR.translate(TEST_SPDX_v2_2_SBOM);
         assertNotNull(test);
-        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.2", test.getSpecVersion());
         assertEquals(138, test.getAllComponents().size());
@@ -67,7 +67,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     public void builder_makes_large_SBOM_test() throws IOException, ParseException, ParserConfigurationException {
         SBOM test = this.TRANSLATOR.translate(TEST_SPDX_LARGE_v2_3_SBOM);
         assertNotNull(test);
-        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(433, test.getAllComponents().size());
@@ -90,7 +90,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     public void builder_parses_SBOM_with_no_components() throws IOException, ParseException, ParserConfigurationException {
         SBOM test = this.TRANSLATOR.translate(TEST_SBOM_SPDX_NO_COMPONENTS);
         assertNotNull(test);
-        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());
@@ -100,7 +100,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     public void builder_parses_SBOM_that_is_empty() throws IOException, ParseException, ParserConfigurationException {
         SBOM test = this.TRANSLATOR.translate(TEST_SBOM_SPDX_EMPTY);
         assertNotNull(test);
-        assertEquals(SBOMType.SPDX, test.getOriginFormat());
+        assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
         assertEquals(null, test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());

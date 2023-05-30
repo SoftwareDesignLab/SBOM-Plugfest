@@ -3,7 +3,7 @@ package org.nvip.plugfest.tooling.qa.oldQA;
 import org.nvip.plugfest.tooling.qa.oldQA.test_results.Test;
 import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.HashSet;
 import java.util.Set;
