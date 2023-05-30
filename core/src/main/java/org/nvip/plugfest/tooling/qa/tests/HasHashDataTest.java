@@ -7,6 +7,12 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * file: HasHashDataTest.java
+ *
+ * Test each component if hash values are present
+ * @author Matthew Morrison
+ */
 public class HasHashDataTest extends MetricTest{
 
     private static final String TEST_NAME = "HasHashData";
