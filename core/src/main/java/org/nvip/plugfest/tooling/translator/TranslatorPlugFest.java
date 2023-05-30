@@ -54,8 +54,7 @@ public class TranslatorPlugFest {
 
             if (translator == null) System.err.println("Error translating file: " + filePath + ".\nReason: Invalid " +
                     "SBOM file contents (could not assume schema).");
-
-            sbom = translator.translate(filePath);
+            else sbom = translator.translateContents(contents, filePath);
         }
         catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
