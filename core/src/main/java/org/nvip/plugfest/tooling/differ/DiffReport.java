@@ -18,7 +18,7 @@ import static org.nvip.plugfest.tooling.sbom.ComponentConflictType.*;
 public class DiffReport {
 
     /**
-     * Utility class for storing conflict data
+     * Utility record for storing conflict data
      */
     private record ConflictData(@JsonProperty String type, @JsonProperty String target, @JsonProperty String other) {
         /**
@@ -73,7 +73,7 @@ public class DiffReport {
         }
     }
 
-
+    private static final String MISSING_TAG = "MISSING";
     @JsonProperty("target")
     private String targetUID;
     @JsonProperty
@@ -352,8 +352,8 @@ public class DiffReport {
                 }
 
                 // todo use better identifiers than name
-                String targetIdentifier = conflict.getComponentA() == null ? "MISSING" : conflict.getComponentA().getName();
-                String conflictIdentifier = conflict.getComponentB() == null ? "MISSING" : conflict.getComponentB().getName();
+                String targetIdentifier = conflict.getComponentA() == null ? MISSING_TAG : conflict.getComponentA().getName();
+                String conflictIdentifier = conflict.getComponentB() == null ? MISSING_TAG : conflict.getComponentB().getName();
                 body.addComponentConflict(
                         targetIdentifier,
                         conflictIdentifier,
