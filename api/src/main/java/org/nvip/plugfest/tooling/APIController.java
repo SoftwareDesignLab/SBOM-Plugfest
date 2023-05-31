@@ -2,7 +2,7 @@ package org.nvip.plugfest.tooling;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
-import org.nvip.plugfest.tooling.differ.Comparison;
+import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
@@ -14,11 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * File: APIController.java
@@ -65,14 +61,22 @@ public class APIController {
                 return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);  // todo better status code?
             }
         }
+        // Get and remove target from queue
+        SBOM targetSBOM = compareQueue.get(targetIndex);
+        compareQueue.remove(targetIndex);
 
         // Run comparison
-        Comparison report = new Comparison(targetIndex, compareQueue); // report to return
-        report.runComparison();
+        DiffReport dr = new DiffReport(sboms[targetIndex].fileName, targetSBOM);
+
+        // Compare against all sboms in the queue
+        for(int i = 0; i < compareQueue.size(); i++)
+            dr.compare(sboms[i].fileName, compareQueue.get(i));
+
+
 
         //encode and send report
         try {
-            return new ResponseEntity<>(report, HttpStatus.OK);
+            return new ResponseEntity<>(dr, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

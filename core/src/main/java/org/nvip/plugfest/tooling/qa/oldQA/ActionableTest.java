@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa.oldQA;
 
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.qa.oldQA.test_results.Test;
 import org.nvip.plugfest.tooling.qa.oldQA.test_results.TestResults;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -118,7 +119,8 @@ public class ActionableTest extends MetricTest{
                     return 1;
                 }
             } else {
-                System.err.println("Warn: ActionableTest.java/testUniqueIdentifiers/sort. Unknown message start: " + o1);
+                Debug.log(Debug.LOG_TYPE.WARN, "ActionableTest.java/testUniqueIdentifiers/sort. Unknown message " +
+                        "start: " + o1);
                 return 0;
             }
         });
