@@ -1,8 +1,15 @@
 # Plugfest Changelog
-## v3.3.0-- 5/22/23
+## v3.3.0-- 5/31/23
 ### SBOM
 - updated PURL object to have more robust fields and utility
+### Translator
 
+- When internal failure occurs, Translators throw **TranslatorException** which contains information regarding the specific error
+
+### API
+
+- _/compare_ tests are implemented that check for user input that will produce a _BAD_REQUEST_ response
+- **Utils.java** now holds **SBOMFile** class
 ## v3.2.1-- 5/18/23
 ### GUI
 - Frontend launches backend and kills process on exit

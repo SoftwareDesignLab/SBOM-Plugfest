@@ -23,8 +23,7 @@ public class TranslatorComparisonTest {
 
 
     @Test
-    public void translator_comparison_cdx_json_test() throws ParseException, IOException,
-            ParserConfigurationException, TranslatorException {
+    public void translator_comparison_cdx_json_test() throws TranslatorException {
 
 
         SBOM test_sbom_one = TranslatorPlugFest.translate(TEST_MEDIUM_CDX_JSON);
