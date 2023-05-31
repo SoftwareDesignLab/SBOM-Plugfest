@@ -1,4 +1,6 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.differ.conflicts;
+
+import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -107,7 +109,7 @@ public class SBOMConflict {
     /// Getters and Setters
     ///
 
-    public Set getConflicts() {
+    public Set<SBOMConflictType> getConflicts() {
         return this.conflictTypes;
     }
 
