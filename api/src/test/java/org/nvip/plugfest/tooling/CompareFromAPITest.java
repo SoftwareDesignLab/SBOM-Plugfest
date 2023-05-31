@@ -1,6 +1,6 @@
 package org.nvip.plugfest.tooling;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.differ.Comparison;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -34,6 +34,8 @@ public class CompareFromAPITest {
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx";
     private final String dockerSBOM = System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx";
+    private final ArrayList<APIController.SBOMFile> sboms = new ArrayList<>();
+
 
     /**
      * Controller to test
@@ -45,28 +47,22 @@ public class CompareFromAPITest {
      * @throws IOException If the SBOM parsing is broken
      */
     @Test
+    @DisplayName("Compare SBOMs Test")
     public void compareTest() throws IOException {
-        List<String> contentsArray = new ArrayList<>();
-        List<String> fileNamesArray = new ArrayList<>();
+        sboms.add(new APIController.SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new APIController.SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new APIController.SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
 
-        contentsArray.add(new String(Files.readAllBytes(Paths.get(alpineSBOM))));
-        contentsArray.add(new String(Files.readAllBytes(Paths.get(pythonSBOM))));
-        contentsArray.add(new String(Files.readAllBytes(Paths.get(dockerSBOM))));
+        APIController.SBOMFile[] arr = new APIController.SBOMFile[sboms.size()];
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        for(int i = 0; i < sboms.size(); i++){
+            arr[i] = sboms.get(i);
+        }
 
-        String contentsString = objectMapper.writeValueAsString(contentsArray);
-
-        fileNamesArray.add(alpineSBOM);
-        fileNamesArray.add(pythonSBOM);
-        fileNamesArray.add(dockerSBOM);
-
-        String fileNamesString = objectMapper.writeValueAsString(fileNamesArray);
-
-//        ResponseEntity<Comparison> report = ctrl.compare(contentsString, fileNamesString);
-//        assertEquals(report.getStatusCode(), HttpStatus.OK);
-//        assertEquals(report.getBody().getDiffReports().size(), 2);
-//        assertNotEquals(report.getBody().getComparisons().size(),0);
+        ResponseEntity<?> report =  ctrl.compare(0, arr);
+        assertEquals(report.getStatusCode(), HttpStatus.OK);
+        assertEquals(arr.length, ((Comparison) Objects.requireNonNull(report.getBody())).getDiffReports().size());
+        assertNotEquals(arr.length,((Comparison) Objects.requireNonNull(report.getBody())).getComparisons().size());
     }
 
     /**

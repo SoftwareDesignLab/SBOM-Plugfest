@@ -37,11 +37,15 @@ public class APIController {
     /**
      * Utility Class for sending SBOM JSON objects
      */
-    private static class SBOMFile {
+    public static class SBOMFile {
         @JsonProperty
         private String fileName;
         @JsonProperty
         private String contents;
+
+        public SBOMFile(String fileName, String contents) {
+            this.fileName = fileName; this.contents = contents;
+        }
     }
 
     /**
