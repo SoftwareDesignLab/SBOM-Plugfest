@@ -48,7 +48,7 @@ public class APIController {
             @RequestParam("targetIndex") Integer targetIndex,
             @RequestBody SBOMFile[] sboms)
     {
-        // null check
+        // null/empty sboms check
         int nullCheck = Utils.sbomFileArrNullCheck(sboms);
         if(nullCheck > -1)
             return new ResponseEntity<>("Invalid SBOM at index " + nullCheck + ".",

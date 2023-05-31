@@ -39,34 +39,40 @@ public class CompareFromAPITest {
     private final ArrayList<SBOMFile> sboms = new ArrayList<>();
 
     @Test
-    @DisplayName("Null/Empty File Contents Array")
+    @DisplayName("Null/Empty File Contents")
     void emptyContentsArrayTest() {
 
-        sboms.add(new SBOMFile(alpineSBOM, null));
-        sboms.add(new SBOMFile(pythonSBOM, null));
-        sboms.add(new SBOMFile(dockerSBOM, null));
+        sboms.add(new SBOMFile(alpineSBOM, ""));
+        sboms.add(new SBOMFile(pythonSBOM, ""));
+        sboms.add(new SBOMFile(dockerSBOM, ""));
         SBOMFile[] arr = Utils.configSbomFileArr(sboms);
 
         ResponseEntity<?> response = ctrl.compare(0, arr);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
-    @DisplayName("Null/Empty File Names Array")
-    void emptyFileNamesArrayTest() {
-       // ResponseEntity<Comparison> response = ctrl.compare(TESTCONTENTSARRAY_LENGTH1, fileNames);
-      //  assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    @Test
+    @DisplayName("Null/Empty File Names")
+    void emptyFileNamesArrayTest() throws IOException {
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+
+        ResponseEntity<?> response = ctrl.compare(0, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
     }
 
     @Test
     @DisplayName("Mismatched File Contents/Names Array Length")
-    void mismatchedFileInfoTest() {
-        // Longer contents array
-      //  ResponseEntity<Comparison> response = ctrl.compare(TESTCONTENTSARRAY_LENGTH2, TESTFILEARRAY_LENGTH1);
-    //    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    void oneSbomTest() throws IOException {
 
-        // Longer file names array
-      //  response = ctrl.compare(TESTCONTENTSARRAY_LENGTH1, TESTFILEARRAY_LENGTH2);
-   //     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        ResponseEntity<?> report =  ctrl.compare(0, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
+
     }
 
     /**

@@ -20,9 +20,11 @@ public class Utils {
         public String fileName;
         @JsonProperty
         public String contents;
-        public boolean hasNullProperties = fileName == null || contents == null;
+        public boolean hasNullProperties;
         public SBOMFile(String fileName, String contents) {
             this.fileName = fileName; this.contents = contents;
+            hasNullProperties = fileName == null || contents == null
+                    || fileName.length() == 0 || contents.length() == 0;
         }
     }
 
