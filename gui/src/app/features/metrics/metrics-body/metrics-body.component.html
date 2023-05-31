@@ -1,28 +1,33 @@
 <div class="metrics-body flex col center">
-    <div class="results" *ngIf="GetQualityReport() && GetQualityReport().testResults.length > 0">
-        <app-accordion title="TEST RESULTS" [extra]="[(GetQualityReport() ? GetQualityReport().testResults.length : '0') + ' COMPONENTS']" style="flex-direction: column;">
+    <div class="results" *ngIf="result && getKeys(result).length > 0">
+        <app-accordion [extra]="[(result ? getKeys(result).length : '0') + ' Report(s)']" style="flex-direction: column;" [expanded]="true">
             <div body>
-                <app-accordion *ngFor="let testResult of GetQualityReport()?.testResults" style="flex-direction: column;" [extra]="[ getPassedPercent(testResult) + '% Passed' ]">
+                <app-accordion *ngFor="let category of getKeys(result)" style="flex-direction: column;" [extra]="[ getPassedPercent(category) + '% Passed' ]">
                     <div title class="title">
-                    <span>{{testResult.component.name}}</span>
+                    <span>{{category}}</span>
                     </div>
                     <div body>
-                        <div class="tests">
-                            <div class="test" *ngFor="let test of testResult.tests">
-                                <div class="result" id="{{test.status ? 'pass' : 'fail'}}" style="color: white">
-                                    {{test.message}}
+                        <app-accordion  *ngFor="let testTitle of getKeys(result[category])">
+                            <div title class="title">{{testTitle}}</div>
+                            <div body>
+                                <div class="tests">
+                                    <div class="test" *ngFor="let test of result[category][testTitle]">
+                                        <div *ngIf="test.pass !== 1" class="result flex" id="{{test.pass === 1 ? 'pass' : 'fail'}}" style="color: white">
+                                            <span>{{test.additionalInfo['IDENTIFIER']}}</span> <span>{{getTestMessage(test)}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </app-accordion>
                     </div>
                 </app-accordion>
             </div>
         </app-accordion>
     </div>
-    <div class="text flex center" *ngIf="!GetQualityReport()">
+    <div class="text flex center" *ngIf="!result">
         Please select an SBOM to see test results
     </div>
-    <div class="text flex center" *ngIf="GetQualityReport() && GetQualityReport().testResults.length === 0">
+    <div class="text flex center" *ngIf="result && getKeys(result).length === 0">
         There aren't any test results with the selected SBOM
     </div>
 </div>
