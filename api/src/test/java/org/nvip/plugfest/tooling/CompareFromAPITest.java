@@ -75,6 +75,22 @@ public class CompareFromAPITest {
 
     }
 
+    @Test
+    @DisplayName("Index out of bounds test")
+    void indexOutOfBoundsTest() throws IOException {
+
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+
+        ResponseEntity<?> report =  ctrl.compare(4, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
+
+        report =  ctrl.compare(-1, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
+    }
+
     // todo tests that break the translators / return an INTERNAL_SERVER_ERROR
 
     /**
