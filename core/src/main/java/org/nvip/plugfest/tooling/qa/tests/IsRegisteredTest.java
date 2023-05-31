@@ -38,6 +38,13 @@ public class IsRegisteredTest extends MetricTest{
         return results;
     }
 
+    /**
+     * Given a component, get all purls and test if the package is
+     * registered thorugh its specified type/package manager
+     * @param c the component to test
+     * @return a collection of results for each PURL associated with
+     * the component
+     */
     private List<Result> testComponentPURLs(Component c){
         List<Result> purlResults = new ArrayList<>();
         Result r;
@@ -56,9 +63,10 @@ public class IsRegisteredTest extends MetricTest{
             for(PURL p : c.getPurls()){
                 // holds the response code from the purl
                 int response = 0;
+                String packageManager = p.getType();
                 try{
                     // extract method based on package manager type
-                    switch(p.getType().toLowerCase()) {
+                    switch(packageManager.toLowerCase()) {
                         // TODO More cases need to be added for package manager types
                         case "maven" -> response =  extractFromMaven(p);
                         case "pypi" -> response = extractFromPyPi(p);
@@ -70,37 +78,44 @@ public class IsRegisteredTest extends MetricTest{
                         case "gem" -> response = extractFromGem(p);
                         case "hackage" -> response = extractFromHackage(p);
                         case "hex" -> response = extractFromHex(p);
-                        // an invalid package manager type
+                        case "conan" -> response = extractFromConan(p);
+                        // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                                    "Package Manager is not valid");
-                            r.addContext(c, "PURL Validation");
+                                    "Package Manager is not valid: " + packageManager);
+                            r.addContext(c, "PURL Package Validation");
                             purlResults.add(r);
                         }
                     }
-                }catch(IOException e){
+                }
+                // if there are any issues with the url or http connection
+                catch(IOException e){
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
                             "PURL had an error");
-                    r.addContext(c, "PURL Validation");
+                    r.addContext(c, "PURL Package Validation");
+                    purlResults.add(r);
+
+                }
+                // no errors occurred in checking the PURL through the URL
+                // so some response code was returned
+                if(response != 0){
+                    // if the response code is 200 (HTTP_OK), then
+                    // package is registered with package manager
+                    if(response == HttpURLConnection.HTTP_OK){
+                        r = new Result(TEST_NAME, Result.STATUS.PASS,
+                                "Package is registered with package " +
+                                        "manager: " + packageManager);
+                    }
+                    // any other response codes result in a test fail
+                    else{
+                        r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                                "Package is not registered with " +
+                                        "package manager: " + packageManager);
+
+                    }
+                    r.addContext(c, "PURL Package Validation");
                     purlResults.add(r);
                 }
-
-                if(response == 0){
-                    continue;
-                }
-                // if the response code is 200 (HTTP_OK), then
-                // package manager is valid
-                else if(response == HttpURLConnection.HTTP_OK){
-                    r = new Result(TEST_NAME, Result.STATUS.PASS,
-                            "Package is registered with package " +
-                                    "manager");
-                } else{
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                            "Package is not registered with " +
-                                    "package manager");
-                }
-                r.addContext(c, "PURL Validation");
-                purlResults.add(r);
 
             }
         }
@@ -289,6 +304,7 @@ public class IsRegisteredTest extends MetricTest{
         // get the response code from this url
         return huc.getResponseCode();
     }
+
     /**
      * Extract data from Hex based packages
      * Source: <a href="https://hex.pm/packages/">...</a>
@@ -303,6 +319,27 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://hex.pm/packages/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from C/C++ Conan based packages
+     * Source: <a href="https://conan.io/center/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromConan(PURL p) throws IOException{
+
+        // Query Conan packages page
+        // package name is required, add the version if it is
+        // included in the purl
+        //TODO add qualifier info? Doesn't seem to affect link
+        URL url = new URL ("https://conan.io/center/" +
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
         return huc.getResponseCode();
