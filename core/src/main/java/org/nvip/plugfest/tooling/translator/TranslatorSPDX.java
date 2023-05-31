@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * file: TranslatorSPDX.java
@@ -35,6 +36,10 @@ public class TranslatorSPDX extends TranslatorCore {
     private static final String RELATIONSHIP_TAG = "##### Relationships";
 
     private static final String EXTRACTED_LICENSE_TAG = "##### Extracted"; // starts with
+
+    private static final String EXTRACTED_LICENSE_ID = "LicenseID: ";
+
+    private static final String EXTRACTED_LICENSE_NAME = "LicenseName: ";
 
     private static final String RELATIONSHIP_KEY = "Relationship: ";
 
@@ -85,6 +90,9 @@ public class TranslatorSPDX extends TranslatorCore {
         // Collection of packages, used  for adding head components to top component if in the header (SPDXRef-DOCUMENT)
         // Value (SPDX_ID)
         ArrayList<String> packages = new ArrayList<>();
+
+        // Map of external licenses mapping ID to name
+        Map<String, String> externalLicenses = new HashMap<>();
 
         // Get SPDX file
         // Initialize BufferedReader along with current line
@@ -163,6 +171,44 @@ public class TranslatorSPDX extends TranslatorCore {
             throw new TranslatorException("Error translating top level data in " + fileName + ": " + e.getMessage());
         }
 
+        /**
+         * Parse through extracted licenses (if any) and store them
+         */
+        while ( current_line != null
+                && !current_line.contains(UNPACKAGED_TAG)
+                && !current_line.contains(PACKAGE_TAG)
+                && !current_line.contains(RELATIONSHIP_TAG)
+                && !current_line.contains(RELATIONSHIP_KEY)
+        ) {
+            if (current_line.contains(UNPACKAGED_TAG) || current_line.contains(PACKAGE_TAG) ||
+                    current_line.contains(RELATIONSHIP_TAG)) break;
+
+            if (current_line.isEmpty()) {
+                try {
+                    String licenseId = null;
+                    String licenseName = null;
+
+                    // Loop through the contents until the next empty line or tag
+                    while (!(current_line = br.readLine()).contains(TAG) && !current_line.isEmpty()) {
+                        if (current_line.contains(EXTRACTED_LICENSE_ID)) licenseId = current_line.split(": ")[1];
+                        if (current_line.contains(EXTRACTED_LICENSE_NAME)) licenseName = current_line.split(": ")[1];
+
+                        if(licenseId != null && licenseName != null) { // Only add the pair if we have all info
+                            externalLicenses.put(licenseId, licenseName);
+
+                            // Reset licenses
+                            licenseId = null;
+                            licenseName = null;
+                        }
+                    }
+                }catch (IOException e){
+                    throw new TranslatorException("Error parsing extracted licensing information in " + fileName + ":" +
+                            " " + e.getMessage());
+                }
+            } else {
+                current_line = tryReadingLine(br, fileName);
+            }
+        }
 
         /**
          * Parse through unpackaged files, add them to components HashSet
@@ -308,8 +354,16 @@ public class TranslatorSPDX extends TranslatorCore {
                     licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseDeclared").split(" AND ")));
                 }
 
-                // Remove any NONE licenses
+                // Remove any NONE/NOASSERTION licenses
                 licenses.remove("NONE");
+                licenses.remove("NOASSERTION");
+
+                // Replace any extracted license information
+                licenses = (HashSet<String>) licenses.stream().map(l -> {
+                    if(l.contains("LicenseRef") && externalLicenses.get(l) != null) return externalLicenses.get(l);
+                    return l;
+                }).collect(Collectors.toSet());
+
                 component.setLicenses(licenses);
 
                 // Add packaged component to components list
