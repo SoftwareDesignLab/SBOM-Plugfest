@@ -10,9 +10,11 @@ import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
+import org.nvip.plugfest.tooling.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.nvip.plugfest.tooling.utils.Utils.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,20 +37,6 @@ import java.util.Set;
 public class APIController {
 
     /**
-     * Utility Class for sending SBOM JSON objects
-     */
-    public static class SBOMFile {
-        @JsonProperty
-        private String fileName;
-        @JsonProperty
-        private String contents;
-
-        public SBOMFile(String fileName, String contents) {
-            this.fileName = fileName; this.contents = contents;
-        }
-    }
-
-    /**
      * USAGE. Send POST request to /compare with a collection of SBOM Json objects and a selected target
      *
      * @param targetIndex index of the target SBOM
@@ -60,6 +48,12 @@ public class APIController {
             @RequestParam("targetIndex") Integer targetIndex,
             @RequestBody SBOMFile[] sboms)
     {
+        // null check
+        int nullCheck = Utils.sbomFileArrNullCheck(sboms);
+        if(nullCheck > -1)
+            return new ResponseEntity<>("Invalid SBOM at index " + nullCheck + ".",
+                    HttpStatus.BAD_REQUEST);
+
         if (sboms.length < 2) return new ResponseEntity<>("SBOM array must contain at least 2 elements to compare.",
                 HttpStatus.BAD_REQUEST);
 
@@ -99,7 +93,7 @@ public class APIController {
     @PostMapping("/qa")
     public ResponseEntity<?> qa(
             HttpServletRequest servletRequest,
-            @RequestBody SBOMFile sbomFile)
+            @RequestBody Utils.SBOMFile sbomFile)
     {
         try {
             servletRequest.setCharacterEncoding("UTF-8");

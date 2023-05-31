@@ -3,6 +3,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.differ.Comparison;
+import org.nvip.plugfest.tooling.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
+import org.nvip.plugfest.tooling.utils.Utils.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -34,8 +36,38 @@ public class CompareFromAPITest {
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx";
     private final String dockerSBOM = System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx";
-    private final ArrayList<APIController.SBOMFile> sboms = new ArrayList<>();
+    private final ArrayList<SBOMFile> sboms = new ArrayList<>();
 
+    @Test
+    @DisplayName("Null/Empty File Contents Array")
+    void emptyContentsArrayTest() {
+
+        sboms.add(new SBOMFile(alpineSBOM, null));
+        sboms.add(new SBOMFile(pythonSBOM, null));
+        sboms.add(new SBOMFile(dockerSBOM, null));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+
+        ResponseEntity<?> response = ctrl.compare(0, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @DisplayName("Null/Empty File Names Array")
+    void emptyFileNamesArrayTest() {
+       // ResponseEntity<Comparison> response = ctrl.compare(TESTCONTENTSARRAY_LENGTH1, fileNames);
+      //  assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Mismatched File Contents/Names Array Length")
+    void mismatchedFileInfoTest() {
+        // Longer contents array
+      //  ResponseEntity<Comparison> response = ctrl.compare(TESTCONTENTSARRAY_LENGTH2, TESTFILEARRAY_LENGTH1);
+    //    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        // Longer file names array
+      //  response = ctrl.compare(TESTCONTENTSARRAY_LENGTH1, TESTFILEARRAY_LENGTH2);
+   //     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
     /**
      * Controller to test
@@ -49,15 +81,10 @@ public class CompareFromAPITest {
     @Test
     @DisplayName("Compare SBOMs Test")
     public void compareTest() throws IOException {
-        sboms.add(new APIController.SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
-        sboms.add(new APIController.SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
-        sboms.add(new APIController.SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
-
-        APIController.SBOMFile[] arr = new APIController.SBOMFile[sboms.size()];
-
-        for(int i = 0; i < sboms.size(); i++){
-            arr[i] = sboms.get(i);
-        }
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
 
         ResponseEntity<?> report =  ctrl.compare(0, arr);
         assertEquals(report.getStatusCode(), HttpStatus.OK);
