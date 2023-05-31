@@ -265,7 +265,7 @@ public class ComponentTest {
 
     @Test
     public void getPurl_test() throws Exception {
-        assertEquals(new HashSet<>(List.of(new PURL[]{new PURL("pkg:generic/python@3.11.2")})), test_component.getPurls());
+        assertEquals(new HashSet<>(List.of("pkg:generic/python@3.11.2")), test_component.getPurls());
     }
 
     @Test
