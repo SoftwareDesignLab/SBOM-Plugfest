@@ -34,6 +34,8 @@ public class TranslatorSPDX extends TranslatorCore {
 
     private static final String RELATIONSHIP_TAG = "##### Relationships";
 
+    private static final String EXTRACTED_LICENSE_TAG = "##### Extracted"; // starts with
+
     private static final String RELATIONSHIP_KEY = "Relationship: ";
 
     private static final String SPEC_VERSION_TAG = "SPDXVersion: ";
@@ -100,6 +102,7 @@ public class TranslatorSPDX extends TranslatorCore {
             while ( (current_line = br.readLine()) != null
                     && !current_line.contains(UNPACKAGED_TAG)
                     && !current_line.contains(PACKAGE_TAG)
+                    && !current_line.contains(EXTRACTED_LICENSE_TAG)
                     && !current_line.contains(RELATIONSHIP_TAG)
                     && !current_line.contains(RELATIONSHIP_KEY)
             ) {
