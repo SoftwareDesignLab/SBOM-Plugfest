@@ -144,7 +144,7 @@ public class EmptyOrNullTest extends MetricTest {
             results.add(r);
         } else {
             // Check each purl
-            for(PURL p : c.getPurls()){
+            for(String p : c.getPurls()){
                 r = resultEmptyOrNull(p);
                 r.addContext(c,"purl");
                 results.add(r);

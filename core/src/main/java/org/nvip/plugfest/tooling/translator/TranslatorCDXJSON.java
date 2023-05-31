@@ -90,9 +90,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 if (cpe != null) new_component.setCpes(Collections.singleton(cpe));
 
                 String purl = cdx_component.getPurl();
-                try {
-                    if (purl != null) new_component.setPurls(Collections.singleton(new PURL(purl)));
-                } catch (Exception ignored) {}
+                if (purl != null) new_component.setPurls(Collections.singleton(purl));
 
                 String swid = String.valueOf(cdx_component.getSwid());
                 if (swid != null) new_component.setSwids(Collections.singleton(swid));

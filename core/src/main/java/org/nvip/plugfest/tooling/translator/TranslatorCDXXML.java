@@ -171,7 +171,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                     Element elem = (Element) compItem;
                     NodeList component_elements = elem.getElementsByTagName("*");
 
-                    Set<PURL> purls = new HashSet<>();
+                    Set<String> purls = new HashSet<>();
                     Set<String> cpes = new HashSet<>();
                     Set<Hash> hashes = new HashSet<>();
 
@@ -188,10 +188,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                             cpes.add(component_elements.item(j).getTextContent());
                         }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("purl")) {
-                            try {
-                                purls.add(new PURL(component_elements.item(j).getTextContent()));
-                            } catch (Exception ignored){
-                            }
+                            purls.add(component_elements.item(j).getTextContent());
                         }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
                             hashes.add(

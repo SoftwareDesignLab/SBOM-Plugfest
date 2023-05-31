@@ -60,7 +60,7 @@ public class SBOMTest {
 
     Set<String> test_cpe = new HashSet<>(List.of(new String[]{"cpe:2.3:a:python_software_foundation:python:3.11.2:*:*:*:*:*:*:*"}));
 
-    Set<PURL> test_purl = new HashSet<>(List.of(new PURL[]{new PURL("pkg:generic/python@3.11.2")}));
+    Set<String> test_purl = new HashSet<>(List.of("pkg:generic/python@3.11.2"));
 
     Set<String> test_swid = new HashSet<>(List.of(new String[]{"python_software_identification_number"}));
 
@@ -78,7 +78,7 @@ public class SBOMTest {
 
     Set<String> test_cpe_two = new HashSet<>(List.of(new String[]{"cpe:2.3:a:nohtyp_software_foundation:nohtyp:3.11.2:*:*:*:*:*:*:*"}));
 
-    Set<PURL> test_purl_two = new HashSet<>(List.of(new PURL[]{new PURL("pkg:generic/nohtyp@3.11.2")}));
+    Set<String> test_purl_two = new HashSet<>(List.of("pkg:generic/nohtyp@3.11.2"));
 
     Set<String> test_swid_two = new HashSet<>(List.of(new String[]{"nohtyp_software_identification_number"}));
 
