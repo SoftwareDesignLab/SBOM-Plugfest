@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling.qa.tests;
 
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.SBOMType;
 
 import java.util.*;
 
@@ -26,21 +25,24 @@ public class HasLicenseDataTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         // create a list to hold each result of sbom components
         List<Result> results = new ArrayList<>();
-        SBOMType type = sbom.getOriginFormat();
+        SBOM.Type type = sbom.getOriginFormat();
 
-        if(type == SBOMType.Other){
-            Result r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SBOM " +
+        if(type == SBOM.Type.Other){
+            Result r = new Result(TEST_NAME, Result.STATUS.ERROR, "Invalid SBOM " +
                     "Type");
-            r.addContext(sbom, "SBOM Type");
+            r.addContext(sbom, "SBOM Type, License Data Check");
             results.add(r);
             return results;
         }
         // if SBOM is a valid type, test licenses based on its type
-        else if(type == SBOMType.CYCLONE_DX){
+        //CycloneDX format
+        else if(type == SBOM.Type.CYCLONE_DX){
             for(Component c : sbom.getAllComponents()){
                 results.addAll(testComponentLicenseCDX(c));
             }
-        } else{
+        }
+        // SPDX format
+        else{
             for(Component c : sbom.getAllComponents()){
                 results.addAll(testComponentLicenseSPDX(c));
             }
