@@ -2,9 +2,6 @@ package org.nvip.plugfest.tooling;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.differ.Comparison;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.nio.file.Files;
