@@ -64,7 +64,7 @@ public class DiffReportTest {
     }
 
     ///
-    /// Comparison
+    /// SBOM Comparison
     ///
 
     @Test
@@ -92,11 +92,15 @@ public class DiffReportTest {
         assertNotNull(d);
     }
 
+    ///
+    /// SBOM Metadata Comparison
+    ///
     @Test
     @DisplayName("Compare SBOM Conflicts")
     public void test_compare_sbom_conflicts(){
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
+        // Build other SBOM with random metadata details
         SBOM s = new SBOM(SBOM.Type.Other, "7", "2", "Foo",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617a54", "2002-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
@@ -126,11 +130,16 @@ public class DiffReportTest {
         assertNotNull(d);
     }
 
+    ///
+    /// Component Comparison
+    ///
+
     @Test
     @DisplayName("Compare No Components")
     public void test_compare_no_components(){
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
+        // Empty SBOM
         SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
@@ -144,8 +153,8 @@ public class DiffReportTest {
     public void test_compare_extra_components(){
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
+        // Generate template and add extra component
         SBOM s = generateTemplateSBOM();
-
         try{
             Component test_component_a = new Component(
                     "yellow", "yellow_publisher", "1.2.3",
@@ -162,16 +171,17 @@ public class DiffReportTest {
         assertNotNull(d);
     }
 
+    // todo test name conflict, spdxid conflict, unknown
     @Test
     @DisplayName("Compare Component Conflicts")
     public void test_compare_component_conflicts(){
 
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
+        // make new SBOM with modified component
         SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
-
         try{
             Component test_component_a = new Component(
                     "red", "other", "1.5.0",
@@ -187,8 +197,6 @@ public class DiffReportTest {
         } catch (Exception e){
             fail("Failed to generate other SBOM");
         }
-
-
 
         d.compare("OTHER", s);
         assertNotNull(d);
