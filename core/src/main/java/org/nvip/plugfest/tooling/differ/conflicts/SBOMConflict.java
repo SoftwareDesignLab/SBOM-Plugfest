@@ -50,7 +50,7 @@ public class SBOMConflict {
             conflictTypes.add(SBOMConflictType.TIMESTAMP_MISMATCH);
         }
         if (aSBOM.getSupplier() != null && !aSBOM.getSupplier().equals(bSBOM.getSupplier())) {
-            conflictTypes.add(SBOMConflictType.AUTHOR_MISMATCH);
+            conflictTypes.add(SBOMConflictType.SUPPLIER_MISMATCH);
         }
         if (aSBOM.getSbomVersion() != null && !aSBOM.getSbomVersion().equals(bSBOM.getSbomVersion())) {
             conflictTypes.add(SBOMConflictType.SBOM_VERSION_MISMATCH);
