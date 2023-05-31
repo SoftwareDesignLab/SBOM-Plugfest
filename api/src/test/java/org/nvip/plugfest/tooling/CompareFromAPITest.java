@@ -40,7 +40,7 @@ public class CompareFromAPITest {
 
     @Test
     @DisplayName("Null/Empty File Contents")
-    void emptyContentsArrayTest() {
+    void emptyContentsTest() {
 
         sboms.add(new SBOMFile(alpineSBOM, ""));
         sboms.add(new SBOMFile(pythonSBOM, ""));
@@ -53,7 +53,7 @@ public class CompareFromAPITest {
 
     @Test
     @DisplayName("Null/Empty File Names")
-    void emptyFileNamesArrayTest() throws IOException {
+    void emptyFileNamesTest() throws IOException {
         sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
         sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
         sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
@@ -65,7 +65,7 @@ public class CompareFromAPITest {
     }
 
     @Test
-    @DisplayName("Mismatched File Contents/Names Array Length")
+    @DisplayName("One sbom")
     void oneSbomTest() throws IOException {
 
         sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
@@ -74,6 +74,8 @@ public class CompareFromAPITest {
         assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
 
     }
+
+    // todo tests that break the translators / return an INTERNAL_SERVER_ERROR
 
     /**
      * Controller to test
