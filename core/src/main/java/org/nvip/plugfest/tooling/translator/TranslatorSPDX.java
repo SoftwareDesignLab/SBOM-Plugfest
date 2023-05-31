@@ -67,12 +67,14 @@ public class TranslatorSPDX extends TranslatorCore {
      */
     // TODO: Break into sub-methods
     @Override
-    protected SBOM translateContents(String fileContents, String file_path) throws IOException, ParseException {
+    protected SBOM translateContents(String fileContents, String file_path) throws TranslatorException {
 
         // Top level component information
         String sbom_serial_number;
 
         String product_id = "";
+
+        String fileName = file_path.substring(file_path.lastIndexOf('/') + 1).trim().toLowerCase(); // todo make sure this works
 
         // Collection for components, packaged and unpackaged
         // Key = SPDXID , Value = Component
@@ -93,66 +95,71 @@ public class TranslatorSPDX extends TranslatorCore {
         /**
          * Parse through top level SBOM data
          */
-        // Get next line until end of file is found or un-packaged tag not found
-        while ( (current_line = br.readLine()) != null
-                && !current_line.contains(UNPACKAGED_TAG)
-                && !current_line.contains(PACKAGE_TAG)
-                && !current_line.contains(RELATIONSHIP_TAG)
-                && !current_line.contains(RELATIONSHIP_KEY)
-        ) {
-            if (current_line.contains(": ")) {
+        try{
+            // Get next line until end of file is found or un-packaged tag not found
+            while ( (current_line = br.readLine()) != null
+                    && !current_line.contains(UNPACKAGED_TAG)
+                    && !current_line.contains(PACKAGE_TAG)
+                    && !current_line.contains(RELATIONSHIP_TAG)
+                    && !current_line.contains(RELATIONSHIP_KEY)
+            ) {
+                if (current_line.contains(": ")) {
 
-                switch (current_line.split(": ", 2)[0] + ": ") {
+                    switch (current_line.split(": ", 2)[0] + ": ") {
 
-                    case DOCUMENT_NAMESPACE_TAG:
-                        // Attempt to get UUID from current line using regex
-                        // replaceAll regex provided by:
-                        // https://stackoverflow.com/questions/25852961/how-to-remove-brackets-character-in-string-java
-                        sbom_serial_number = Arrays.toString(
-                                uuid_pattern
-                                        .matcher(current_line)
-                                        .results()
-                                        .map(MatchResult::group)
-                                        .toArray(String[]::new)
-                        ).replaceAll("[\\[\\](){}]", "");
+                        case DOCUMENT_NAMESPACE_TAG:
+                            // Attempt to get UUID from current line using regex
+                            // replaceAll regex provided by:
+                            // https://stackoverflow.com/questions/25852961/how-to-remove-brackets-character-in-string-java
+                            sbom_serial_number = Arrays.toString(
+                                    uuid_pattern
+                                            .matcher(current_line)
+                                            .results()
+                                            .map(MatchResult::group)
+                                            .toArray(String[]::new)
+                            ).replaceAll("[\\[\\](){}]", "");
 
-                        // If a UUID is found, set it as the SBOM serial number, otherwise default to DocumentNamespace value
-                        sbom_serial_number = (sbom_serial_number.isBlank()) // TODO: Verify change (sbom_serial_number was never null, only possibly empty)
-                                ? bom_data.get("DocumentNamespace")
-                                : sbom_serial_number;
+                            // If a UUID is found, set it as the SBOM serial number, otherwise default to DocumentNamespace value
+                            sbom_serial_number = (sbom_serial_number.isBlank()) // TODO: Verify change (sbom_serial_number was never null, only possibly empty)
+                                    ? bom_data.get("DocumentNamespace")
+                                    : sbom_serial_number;
 
-                        // Add DocumentNamespace value to sbom materials collection
-                        bom_data.put("serialNumber", sbom_serial_number);
-                        break;
+                            // Add DocumentNamespace value to sbom materials collection
+                            bom_data.put("serialNumber", sbom_serial_number);
+                            break;
 
-                    case SPEC_VERSION_TAG:
-                        bom_data.put("specVersion", current_line.split(": ", 2)[1]);
-                        break;
+                        case SPEC_VERSION_TAG:
+                            bom_data.put("specVersion", current_line.split(": ", 2)[1]);
+                            break;
 
-                    case AUTHOR_TAG:
-                        if(!bom_data.containsKey("author")) {
-                            bom_data.put("author", current_line.split(":", 2)[1]);
-                        } else {
-                            bom_data.put("author", bom_data.get("author") + " " + current_line.split(":", 2)[1]);
-                        }
-                        break;
+                        case AUTHOR_TAG:
+                            if(!bom_data.containsKey("author")) {
+                                bom_data.put("author", current_line.split(":", 2)[1]);
+                            } else {
+                                bom_data.put("author", bom_data.get("author") + " " + current_line.split(":", 2)[1]);
+                            }
+                            break;
 
-                    case ID_TAG:
-                        bom_data.put("id", current_line.split(": ", 2)[1]);
-                        break;
+                        case ID_TAG:
+                            bom_data.put("id", current_line.split(": ", 2)[1]);
+                            break;
 
-                    case TIMESTAMP_TAG:
-                        bom_data.put("timestamp", current_line.split(": ", 2)[1]);
-                        break;
+                        case TIMESTAMP_TAG:
+                            bom_data.put("timestamp", current_line.split(": ", 2)[1]);
+                            break;
 
-                    default:
-                        bom_data.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
+                        default:
+                            bom_data.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
+
+                    }
 
                 }
 
             }
-
+        }catch (IOException e){
+            throw new TranslatorException("Error translating top level data in " + fileName + ": " + e.getMessage());
         }
+
 
         /**
          * Parse through unpackaged files, add them to components HashSet
@@ -171,14 +178,20 @@ public class TranslatorSPDX extends TranslatorCore {
             // If current line is empty (new un-packaged component)
             if (current_line.isEmpty()) {
 
-                // Loop through the contents until the next empty line or tag
-                while (!(current_line = br.readLine()).contains(TAG) && !current_line.isEmpty()) {
+                try{
+                    // Loop through the contents until the next empty line or tag
+                    while (!(current_line = br.readLine()).contains(TAG) && !current_line.isEmpty()) {
 
-                    // If line contains separator, split line into Key:Value then store it into component materials map
-                    if ( current_line.contains(": ")) {
-                        file_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
+                        // If line contains separator, split line into Key:Value then store it into component materials map
+                        if ( current_line.contains(": ")) {
+                            file_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
+                        }
                     }
+                }catch (IOException e){
+                    throw new TranslatorException("Error parsing unpackaged components in " + fileName + ": " + e.getMessage());
                 }
+
+
 
                 // Create new component from materials
                 Component unpackaged_component = new Component(
@@ -193,7 +206,7 @@ public class TranslatorSPDX extends TranslatorCore {
                 this.components.put(unpackaged_component.getUniqueID(), unpackaged_component);
 
             } else {
-                current_line = br.readLine();
+                current_line = tryReadingLine(br, fileName);
             }
         }
 
@@ -214,45 +227,51 @@ public class TranslatorSPDX extends TranslatorCore {
                 Set<String> swids = new HashSet<>();
 
 
-                // While in the same package/component
-                while ( (current_line = br.readLine()) != null
-                        && !current_line.contains(TAG)
-                        && !current_line.contains(RELATIONSHIP_TAG)
-                        && !current_line.contains(RELATIONSHIP_KEY))
-                {
-                    // Special case for CPEs, PURLs, and SWIDs
-                    if (current_line.contains("ExternalRef: SECURITY")) {
-                        // We have a CPE
-                        String[] lineSplit = current_line.split(" ");
-                        // Last element is the CPE
-                        String cpe = lineSplit[lineSplit.length - 1];
+                try{
+                    // While in the same package/component
+                    while ( (current_line = br.readLine()) != null
+                            && !current_line.contains(TAG)
+                            && !current_line.contains(RELATIONSHIP_TAG)
+                            && !current_line.contains(RELATIONSHIP_KEY))
+                    {
+                        // Special case for CPEs, PURLs, and SWIDs
+                        if (current_line.contains("ExternalRef: SECURITY")) {
+                            // We have a CPE
+                            String[] lineSplit = current_line.split(" ");
+                            // Last element is the CPE
+                            String cpe = lineSplit[lineSplit.length - 1];
 
-                        cpes.add(cpe);
+                            cpes.add(cpe);
 
-                        // Don't continue parsing after we add the special cases
-                        continue;
-                    }
-                    else if (current_line.contains("ExternalRef: PACKAGE-MANAGER purl")) {
-                        // We have a PURL
-                        String[] lineSplit = current_line.split(" ");
-                        // Last element is the PURL
-                        String purl = lineSplit[lineSplit.length - 1];
-
-                        try {
-                            purls.add(new PURL(purl));
-                        } catch (Exception ignored){
+                            // Don't continue parsing after we add the special cases
+                            continue;
                         }
+                        else if (current_line.contains("ExternalRef: PACKAGE-MANAGER purl")) {
+                            // We have a PURL
+                            String[] lineSplit = current_line.split(" ");
+                            // Last element is the PURL
+                            String purl = lineSplit[lineSplit.length - 1];
 
-                        // Don't continue parsing after we add the special cases
-                        continue;
-                    }
-                    // TODO find examples of how SPDX represents SWID and implement that here
+                            try {
+                                purls.add(new PURL(purl));
+                            } catch (Exception ignored){
+                            }
 
-                    // If line isn't blank split it on separator and store into component collect as key:value
-                    if (current_line.contains(": ")) {
-                        component_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
+                            // Don't continue parsing after we add the special cases
+                            continue;
+                        }
+                        // TODO find examples of how SPDX represents SWID and implement that here
+
+                        // If line isn't blank split it on separator and store into component collect as key:value
+                        if (current_line.contains(": ")) {
+                            component_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
+                        }
                     }
                 }
+                catch (IOException e){
+                    throw new TranslatorException("Error parsing package relationships in " + fileName + ": " + e.getMessage());
+                }
+
 
                 // Cleanup package originator
                 String supplier = null;
@@ -328,16 +347,20 @@ public class TranslatorSPDX extends TranslatorCore {
 
                 }
 
-                current_line = br.readLine();
+                current_line = tryReadingLine(br, fileName);
 
             }
             else {
                 // if no package/component is found, get next line
-                current_line = br.readLine();
+                current_line = tryReadingLine(br, fileName);
             }
         }
-
-        br.close();
+        try{
+            br.close();
+        }
+        catch (IOException e){
+            // todo this isn't worth anything more than ignoring, correct?
+        }
 
         if (product_id.contains(DOCUMENT_REFERENCE_TAG)) {
             product_data.put("name", bom_data.get("DocumentName"));
@@ -366,6 +389,23 @@ public class TranslatorSPDX extends TranslatorCore {
         // Return SBOM object
         return this.sbom;
 
+    }
+
+    /**
+     * Method to read in line from file through BufferedReader class
+     * @param br instantiated BufferedReader
+     * @param fileName name of file
+     * @return current line read in
+     * @throws TranslatorException after catching IOException
+     */
+    private static String tryReadingLine(BufferedReader br, String fileName) throws TranslatorException {
+        String current_line;
+        try {
+            current_line = br.readLine();
+        } catch (IOException e) {
+            throw new TranslatorException("Error translating in" + fileName + ": " + e.getMessage());
+        }
+        return current_line;
     }
 
 }

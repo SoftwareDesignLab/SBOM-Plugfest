@@ -48,8 +48,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
 
     @ParameterizedTest
     @ValueSource(strings = { TEST_SPDX_v2_3_SBOM, TEST_SPDX_v2_3_SBOM_NOMETADATA })
-    public void builder_makes_SBOM_test(String pathToSBOM) throws IOException, ParseException,
-            ParserConfigurationException {
+    public void builder_makes_SBOM_test(String pathToSBOM) throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(test);
         Assertions.assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
@@ -59,7 +58,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     }
 
     @Test
-    public void builder_makes_SBOM_from_SPDX_2_2_test() throws IOException, ParseException, ParserConfigurationException {
+    public void builder_makes_SBOM_from_SPDX_2_2_test() throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate(TEST_SPDX_v2_2_SBOM);
         assertNotNull(test);
         assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
@@ -70,7 +69,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
 
 
     @Test
-    public void builder_makes_large_SBOM_test() throws IOException, ParseException, ParserConfigurationException {
+    public void builder_makes_large_SBOM_test() throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate(TEST_SPDX_LARGE_v2_3_SBOM);
         assertNotNull(test);
         assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
@@ -81,19 +80,19 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
 
 
     @Test
-    public void builder_does_not_make_SBOM_from_blank_path() throws IOException, ParseException, ParserConfigurationException {
+    public void builder_does_not_make_SBOM_from_blank_path() throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate("");
         assertNull(test);
     }
 
     @Test
-    public void builder_does_not_make_SBOM_from_non_existing_file() throws IOException, ParseException, ParserConfigurationException {
+    public void builder_does_not_make_SBOM_from_non_existing_file() throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate(TEST_SBOM_DOESNT_EXIST);
         assertNull(test);
     }
 
     @Test
-    public void builder_parses_SBOM_with_no_components() throws IOException, ParseException, ParserConfigurationException {
+    public void builder_parses_SBOM_with_no_components() throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate(TEST_SBOM_SPDX_NO_COMPONENTS);
         assertNotNull(test);
         assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
@@ -103,7 +102,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     }
 
     @Test
-    public void builder_parses_SBOM_that_is_empty() throws IOException, ParseException, ParserConfigurationException {
+    public void builder_parses_SBOM_that_is_empty() throws TranslatorException {
         SBOM test = this.TRANSLATOR.translate(TEST_SBOM_SPDX_EMPTY);
         assertNotNull(test);
         assertEquals(SBOM.Type.SPDX, test.getOriginFormat());

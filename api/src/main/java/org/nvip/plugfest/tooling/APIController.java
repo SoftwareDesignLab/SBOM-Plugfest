@@ -8,6 +8,7 @@ import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.*;
  * @author Asa Horn
  * @author Justin Jantzi
  * @author Derek Garcia
+ * @author Ian Dunn
  */
 @RestController
 @RequestMapping("/plugfest")
@@ -30,13 +32,16 @@ public class APIController {
 
     /**
      * Utility Class for sending SBOM JSON objects
-     * todo better name?
      */
-    private static class SBOMArgument{
+    public static class SBOMFile {
         @JsonProperty
         private String fileName;
         @JsonProperty
         private String contents;
+
+        public SBOMFile(String fileName, String contents) {
+            this.fileName = fileName; this.contents = contents;
+        }
     }
 
     /**
@@ -49,15 +54,21 @@ public class APIController {
     @PostMapping("/compare")
     public ResponseEntity<?> compare(
             @RequestParam("targetIndex") Integer targetIndex,
-            @RequestBody SBOMArgument[] sboms)
+            @RequestBody SBOMFile[] sboms)
     {
+        if (sboms.length < 2) return new ResponseEntity<>("SBOM array must contain at least 2 elements to compare.",
+                HttpStatus.BAD_REQUEST);
+
+        if (targetIndex < 0 || targetIndex > sboms.length - 1) return new ResponseEntity<>("Target Index out of " +
+                "bounds (must be between 0 and " + (sboms.length - 1) + ", was " + targetIndex + ").", HttpStatus.BAD_REQUEST);
+
         // Attempt to load comparison queue
         List<SBOM> compareQueue = new ArrayList<>();
-        for(SBOMArgument sbom : sboms){
-            try{
+        for (SBOMFile sbom : sboms){
+            try {
                 compareQueue.add(TranslatorPlugFest.translateContents(sbom.contents, sbom.fileName));
-            } catch (Exception e){
-                return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);  // todo better status code?
+            } catch (TranslatorException e){
+                return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         // Get and remove target from queue
@@ -86,28 +97,28 @@ public class APIController {
      * The API will respond with an HTTP 200 and a serialized report in the body.
      *
      * @param servletRequest
-     * @param sbomArgument JSON object of sbom details
+     * @param sbomFile JSON object of sbom details
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<QualityReport> qa(
+    public ResponseEntity<?> qa(
             HttpServletRequest servletRequest,
-            @RequestBody SBOMArgument sbomArgument)
+            @RequestBody SBOMFile sbomFile)
     {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
         catch (Exception e) {
             // This will not happen as we are hardcoding UTF-8
-            System.out.println("Failed to set encoding");
+            Debug.log(Debug.LOG_TYPE.ERROR, "Failed to set encoding");
         }
 
-        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+        SBOM sbom;
 
-        // Check if the sbom is null
-        if (sbom == null) {
-            // todo return why sbom failed to parse, not just null
-            return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            sbom = TranslatorPlugFest.translateContents(sbomFile.contents, sbomFile.fileName);
+        } catch (TranslatorException e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // todo get tests/processors from user that they want to run?
@@ -115,7 +126,7 @@ public class APIController {
         processors.add(new CompletenessProcessor());
 
         //run the QA
-        QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
+        QualityReport report = QAPipeline.process(sbomFile.fileName, sbom, processors);
 
         //encode and send report
         try {
@@ -127,20 +138,22 @@ public class APIController {
 
     /**
      * Send post request to /parse and it will convert the file contents to an SBOM object, returns null if failed to parse
-     * todo make translation a private method that calls use?
-     * @param sbomArgument JSON object of sbom details
+     *
+     * @param sbomFile JSON object of sbom details
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<SBOM> parse(@RequestBody SBOMArgument sbomArgument)
+    public ResponseEntity<?> parse(@RequestBody SBOMFile sbomFile)
     {
-        SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+        SBOM sbom;
 
         try {
-            // Explicitly return null if failed
-            if (sbom == null) {
-                return new ResponseEntity<>(null, HttpStatus.OK);
-            }
+            sbom = TranslatorPlugFest.translateContents(sbomFile.contents, sbomFile.fileName);
+        } catch (TranslatorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // TODO better status code?
+        }
+
+        try {
             return new ResponseEntity<>(sbom, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
