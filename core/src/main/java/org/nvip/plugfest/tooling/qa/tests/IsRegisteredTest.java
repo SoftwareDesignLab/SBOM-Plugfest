@@ -84,6 +84,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "huggingface" -> response = extractFromHuggingFace(p);
                         case "cocoapods" -> response = extractFromCocoapods(p);
                         case "cran" -> response = extractFromCran(p);
+                        case "pub" -> response = extractFromPub(p);
                         // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -426,7 +427,7 @@ public class IsRegisteredTest extends MetricTest{
 
     /**
      * Extract data from Cran R based packages
-     * Source: <a href="https://cran.r-project.org/web/packages//">...</a>
+     * Source: <a href="https://cran.r-project.org/web/packages/">...</a>
      * @param p purl to use to query for info
      * @return an int response code when opening up a connection with PURL info
      * @throws IOException issue with http connection
@@ -436,10 +437,29 @@ public class IsRegisteredTest extends MetricTest{
         // package name is required, add the version if it is
         // included in the purl
         //TODO version does nothing, how to check for specific version?
-        URL url = new URL ("https://cran.r-project.org/web/packages/" +
+        URL url = new URL("https://cran.r-project.org/web/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : "") +
                 "/index.html");
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from the Pub repo (for Dart and Flutter packages)
+     * Source: <a href="https://pub.dev/packages/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromPub(PURL p) throws IOException{
+        // Query Pub Repository
+        // package name is required, add the version if it is
+        // included in the purl
+        URL url = new URL("https://cran.r-project.org/web/packages/" +
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
         return huc.getResponseCode();
