@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
 import org.nvip.plugfest.tooling.qa.tests.HasMetadataTest;
+import org.nvip.plugfest.tooling.qa.tests.HasSupplierTest;
 
 /**
  * file: MetadataProcessor.java
@@ -17,6 +18,10 @@ public class MetadataProcessor extends AttributeProcessor{
     public MetadataProcessor(){
         this.attributeName = "Metadata";
         this.metricTests.add(new HasMetadataTest());
+
+
+        this.metricTests.add(new HasSupplierTest());
+
         /*
         TODO
          emptyOrNull: check if the field is empty or null
