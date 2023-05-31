@@ -1,7 +1,5 @@
 package org.nvip.plugfest.tooling.differ;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -23,6 +21,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class DiffReportTest {
 
 
+    /**
+     * Generate a template SBOM
+     *
+     * @return Template SBOM
+     */
     private SBOM generateTemplateSBOM() {
         SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
