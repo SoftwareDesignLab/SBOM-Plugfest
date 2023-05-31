@@ -56,9 +56,9 @@ public class TranslatorPlugFest {
         try {
             TranslatorCore translator = getTranslator(contents, filePath);
 
-            if (translator == null) throw new TranslatorException(INVALID_FILE_CONTENTS + " File: " + filePath);
-
-            return translator.translateContents(contents, filePath); // TODO test invalid test cases
+            SBOM result = translator.translateContents(contents, filePath);
+            if (result == null) throw new TranslatorException("Unknown error while translating.");
+            return result;
         }
         catch (Exception e) {
             throw new TranslatorException(e.getMessage());

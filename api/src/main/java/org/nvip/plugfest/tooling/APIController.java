@@ -35,9 +35,8 @@ public class APIController {
 
     /**
      * Utility Class for sending SBOM JSON objects
-     * todo better name?
      */
-    private static class SBOMArgument{
+    private static class SBOMFile {
         @JsonProperty
         private String fileName;
         @JsonProperty
@@ -54,15 +53,18 @@ public class APIController {
     @PostMapping("/compare")
     public ResponseEntity<?> compare(
             @RequestParam("targetIndex") Integer targetIndex,
-            @RequestBody SBOMArgument[] sboms)
+            @RequestBody SBOMFile[] sboms)
     {
-        // todo check parameters so that we can return BAD_REQUEST?
-        // todo this is resolved in SVIP API Utils package ^. import them now?
+        if (sboms.length < 2) return new ResponseEntity<>("SBOM array must contain at least 2 elements to compare.",
+                HttpStatus.BAD_REQUEST);
+
+        if (targetIndex < 0 || targetIndex > sboms.length - 1) return new ResponseEntity<>("Target Index out of " +
+                "bounds (must be between 0 and " + (sboms.length - 1) + ", was " + targetIndex + ").", HttpStatus.BAD_REQUEST);
 
         // Attempt to load comparison queue
         List<SBOM> compareQueue = new ArrayList<>();
-        for(SBOMArgument sbom : sboms){
-            try{
+        for (SBOMFile sbom : sboms){
+            try {
                 compareQueue.add(TranslatorPlugFest.translateContents(sbom.contents, sbom.fileName));
             } catch (TranslatorException e){
                 return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,34 +88,28 @@ public class APIController {
      * The API will respond with an HTTP 200 and a serialized report in the body.
      *
      * @param servletRequest
-     * @param sbomArgument JSON object of sbom details
+     * @param sbomFile JSON object of sbom details
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
     public ResponseEntity<?> qa(
             HttpServletRequest servletRequest,
-            @RequestBody SBOMArgument sbomArgument)
+            @RequestBody SBOMFile sbomFile)
     {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
         catch (Exception e) {
             // This will not happen as we are hardcoding UTF-8
-            System.out.println("Failed to set encoding");
+            Debug.log(Debug.LOG_TYPE.ERROR, "Failed to set encoding");
         }
 
         SBOM sbom;
 
         try {
-            sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+            sbom = TranslatorPlugFest.translateContents(sbomFile.contents, sbomFile.fileName);
         } catch (TranslatorException e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        // Check if the sbom is null
-        if (sbom == null) {
-            // todo return why sbom failed to parse, not just null
-            return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
         // todo get tests/processors from user that they want to run?
@@ -121,7 +117,7 @@ public class APIController {
         processors.add(new CompletenessProcessor());
 
         //run the QA
-        QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
+        QualityReport report = QAPipeline.process(sbomFile.fileName, sbom, processors);
 
         //encode and send report
         try {
@@ -133,28 +129,22 @@ public class APIController {
 
     /**
      * Send post request to /parse and it will convert the file contents to an SBOM object, returns null if failed to parse
-     * todo make translation a private method that calls use?
-     * @param sbomArgument JSON object of sbom details
+     *
+     * @param sbomFile JSON object of sbom details
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<?> parse(@RequestBody SBOMArgument sbomArgument)
+    public ResponseEntity<?> parse(@RequestBody SBOMFile sbomFile)
     {
         SBOM sbom;
 
         try {
-            sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
+            sbom = TranslatorPlugFest.translateContents(sbomFile.contents, sbomFile.fileName);
         } catch (TranslatorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // TODO better status code?
         }
 
         try {
-            // Explicitly return null if failed
-            // TODO translateContents should only fail, not return null. Is this
-            //  still needed?
-            if (sbom == null) {
-                return new ResponseEntity<>(null, HttpStatus.OK);
-            }
             return new ResponseEntity<>(sbom, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
