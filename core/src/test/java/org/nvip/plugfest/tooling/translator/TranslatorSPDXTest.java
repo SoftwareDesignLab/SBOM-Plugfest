@@ -14,6 +14,7 @@ import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +33,9 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     private static final String TEST_SPDX_v2_3_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.alpine.2-3.spdx";
     private static final String TEST_SPDX_v2_3_SBOM_NOMETADATA = "src/test/java/org/nvip/plugfest/tooling/sample_boms" +
             "/sbom.alpine.2-3.nometadata.spdx";
+
+    private static final String TEST_SPDX_v2_3_SBOM_LICENSINGINFO = "src/test/java/org/nvip/plugfest/tooling" +
+            "/sample_boms/sbom.alpine.2-3.licensinginfo.spdx";
 
     private static final String TEST_SPDX_v2_2_SBOM = "src/test/java/org/nvip/plugfest/tooling/sample_boms/sbom.docker.2-2.spdx";
 
@@ -112,6 +116,19 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals(null, test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());
+    }
+
+    @Test
+    @DisplayName("Extracted Licensing Information")
+    void extractedLicensingTest() throws TranslatorException {
+        SBOM sbom = this.TRANSLATOR.translate(TEST_SPDX_v2_3_SBOM_LICENSINGINFO);
+        for(Component component : sbom.getAllComponents()) {
+            if(!component.getName().equals("ssl_client")) continue;
+
+            Set<String> licenses = component.getLicenses();
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Found licenses in component ssl_client: " + licenses.toString());
+            assertTrue(licenses.contains("Test License")); // The extracted license NAME (not ID) found in the SBOM
+        }
     }
 
     @Test
