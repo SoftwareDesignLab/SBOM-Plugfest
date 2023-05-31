@@ -6,10 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 ## [3.7.0] - 2023-05-31
 ### Added
+- Add `dev` launcher that launches just the front end.
+- When internal failure occurs, Translators throw a top-level `TranslatorException` which contains information 
+  regarding the specific error
+- `/compare` tests are implemented that check for user input that will produce a `HttpStatus.BAD_REQUEST` response
 
 ### Changed
 - `DiffReport` is now more JSON friendly object
   - Consolidated `Comparer`, `Comparison`, and `ComponentVersion`
+- `Utils.java` now holds `SBOMFile` class
 
 ### Fixed
 
@@ -45,10 +50,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
----
-## [3.2.1] - 2023-05-18
-> TODO: Add `dev` launcher that launches just the front end. See issue [#118](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/118)
+## v3.2.1-- 5/18/23
 ### Added
+- Frontend launches backend and kills process on exit
+- Removed full filepath from upload screen
 
 ### Changed
 
