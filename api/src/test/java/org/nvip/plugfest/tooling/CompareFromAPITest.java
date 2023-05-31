@@ -2,12 +2,17 @@ package org.nvip.plugfest.tooling;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.differ.Comparison;
+import org.nvip.plugfest.tooling.utils.Utils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
+import org.nvip.plugfest.tooling.utils.Utils.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -31,8 +36,62 @@ public class CompareFromAPITest {
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx";
     private final String dockerSBOM = System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.docker.2-2.spdx";
-    private final ArrayList<APIController.SBOMFile> sboms = new ArrayList<>();
+    private final ArrayList<SBOMFile> sboms = new ArrayList<>();
 
+    @Test
+    @DisplayName("Null/Empty File Contents")
+    void emptyContentsTest() {
+
+        sboms.add(new SBOMFile(alpineSBOM, ""));
+        sboms.add(new SBOMFile(pythonSBOM, ""));
+        sboms.add(new SBOMFile(dockerSBOM, ""));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+
+        ResponseEntity<?> response = ctrl.compare(0, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Null/Empty File Names")
+    void emptyFileNamesTest() throws IOException {
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+
+        ResponseEntity<?> response = ctrl.compare(0, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+    }
+
+    @Test
+    @DisplayName("One sbom")
+    void oneSbomTest() throws IOException {
+
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        ResponseEntity<?> report =  ctrl.compare(0, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
+
+    }
+
+    @Test
+    @DisplayName("Index out of bounds test")
+    void indexOutOfBoundsTest() throws IOException {
+
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+
+        ResponseEntity<?> report =  ctrl.compare(4, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
+
+        report =  ctrl.compare(-1, arr);
+        assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
+    }
+
+    // todo tests that break the translators / return an INTERNAL_SERVER_ERROR
 
     /**
      * Controller to test
@@ -46,15 +105,10 @@ public class CompareFromAPITest {
     @Test
     @DisplayName("Compare SBOMs Test")
     public void compareTest() throws IOException {
-        sboms.add(new APIController.SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
-        sboms.add(new APIController.SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
-        sboms.add(new APIController.SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
-
-        APIController.SBOMFile[] arr = new APIController.SBOMFile[sboms.size()];
-
-        for(int i = 0; i < sboms.size(); i++){
-            arr[i] = sboms.get(i);
-        }
+        sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
+        sboms.add(new SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
+        sboms.add(new SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
+        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
 
         ResponseEntity<?> report =  ctrl.compare(0, arr);
         assertEquals(report.getStatusCode(), HttpStatus.OK);
