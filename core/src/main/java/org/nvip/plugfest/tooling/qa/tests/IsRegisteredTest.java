@@ -83,6 +83,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "conan" -> response = extractFromConan(p);
                         case "huggingface" -> response = extractFromHuggingFace(p);
                         case "cocoapods" -> response = extractFromCocoapods(p);
+                        case "cran" -> response = extractFromCran(p);
                         // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -421,5 +422,26 @@ public class IsRegisteredTest extends MetricTest{
         // get the response code from this url
         return huc.getResponseCode();
 
+    }
+
+    /**
+     * Extract data from Cran R based packages
+     * Source: <a href="https://cran.r-project.org/web/packages//">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromCran(PURL p) throws IOException{
+        // Query Cran R packages page
+        // package name is required, add the version if it is
+        // included in the purl
+        //TODO version does nothing, how to check for specific version?
+        URL url = new URL ("https://cran.r-project.org/web/packages/" +
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "?version=" + p.getVersion() : "") +
+                "/index.html");
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
     }
 }
