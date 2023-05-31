@@ -44,8 +44,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
 
     @ParameterizedTest
     @ValueSource(strings = { test_small_cdx, test_no_metadata_cdx })
-    public void translatorxml_small_file_test(String pathToSBOM) throws ParserConfigurationException, IOException,
-            ParseException {
+    public void translatorxml_small_file_test(String pathToSBOM) throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(sbom);
         Assertions.assertEquals(SBOM.Type.CYCLONE_DX, sbom.getOriginFormat());
@@ -55,7 +54,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
     }
 
     @Test
-    public void translatorxml_large_file_test() throws ParserConfigurationException, IOException, ParseException {
+    public void translatorxml_large_file_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(test_large_cdx.toString());
         assertNotNull(sbom);
         assertEquals(SBOM.Type.CYCLONE_DX, sbom.getOriginFormat());
@@ -65,7 +64,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
     }
 
     @Test
-    public void translatorxml_no_components_test() throws ParserConfigurationException, IOException, ParseException {
+    public void translatorxml_no_components_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(test_no_components_cdx.toString());
         assertNotNull(sbom);
         // Should be 1 component for head component
@@ -76,14 +75,14 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
     }
 
     @Test
-    public void translatorxml_v1_2_dependencies_test() throws ParserConfigurationException, IOException, ParseException {
+    public void translatorxml_v1_2_dependencies_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_SBOM_1_2_DEPENDENCIES.toString());
         assertNotNull(sbom);
         assertEquals(202, sbom.getAllComponents().size());
     }
 
     @Test
-    public void translatorxml_v1_2_dependencies_other_test() throws ParserConfigurationException, IOException, ParseException {
+    public void translatorxml_v1_2_dependencies_other_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_SBOM_1_4_DEPENDENCIES);
         assertNotNull(sbom);
         assertEquals(631, sbom.getAllComponents().size());

@@ -33,13 +33,18 @@ public class TranslatorCDXJSON extends TranslatorCore {
      * @return internal SBOM object
      */
     @Override
-    protected SBOM translateContents(String fileContents, String file_path) throws ParseException {
+    protected SBOM translateContents(String fileContents, String file_path) throws TranslatorException {
 
         // Initialize JSON Parser
         JsonParser parser = new JsonParser();
 
         // Use JSON Parser to parse cdx.json file and store into cyclonedx Bom Object
-        Bom json_sbom = parser.parse(fileContents.getBytes());
+        Bom json_sbom;
+        try {
+            json_sbom = parser.parse(fileContents.getBytes());
+        } catch (ParseException e) {
+            throw new TranslatorException(e.getMessage());
+        }
 
         // TODO these are essential fields, throw an actual error if any of these are null
         bom_data.put("format", json_sbom.getBomFormat());
@@ -100,8 +105,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     // Getting a NullPointerException on licenses is fine. It just means the component had none.
                 } catch (Exception e) {
                     // This may be an actual error
-                    Debug.log(Debug.LOG_TYPE.ERROR, "An error occurred while getting licenses:");
-                    Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+                    throw new TranslatorException("An error occurred while getting licenses: " + e.getMessage());
 //                    e.printStackTrace();
                 }
 
@@ -142,7 +146,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     );
         } catch (NullPointerException nullPointerException) {
             // If dependencies fail, default
-            Debug.log(Debug.LOG_TYPE.ERROR, "Could not find dependencies from CycloneDX Object. " +
+            Debug.log(Debug.LOG_TYPE.WARN, "Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies.put(
                     this.product.getUniqueID(),

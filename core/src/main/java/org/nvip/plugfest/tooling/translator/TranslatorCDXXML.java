@@ -36,14 +36,20 @@ public class TranslatorCDXXML extends TranslatorCore {
      * @throws ParserConfigurationException if the DocumentBuilder cannot be created
      */
     @Override
-    protected SBOM translateContents(String contents, String file_path) throws ParserConfigurationException {
+    protected SBOM translateContents(String contents, String file_path) throws TranslatorException {
         // Top level SBOM materials
         HashMap<String, String> header_materials = new HashMap<>();
 
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+        DocumentBuilder documentBuilder;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new TranslatorException(e.getMessage());
+        }
 
         // Get parsed XML SBOM file and normalize
         Document sbom_xml_file;
@@ -78,14 +84,13 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbomHead = sbom_xml_file.getElementsByTagName("bom").item(0).getAttributes();
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "Invalid format, 'bom' not found in: " + file_path);
-            return null;
+            throw new TranslatorException("Invalid format, 'bom' not found in: " + file_path);
         }
 
         try {
             sbomMeta = ((Element) (sbom_xml_file.getElementsByTagName("metadata")).item(0)).getElementsByTagName("*");
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "'metadata' not found in: " + file_path);
+            Debug.log(Debug.LOG_TYPE.WARN, "'metadata' not found in: " + file_path);
             sbomMeta = null;
         }
 
@@ -114,7 +119,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         }
 
         // Get important SBOM items from meta  (timestamp, tool info)
-        resolveMetadata(sbomMeta); // TODO if false is returned, warn that no metadata has been found
+        resolveMetadata(sbomMeta);
 
         bom_data.put("format", "cyclonedx");
         bom_data.put("specVersion", header_materials.get("xmlns"));
@@ -286,7 +291,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
-        try {
+        try { // TODO should these errors be thrown?
             dependencyBuilder(components, this.product,null);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
@@ -303,8 +308,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         return this.sbom;
     }
 
-    private boolean resolveMetadata(NodeList sbomMeta) {
-        if(sbomMeta == null) return false;
+    private void resolveMetadata(NodeList sbomMeta) {
+        if(sbomMeta == null) return;
 
         // Collected data
         String author = "";
@@ -364,7 +369,5 @@ public class TranslatorCDXXML extends TranslatorCore {
                 ? sbom_materials.get("author") : sbom_component.get("publisher"));
         product_data.put("version", sbom_component.get("version"));
         product_data.put("id", sbom_component.get("bom-ref"));
-
-        return true;
     }
 }

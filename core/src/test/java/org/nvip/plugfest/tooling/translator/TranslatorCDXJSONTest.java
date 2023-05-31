@@ -37,8 +37,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
 
     @ParameterizedTest
     @ValueSource(strings = { TEST_SMALL_CDX_JSON, TEST_SMALL_CDX_JSON_NOMETADATA })
-    public void build_SBOM_from_small_cdx_json_test(String pathToSBOM) throws IOException, ParseException,
-            ParserConfigurationException {
+    public void build_SBOM_from_small_cdx_json_test(String pathToSBOM) throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
@@ -47,7 +46,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
     }
 
     @Test
-    public void build_SBOM_from_medium_cdx_json_test() throws IOException, ParseException, ParserConfigurationException {
+    public void build_SBOM_from_medium_cdx_json_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(TEST_MEDIUM_CDX_JSON);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
@@ -56,7 +55,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
     }
 
     @Test
-    public void build_SBOM_from_another_small_syft_json_test() throws IOException, ParseException, ParserConfigurationException {
+    public void build_SBOM_from_another_small_syft_json_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(TEST_ANOTHER_SMALL_SYFT_CDX_JSON);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
