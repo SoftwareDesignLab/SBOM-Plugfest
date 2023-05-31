@@ -79,6 +79,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "hackage" -> response = extractFromHackage(p);
                         case "hex" -> response = extractFromHex(p);
                         case "conan" -> response = extractFromConan(p);
+                        case "huggingface" -> response = extractFromHuggingFace(p);
                         // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -338,6 +339,30 @@ public class IsRegisteredTest extends MetricTest{
         // included in the purl
         //TODO add qualifier info? Doesn't seem to affect link
         URL url = new URL ("https://conan.io/center/" +
+                p.getName().toLowerCase() +
+                (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from Hugging Face ML Models
+     * Source: <a href="https://huggingface.co/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromHuggingFace(PURL p) throws IOException {
+        // get namespace, if any
+        String namespace = String.join("/", p.getNamespace());
+
+        // Query HuggingFace ML Models page
+        // namespace is required if present
+        // package name is required, add the version if it is
+        // included in the purl
+        URL url = new URL("https://huggingface.co/" +
+                (!isEmptyOrNull(namespace) ? namespace : "") + "/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
