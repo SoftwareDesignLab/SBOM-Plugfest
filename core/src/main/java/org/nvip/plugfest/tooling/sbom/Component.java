@@ -94,6 +94,7 @@ public class Component {
         this.hashes = new HashSet<>();
         this.componentConflicts = new HashSet<>();
         this.unpackaged = false;
+        this.uuid = UUID.randomUUID();
     }
 
     /**
@@ -111,6 +112,7 @@ public class Component {
         this.cpes = new HashSet<>();
         this.purls = new HashSet<>();
         this.swids = new HashSet<>();
+        this.uuid = UUID.randomUUID();
     }
 
     /**
