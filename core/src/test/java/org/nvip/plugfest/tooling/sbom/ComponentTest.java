@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.sbom;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.HashSet;
 import java.util.List;

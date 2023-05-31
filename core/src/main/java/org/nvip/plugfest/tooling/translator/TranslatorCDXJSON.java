@@ -1,15 +1,15 @@
 package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.Metadata;
 import org.cyclonedx.parsers.JsonParser;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.translator.TranslatorCore;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,20 +41,28 @@ public class TranslatorCDXJSON extends TranslatorCore {
         // Use JSON Parser to parse cdx.json file and store into cyclonedx Bom Object
         Bom json_sbom = parser.parse(fileContents.getBytes());
 
+        // TODO these are essential fields, throw an actual error if any of these are null
         bom_data.put("format", json_sbom.getBomFormat());
         bom_data.put("specVersion", json_sbom.getSpecVersion());
         bom_data.put("sbomVersion", String.valueOf(json_sbom.getVersion()));
-        bom_data.put("author", json_sbom.getMetadata().getAuthors() == null ?
-                json_sbom.getMetadata().getTools().toString() : json_sbom.getMetadata().getAuthors().toString());
         bom_data.put("serialNumber", json_sbom.getSerialNumber());
-        bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
 
-        org.cyclonedx.model.Component top_component_meta = json_sbom.getMetadata().getComponent();
+        // Ensure metadata is not null before we begin querying it
+        Metadata metadata = json_sbom.getMetadata();
+        if(metadata != null) {
+            bom_data.put("author", json_sbom.getMetadata().getAuthors() == null ?
+                    json_sbom.getMetadata().getTools().toString() : json_sbom.getMetadata().getAuthors().toString());
+            bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
 
-        product_data.put("name", top_component_meta.getName());
-        product_data.put("publisher", top_component_meta.getPublisher());
-        product_data.put("version", top_component_meta.getVersion());
-        product_data.put("id", top_component_meta.getBomRef());
+            // Top component analysis (check if not null as well)
+            org.cyclonedx.model.Component topComponent = metadata.getComponent();
+            if(topComponent != null) {
+                product_data.put("name", topComponent.getName());
+                product_data.put("publisher", topComponent.getPublisher());
+                product_data.put("version", topComponent.getVersion());
+                product_data.put("id", topComponent.getBomRef());
+            }
+        }
 
         this.createSBOM();
 
@@ -92,8 +100,9 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     // Getting a NullPointerException on licenses is fine. It just means the component had none.
                 } catch (Exception e) {
                     // This may be an actual error
-                    System.err.println("An error occurred while getting licenses: \n");
-                    e.printStackTrace();
+                    Debug.log(Debug.LOG_TYPE.ERROR, "An error occurred while getting licenses:");
+                    Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+//                    e.printStackTrace();
                 }
 
                 // Set the component's unique ID
@@ -133,7 +142,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     );
         } catch (NullPointerException nullPointerException) {
             // If dependencies fail, default
-            System.err.println("Could not find dependencies from CycloneDX Object. " +
+            Debug.log(Debug.LOG_TYPE.ERROR, "Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies.put(
                     this.product.getUniqueID(),
@@ -147,7 +156,8 @@ public class TranslatorCDXJSON extends TranslatorCore {
             try {
                 this.dependencyBuilder(components, this.product, null);
             } catch (Exception e) {
-                System.out.println("Error building dependency tree. Dependency tree may be incomplete for: " + file_path);
+                Debug.log(Debug.LOG_TYPE.WARN, "Error building dependency tree. Dependency tree may be incomplete " +
+                        "for: " + file_path);
             }
         }
 
