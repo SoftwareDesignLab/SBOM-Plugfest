@@ -75,7 +75,7 @@ public class APIController {
 
         //encode and send report
         try {
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(dr, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
