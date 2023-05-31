@@ -79,24 +79,23 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
             if( cdx_component != null ) {
 
-                // Get CPE, PURL, and SWIDs
-                String cpe = cdx_component.getCpe() == null ? null : cdx_component.getCpe();
-                PURL purl = null;
-                try {
-                    purl = new PURL(cdx_component.getPurl());
-                } catch (Exception ignored){
-                }
-                String swid = cdx_component.getSwid() == null ? null : String.valueOf(cdx_component.getSwid());
-
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(
                         cdx_component.getName(),
                         cdx_component.getPublisher(),
-                        cdx_component.getVersion(),
-                        Collections.singleton(cpe),
-                        Collections.singleton(purl),
-                        Collections.singleton(swid)
-                );
+                        cdx_component.getVersion());
+
+                // Get CPE, PURL, and SWIDs
+                String cpe = cdx_component.getCpe();
+                if (cpe != null) new_component.setCpes(Collections.singleton(cpe));
+
+                String purl = cdx_component.getPurl();
+                try {
+                    if (purl != null) new_component.setPurls(Collections.singleton(new PURL(purl)));
+                } catch (Exception ignored) {}
+
+                String swid = String.valueOf(cdx_component.getSwid());
+                if (swid != null) new_component.setSwids(Collections.singleton(swid));
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
                 try {

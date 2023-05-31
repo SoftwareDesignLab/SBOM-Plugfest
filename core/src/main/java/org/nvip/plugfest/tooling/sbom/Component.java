@@ -108,6 +108,9 @@ public class Component {
         this.name = name;
         this.version = version;
         this.publisher = "Unknown";
+        this.cpes = new HashSet<>();
+        this.purls = new HashSet<>();
+        this.swids = new HashSet<>();
     }
 
     /**
