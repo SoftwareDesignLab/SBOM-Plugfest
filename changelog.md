@@ -4,6 +4,18 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.7.1] - 2023-05-31
+### Added
+- Tests in `TranslatorCDXJSONTest`, `TranslatorCDXXMLest`, & `TranslatorSPDXTest` to check for null UIDs in all 
+  translated components.
+
+### Changed
+- `TranslatorCDXJSONTest` now adds UIDs to each component only if they are not null.
+  - `Component` construction was changed to only use the constructor with `name`, `version`, and `publisher` attributes.
+
+### Fixed
+
+---
 ## [3.7.0] - 2023-05-31
 ### Added
 - Add `dev` launcher that launches just the front end.

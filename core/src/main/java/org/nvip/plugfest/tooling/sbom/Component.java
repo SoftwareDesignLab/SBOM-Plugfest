@@ -40,7 +40,7 @@ public class Component {
      * Unique identifiers of the component (ex: CDX uses purl and/or cpe)
      */
     private Set<String> cpes;
-    private Set<PURL> purls;
+    private Set<String> purls;
     private Set<String> swids;
 
     /**
@@ -94,6 +94,7 @@ public class Component {
         this.hashes = new HashSet<>();
         this.componentConflicts = new HashSet<>();
         this.unpackaged = false;
+        this.uuid = UUID.randomUUID();
     }
 
     /**
@@ -108,6 +109,10 @@ public class Component {
         this.name = name;
         this.version = version;
         this.publisher = "Unknown";
+        this.cpes = new HashSet<>();
+        this.purls = new HashSet<>();
+        this.swids = new HashSet<>();
+        this.uuid = UUID.randomUUID();
     }
 
     /**
@@ -145,7 +150,8 @@ public class Component {
      * @param PURL      Set of PURLs of the component
      * @param SWID      SWID of the component
      */
-    public Component(String name, String publisher, String version, Set<String> CPE, Set<PURL> PURL, Set<String> SWID) {
+    public Component(String name, String publisher, String version, Set<String> CPE, Set<String> PURL,
+                     Set<String> SWID) {
         this(name, publisher, version);
         this.cpes = CPE;
         this.purls = PURL;
@@ -176,7 +182,7 @@ public class Component {
 
     public UUID getUUID() { return uuid; }
 
-    protected void setUUID(UUID componentUUID) { this.uuid = componentUUID; }
+    public void setUUID(UUID componentUUID) { this.uuid = componentUUID; }
 
     public String getName() {
         return name;
@@ -253,15 +259,15 @@ public class Component {
         this.cpes.add(cpe);
     }
 
-    public Set<PURL> getPurls() {
+    public Set<String> getPurls() {
         return purls;
     }
 
-    public void setPurls(Set<PURL> purls) {
+    public void setPurls(Set<String> purls) {
         this.purls = purls;
     }
 
-    public void addPURL(PURL purl) {
+    public void addPURL(String purl) {
         this.purls.add(purl);
     }
 

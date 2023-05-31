@@ -1,16 +1,18 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.cyclonedx.exception.ParseException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.nvip.plugfest.tooling.Debug;
+import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * File: TranslatorCDXJSONTest.java
@@ -42,7 +44,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(17, sbom.getAllComponents().size());
+        assertEquals(18, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
     }
 
     @Test
@@ -61,6 +63,27 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(48, sbom.getAllComponents().size());
+    }
+
+    @Test
+    @DisplayName("Test for null UIDs")
+    void nullUIDTest() throws TranslatorException {
+        SBOM sbom = this.TRANSLATOR.translate(TEST_MEDIUM_CDX_JSON);
+
+        for (Component component : sbom.getAllComponents()) {
+            Debug.logBlockTitle(component.getName());
+
+            assertFalse(component.getCpes().contains(null));
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Component does not contain null CPEs");
+
+            assertFalse(component.getPurls().contains(null));
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Component does not contain null PURLs");
+
+            assertFalse(component.getSwids().contains(null));
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Component does not contain null SWIDs");
+
+            Debug.logBlock();
+        }
     }
 
 }

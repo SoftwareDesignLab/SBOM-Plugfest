@@ -2,9 +2,12 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.nvip.plugfest.tooling.Debug;
+import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.SBOM.Type;
 import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
@@ -109,5 +112,26 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals(null, test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());
+    }
+
+    @Test
+    @DisplayName("Test for null UIDs")
+    void nullUIDTest() throws TranslatorException {
+        SBOM sbom = this.TRANSLATOR.translate(TEST_SPDX_LARGE_v2_3_SBOM);
+
+        for (Component component : sbom.getAllComponents()) {
+            Debug.logBlockTitle(component.getName());
+
+            assertFalse(component.getCpes().contains(null));
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Component does not contain null CPEs");
+
+            assertFalse(component.getPurls().contains(null));
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Component does not contain null PURLs");
+
+            assertFalse(component.getSwids().contains(null));
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Component does not contain null SWIDs");
+
+            Debug.logBlock();
+        }
     }
 }
