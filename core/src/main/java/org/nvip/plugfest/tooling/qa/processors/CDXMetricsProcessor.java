@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
 import org.nvip.plugfest.tooling.qa.tests.HasBomRefTest;
+import org.nvip.plugfest.tooling.qa.tests.HasBomVersionTest;
 
 /**
  * file: CDXMetricsProcessor.java
@@ -16,5 +17,6 @@ public class CDXMetricsProcessor extends AttributeProcessor{
     public CDXMetricsProcessor(){
         this.attributeName = "CDXMetrics";
         this.metricTests.add(new HasBomRefTest());
+        this.metricTests.add(new HasBomVersionTest());
     }
 }
