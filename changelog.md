@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Tests in `TranslatorCDXJSONTest`, `TranslatorCDXXMLest`, & `TranslatorSPDXTest` to check for null UIDs in all 
   translated components.
+- `TranslatorSPDX` now has the capability to read in multiple external licenses. See 
+  [the specification](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/) for details.
 
 ### Changed
 - `TranslatorCDXJSONTest` now adds UIDs to each component only if they are not null.
