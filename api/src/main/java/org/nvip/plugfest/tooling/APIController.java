@@ -28,6 +28,7 @@ import java.util.Set;
  * @author Asa Horn
  * @author Justin Jantzi
  * @author Derek Garcia
+ * @author Ian Dunn
  */
 @RestController
 @RequestMapping("/plugfest")
