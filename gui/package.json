@@ -8,6 +8,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "frontend-web": "ng serve",
+    "frontend-app": "ng build --base-href ./ && electron .",
+    "backend": "../gradlew run",
+    "dev": "ng build --base-href ./ && electron .",
     "winBuildExe": "electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite"
   },
   "private": true,
