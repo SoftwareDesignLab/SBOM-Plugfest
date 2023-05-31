@@ -180,7 +180,7 @@ public class Component {
 
     public UUID getUUID() { return uuid; }
 
-    protected void setUUID(UUID componentUUID) { this.uuid = componentUUID; }
+    public void setUUID(UUID componentUUID) { this.uuid = componentUUID; }
 
     public String getName() {
         return name;

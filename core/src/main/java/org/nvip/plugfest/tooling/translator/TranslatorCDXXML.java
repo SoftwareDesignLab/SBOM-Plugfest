@@ -239,7 +239,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                     // Set licenses for component
                     component.setLicenses(component_licenses);
 
-                    this.loadComponent(component.getUUID().toString(), component);
+                    this.loadComponent(component);
 
                     this.product = product == null ? component : product;
 

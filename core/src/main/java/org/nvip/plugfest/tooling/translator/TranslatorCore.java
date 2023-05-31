@@ -213,9 +213,11 @@ public abstract class TranslatorCore {
 
     }
 
-    protected void loadComponent(String key, Component component) {
-        components.put(key, component);
-        remainder.add(key);
+    protected void loadComponent(Component component) {
+        UUID componentUUID = UUID.randomUUID();
+
+        components.put(componentUUID.toString(), component);
+        remainder.add(componentUUID.toString());
     }
 
     /**

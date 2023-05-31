@@ -310,7 +310,7 @@ public class TranslatorSPDX extends TranslatorCore {
                 component.setLicenses(licenses);
 
                 // Add packaged component to components list
-                this.loadComponent(component.getUUID().toString(), component);
+                this.loadComponent(component);
 
                 // Add packaged component to packages list as well
                 packages.add(component.getUniqueID());
