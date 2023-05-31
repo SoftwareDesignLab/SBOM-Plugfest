@@ -6,8 +6,10 @@ import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -80,6 +82,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "hex" -> response = extractFromHex(p);
                         case "conan" -> response = extractFromConan(p);
                         case "huggingface" -> response = extractFromHuggingFace(p);
+                        case "cocoapods" -> response = extractFromCocoapods(p);
                         // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
@@ -114,6 +117,13 @@ public class IsRegisteredTest extends MetricTest{
                                         "package manager: " + packageManager);
 
                     }
+                    r.addContext(c, "PURL Package Validation");
+                    purlResults.add(r);
+                }
+                // some tests will throw a 0 if a different error occurs
+                else{
+                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                            "PURL had an error");
                     r.addContext(c, "PURL Package Validation");
                     purlResults.add(r);
                 }
@@ -368,5 +378,48 @@ public class IsRegisteredTest extends MetricTest{
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
         return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from CocoaPods based packages
+     * Source: <a href="https://cdn.jsdelivr.net/cocoa/Specs/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromCocoapods(PURL p) throws IOException{
+        String componentName = p.getName();
+        String firstThreeString;
+        // try to convert the component's name into an SHA using md5
+        // the first three characters are needed for the url searching
+        try{
+            // convert component name into a HexaDecimal form string
+            // it is required to link url (first three characters)
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(componentName.getBytes());
+            BigInteger bigInt = new BigInteger(1,digest);
+            // convert the bytes to a string (hexadecimal form)
+            String hashtext = bigInt.toString(16);
+            // split up the characters and concat the first three
+            String[] hashTextSplit = hashtext.split("");
+            firstThreeString = hashTextSplit[0] + "/" + hashTextSplit[1] +
+                    "/" + hashTextSplit[2] + "/";
+        }catch(NoSuchAlgorithmException e){
+            // failed to convert component name, return 0 to end test
+            return 0;
+        }
+        // Query cocoapods package page
+        // first three character of the component's name as an SHA using
+        // md5 required
+        // package name and version are required
+        URL url = new URL("https://cdn.jsdelivr.net/cocoa/Specs/" +
+                firstThreeString +
+                p.getName() + "/" +
+                p.getVersion() + "/" +
+                p.getName() + ".podspec.json") ;
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+
     }
 }
