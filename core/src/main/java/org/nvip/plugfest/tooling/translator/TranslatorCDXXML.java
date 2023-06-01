@@ -326,8 +326,8 @@ public class TranslatorCDXXML extends TranslatorCore {
                         toolString.append("Version: ").append(component_elements.item(j).getTextContent()).append("]");
                     }
                 }
-                if(!toolString.toString().contains("[Application tool - "))
-                    toolString = new StringBuilder("[").append(toolString);
+                if(!toolString.toString().contains("["))
+                    toolString = new StringBuilder("[Application tool - ").append(toolString);
                 if(!toolString.toString().contains("["))
                     toolString.append("]");
                 sbom.addMetadata(toolString.toString());
