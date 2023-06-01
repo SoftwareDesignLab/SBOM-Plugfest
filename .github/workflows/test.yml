@@ -1,4 +1,4 @@
-name: Build and Test SVIP
+name: Build and Test Plugfest
 on: 
   push:
       branches:  

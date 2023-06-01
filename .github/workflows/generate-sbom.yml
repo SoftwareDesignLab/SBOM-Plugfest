@@ -30,10 +30,10 @@ jobs:
         uses: anchore/sbom-action@v0.14.2
         with:
           format: spdx
-          artifact-name: svip-sbom-${{ env.SBOM_TYPE }}.spdx
+          artifact-name: plugfest-sbom-${{ env.SBOM_TYPE }}.spdx
       
       - name: cyclonedx-sbom
         uses: anchore/sbom-action@v0.14.2
         with:
           format: cyclonedx-json
-          artifact-name: svip-sbom-cdx-${{ env.SBOM_TYPE }}.json
+          artifact-name: plugfest-sbom-cdx-${{ env.SBOM_TYPE }}.json

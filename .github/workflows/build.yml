@@ -1,4 +1,4 @@
-name: Build SVIP
+name: Build Plugfest
 on: 
   push:
     # Exclude prod/dev branches since they are built and tested
