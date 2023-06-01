@@ -56,4 +56,8 @@ export class QualityReport {
   getResultsbyType(type: string) {
     return this.results.filter((result)=> result.type === type);
   }
+
+  getResultByGrade(num: -1 | 1 | 0) {
+    return this.results.filter(result => result.pass === num);
+  }
 }
