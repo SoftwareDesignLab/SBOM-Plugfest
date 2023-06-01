@@ -67,6 +67,7 @@ public class TranslatorSPDX extends TranslatorCore {
 
     //#endregion
 
+    //#region Abstract Method Overrides
 
     /**
      * Coverts SPDX SBOMs into internal SBOM objects by its contents
@@ -196,6 +197,10 @@ public class TranslatorSPDX extends TranslatorCore {
         return sbom;
     }
 
+    //#endregion
+
+    //#region Helper Methods
+
     /**
      * Private helper method to get all tag-value pairs categorized under the specified tag (ex. ##### Unpackaged
      * Files). The tags will be located anywhere in the file; the order of tags does not impact translation of the SBOM.
@@ -224,6 +229,12 @@ public class TranslatorSPDX extends TranslatorCore {
         return tagContents;
     }
 
+    /**
+     * Private helper method to process the header/metadata of an SPDX document and put all relevant data into the
+     * {@code bom_data} map in {@code TranslatorCore}.
+     *
+     * @param header The header data of the SPDX document.
+     */
     private void parseHeader(String header) {
         // Process header TODO throw error if required fields are not found. Create enum with all tags?
         Matcher m = TAG_VALUE_PATTERN.matcher(header);
@@ -242,6 +253,13 @@ public class TranslatorSPDX extends TranslatorCore {
         }
     }
 
+    /**
+     * Private helper method to process an external license in an SPDX document and append all relevant data into
+     * the {@code externalLicenses} map with each entry having an ID (key) and name (value).
+     *
+     * @param extractedLicenseBlock An extracted licensing information "block" in the document.
+     * @param externalLicenses The map of external licenses to append to.
+     */
     private void parseExternalLicense(String extractedLicenseBlock, Map<String, String> externalLicenses) {
         String licenseId = null;
         String licenseName = null;
@@ -258,12 +276,17 @@ public class TranslatorSPDX extends TranslatorCore {
         if (licenseId != null && licenseName != null) externalLicenses.put(licenseId, licenseName);
     }
 
+    /**
+     * Private helper method to process an unpackaged file in an SPDX document and use its data to build a
+     * {@code Component} representation.
+     *
+     * @param fileBlock An unpackaged file "block" in the document.
+     * @return A {@code Component} with the data of the file "block".
+     */
     private Component buildFile(String fileBlock) {
         Matcher m = TAG_VALUE_PATTERN.matcher(fileBlock);
         HashMap<String, String> file_materials = new HashMap<>();
-        while(m.find()) {
-            file_materials.put(m.group(1), m.group(2));
-        }
+        while(m.find()) file_materials.put(m.group(1), m.group(2));
 
         // Create new component from materials
         Component unpackaged_component = new Component(
@@ -277,6 +300,13 @@ public class TranslatorSPDX extends TranslatorCore {
         return unpackaged_component;
     }
 
+    /**
+     * Private helper method to process a package in an SPDX document and use its data to build a {@code Component}
+     * representation.
+     *
+     * @param packageBlock A package "block" in the document.
+     * @return A {@code Component} with the data of the package "block".
+     */
     private Component buildComponent(String packageBlock, Map<String, String> externalLicenses) {
         Map<String, String> componentMaterials = new HashMap<>();
         Set<String> cpes = new HashSet<>();
@@ -295,24 +325,19 @@ public class TranslatorSPDX extends TranslatorCore {
             Matcher externalRef = EXTERNAL_REF_PATTERN.matcher(m.group());
             if (!externalRef.find()) continue;
 
-            if (externalRef.group(1).equalsIgnoreCase("security")) {
-                if (externalRef.group(2).equalsIgnoreCase("cpe23Type")) cpes.add(externalRef.group(3));
-                if (externalRef.group(2).equalsIgnoreCase("swid")) swids.add(externalRef.group(3));
-            } else if (externalRef.group(2).equalsIgnoreCase("purl")) {
-                purls.add(externalRef.group(3));
+            switch(externalRef.group(2).toLowerCase()) {
+                case "cpe23type" -> cpes.add(externalRef.group(3));
+                case "purl" -> purls.add(externalRef.group(3));
+                case "swid" -> swids.add(externalRef.group(3));
             }
         }
 
         // Cleanup package originator
-        String supplier = null;
+        String supplier = "Unknown"; // Default value of unknown
         if (componentMaterials.get("PackageSupplier") != null) {
             supplier = componentMaterials.get("PackageSupplier");
         } else if (componentMaterials.get("PackageOriginator") != null) {
             supplier = componentMaterials.get("PackageOriginator");
-        }
-
-        if (supplier != null) {
-            supplier = supplier.contains("Person: ") && supplier.contains("<") ? supplier.substring(8) : supplier;
         }
 
         // Create new component from required information
@@ -331,22 +356,19 @@ public class TranslatorSPDX extends TranslatorCore {
         HashSet<String> licenses = new HashSet<>();
 
         // Get licenses from component materials and split them by 'AND' tag, store them into HashSet and add them to component object
-        if (componentMaterials.get("PackageLicenseConcluded") != null) {
+        if (componentMaterials.get("PackageLicenseConcluded") != null)
             licenses.addAll(Arrays.asList(componentMaterials.get("PackageLicenseConcluded").split(" AND ")));
-        }
-        if (componentMaterials.get("PackageLicenseDeclared") != null) {
+        if (componentMaterials.get("PackageLicenseDeclared") != null)
             licenses.addAll(Arrays.asList(componentMaterials.get("PackageLicenseDeclared").split(" AND ")));
-        }
 
-        // Remove any NONE/NOASSERTION licenses
-        licenses.remove("NONE");
-        licenses.remove("NOASSERTION");
-
-        // Replace any extracted license information
-        licenses = (HashSet<String>) licenses.stream().map(l -> {
-            if (l.contains("LicenseRef") && externalLicenses.get(l) != null) return externalLicenses.get(l);
-            return l;
-        }).collect(Collectors.toSet());
+        // Clean up licenses
+        licenses = // Remove NONE/NOASSERTION with .filter()
+                (HashSet<String>) licenses.stream().filter(l -> !l.equals("NONE") && !l.equals("NOASSERTION"))
+                        .map(l -> { // Replace external licenses with .map()
+                            if (l.contains("LicenseRef") && externalLicenses.get(l) != null)
+                                return externalLicenses.get(l);
+                            return l;
+                        }).collect(Collectors.toSet());
 
         component.setLicenses(licenses);
 
