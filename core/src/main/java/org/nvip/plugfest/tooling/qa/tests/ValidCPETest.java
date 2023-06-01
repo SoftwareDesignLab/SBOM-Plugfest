@@ -25,20 +25,23 @@ public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest 
     @Override
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
-        Set<String> purlStrings = new HashSet<>();
+        Set<String> cpes = new HashSet<>();
 
         for (Component c : sbom.getAllComponents()) {
             for (String cpe : c.getCpes()) {
-                purlStrings.add(cpe);
+                cpes.add(cpe);
             }
         }
 
-        for (String cpe : purlStrings) {
-            if (!this.cpe23Regex.matcher(cpe.strip()).matches()) {
-                results.add(new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE"));
+        for (String cpe : cpes) {
+            Result r;
+            if (this.cpe23Regex.matcher(cpe.strip()).matches()) {
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
             } else {
-                results.add(new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE"));
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE");
             }
+            r.addContext(sbom, "cpe");
+            results.add(r);
         }
 
         // return findings

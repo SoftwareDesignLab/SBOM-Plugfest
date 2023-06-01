@@ -18,7 +18,8 @@ public class CompletenessProcessor extends AttributeProcessor{
        this.metricTests.add(new EmptyOrNullTest());
        this.metricTests.add(new ValidPurlTest());
        this.metricTests.add(new ValidCPETest());
-       this.metricTests.add(new ValidSWIDTest());
-       this.metricTests.add(new HasRelationshipsTest());
+       //TODO
+       //this.metricTests.add(new ValidSWIDTest());
+       //this.metricTests.add(new HasRelationshipsTest());
    }
 }
