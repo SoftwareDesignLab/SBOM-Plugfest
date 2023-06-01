@@ -95,21 +95,15 @@ public abstract class TranslatorCore {
         // If there is no top component (product) already, try to create it
         // Otherwise, make sure it's in the SBOM
         if (product == null) {
-            try {
-                product = new Component(
-                        product_data.get("name"),
-                        product_data.get("publisher"),
-                        product_data.get("version"),
-                        product_data.get("id")
-                );
-                sbom.addComponent(null, product);
-            } catch (Exception e) {
-                throw new TranslatorException("Error: Could not create top component from SBOM metadata. File: " + this.FILE_EXTN);
-            }
-        } else {
-            sbom.addComponent(null, product);
+            product = new Component(
+                    product_data.get("name"),
+                    product_data.get("publisher"),
+                    product_data.get("version"),
+                    product_data.get("id")
+            );
         }
 
+        sbom.addComponent(null, product);
     }
 
     /**
