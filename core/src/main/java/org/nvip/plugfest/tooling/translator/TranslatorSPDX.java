@@ -107,51 +107,9 @@ public class TranslatorSPDX extends TranslatorCore {
         bom_data.put("format", "spdx");
 
         /*
-            Extracted Licensing Info
-         */
-
-        String extractedLicenseContent = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
-        List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n\n"));
-
-        for (String extractedLicenseBlock : extractedLicenses) {
-            this.parseExternalLicense(extractedLicenseBlock, externalLicenses);
-        }
-
-        /*
-            Files
-         */
-
-        String unpackagedFilesContents = getTagContents(fileContents, UNPACKAGED_TAG);
-        List<String> files = List.of(unpackagedFilesContents.split("\n\n")); // Split over newline
-
-        for(String fileBlock : files) {
-            Component file = this.buildFile(fileBlock);
-
-            // Add unpackaged file to components
-            this.components.put(file.getUniqueID(), file);
-        }
-
-        /*
-            Packages
-         */
-
-        String packageContents = getTagContents(fileContents, PACKAGE_TAG);
-        List<String> packageList = Stream.of(packageContents.split("\n\n")).filter(pkg -> !pkg.contains(TAG)).toList();
-
-        for (String pkg : packageList) {
-            Component component = buildComponent(pkg, externalLicenses);
-
-            // Add packaged component to components list
-            this.loadComponent(component);
-
-            // Add packaged component to packages list as well
-            packages.add(component.getUniqueID());
-        }
-
-        /*
             Relationships
          */
-
+        List<String> lines = new ArrayList<>(List.of(fileContents.split("\n")));
         // Find all relationships in the file contents regardless of where they are
         Matcher relationship = RELATIONSHIP_PATTERN.matcher(fileContents);
         while(relationship.find()) {
@@ -166,6 +124,53 @@ public class TranslatorSPDX extends TranslatorCore {
                 );
                 case "DESCRIBES" -> product_id = relationship.group(3);
             }
+            lines.remove(relationship.group()); // Remove parsed relationship from contents
+        }
+        fileContents = String.join("\n", lines); // Remove all relationships from fileContents
+
+        /*
+            Extracted Licensing Info
+         */
+
+        String extractedLicenseContent = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
+        List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n\n"));
+
+        for (String extractedLicenseBlock : extractedLicenses) {
+            if (extractedLicenseBlock.equals("")) continue;
+            this.parseExternalLicense(extractedLicenseBlock, externalLicenses);
+        }
+
+        /*
+            Files
+         */
+
+        String unpackagedFilesContents = getTagContents(fileContents, UNPACKAGED_TAG);
+        List<String> files = List.of(unpackagedFilesContents.split("\n\n")); // Split over newline
+
+        for(String fileBlock : files) {
+            if (fileBlock.equals("")) continue;
+            Component file = this.buildFile(fileBlock);
+
+            // Add unpackaged file to components
+            this.components.put(file.getUniqueID(), file);
+        }
+
+        /*
+            Packages
+         */
+
+        String packageContents = getTagContents(fileContents, PACKAGE_TAG);
+        List<String> packageList = Stream.of(packageContents.split("\n\n")).filter(pkg -> !pkg.contains(TAG)).toList();
+
+        for (String pkg : packageList) {
+            if (pkg.equals("")) continue;
+            Component component = buildComponent(pkg, externalLicenses);
+
+            // Add packaged component to components list
+            this.loadComponent(component);
+
+            // Add packaged component to packages list as well
+            packages.add(component.getUniqueID());
         }
 
         // Build the top component of the SBOM (containing metadata)
@@ -219,7 +224,9 @@ public class TranslatorSPDX extends TranslatorCore {
             // Get boundaries of this tag
             firstIndex = fileContents.indexOf(tag);
             lastIndex = fileContents.indexOf(TAG, firstIndex + 1);
-            if (lastIndex == -1) break; // If another tag is not found, break the loop.
+
+            // If another tag is not found, last index goes to end of file
+            if (lastIndex == -1) lastIndex = fileContents.length();
 
             // Use this data to update tagContents with the found tag
             tagContents += fileContents.substring(firstIndex, lastIndex); // Remove newline
