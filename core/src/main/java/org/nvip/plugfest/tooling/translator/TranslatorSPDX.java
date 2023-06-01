@@ -14,6 +14,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * file: TranslatorSPDX.java
@@ -60,7 +61,10 @@ public class TranslatorSPDX extends TranslatorCore {
     private static final String EXTERNAL_REFERENCE_TAG = "ExternalRef";
 
     private static final Pattern TAG_VALUE_PATTERN = Pattern.compile("(\\S+): (.+)");
-    private static final Pattern EXTERNAL_REF_PATTERN = Pattern.compile("ExternalRef: (\\S*) (\\S*) (\\S*)");
+    private static final Pattern EXTERNAL_REF_PATTERN = Pattern.compile(EXTERNAL_REFERENCE_TAG + ": (\\S*) (\\S*) " +
+            "(\\S*)");
+    private static final Pattern RELATIONSHIP_PATTERN = Pattern.compile(RELATIONSHIP_KEY + ": (\\S*) (\\S*) " +
+            "(\\S*)");
 
     public TranslatorSPDX() {
         super("spdx");
@@ -180,7 +184,7 @@ public class TranslatorSPDX extends TranslatorCore {
             Packages
          */
         String packageContents = getTagContents(fileContents, PACKAGE_TAG);
-        List<String> packageList = List.of(packageContents.split("\n\n"));
+        List<String> packageList = Stream.of(packageContents.split("\n\n")).filter(pkg -> !pkg.contains(TAG)).toList();
 
         for (String pkg : packageList) {
             // If new package/component is found
@@ -262,38 +266,32 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Relationships
          */
-        // Regex to get every Relationship: tag in file
-//                // Split and get and value of the line
-//                String relationship = current_line.split(RELATIONSHIP_KEY, 2)[1];
-//
-//                // Split dependency relationship and store into relationships map depends on relationship type
-//                if (current_line.contains("DEPENDS_ON")) {
-//
-//                    addDependency(
-//                            relationship.split(" DEPENDS_ON ")[0],
-//                            relationship.split(" DEPENDS_ON ")[1]
-//                    );
-//
-//                } else if (current_line.contains("DEPENDENCY_OF")) {
-//
-//                    addDependency(
-//                            relationship.split(" DEPENDENCY_OF ")[1],
-//                            relationship.split(" DEPENDENCY_OF ")[0]
-//                    );
-//
-//                }  else if (current_line.contains("DESCRIBES")) {
-//
-//                    product_id = relationship.split(" DESCRIBES ")[1];
-//
-//        if (product_id.contains(DOCUMENT_REFERENCE_TAG)) {
-//            product_data.put("name", bom_data.get("DocumentName"));
-//            product_data.put("publisher", bom_data.get("N/A"));
-//            product_data.put("version", bom_data.get("N/A"));
-//            product_data.put("id", bom_data.get("id"));
-//            defaultTopComponent(product_data.get("id"), packages);
-//        } else {
-//            product = components.get(product_id);
-//        }
+        // Find all relationships in the file regardless of content
+
+        Matcher relationship = RELATIONSHIP_PATTERN.matcher(fileContents);
+        while(relationship.find()) {
+            switch(relationship.group(2)) {
+                case "DEPENDS_ON" -> addDependency( // TODO verify
+                        relationship.group(1),
+                        relationship.group(3)
+                );
+                case "DEPENDENCY_OF" -> addDependency( // TODO verify
+                        relationship.group(3),
+                        relationship.group(1)
+                );
+                case "DESCRIBES" -> product_id = relationship.group(3);
+            }
+        }
+
+        if (product_id.contains(DOCUMENT_REFERENCE_TAG)) {
+            product_data.put("name", bom_data.get("DocumentName"));
+            product_data.put("publisher", bom_data.get("N/A"));
+            product_data.put("version", bom_data.get("N/A"));
+            product_data.put("id", bom_data.get("id"));
+            defaultTopComponent(product_data.get("id"), packages);
+        } else {
+            product = components.get(product_id);
+        }
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
