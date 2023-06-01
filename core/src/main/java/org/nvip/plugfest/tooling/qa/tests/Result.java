@@ -42,10 +42,10 @@ public class Result {
      * Enums to update the additional info section
      */
     public enum Context{
-        TYPE,
-        FIELD_NAME,
-        STRING_VALUE,
-        IDENTIFIER
+        TYPE,           // Type of test (component, sbom, etc)
+        FIELD_NAME,     // Name of value being checked EX: "publisher"
+        STRING_VALUE,   // String of value being checked EX: when checking publisher string_value="google"
+        IDENTIFIER      // Component name
     }
 
     @JsonIgnore
