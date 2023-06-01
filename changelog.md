@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New QA Refactor
   - Unified Metric testing process
+    - `UniquenessProcessor` - Collection of Tests for checking a component's UIDs (Hashes, PURLs, etc)
+      - `HasHashDataTest` - Test if a component has any hash values and the number of hashes if present
+      `ValidTestDataTest` - Test hashes if they match a valid hash schema
+      - `AccuratePURLTest` - Test a component's PURL(s) if its data matches the component's stored data
     - `RegisteredProcessor` - Collection of Tests for checking if components are registered in their package manager
       - `IsRegisteredTest` - Using a component's purl(s), check if package is registered with their package manager
 ### Changed
