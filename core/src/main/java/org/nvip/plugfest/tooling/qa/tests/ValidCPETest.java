@@ -34,6 +34,8 @@ public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest 
         }
 
         for (String cpe : cpes) {
+            if (cpe == null)
+                continue;
             Result r;
             if (this.cpe23Regex.matcher(cpe.strip()).matches()) {
                 r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
