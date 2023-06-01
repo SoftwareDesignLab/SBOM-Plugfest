@@ -1,10 +1,15 @@
 :root {
     --accent: #58A5FF;
-    --green: #58ff82;
-    --red: #ff5858;
     --primary: #333333;
     --secondary: #1B1E21;
     --bg: #191d20;
+    --red: #ff5858;
+    --orange: #ffb158;
+    --yellow:#ffec588;
+    --green: #58ff82;
+    --teal: #58ffe6;
+    --blue: #5863ff;
+    --purple: #e358ff;
     --gray: gray;
 }
 
