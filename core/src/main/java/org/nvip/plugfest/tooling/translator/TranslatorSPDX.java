@@ -57,8 +57,10 @@ public class TranslatorSPDX extends TranslatorCore {
 
     // Used as an identifier for main SBOM information. Sometimes used as reference in relationships to show header contains main component.
     private static final String DOCUMENT_REFERENCE_TAG = "SPDXRef-DOCUMENT";
+    private static final String EXTERNAL_REFERENCE_TAG = "ExternalRef";
 
     private static final Pattern TAG_VALUE_PATTERN = Pattern.compile("(\\S+): (.+)");
+    private static final Pattern EXTERNAL_REF_PATTERN = Pattern.compile("ExternalRef: (\\S*) (\\S*) (\\S*)");
 
     public TranslatorSPDX() {
         super("spdx");
@@ -98,6 +100,7 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Top level SBOM data (metadata, etc.)
         */
+        fileContents = fileContents.replaceAll("\r", ""); // Remove carriage return characters if windows
         int firstIndex = fileContents.indexOf(TAG); // Find first index of next "section"
         String header;
 
@@ -128,8 +131,8 @@ public class TranslatorSPDX extends TranslatorCore {
             Extracted Licensing Info
          */
         String extractedLicenseContent = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
-        List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n"));
-//
+        List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n\n"));
+
         for (String extractedLicenseBlock : extractedLicenses) {
             String licenseId = null;
             String licenseName = null;
@@ -151,7 +154,7 @@ public class TranslatorSPDX extends TranslatorCore {
          */
 
         String unpackagedFilesContents = getTagContents(fileContents, UNPACKAGED_TAG);
-        List<String> files = List.of(unpackagedFilesContents.split("\n")); // Split over newline
+        List<String> files = List.of(unpackagedFilesContents.split("\n\n")); // Split over newline
 
         for(String fileBlock : files) {
             m = TAG_VALUE_PATTERN.matcher(fileBlock);
@@ -176,114 +179,90 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Packages
          */
-        String packageContents = getTagContents(fileContents, PACKAGE_TAG);//        /**
-//         * Parse through components, add them to components HashSet
-//         */
-//        // Loop through every Package until Relationships or end of file
-//        while ( current_line != null ) {
-//
-//            // If new package/component is found
-//            HashMap<String, String> component_materials = null;
-//            Set<String> cpes = null;
-//            Set<String> purls = null;
-//
-//            if (current_line.contains(PACKAGE_TAG)) {
-//
-//                // Temporary component collection of materials
-//                component_materials = new HashMap<>();
-//                cpes = new HashSet<>();
-//                purls = new HashSet<>();
-//                Set<String> swids = new HashSet<>();
-//
-//                // While in the same package/component
-//                while ((current_line = tryReadingLine(br, fileName)) != null &&
-//                        !current_line.contains(TAG) &&
-//                        !current_line.contains(RELATIONSHIP_TAG) &&
-//                        !current_line.contains(RELATIONSHIP_KEY)) {
-//
-//                    // Special case for CPEs, PURLs, and SWIDs
-//                    if (current_line.contains("ExternalRef: SECURITY")) {
-//                        // We have a CPE
-//                        String[] lineSplit = current_line.split(" ");
-//                        // Last element is the CPE
-//                        String cpe = lineSplit[lineSplit.length - 1];
-//
-//                        cpes.add(cpe);
-//
-//                        // Don't continue parsing after we add the special cases
-//                        continue;
-//                    } else if (current_line.contains("ExternalRef: PACKAGE-MANAGER purl")) {
-//                        // We have a PURL
-//                        String[] lineSplit = current_line.split(" ");
-//                        // Last element is the PURL
-//                        String purl = lineSplit[lineSplit.length - 1];
-//                        purls.add(purl);
-//
-//                        // Don't continue parsing after we add the special cases
-//                        continue;
-//                    }
-//                    // TODO find examples of how SPDX represents SWID and implement that here
-//
-//                    // If line isn't blank split it on separator and store into component collect as key:value
-//                    if (current_line.contains(": ")) {
-//                        component_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
-//                    }
-//                }
-//
-//                // Cleanup package originator
-//                String supplier = null;
-//                if (component_materials.get("PackageSupplier") != null) {
-//                    supplier = component_materials.get("PackageSupplier");
-//                } else if (component_materials.get("PackageOriginator") != null) {
-//                    supplier = component_materials.get("PackageOriginator");
-//                }
-//
-//                if (supplier != null) {
-//                    supplier = supplier.contains("Person: ") && supplier.contains("<") ? supplier.substring(8) : supplier;
-//                }
-//
-//                // Create new component from required information
-//                Component component = new Component(
-//                        component_materials.get("PackageName"),
-//                        supplier,
-//                        component_materials.get("PackageVersion"),
-//                        component_materials.get("SPDXID"));
-//
-//                // Append CPEs and Purls
-//                component.setCpes(cpes);
-//                component.setPurls(purls);
-//
-//                // License materials map
-//                HashSet<String> licenses = new HashSet<>();
-//
-//                // Get licenses from component materials and split them by 'AND' tag, store them into HashSet and add them to component object
-//                if (component_materials.get("PackageLicenseConcluded") != null) {
-//                    licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseConcluded").split(" AND ")));
-//                }
-//                if (component_materials.get("PackageLicenseDeclared") != null) {
-//                    licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseDeclared").split(" AND ")));
-//                }
-//
-//                // Remove any NONE/NOASSERTION licenses
-//                licenses.remove("NONE");
-//                licenses.remove("NOASSERTION");
-//
-//                // Replace any extracted license information
-//                licenses = (HashSet<String>) licenses.stream().map(l -> {
-//                    if (l.contains("LicenseRef") && externalLicenses.get(l) != null) return externalLicenses.get(l);
-//                    return l;
-//                }).collect(Collectors.toSet());
-//
-//                component.setLicenses(licenses);
-//
-//                // Add packaged component to components list
-//                this.loadComponent(component);
-//
-//                // Add packaged component to packages list as well
-//                packages.add(component.getUniqueID());
-//
-//            } else if (current_line.contains(RELATIONSHIP_KEY)) { // If relationship key is found
-//
+        String packageContents = getTagContents(fileContents, PACKAGE_TAG);
+        List<String> packageList = List.of(packageContents.split("\n\n"));
+
+        for (String pkg : packageList) {
+            // If new package/component is found
+            HashMap<String, String> component_materials = new HashMap<>();
+            Set<String> cpes = new HashSet<>();
+            Set<String> purls = new HashSet<>();
+            Set<String> swids = new HashSet<>();
+
+            m = TAG_VALUE_PATTERN.matcher(pkg);
+
+            while (m.find()) {
+                // Special case for external references
+                if (m.group(1).equals(EXTERNAL_REFERENCE_TAG)) {
+                    Matcher externalRef = EXTERNAL_REF_PATTERN.matcher(m.group(0));
+                    if (!externalRef.find()) continue; // TODO invalid formatting?
+                    if (externalRef.group(1).equalsIgnoreCase("security")) cpes.add(externalRef.group(3));
+                    else if (externalRef.group(2).equalsIgnoreCase("purl")) purls.add(externalRef.group(3));
+                    // TODO find examples of how SPDX represents SWID and implement that here
+
+                    continue; // Now that the external ref line has been parsed, continue
+                }
+
+                component_materials.put(m.group(1), m.group(2));
+            }
+
+            // Cleanup package originator
+            String supplier = null;
+            if (component_materials.get("PackageSupplier") != null) {
+                supplier = component_materials.get("PackageSupplier");
+            } else if (component_materials.get("PackageOriginator") != null) {
+                supplier = component_materials.get("PackageOriginator");
+            }
+
+            if (supplier != null) {
+                supplier = supplier.contains("Person: ") && supplier.contains("<") ? supplier.substring(8) : supplier;
+            }
+
+            // Create new component from required information
+            Component component = new Component(
+                    component_materials.get("PackageName"),
+                    supplier,
+                    component_materials.get("PackageVersion"),
+                    component_materials.get("SPDXID"));
+
+            // Append CPEs and Purls
+            component.setCpes(cpes);
+            component.setPurls(purls);
+
+            // License materials map
+            HashSet<String> licenses = new HashSet<>();
+
+            // Get licenses from component materials and split them by 'AND' tag, store them into HashSet and add them to component object
+            if (component_materials.get("PackageLicenseConcluded") != null) {
+                licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseConcluded").split(" AND ")));
+            }
+            if (component_materials.get("PackageLicenseDeclared") != null) {
+                licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseDeclared").split(" AND ")));
+            }
+
+            // Remove any NONE/NOASSERTION licenses
+            licenses.remove("NONE");
+            licenses.remove("NOASSERTION");
+
+            // Replace any extracted license information
+            licenses = (HashSet<String>) licenses.stream().map(l -> {
+                if (l.contains("LicenseRef") && externalLicenses.get(l) != null) return externalLicenses.get(l);
+                return l;
+            }).collect(Collectors.toSet());
+
+            component.setLicenses(licenses);
+
+            // Add packaged component to components list
+            this.loadComponent(component);
+
+            // Add packaged component to packages list as well
+            packages.add(component.getUniqueID());
+        }
+
+        /*
+            Relationships
+         */
+        // Regex to get every Relationship: tag in file
 //                // Split and get and value of the line
 //                String relationship = current_line.split(RELATIONSHIP_KEY, 2)[1];
 //
@@ -306,21 +285,6 @@ public class TranslatorSPDX extends TranslatorCore {
 //
 //                    product_id = relationship.split(" DESCRIBES ")[1];
 //
-//                }
-//
-//                current_line = tryReadingLine(br, fileName);
-//
-//            } else {
-//                // if no package/component is found, get next line
-//                current_line = tryReadingLine(br, fileName);
-//            }
-//        }
-
-        /*
-            Relationships
-         */
-        // Regex to get every Relationship: tag in file
-
 //        if (product_id.contains(DOCUMENT_REFERENCE_TAG)) {
 //            product_data.put("name", bom_data.get("DocumentName"));
 //            product_data.put("publisher", bom_data.get("N/A"));
@@ -334,16 +298,16 @@ public class TranslatorSPDX extends TranslatorCore {
         // Create the new SBOM Object with top level data
         this.createSBOM();
 
-//        // Create the top level component
-//        // Build the dependency tree using dependencyBuilder
-//        try {
-//            this.dependencyBuilder(components, this.product, null);
-//        } catch (Exception e) {
-//            Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
-//            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
-//        }
+        // Create the top level component
+        // Build the dependency tree using dependencyBuilder
+        try {
+            this.dependencyBuilder(components, this.product, null);
+        } catch (Exception e) {
+            Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+        }
 
-//        this.defaultDependencies(this.product);
+        this.defaultDependencies(this.product);
 
         // Return the final SBOM object
         return sbom;
@@ -370,7 +334,7 @@ public class TranslatorSPDX extends TranslatorCore {
             if (lastIndex == -1) break; // If another tag is not found, break the loop. TODO end of file?
 
             // Use this data to update tagContents with the found tag
-            tagContents += fileContents.substring(firstIndex, lastIndex - 1); // Remove newline
+            tagContents += fileContents.substring(firstIndex, lastIndex); // Remove newline
             fileContents = fileContents.substring(0, firstIndex) + fileContents.substring(lastIndex);
         }
 
