@@ -38,6 +38,8 @@ public class HasSupplierTest extends MetricTest{
                     "supplier information");
         }
         r.addContext(sbom, "Metadata Supplier Information");
+        r.updateInfo(Result.Context.FIELD_NAME, "Supplier");
+        r.updateInfo(Result.Context.STRING_VALUE, sbom.getSupplier());
         result.add(r);
 
         return result;

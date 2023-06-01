@@ -41,6 +41,7 @@ public class HasMetadataTest extends MetricTest {
                     "present");
         }
         r.addContext(sbom, "Metadata Presence");
+        r.updateInfo(Result.Context.FIELD_NAME, "Metadata");
         // add result to list and return the result
         result.add(r);
         return result;
