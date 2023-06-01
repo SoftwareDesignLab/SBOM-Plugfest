@@ -4,15 +4,17 @@
         <div class="uploaded-files-container" #container *ngIf="ContainsFiles()">
             <div class="uploaded-files flex col" *ngIf="ContainsFiles()">
                 <div class="file flex center" *ngFor="let item of GetFiles() | keyvalue">
-                    <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"/>
+                    <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"
+                        [matTooltip]="item.value !== null ? 'SBOM is valid' : 'SBOM is not valid'">
+                    </icon>
                     <div class="sbom flex">
                         {{item.key}}
-                        <icon icon="delete" (click)="RemoveFile(item.key)"/>
+                        <icon icon="delete" (click)="RemoveFile(item.key)"></icon>
                     </div>
                 </div>
             </div>
             <div class="file flex center" *ngFor="let item of GetLoadingFiles()">
-                <mat-spinner style="width: 32px; height: 32px;"/>
+                <mat-spinner style="width: 32px; height: 32px;"></mat-spinner>
                 <div class="sbom flex">
                     {{item}}
                 </div>

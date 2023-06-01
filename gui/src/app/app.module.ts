@@ -31,6 +31,7 @@ import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel
 import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
 import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-main.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatSelectModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent],
