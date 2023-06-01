@@ -233,13 +233,23 @@ public class TranslatorCDXXML extends TranslatorCore {
                         }
                     }
 
+                    // No apparent publisher means this is most likely an application tool
+                    StringBuilder toolString = new StringBuilder();
+                    Component component;
+                    if(!component_items.containsKey("publisher")){
+                        sbom.addMetaData(toolString.append("[Application tool - Name: ")
+                                .append(component_items.get("name")).append(" - Version: ")
+                                .append(component_items.get("version")).append(" - Bom-ref: ")
+                                .append(component_items.get("bom-ref")).append("]").toString());
+                                continue;}
+                    else
                     // Create a new component with required information
-                    Component component = new Component(
-                            component_items.get("name"),
-                            component_items.get("publisher"),
-                            component_items.get("version"),
-                            component_items.get("bom-ref")
-                    );
+                        component = new Component(
+                                component_items.get("name"),
+                                component_items.get("publisher"),
+                                component_items.get("version"),
+                                component_items.get("bom-ref")
+                        );
 
                     // Set CPEs, PURLs, and Hashes
                     component.setCpes(cpes);
