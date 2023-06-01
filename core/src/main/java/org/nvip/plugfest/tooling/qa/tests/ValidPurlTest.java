@@ -32,6 +32,8 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
         }
 
         for (String p : purlStrings) {
+            if (p == null)
+                continue;
             Result r;
             if (this.purlRegex.matcher(p.strip()).matches()) {
                 r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
