@@ -59,6 +59,8 @@ public class IsRegisteredTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.ERROR,
                     "Component has no PURL");
             r.addContext(c, "PURL Validation");
+            r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+            r.updateInfo(Result.Context.STRING_VALUE, c.getName());
             purlResults.add(r);
         }
         else{
@@ -92,6 +94,8 @@ public class IsRegisteredTest extends MetricTest{
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
                                     "Package Manager is not valid: " + packageManager);
                             r.addContext(c, "PURL Package Validation");
+                            r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                            r.updateInfo(Result.Context.STRING_VALUE, p.toString());
                             purlResults.add(r);
                             // error number to skip other results
                             response = -1;
@@ -103,6 +107,8 @@ public class IsRegisteredTest extends MetricTest{
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
                             "PURL had an error");
                     r.addContext(c, "PURL Package Validation");
+                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
                     purlResults.add(r);
                     // error number to skip other results
                     response = -1;
@@ -126,6 +132,8 @@ public class IsRegisteredTest extends MetricTest{
 
                     }
                     r.addContext(c, "PURL Package Validation");
+                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
                     purlResults.add(r);
                 }
                 // some tests will throw a 0 if a different error occurs
@@ -133,6 +141,8 @@ public class IsRegisteredTest extends MetricTest{
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
                             "PURL had an error");
                     r.addContext(c, "PURL Package Validation");
+                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
                     purlResults.add(r);
                 }
 
