@@ -44,6 +44,7 @@ public class AccuratePURLTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.ERROR, "Component does " +
                     "not contain PURLs");
             r.addContext(c, "Matching PURLs");
+            r.updateInfo(Result.Context.FIELD_NAME, "PURL");
             purlResults.add(r);
         }
         // purls are present in the component, test each purl for matching
@@ -71,7 +72,10 @@ public class AccuratePURLTest extends MetricTest{
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
                             " does not match component data");
                 }
-                r.addContext(p, "Matching PURLs");
+                r.addContext(c, "Matching PURLs");
+                r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                r.updateInfo(Result.Context.STRING_VALUE, p.toString());
+
                 purlResults.add(r);
 
             }
