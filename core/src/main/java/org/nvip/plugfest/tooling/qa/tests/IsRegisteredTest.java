@@ -161,11 +161,11 @@ public class IsRegisteredTest extends MetricTest{
     private int extractFromMaven(PURL p) throws IOException{
         // maven requires namespace
         if(p.getNamespace() == null || p.getNamespace().size() == 0)
-            return 404;
+            return 0;
 
         // maven requires version
         if(p.getVersion() == null)
-            return 404;
+            return 0;
 
         // build namespace for request
         StringBuilder namespaceUrl = new StringBuilder();
