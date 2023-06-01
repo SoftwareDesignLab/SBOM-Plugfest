@@ -54,6 +54,7 @@ public class ValidHashDataTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.ERROR, "Component does " +
                     "not contain hashes, test cannot be performed");
             r.addContext(c, "Hash Validation");
+            r.updateInfo(Result.Context.FIELD_NAME, "Hashes");
             hashResults.add(r);
         }
         // hashes are present for the component
@@ -71,7 +72,9 @@ public class ValidHashDataTest extends MetricTest{
                     r = new Result(TEST_NAME, Result.STATUS.PASS, "Hash is " +
                             "a valid type");
                 }
-                r.addContext(h, "Hash Validation");
+                r.addContext(c, "Hash Validation");
+                r.updateInfo(Result.Context.FIELD_NAME, "Hashes");
+                r.updateInfo(Result.Context.STRING_VALUE, h.toString());
                 hashResults.add(r);
             }
 

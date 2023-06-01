@@ -59,7 +59,7 @@ public class HasHashDataTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.PASS, message);
         }
         r.addContext(c, "Contains Hashes");
-
+        r.updateInfo(Result.Context.FIELD_NAME, "Hashes");
         return r;
 
     }
