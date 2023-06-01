@@ -119,7 +119,7 @@ public class AccuratePURLTest extends MetricTest{
 
         Result r;
         // if purlVersion is empty, test automatically fails, cannot check
-        // if names match
+        // if versions match
         if(isEmptyOrNull(purlVersion)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
                     "does not have a version");
