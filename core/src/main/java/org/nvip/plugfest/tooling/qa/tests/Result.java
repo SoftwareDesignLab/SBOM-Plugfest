@@ -45,7 +45,7 @@ public class Result {
         TYPE,           // Type of test (component, sbom, etc)
         FIELD_NAME,     // Name of value being checked EX: "publisher"
         STRING_VALUE,   // String of value being checked EX: when checking publisher string_value="google"
-        IDENTIFIER      // Component name
+        IDENTIFIER      // UID of the source
     }
 
     @JsonIgnore
