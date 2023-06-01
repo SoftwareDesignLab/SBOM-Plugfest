@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { DataHandlerService } from '@services/data-handler.service';
 import { IpcRenderer } from 'electron';
 
@@ -11,6 +11,7 @@ export class UploadComponent {
   private ipc!: IpcRenderer;
   isLoading = false;
   @ViewChild('container') container!: ElementRef;
+  @Input() stepper: any;
 
   constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
@@ -36,6 +37,10 @@ export class UploadComponent {
     });
   }
 
+  getSBOMAlias(path: string) {
+    return this.dataHandler.getSBOMAlias(path);
+  }
+
   ContainsFiles() {
     return Object.keys(this.dataHandler.metrics).length > 0 || this.GetLoadingFiles().length > 0;
   }
@@ -48,6 +53,38 @@ export class UploadComponent {
     return this.dataHandler.loadingFiles;
   }
 
+  GetValidSBOMs() {
+    return this.dataHandler.GetValidSBOMs();
+  }
+
+  SelectAll() {
+    this.setAllSelected(true);
+  }
+
+  DeselectAll() {
+    this.setAllSelected(false);
+  }
+
+  DeleteSelected() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      if (checkbox.checked && !checkbox.disabled) {
+        this.RemoveFile(checkbox.value);
+      }
+    }
+  }
+
+  setAllSelected(value: boolean) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      checkbox.checked = value;
+    }
+  }
+
   RemoveFile(file: string) {
     this.dataHandler.filePaths = this.dataHandler.filePaths.filter((x) => x != file);
     delete this.dataHandler.metrics[file];
@@ -57,5 +94,9 @@ export class UploadComponent {
     setTimeout(() => {
       this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
     }, 0);
+  }
+
+  NextStepper() {
+    this.stepper.next();
   }
 }

@@ -25,7 +25,9 @@ export class ComparisonComponent implements OnChanges {
     purls: [],
     cpes: [],
     swids: [],
+    hashes: [],
   };
+  icon =  'check_circle'
 
   constructor(private dataHandler: DataHandlerService) {}
 
@@ -75,6 +77,7 @@ export class ComparisonComponent implements OnChanges {
   }
 
   decreaseDepth(index: number) {
+    if (index < 0) return;
     if (index < this.path.length - 1) {
       this.pathTitles = this.pathTitles.slice(0, index + 1);
       this.path = this.path.slice(0, index + 1);
@@ -115,6 +118,7 @@ export class ComparisonComponent implements OnChanges {
                 ...Object.values(version.purls),
                 ...Object.values(version.swids),
                 ...Object.values(version.cpes),
+                ...Object.values(version.hashes),
               ];
               for (let attr of attributes) {
                 if (attr.appearances) {

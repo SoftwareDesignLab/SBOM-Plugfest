@@ -26,7 +26,6 @@
 
 .header {
   display: flex;
-  justify-content: left;
   align-items: center;
   font-size: 30px;
   color: white;
@@ -39,4 +38,14 @@
 
 #attribute-body {
   padding-top: 20px;
+}
+
+.in-target{
+  margin-top: 4px;
+  font-size: large;
+}
+
+.title {
+  display: flex;
+  align-items: center;
 }

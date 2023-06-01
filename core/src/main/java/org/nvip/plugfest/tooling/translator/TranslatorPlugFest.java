@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.json.JSONObject;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import java.util.Arrays;
  * @author Matt London
  */
 public class TranslatorPlugFest {
+
     /**
      * Parse an SBOM using the appropriate translator and return the object
      *
@@ -31,7 +33,7 @@ public class TranslatorPlugFest {
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         return translateContents(contents, path);
@@ -48,35 +50,37 @@ public class TranslatorPlugFest {
 
         SBOM sbom = null;
 
-        // TODO check the contents of the file rather than trusting the file extension
-        // TODO address the parser exception rather than ignoring it
-
-        final String extension = filePath.substring(filePath.toLowerCase().lastIndexOf('.'));
-
         try {
+            TranslatorCore translator = getTranslator(contents, filePath);
 
-            //call the appropriate translator based on the file extension
-            switch (extension) {
-
-                case ".xml"  -> sbom = TranslatorCDXXML.translatorCDXXMLContents(contents, filePath);
-
-                case ".json" -> {
-                    if (new JSONObject(contents).toMap().get("bomFormat").equals("CycloneDX")) {
-                        sbom = TranslatorCDXJSON.translatorCDXJSONContents(contents, filePath);
-                    }
-                }
-
-                case ".spdx" -> sbom = TranslatorSPDX.translatorSPDXContents(contents, filePath);
-
-                default      -> System.err.println("\nInvalid SBOM format found at: " + filePath);
-
-            }
-
+            if (translator == null) Debug.log(Debug.LOG_TYPE.ERROR, "Error translating file: " + filePath + ".\nReason: Invalid " +
+                    "SBOM file contents (could not assume schema)."); // TODO throw error
+            else sbom = translator.translateContents(contents, filePath);
         }
         catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
         return sbom;
+    }
+
+    private static TranslatorCore getTranslator(String contents, String filePath) {
+        String ext = filePath.substring(filePath.lastIndexOf('.') + 1).trim().toLowerCase();
+
+        switch (ext.toLowerCase()) { // TODO possibly scan for an entire file header to ensure validity?
+            case "json" -> {
+                if (contents.contains("\"bomFormat\": \"CycloneDX\"")) return new TranslatorCDXJSON();
+//                else if (contents.contains("\"SPDXID\" : \"SPDXRef-DOCUMENT\"")) return new TranslatorSPDXJSON();
+                else return null;
+            }
+            case "xml" -> {
+                if (contents.contains("<bom xmlns=\"http://cyclonedx.org/schema/bom/")) return new TranslatorCDXXML();
+//                else if (contents.contains("<SPDXID>SPDXRef-DOCUMENT</SPDXID>")) return new TranslatorSPDXXML();
+                else return null;
+            }
+//            case "yml" -> { return new TranslatorSPDXYAML(); }
+            case "spdx" -> { return new TranslatorSPDX(); }
+            default -> { return null; }
+        }
     }
 }

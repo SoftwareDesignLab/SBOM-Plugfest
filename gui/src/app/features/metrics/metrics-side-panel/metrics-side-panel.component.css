@@ -39,7 +39,8 @@
   
   .compare-item {
     gap: 10px;
-    width: 95%;
+    width: 100%;
+    cursor: pointer;
   }
   
   .compare-item > .sbom {
@@ -64,4 +65,12 @@
 
 .item > .name {
     width: 75px;
+}
+
+.compare-item > .sbom:hover{
+  background-color: gray;
+}
+
+.compare-item > .sbom.selected {
+  background-color: gray;
 }

@@ -27,6 +27,7 @@ export interface attributes {
   cpes?: readonly attributes[] | readonly string[] | readonly [] | null;
   purls?: readonly attributes[] | attributes | readonly [];
   swids?: readonly string[] | readonly [];
+  hashes?: readonly string[] | readonly [];
   uniqueId?: string | null;
   uniqueIDType?: string | null;
   children?: readonly string[] | readonly [];
@@ -50,7 +51,8 @@ export interface ComponentVersion {
   componentVersion: string | null;
   cpes: {[key: string]: attributes} | {};
   purls: {[key: string]: attributes} | {};
-  swids: {[key: string]: attributes} | {}
+  swids: {[key: string]: attributes} | {};
+  hashes: {[key: string]: attributes} | {};
   appearances: readonly number[] | readonly []; // number meaning SBOM ID
 }
 
