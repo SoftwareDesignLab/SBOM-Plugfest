@@ -98,11 +98,17 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Top level SBOM data (metadata, etc.)
         */
-        int firstIndex = fileContents.indexOf(TAG);
-        String header = fileContents.substring(0, firstIndex - 2); // Remove newlines
-        fileContents = fileContents.substring(firstIndex);
+        int firstIndex = fileContents.indexOf(TAG); // Find first index of next "section"
+        String header;
 
-        // Process header
+        // If no tags found, assume the header is the only part of the file
+        if (firstIndex == -1) header = fileContents;
+        else {
+            header = fileContents.substring(0, firstIndex - 2); // Remove newlines as well
+            fileContents = fileContents.substring(firstIndex); // Remove all header info from fileContents
+        }
+
+        // Process header TODO throw error if required fields are not found. Create enum with all tags?
         Matcher m = TAG_VALUE_PATTERN.matcher(header);
         while(m.find()) {
             switch (m.group(1)) {
@@ -121,12 +127,12 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Extracted Licensing Info
          */
-        String extractedLicenses = getTagContents(fileContents, EXTRACTED_LICENSE_TAG); // Remove newline
+        String extractedLicenses = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
 
         /*
             Files
          */
-        String unpackagedFiles = getTagContents(fileContents, UNPACKAGED_TAG); // Remove newline
+        String unpackagedFiles = getTagContents(fileContents, UNPACKAGED_TAG);
 
         /*
             Packages
@@ -412,6 +418,7 @@ public class TranslatorSPDX extends TranslatorCore {
             // Get boundaries of this tag
             firstIndex = fileContents.indexOf(tag);
             lastIndex = fileContents.indexOf(TAG, firstIndex + 1);
+            if (lastIndex == -1) break; // If another tag is not found, break the loop. TODO end of file?
 
             // Use this data to update tagContents with the found tag
             tagContents += fileContents.substring(firstIndex, lastIndex - 1); // Remove newline
