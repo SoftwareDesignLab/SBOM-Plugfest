@@ -62,6 +62,11 @@ public class SBOM {
     private Set<Signature> signature;
 
     /**
+     * Metadata of SBOM
+     */
+    private Set<String> metaData;
+
+    /**
      * Default constructor
      */
     public SBOM () {
@@ -341,6 +346,20 @@ public class SBOM {
 
         // Now we can return
         return retVal;
+    }
+
+    /**
+     * Add additional ambiguous metadata to SBOM
+     * @param m String representation of data
+     */
+    public void addMetaData(String m){
+        metaData.add(m);
+    }
+    public void setMetaData(Set<String> md){
+        metaData = md;
+    }
+    public Set<String> getMetaData(){
+        return metaData;
     }
 
     /**
