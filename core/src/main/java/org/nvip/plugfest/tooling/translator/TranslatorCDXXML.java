@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.translator;
 
+import org.cyclonedx.model.Tool;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
 import org.w3c.dom.*;
@@ -233,13 +234,12 @@ public class TranslatorCDXXML extends TranslatorCore {
                     }
 
                     // No apparent publisher means this is most likely an application tool
-                    StringBuilder toolString = new StringBuilder();
                     Component component;
                     if(!component_items.containsKey("publisher")){
-                        sbom.addMetadata(toolString.append("[Application tool - Name: ")
-                                .append(component_items.get("name")).append(" - Version: ")
-                                .append(component_items.get("version")).append(" - Bom-ref: ")
-                                .append(component_items.get("bom-ref")).append("]").toString());
+                        Tool t = new Tool();
+                        t.setName(component_items.get("name"));
+                        t.setVersion(component_items.get("version"));
+                        sbom.addAppTool(t);
                                 continue;}
                     else
                     // Create a new component with required information
@@ -311,26 +311,23 @@ public class TranslatorCDXXML extends TranslatorCore {
                 Element elem = (Element) tool;
                 NodeList component_elements = elem.getElementsByTagName("*");
 
-                StringBuilder toolString = new StringBuilder();
+                Tool t = new Tool();
 
                 // Iterate through each element in that component
                 for (int j = 0; j < component_elements.getLength(); j++) {
 
                     if (component_elements.item(j).getNodeName().equalsIgnoreCase("vendor")) {
-                        toolString.append("[Application tool - Vendor: ").append(component_elements.item(j).getTextContent()).append(" - ");
+                        t.setVendor(component_elements.item(j).getTextContent());
                     }
                     else if (component_elements.item(j).getNodeName().equalsIgnoreCase("name")) {
-                        toolString.append("Name: ").append(component_elements.item(j).getTextContent()).append(" - "); // todo better way of representing tools as a single string
+                        t.setName(component_elements.item(j).getTextContent());
                     }
                     else if (component_elements.item(j).getNodeName().equalsIgnoreCase("version")) {
-                        toolString.append("Version: ").append(component_elements.item(j).getTextContent()).append("]");
+                        t.setVersion(component_elements.item(j).getTextContent());
                     }
                 }
-                if(!toolString.toString().contains("["))
-                    toolString = new StringBuilder("[Application tool - ").append(toolString);
-                if(!toolString.toString().contains("["))
-                    toolString.append("]");
-                sbom.addMetadata(toolString.toString());
+
+                sbom.addAppTool(t);
 
             }
         }
