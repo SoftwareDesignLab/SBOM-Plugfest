@@ -297,7 +297,34 @@ public class TranslatorCDXXML extends TranslatorCore {
         if(appTools != null){
             for(int i = 0; i < appTools.getLength(); i++){
                 Node tool = appTools.item(i);
-                int x = 0;
+                // Get all elements from that node
+                Element elem = (Element) tool;
+                NodeList component_elements = elem.getElementsByTagName("*");
+
+                StringBuilder toolString = new StringBuilder();
+
+                // Iterate through each element in that component
+                for (int j = 0; j < component_elements.getLength(); j++) {
+
+                    if (component_elements.item(j).getNodeName().equalsIgnoreCase("vendor")) {
+                        toolString.append("Tool vendor: ").append(component_elements.item(j).getTextContent()).append("-");
+                    }
+                    else if (component_elements.item(j).getNodeName().equalsIgnoreCase("name")) {
+                        toolString.append("Tool name: ").append(component_elements.item(j).getTextContent()).append("-"); // todo better way of representing tools as a single string
+                    }
+                    else if (component_elements.item(j).getNodeName().equalsIgnoreCase("version")) {
+                        toolString.append("Tool version: ").append(component_elements.item(j).getTextContent()).append("-");
+                    }
+                }
+
+                if(!toolString.isEmpty())
+                    if(!bom_data.containsKey("author"))
+                        bom_data.put("author", toolString.toString());
+                    else{
+                        String tmp = bom_data.get("author");
+                        bom_data.put("author", tmp + " [" + toolString + "]");
+                    }
+
             }
         }
 
