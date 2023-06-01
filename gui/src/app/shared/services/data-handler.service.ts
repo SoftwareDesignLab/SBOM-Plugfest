@@ -6,7 +6,7 @@ import { IpcRenderer } from 'electron';
 import { Comparison } from '@features/comparison/comparison';
 import { BehaviorSubject } from 'rxjs';
 import mockData from '@features/metrics/jsonformatter (1)';
-import {test} from '@features/metrics/test';
+import {QualityReport, test} from '@features/metrics/test';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class DataHandlerService {
 
   public lastSentFilePaths: string[] = [];
 
-  public metrics: { [id: string]: test | null } = {};
+  public metrics: { [id: string]: QualityReport | null } = {};
   public loadingFiles: string[] = [];
 
   public comparison!: Comparison;
@@ -37,7 +37,7 @@ export class DataHandlerService {
     } else {
       console.warn('App not running inside Electron!');
     }
-        this.metrics['test'] = mockData;
+        this.metrics['test'] = new QualityReport(mockData);
   }
 
   AddFiles(paths: string[]) {
@@ -62,7 +62,7 @@ export class DataHandlerService {
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
-        this.metrics[path] = result as test;
+        this.metrics[path] = new QualityReport(result as test);
         this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       },
       (error) => {

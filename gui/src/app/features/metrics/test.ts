@@ -1,5 +1,3 @@
-import { identity } from "rxjs";
-
 export interface test {
   uid: string;
   attributeResults: {
@@ -17,36 +15,34 @@ interface AdditionalInfo {
   [key: string]: string;
 }
 
-export class QuailtyReport {
+export class QualityReport {
   test: test;
   categories: string[] = [];
-  results: testResult[] = [];
+  results: any[] = [];
   identifiers: Set<string> = new Set<string>();
   componentResults: { [key: string]: testResult[] } = {};
 
   constructor(test: test) {
     this.test = test;
     this.categories = Object.keys(this.test.attributeResults);
-    this.categories.forEach(category => {
-      const tests = Object.keys(this.test.attributeResults[category])
-      tests.forEach(test => {
-        this.results = this.test.attributeResults[category][test];
-        // this.identifiers.add(this.test.attributeResults?.['IDENTIFIER']);
+    this.categories.forEach((category) => {
+      const tests = Object.keys(this.test.attributeResults[category]);
+      tests.forEach((test) => {
+        this.test.attributeResults[category][test].forEach((result) => {
+          this.identifiers.add(result.additionalInfo["IDENTIFIER"] || "");
+          this.results.push({
+            result,
+            category,
+            test,
+            pass: result.pass,
+            type: result.additionalInfo["TYPE"] || "",
+            identifier: result.additionalInfo["IDENTIFIER"] || "",
+          });
+        });
       });
-
     });
-  }
 
-  getComponentResults() {
-    if (Object.keys(this.componentResults).length === 0) {
-      this.categories.forEach(category => {
-
-      });
-    }
-  }
-
-  getAllIdentifiers() {
-
+    console.log(this.identifiers);
   }
 
   /**
@@ -54,8 +50,10 @@ export class QuailtyReport {
     @param identifier - component identifier
   */
   getResultsByComponent(identifier: string): testResult[] {
+    return this.results.filter((result) => result.identifier === identifier);
+  }
 
-    return this.results.filter(element => element.additionalInfo?.["IDENTIFIER"] === identifier);
+  getResultsbyType(type: string) {
+    return this.results.filter((result)=> result.type === type);
   }
 }
-
