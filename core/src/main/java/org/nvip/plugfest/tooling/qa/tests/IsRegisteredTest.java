@@ -22,7 +22,7 @@ import java.util.Set;
  * given package manager through its PURL
  */
 public class IsRegisteredTest extends MetricTest{
-
+    // name of the test for results
     private static final String TEST_NAME = "IsRegistered";
 
     /**
@@ -57,7 +57,7 @@ public class IsRegisteredTest extends MetricTest{
         // if no purls are present, the test automatically fails
         if(purls.isEmpty()){
             r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                    "Component has no PURL");
+                    "Component has no PURLs to test");
             r.addContext(c, "PURL Validation");
             r.updateInfo(Result.Context.FIELD_NAME, "PURL");
             r.updateInfo(Result.Context.STRING_VALUE, c.getName());
@@ -92,7 +92,8 @@ public class IsRegisteredTest extends MetricTest{
                         // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                                    "Package Manager is not valid: " + packageManager);
+                                    "Package Manager is not valid or " +
+                                            "not recognized: " + packageManager);
                             r.addContext(c, "PURL Package Validation");
                             r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                             r.updateInfo(Result.Context.STRING_VALUE, p.toString());
@@ -105,7 +106,7 @@ public class IsRegisteredTest extends MetricTest{
                 // if there are any issues with the url or http connection
                 catch(IOException e){
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL had an error");
+                            "PURL had an error in producing URL");
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE, p.toString());
