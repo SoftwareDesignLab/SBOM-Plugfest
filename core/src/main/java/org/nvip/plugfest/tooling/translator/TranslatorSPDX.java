@@ -250,7 +250,9 @@ public class TranslatorSPDX extends TranslatorCore {
                 case DOCUMENT_NAMESPACE_TAG -> bom_data.put("serialNumber", m.group(2));
                 case SPEC_VERSION_TAG -> bom_data.put("specVersion", m.group(2));
                 case AUTHOR_TAG -> {
-                    if (!bom_data.containsKey("author")) bom_data.put("author", m.group(2));
+                    if (!bom_data.containsKey("author"))
+                    {bom_data.put("author", m.group(2));
+                    int x = 0;}
                     else bom_data.put("author", bom_data.get("author") + " " + m.group(2));
                 }
                 case ID_TAG -> bom_data.put("id", m.group(1));

@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import org.cyclonedx.model.Tool;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -65,6 +67,13 @@ public class SBOM {
      * Metadata of SBOM
      */
     private Set<String> metadata;
+
+
+    /**
+     *  Application tools
+     */
+    public Set<Tool> appTools;
+
 
     /**
      * Default constructor
@@ -305,6 +314,8 @@ public class SBOM {
     }
 
     public void addMetadata(String m){
+        if(metadata == null)
+            metadata = new HashSet<>();
         metadata.add(m);
     }
     public void setMetadata(Set<String> md){
@@ -312,6 +323,20 @@ public class SBOM {
     }
     public Set<String> getMetadata(){
         return metadata;
+    }
+
+    public Set<Tool> getAppTools() {
+        return appTools;
+    }
+
+    public void setAppTools(Set<Tool> appTools) {
+        this.appTools = appTools;
+    }
+
+    public void addAppTool(Tool a){
+        if(appTools == null)
+            appTools = new HashSet<>();
+        appTools.add(a);
     }
 
     ///

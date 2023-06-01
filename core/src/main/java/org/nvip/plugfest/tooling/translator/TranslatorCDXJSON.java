@@ -3,6 +3,7 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.Tool;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -57,6 +58,9 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     json_sbom.getMetadata().getTools().toString() : json_sbom.getMetadata().getAuthors().toString());
             bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
 
+            if(json_sbom.getMetadata().getAuthors() != null)
+                return null;
+
             // Top component analysis (check if not null as well)
             org.cyclonedx.model.Component topComponent = metadata.getComponent();
             if(topComponent != null) {
@@ -68,6 +72,9 @@ public class TranslatorCDXJSON extends TranslatorCore {
         }
 
         this.createSBOM();
+
+        if(metadata != null)
+            sbom.setAppTools(new HashSet<>(metadata.getTools()));
 
         // Create new collection of components
         HashMap<String, Component> components = new HashMap<>();
@@ -82,6 +89,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                         cdx_component.getName(),
                         cdx_component.getPublisher(),
                         cdx_component.getVersion());
+
 
                 // Get CPE, PURL, and SWIDs
                 String cpe = cdx_component.getCpe();
@@ -106,6 +114,12 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 // Set the component's unique ID
                 new_component.setUniqueID(cdx_component.getBomRef());
+
+                // assume a component with no publishers to be an application tool
+                if((new_component.getPublisher() == null || new_component.getPublisher().equals("")) && new_component.toString().contains("Library")){
+                    sbom.addMetadata("[Application tool - Name: " + cdx_component.getName() + " -  Version: " + cdx_component.getVersion() + "]");
+                    continue;
+                }
 
                 // Add component to component list
                 this.loadComponent(new_component);
