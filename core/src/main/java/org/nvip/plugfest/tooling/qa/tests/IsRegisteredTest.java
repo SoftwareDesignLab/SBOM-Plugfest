@@ -67,7 +67,7 @@ public class IsRegisteredTest extends MetricTest{
             // check all purl based on its type
             for(PURL p : c.getPurls()){
                 // holds the response code from the purl
-                int response = 0;
+                int response;
                 String packageManager = p.getType();
                 try{
                     // extract method based on package manager type
