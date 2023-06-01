@@ -1,16 +1,10 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.cyclonedx.exception.ParseException;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.*;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -60,10 +54,8 @@ public class TranslatorSPDX extends TranslatorCore {
     private static final String EXTERNAL_REFERENCE_TAG = "ExternalRef";
 
     private static final Pattern TAG_VALUE_PATTERN = Pattern.compile("(\\S+): (.+)");
-    private static final Pattern EXTERNAL_REF_PATTERN = Pattern.compile(EXTERNAL_REFERENCE_TAG + ": (\\S*) (\\S*) " +
-            "(\\S*)");
-    private static final Pattern RELATIONSHIP_PATTERN = Pattern.compile(RELATIONSHIP_KEY + ": (\\S*) (\\S*) " +
-            "(\\S*)");
+    private static final Pattern EXTERNAL_REF_PATTERN = Pattern.compile(EXTERNAL_REFERENCE_TAG + ": (\\S*) (\\S*) (\\S*)");
+    private static final Pattern RELATIONSHIP_PATTERN = Pattern.compile(RELATIONSHIP_KEY + ": (\\S*) (\\S*) (\\S*)");
 
     //#endregion
 
@@ -135,7 +127,7 @@ public class TranslatorSPDX extends TranslatorCore {
             Component file = this.buildFile(fileBlock);
 
             // Add unpackaged file to components
-            this.components.put(file.getUniqueID(), file); // TODO is unique id correct?
+            this.components.put(file.getUniqueID(), file);
         }
 
         /*
@@ -175,9 +167,10 @@ public class TranslatorSPDX extends TranslatorCore {
             }
         }
 
+        // Build the top component of the SBOM (containing metadata)
         if (product_id.contains(DOCUMENT_REFERENCE_TAG)) {
             product_data.put("name", bom_data.get("DocumentName"));
-            product_data.put("publisher", bom_data.get("N/A"));
+            product_data.put("publisher", bom_data.get("Unknown"));
             product_data.put("version", bom_data.get("N/A"));
             product_data.put("id", bom_data.get("id"));
             defaultTopComponent(product_data.get("id"), packages);
@@ -221,7 +214,7 @@ public class TranslatorSPDX extends TranslatorCore {
             // Get boundaries of this tag
             firstIndex = fileContents.indexOf(tag);
             lastIndex = fileContents.indexOf(TAG, firstIndex + 1);
-            if (lastIndex == -1) break; // If another tag is not found, break the loop. TODO end of file?
+            if (lastIndex == -1) break; // If another tag is not found, break the loop.
 
             // Use this data to update tagContents with the found tag
             tagContents += fileContents.substring(firstIndex, lastIndex); // Remove newline
@@ -275,7 +268,7 @@ public class TranslatorSPDX extends TranslatorCore {
         // Create new component from materials
         Component unpackaged_component = new Component(
                 file_materials.get("FileName"),
-                "Unknown", // TODO
+                "Unknown",
                 file_materials.get("PackageVersion"),
                 file_materials.get("SPDXID")
         );
@@ -288,24 +281,26 @@ public class TranslatorSPDX extends TranslatorCore {
         Map<String, String> componentMaterials = new HashMap<>();
         Set<String> cpes = new HashSet<>();
         Set<String> purls = new HashSet<>();
-        // Set<String> swids = new HashSet<>();
+        Set<String> swids = new HashSet<>();
 
         Matcher m = TAG_VALUE_PATTERN.matcher(packageBlock);
 
         while (m.find()) {
-            // Special case for external references
-            if (m.group(1).equals(EXTERNAL_REFERENCE_TAG)) {
-                Matcher externalRef = EXTERNAL_REF_PATTERN.matcher(m.group(0));
-                if (!externalRef.find()) continue; // TODO invalid formatting?
-
-                if (externalRef.group(1).equalsIgnoreCase("security")) cpes.add(externalRef.group(3));
-                else if (externalRef.group(2).equalsIgnoreCase("purl")) purls.add(externalRef.group(3));
-                // TODO find examples of how SPDX represents SWID and implement that here
-
-                continue; // Now that the external ref line has been parsed, continue
+            if (!m.group(1).equals(EXTERNAL_REFERENCE_TAG)) {
+                componentMaterials.put(m.group(1), m.group(2));
+                continue;
             }
 
-            componentMaterials.put(m.group(1), m.group(2));
+            // Special case for external references
+            Matcher externalRef = EXTERNAL_REF_PATTERN.matcher(m.group());
+            if (!externalRef.find()) continue;
+
+            if (externalRef.group(1).equalsIgnoreCase("security")) {
+                if (externalRef.group(2).equalsIgnoreCase("cpe23Type")) cpes.add(externalRef.group(3));
+                if (externalRef.group(2).equalsIgnoreCase("swid")) swids.add(externalRef.group(3));
+            } else if (externalRef.group(2).equalsIgnoreCase("purl")) {
+                purls.add(externalRef.group(3));
+            }
         }
 
         // Cleanup package originator
@@ -330,6 +325,7 @@ public class TranslatorSPDX extends TranslatorCore {
         // Append CPEs and Purls
         component.setCpes(cpes);
         component.setPurls(purls);
+        component.setSwids(swids);
 
         // License materials map
         HashSet<String> licenses = new HashSet<>();
