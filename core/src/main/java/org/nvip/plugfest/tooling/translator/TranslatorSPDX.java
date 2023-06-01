@@ -115,21 +115,7 @@ public class TranslatorSPDX extends TranslatorCore {
             fileContents = fileContents.substring(firstIndex); // Remove all header info from fileContents
         }
 
-        // Process header TODO throw error if required fields are not found. Create enum with all tags?
-        Matcher m = TAG_VALUE_PATTERN.matcher(header);
-        while(m.find()) {
-            switch (m.group(1)) {
-                case DOCUMENT_NAMESPACE_TAG -> bom_data.put("serialNumber", m.group(2));
-                case SPEC_VERSION_TAG -> bom_data.put("specVersion", m.group(2));
-                case AUTHOR_TAG -> {
-                    if (!bom_data.containsKey("author")) bom_data.put("author", m.group(2));
-                    else bom_data.put("author", bom_data.get("author") + " " + m.group(2));
-                }
-                case ID_TAG -> bom_data.put("id", m.group(1));
-                case TIMESTAMP_TAG -> bom_data.put("timestamp", m.group(2));
-                default -> bom_data.put(m.group(1), m.group(2));
-            }
-        }
+        this.parseHeader(header);
 
         /*
             Extracted Licensing Info
@@ -138,19 +124,7 @@ public class TranslatorSPDX extends TranslatorCore {
         List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n\n"));
 
         for (String extractedLicenseBlock : extractedLicenses) {
-            String licenseId = null;
-            String licenseName = null;
-
-            m = TAG_VALUE_PATTERN.matcher(extractedLicenseBlock);
-            while(m.find()) {
-                switch (m.group(1)) {
-                    case EXTRACTED_LICENSE_ID -> licenseId = m.group(2);
-                    case EXTRACTED_LICENSE_NAME -> licenseName = m.group(2);
-                    default -> {} // TODO more fields?
-                }
-            }
-
-            if (licenseId != null && licenseName != null) externalLicenses.put(licenseId, licenseName);
+            this.parseExternalLicense(extractedLicenseBlock, externalLicenses);
         }
 
         /*
@@ -161,23 +135,10 @@ public class TranslatorSPDX extends TranslatorCore {
         List<String> files = List.of(unpackagedFilesContents.split("\n\n")); // Split over newline
 
         for(String fileBlock : files) {
-            m = TAG_VALUE_PATTERN.matcher(fileBlock);
-            HashMap<String, String> file_materials = new HashMap<>();
-            while(m.find()) {
-                file_materials.put(m.group(1), m.group(2));
-            }
-
-            // Create new component from materials
-            Component unpackaged_component = new Component(
-                    file_materials.get("FileName"),
-                    "Unknown", // TODO
-                    file_materials.get("PackageVersion"),
-                    file_materials.get("SPDXID")
-            );
-            unpackaged_component.setUnpackaged(true);
+            Component file = this.buildFile(fileBlock);
 
             // Add unpackaged file to components
-            this.components.put(unpackaged_component.getUniqueID(), unpackaged_component); // TODO is unique id correct?
+            this.components.put(file.getUniqueID(), file); // TODO is unique id correct?
         }
 
         /*
@@ -188,12 +149,12 @@ public class TranslatorSPDX extends TranslatorCore {
 
         for (String pkg : packageList) {
             // If new package/component is found
-            HashMap<String, String> component_materials = new HashMap<>();
+            Map<String, String> componentMaterials = new HashMap<>();
             Set<String> cpes = new HashSet<>();
             Set<String> purls = new HashSet<>();
-            Set<String> swids = new HashSet<>();
+            // Set<String> swids = new HashSet<>();
 
-            m = TAG_VALUE_PATTERN.matcher(pkg);
+            Matcher m = TAG_VALUE_PATTERN.matcher(pkg);
 
             while (m.find()) {
                 // Special case for external references
@@ -207,54 +168,10 @@ public class TranslatorSPDX extends TranslatorCore {
                     continue; // Now that the external ref line has been parsed, continue
                 }
 
-                component_materials.put(m.group(1), m.group(2));
+                componentMaterials.put(m.group(1), m.group(2));
             }
 
-            // Cleanup package originator
-            String supplier = null;
-            if (component_materials.get("PackageSupplier") != null) {
-                supplier = component_materials.get("PackageSupplier");
-            } else if (component_materials.get("PackageOriginator") != null) {
-                supplier = component_materials.get("PackageOriginator");
-            }
-
-            if (supplier != null) {
-                supplier = supplier.contains("Person: ") && supplier.contains("<") ? supplier.substring(8) : supplier;
-            }
-
-            // Create new component from required information
-            Component component = new Component(
-                    component_materials.get("PackageName"),
-                    supplier,
-                    component_materials.get("PackageVersion"),
-                    component_materials.get("SPDXID"));
-
-            // Append CPEs and Purls
-            component.setCpes(cpes);
-            component.setPurls(purls);
-
-            // License materials map
-            HashSet<String> licenses = new HashSet<>();
-
-            // Get licenses from component materials and split them by 'AND' tag, store them into HashSet and add them to component object
-            if (component_materials.get("PackageLicenseConcluded") != null) {
-                licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseConcluded").split(" AND ")));
-            }
-            if (component_materials.get("PackageLicenseDeclared") != null) {
-                licenses.addAll(Arrays.asList(component_materials.get("PackageLicenseDeclared").split(" AND ")));
-            }
-
-            // Remove any NONE/NOASSERTION licenses
-            licenses.remove("NONE");
-            licenses.remove("NOASSERTION");
-
-            // Replace any extracted license information
-            licenses = (HashSet<String>) licenses.stream().map(l -> {
-                if (l.contains("LicenseRef") && externalLicenses.get(l) != null) return externalLicenses.get(l);
-                return l;
-            }).collect(Collectors.toSet());
-
-            component.setLicenses(licenses);
+            Component component = buildComponent(componentMaterials, externalLicenses, cpes, purls);
 
             // Add packaged component to components list
             this.loadComponent(component);
@@ -337,5 +254,109 @@ public class TranslatorSPDX extends TranslatorCore {
         }
 
         return tagContents;
+    }
+
+    private void parseHeader(String header) {
+        // Process header TODO throw error if required fields are not found. Create enum with all tags?
+        Matcher m = TAG_VALUE_PATTERN.matcher(header);
+        while(m.find()) {
+            switch (m.group(1)) {
+                case DOCUMENT_NAMESPACE_TAG -> bom_data.put("serialNumber", m.group(2));
+                case SPEC_VERSION_TAG -> bom_data.put("specVersion", m.group(2));
+                case AUTHOR_TAG -> {
+                    if (!bom_data.containsKey("author")) bom_data.put("author", m.group(2));
+                    else bom_data.put("author", bom_data.get("author") + " " + m.group(2));
+                }
+                case ID_TAG -> bom_data.put("id", m.group(1));
+                case TIMESTAMP_TAG -> bom_data.put("timestamp", m.group(2));
+                default -> bom_data.put(m.group(1), m.group(2));
+            }
+        }
+    }
+
+    private void parseExternalLicense(String extractedLicenseBlock, Map<String, String> externalLicenses) {
+        String licenseId = null;
+        String licenseName = null;
+
+        Matcher m = TAG_VALUE_PATTERN.matcher(extractedLicenseBlock);
+        while(m.find()) {
+            switch (m.group(1)) {
+                case EXTRACTED_LICENSE_ID -> licenseId = m.group(2);
+                case EXTRACTED_LICENSE_NAME -> licenseName = m.group(2);
+                default -> {} // TODO more fields?
+            }
+        }
+
+        if (licenseId != null && licenseName != null) externalLicenses.put(licenseId, licenseName);
+    }
+
+    private Component buildFile(String fileBlock) {
+        Matcher m = TAG_VALUE_PATTERN.matcher(fileBlock);
+        HashMap<String, String> file_materials = new HashMap<>();
+        while(m.find()) {
+            file_materials.put(m.group(1), m.group(2));
+        }
+
+        // Create new component from materials
+        Component unpackaged_component = new Component(
+                file_materials.get("FileName"),
+                "Unknown", // TODO
+                file_materials.get("PackageVersion"),
+                file_materials.get("SPDXID")
+        );
+        unpackaged_component.setUnpackaged(true);
+
+        return unpackaged_component;
+    }
+
+    private Component buildComponent(Map<String, String> componentMaterials, Map<String, String> externalLicenses,
+                                     Set<String> cpes, Set<String> purls) {
+        // Cleanup package originator
+        String supplier = null;
+        if (componentMaterials.get("PackageSupplier") != null) {
+            supplier = componentMaterials.get("PackageSupplier");
+        } else if (componentMaterials.get("PackageOriginator") != null) {
+            supplier = componentMaterials.get("PackageOriginator");
+        }
+
+        if (supplier != null) {
+            supplier = supplier.contains("Person: ") && supplier.contains("<") ? supplier.substring(8) : supplier;
+        }
+
+        // Create new component from required information
+        Component component = new Component(
+                componentMaterials.get("PackageName"),
+                supplier,
+                componentMaterials.get("PackageVersion"),
+                componentMaterials.get("SPDXID"));
+
+        // Append CPEs and Purls
+        component.setCpes(cpes);
+        component.setPurls(purls);
+
+        // License materials map
+        HashSet<String> licenses = new HashSet<>();
+
+        // Get licenses from component materials and split them by 'AND' tag, store them into HashSet and add them to component object
+        if (componentMaterials.get("PackageLicenseConcluded") != null) {
+            licenses.addAll(Arrays.asList(componentMaterials.get("PackageLicenseConcluded").split(" AND ")));
+        }
+        if (componentMaterials.get("PackageLicenseDeclared") != null) {
+            licenses.addAll(Arrays.asList(componentMaterials.get("PackageLicenseDeclared").split(" AND ")));
+        }
+
+        // Remove any NONE/NOASSERTION licenses
+        licenses.remove("NONE");
+        licenses.remove("NOASSERTION");
+
+        // Replace any extracted license information
+        licenses = (HashSet<String>) licenses.stream().map(l -> {
+            if (l.contains("LicenseRef") && externalLicenses.get(l) != null) return externalLicenses.get(l);
+            return l;
+        }).collect(Collectors.toSet());
+
+        component.setLicenses(licenses);
+
+        return component;
     }
 }
