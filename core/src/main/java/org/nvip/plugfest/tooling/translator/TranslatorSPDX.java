@@ -127,42 +127,24 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Extracted Licensing Info
          */
-        String extractedLicenses = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
+        String extractedLicenseContent = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
+        List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n"));
 //
-//        /**
-//         * Parse through extracted licenses (if any) and store them
-//         */
-//        while ( current_line != null
-//                && !current_line.contains(UNPACKAGED_TAG)
-//                && !current_line.contains(PACKAGE_TAG)
-//                && !current_line.contains(RELATIONSHIP_TAG)
-//                && !current_line.contains(RELATIONSHIP_KEY)
-//        ) {
-//            if (current_line.contains(UNPACKAGED_TAG) || current_line.contains(PACKAGE_TAG) ||
-//                    current_line.contains(RELATIONSHIP_TAG)) break;
-//
-//            if (!current_line.isEmpty()) { // Skip over empty lines
-//                current_line = tryReadingLine(br, fileName);
-//                continue;
-//            }
-//
-//            String licenseId = null;
-//            String licenseName = null;
-//
-//            // Loop through the contents until the next empty line or tag
-//            while (!(current_line = tryReadingLine(br, fileName)).contains(TAG) && !current_line.isEmpty()) {
-//                if (current_line.contains(EXTRACTED_LICENSE_ID)) licenseId = current_line.split(": ")[1];
-//                if (current_line.contains(EXTRACTED_LICENSE_NAME)) licenseName = current_line.split(": ")[1];
-//
-//                if(licenseId != null && licenseName != null) { // Only add the pair if we have all info
-//                    externalLicenses.put(licenseId, licenseName);
-//
-//                    // Reset licenses
-//                    licenseId = null;
-//                    licenseName = null;
-//                }
-//            }
-//        }
+        for (String extractedLicenseBlock : extractedLicenses) {
+            String licenseId = null;
+            String licenseName = null;
+
+            m = TAG_VALUE_PATTERN.matcher(extractedLicenseBlock);
+            while(m.find()) {
+                switch (m.group(1)) {
+                    case EXTRACTED_LICENSE_ID -> licenseId = m.group(2);
+                    case EXTRACTED_LICENSE_NAME -> licenseName = m.group(2);
+                    default -> {} // TODO more fields?
+                }
+            }
+
+            if (licenseId != null && licenseName != null) externalLicenses.put(licenseId, licenseName);
+        }
 
         /*
             Files
