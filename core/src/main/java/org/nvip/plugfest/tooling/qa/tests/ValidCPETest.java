@@ -38,9 +38,9 @@ public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest 
                 continue;
             Result r;
             if (this.cpe23Regex.matcher(cpe.strip()).matches()) {
-                r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "CPE Passed");
             } else {
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE");
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE Failed");
             }
             r.addContext(sbom, "cpe");
             results.add(r);

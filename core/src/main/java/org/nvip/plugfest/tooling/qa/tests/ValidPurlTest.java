@@ -36,9 +36,9 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
                 continue;
             Result r;
             if (this.purlRegex.matcher(p.strip()).matches()) {
-                r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "Purl Passed");
             } else {
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE");
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Purl Failed");
             }
             r.addContext(sbom, "purl");
             results.add(r);
