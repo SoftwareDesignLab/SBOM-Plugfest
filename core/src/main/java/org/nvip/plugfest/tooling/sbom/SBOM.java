@@ -64,7 +64,7 @@ public class SBOM {
     /**
      * Metadata of SBOM
      */
-    private Set<String> metaData;
+    private Set<String> metadata;
 
     /**
      * Default constructor
@@ -352,14 +352,14 @@ public class SBOM {
      * Add additional ambiguous metadata to SBOM
      * @param m String representation of data
      */
-    public void addMetaData(String m){
-        metaData.add(m);
+    public void addMetadata(String m){
+        metadata.add(m);
     }
-    public void setMetaData(Set<String> md){
-        metaData = md;
+    public void setMetadata(Set<String> md){
+        metadata = md;
     }
-    public Set<String> getMetaData(){
-        return metaData;
+    public Set<String> getMetadata(){
+        return metadata;
     }
 
     /**

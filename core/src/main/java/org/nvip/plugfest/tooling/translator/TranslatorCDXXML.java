@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -137,7 +136,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
-        sbom.setMetaData(resolvedMetadata);
+        sbom.setMetadata(resolvedMetadata);
 
         /*
          * Cycle through all components and correctly attach them to Java SBOM object
@@ -237,7 +236,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                     StringBuilder toolString = new StringBuilder();
                     Component component;
                     if(!component_items.containsKey("publisher")){
-                        sbom.addMetaData(toolString.append("[Application tool - Name: ")
+                        sbom.addMetadata(toolString.append("[Application tool - Name: ")
                                 .append(component_items.get("name")).append(" - Version: ")
                                 .append(component_items.get("version")).append(" - Bom-ref: ")
                                 .append(component_items.get("bom-ref")).append("]").toString());
@@ -331,7 +330,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                     toolString = new StringBuilder("[").append(toolString);
                 if(!toolString.toString().contains("["))
                     toolString.append("]");
-                sbom.addMetaData(toolString.toString());
+                sbom.addMetadata(toolString.toString());
 
             }
         }
