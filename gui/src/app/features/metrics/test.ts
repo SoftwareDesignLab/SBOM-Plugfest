@@ -41,8 +41,6 @@ export class QualityReport {
         });
       });
     });
-
-    console.log(this.identifiers);
   }
 
   /**

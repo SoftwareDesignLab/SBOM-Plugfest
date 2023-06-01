@@ -1,11 +1,8 @@
 /**@author Justin Jantzi*/
 import { Injectable } from '@angular/core';
 import { ClientService } from './client.service';
-import { HttpParams } from '@angular/common/http';
 import { IpcRenderer } from 'electron';
 import { Comparison } from '@features/comparison/comparison';
-import { BehaviorSubject } from 'rxjs';
-import mockData from '@features/metrics/jsonformatter (1)';
 import {QualityReport, test} from '@features/metrics/test';
 
 @Injectable({
@@ -37,7 +34,6 @@ export class DataHandlerService {
     } else {
       console.warn('App not running inside Electron!');
     }
-        this.metrics['test'] = new QualityReport(mockData);
   }
 
   AddFiles(paths: string[]) {
@@ -61,7 +57,7 @@ export class DataHandlerService {
 
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data: any) => {
-      this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
+      this.client.post("qa", {fileName: path, contents: data}).subscribe((result) => {
         this.metrics[path] = new QualityReport(result as test);
         this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       },
@@ -119,10 +115,10 @@ export class DataHandlerService {
 
           this.lastSentFilePaths = filePaths;
 
-          this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
-            this.comparison = result;
-            this.loadingComparison = false;
-          })
+          // this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
+          //   this.comparison = result;
+          //   this.loadingComparison = false;
+          // })
         }
       })
     })
