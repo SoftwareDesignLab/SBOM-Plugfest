@@ -66,87 +66,107 @@ public class IsRegisteredTest extends MetricTest{
         else{
             // check all purl based on its type
             for(PURL p : c.getPurls()){
-                // holds the response code from the purl
-                int response;
-                String packageManager = p.getType();
-                try{
-                    // extract method based on package manager type
-                    switch(packageManager.toLowerCase()) {
-                        // TODO More cases need to be added for package manager types
-                        case "maven" -> response =  extractFromMaven(p);
-                        case "pypi" -> response = extractFromPyPi(p);
-                        case "nuget" -> response = extractFromNuget(p);
-                        case "cargo" -> response = extractFromCargo(p);
-                        case "golang" -> response = extractFromGo(p);
-                        case "npm" -> response = extractFromNPM(p);
-                        case "composer" -> response = extractFromComposer(p);
-                        case "gem" -> response = extractFromGem(p);
-                        case "hackage" -> response = extractFromHackage(p);
-                        case "hex" -> response = extractFromHex(p);
-                        case "conan" -> response = extractFromConan(p);
-                        case "huggingface" -> response = extractFromHuggingFace(p);
-                        case "cocoapods" -> response = extractFromCocoapods(p);
-                        case "cran" -> response = extractFromCran(p);
-                        case "pub" -> response = extractFromPub(p);
-                        case "conda" -> response = extractFromConda(p);
-                        // an invalid or not recognized package manager type
-                        default -> {
-                            r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                                    "Package Manager is not valid or " +
-                                            "not recognized: " + packageManager);
-                            r.addContext(c, "PURL Package Validation");
-                            r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-                            r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-                            purlResults.add(r);
-                            // error number to skip other results
-                            response = -1;
+                // purl is null, test cannot run, add result as an error
+                if(isEmptyOrNull(p)){
+                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                            "PURL is null, test cannot run");
+                    r.addContext(c, "PURL Validation");
+                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
+                    purlResults.add(r);
+                }
+                // purl is not null, the test can continue
+                else {
+                    // holds the response code from the purl
+                    int response;
+                    String packageManager = p.getType();
+                    try {
+                        // extract method based on package manager type
+                        switch (packageManager.toLowerCase()) {
+                            // TODO More cases need to be added for package manager types
+                            case "maven" -> response = extractFromMaven(p);
+                            case "pypi" -> response = extractFromPyPi(p);
+                            case "nuget" -> response = extractFromNuget(p);
+                            case "cargo" -> response = extractFromCargo(p);
+                            case "golang" -> response = extractFromGo(p);
+                            case "npm" -> response = extractFromNPM(p);
+                            case "composer" -> response =
+                                    extractFromComposer(p);
+                            case "gem" -> response = extractFromGem(p);
+                            case "hackage" -> response = extractFromHackage(p);
+                            case "hex" -> response = extractFromHex(p);
+                            case "conan" -> response = extractFromConan(p);
+                            case "huggingface" -> response =
+                                    extractFromHuggingFace(p);
+                            case "cocoapods" -> response =
+                                    extractFromCocoapods(p);
+                            case "cran" -> response = extractFromCran(p);
+                            case "pub" -> response = extractFromPub(p);
+                            case "conda" -> response = extractFromConda(p);
+                            // an invalid or not recognized package manager type
+                            default -> {
+                                r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                                        "Package Manager is not valid or " +
+                                                "not recognized: " +
+                                                packageManager);
+                                r.addContext(c, "PURL Package Validation");
+                                r.updateInfo(Result.Context.FIELD_NAME,
+                                        "PURL");
+                                r.updateInfo(Result.Context.STRING_VALUE,
+                                        p.toString());
+                                purlResults.add(r);
+                                // error number to skip other results
+                                response = -1;
+                            }
                         }
                     }
-                }
-                // if there are any issues with the url or http connection
-                catch(IOException e){
-                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL had an error in producing URL");
-                    r.addContext(c, "PURL Package Validation");
-                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-                    purlResults.add(r);
-                    // error number to skip other results
-                    response = -1;
-
-                }
-                // no errors occurred in checking the PURL through the URL
-                // so some response code was returned
-                if(response != 0 && response != -1){
-                    // if the response code is 200 (HTTP_OK), then
-                    // package is registered with package manager
-                    if(response == HttpURLConnection.HTTP_OK){
-                        r = new Result(TEST_NAME, Result.STATUS.PASS,
-                                "Package is registered with package " +
-                                        "manager: " + packageManager);
-                    }
-                    // any other response codes result in a test fail
-                    else{
-                        r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                                "Package is not registered with " +
-                                        "package manager: " + packageManager);
+                    // if there are any issues with the url or http connection
+                    catch (IOException e) {
+                        r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                                "PURL had an error in producing URL");
+                        r.addContext(c, "PURL Package Validation");
+                        r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                        r.updateInfo(Result.Context.STRING_VALUE, p.toString());
+                        purlResults.add(r);
+                        // error number to skip other results
+                        response = -1;
 
                     }
-                    r.addContext(c, "PURL Package Validation");
-                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-                    purlResults.add(r);
-                }
-                // some tests will throw a 0 if a different error occurs
-                else if(response == 0){
-                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL had an error");
-                    r.addContext(c, "PURL Package Validation");
-                    r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-                    purlResults.add(r);
-                }
+                    // no errors occurred in checking the PURL through the URL
+                    // so some response code was returned
+                    if (response != 0 && response != -1) {
+                        // if the response code is 200 (HTTP_OK), then
+                        // package is registered with package manager
+                        if (response == HttpURLConnection.HTTP_OK) {
+                            r = new Result(TEST_NAME, Result.STATUS.PASS,
+                                    "Package is registered with package " +
+                                            "manager: " + packageManager);
+                        }
+                        // any other response codes result in a test fail
+                        else {
+                            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                                    "Package is not registered with " +
+                                            "package manager: " +
+                                            packageManager);
 
+                        }
+                        r.addContext(c, "PURL Package Validation");
+                        r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                        r.updateInfo(Result.Context.STRING_VALUE,
+                                p.toString());
+                        purlResults.add(r);
+                    }
+                    // some tests will throw a 0 if a different error occurs
+                    else if (response == 0) {
+                        r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                                "PURL had an error");
+                        r.addContext(c, "PURL Package Validation");
+                        r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                        r.updateInfo(Result.Context.STRING_VALUE,
+                                p.toString());
+                        purlResults.add(r);
+                    }
+                }
             }
         }
         return purlResults;
