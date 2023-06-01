@@ -510,4 +510,26 @@ public class IsRegisteredTest extends MetricTest{
         // get the response code from this url
         return huc.getResponseCode();
     }
+
+    /**
+     * Extract data from GitHub based packages
+     * Source: <a href="https://github.com/">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromGithub(PURL p) throws IOException{
+
+        // Query GitHub package page
+        // namespace and repo name are required
+        // add the version if needed (can be a commit or tag)
+        //TODO determine if version is tag or commit?
+        URL url = new URL("https://github.com/" +
+                p.getNamespace() + "/" +
+                p.getName().toLowerCase() + "/" +
+                (p.getVersion() != null ? "commit/" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
 }
