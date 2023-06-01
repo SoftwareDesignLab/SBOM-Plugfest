@@ -2,23 +2,12 @@
     <div class="results" *ngIf="result">
         <app-accordion [extra]="[(result ? result.length : '0') + ' Result(s)']" style="flex-direction: column;" [expanded]="true">
             <div body>
-                <app-accordion *ngFor="let identifier of identifiers" style="flex-direction: column;" [extra]="[  '% Passed' ]">
+                <app-accordion *ngFor="let res of result" style="flex-direction: column;" [extra]="[  '% Passed' ]" color="var(--red)">
                     <div title class="title">
-                    <span>{{identifier}}</span>
+                    <span>{{res.message}}</span>
                     </div>
                     <div body>
-                        <app-accordion  *ngFor="let testTitle of qr?.getResultsByComponent(identifier)">
-                            <div title class="title">{{testTitle | json}}</div>
-                            <div body>
-                                <!-- <div class="tests">
-                                    <div class="test" *ngFor="let test of result[identifier][testTitle]">
-                                        <div class="result flex" id="{{test.pass === 1 ? 'pass' : 'fail'}}" style="color: white">
-                                            <span>{{test.additionalInfo['IDENTIFIER']}}</span> <span>{{getTestMessage(test)}}</span>
-                                        </div>
-                                    </div>
-                                </div> -->
-                            </div>
-                        </app-accordion>
+                        {{res | json}}
                     </div>
                 </app-accordion>
             </div>

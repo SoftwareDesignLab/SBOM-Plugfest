@@ -11,11 +11,7 @@ export class MetricsBodyComponent {
   constructor(private handler: DataHandlerService) {}
   testResult: testResult | null = null;
   qr: QualityReport | null = null;
-
-  //  STRING_VALUE: "Pivotal Software, Inc.",
-  //   IDENTIFIER: "spring-boot-autoconfigure",
-  //   FIELD_NAME: "publisher",
-  //   TYPE: "Component",
+  filteredArray: any[] = [];
 
   get result() {
     this.qr = this.handler.metrics[this.handler.selectedQualityReport];
@@ -26,19 +22,10 @@ export class MetricsBodyComponent {
     return this.qr?.identifiers ? Array.from(this.qr.identifiers.values()) : [];
   }
 
-  getTestMessage(result: testResult) {
-    const info = result.additionalInfo;
-    return `${info["FIELD_NAME"]}: ${result.message.toLowerCase()} ${
-      info["STRING_VALUE"] ? info["STRING_VALUE"] : ""
-    }`;
-  }
-
-  getPassedPercent(testResult: any) {
-    return 100;
-    return (
-      (testResult.successfulTests / testResult.tests.length) *
-      100
-    ).toFixed(2);
+  getTestMessage(result: any) {
+    return `${result.field} ${result.message.toLowerCase()} ${
+      result.t? info["STRING_VALUE"] : ""
+    }`
   }
 
   getKeys(obj: Object) {

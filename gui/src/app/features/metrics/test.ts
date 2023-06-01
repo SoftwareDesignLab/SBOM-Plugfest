@@ -34,8 +34,10 @@ export class QualityReport {
             result,
             category,
             test,
+            message: result.message,
             pass: result.pass,
             type: result.additionalInfo["TYPE"] || "",
+            fieldName: result.additionalInfo['FIELD_NAME'],
             identifier: result.additionalInfo["IDENTIFIER"] || "",
           });
         });
