@@ -3,6 +3,7 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
@@ -53,8 +54,17 @@ public class TranslatorCDXJSON extends TranslatorCore {
         // Ensure metadata is not null before we begin querying it
         Metadata metadata = json_sbom.getMetadata();
         if(metadata != null) {
-            bom_data.put("author", json_sbom.getMetadata().getAuthors() == null ?
-                    json_sbom.getMetadata().getTools().toString() : json_sbom.getMetadata().getAuthors().toString());
+            List<OrganizationalContact> authorList = json_sbom.getMetadata().getAuthors();
+            if (authorList != null) {
+                String authors = authorList.stream().map(
+                                                          n -> (n.getName() == null ?  "" : "Name: "    + n.getName())  +
+                                                               (n.getEmail() == null ? "" : ", Email: " + n.getEmail()) +
+                                                               (n.getPhone() == null ? "" : ", Phone: " + n.getPhone())
+                                                       )
+                                                   .collect(Collectors.joining(" ; ", "{ ", " }")); // at least {}
+                bom_data.put("author", authors);
+            }
+
             bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
 
             // Top component analysis (check if not null as well)
