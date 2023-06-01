@@ -100,7 +100,9 @@ public class PURL {
         return version;
     }
 
-
+    public LinkedHashMap<String, String> getQualifiers() {
+        return qualifiers;
+    }
 
     ///
     /// Overrides

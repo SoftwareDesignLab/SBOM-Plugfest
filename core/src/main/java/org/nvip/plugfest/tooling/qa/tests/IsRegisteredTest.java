@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -85,12 +86,15 @@ public class IsRegisteredTest extends MetricTest{
                         case "cocoapods" -> response = extractFromCocoapods(p);
                         case "cran" -> response = extractFromCran(p);
                         case "pub" -> response = extractFromPub(p);
+                        case "conda" -> response = extractFromConda(p);
                         // an invalid or not recognized package manager type
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
                                     "Package Manager is not valid: " + packageManager);
                             r.addContext(c, "PURL Package Validation");
                             purlResults.add(r);
+                            // error number to skip other results
+                            response = -1;
                         }
                     }
                 }
@@ -100,11 +104,13 @@ public class IsRegisteredTest extends MetricTest{
                             "PURL had an error");
                     r.addContext(c, "PURL Package Validation");
                     purlResults.add(r);
+                    // error number to skip other results
+                    response = -1;
 
                 }
                 // no errors occurred in checking the PURL through the URL
                 // so some response code was returned
-                if(response != 0){
+                if(response != 0 && response != -1){
                     // if the response code is 200 (HTTP_OK), then
                     // package is registered with package manager
                     if(response == HttpURLConnection.HTTP_OK){
@@ -123,7 +129,7 @@ public class IsRegisteredTest extends MetricTest{
                     purlResults.add(r);
                 }
                 // some tests will throw a 0 if a different error occurs
-                else{
+                else if(response == 0){
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
                             "PURL had an error");
                     r.addContext(c, "PURL Package Validation");
@@ -460,6 +466,36 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL("https://cran.r-project.org/web/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
+        return huc.getResponseCode();
+    }
+
+    /**
+     * Extract data from Conda based packages
+     * Source: <a href="https://repo.anaconda.com">...</a>
+     * @param p purl to use to query for info
+     * @return an int response code when opening up a connection with PURL info
+     * @throws IOException issue with http connection
+     */
+    private int extractFromConda(PURL p) throws IOException{
+        // need to get purls qualifiers. build, channel, subdir,
+        // and type required for url
+        LinkedHashMap<String, String> pQualifiers = p.getQualifiers();
+        // usually a string of numbers and chars
+        String build = pQualifiers.get("build");
+        // what channel the package is located in
+        String channel = pQualifiers.get("channel");
+        // the associated platform of the package
+        String subdir = pQualifiers.get("subdir");
+        // package type (tar.bz2,conda, etc)
+        String type = pQualifiers.get("type");
+        // Query Conda Repository
+        // along with the qualifiers, package name and version are required
+        URL url = new URL("https://repo.anaconda.com/pkgs/" +
+                channel + "/" + subdir + "/" +
+                p.getName().toLowerCase() + "-" + p.getVersion() + "-" +
+                build + "." + type);
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
         return huc.getResponseCode();
