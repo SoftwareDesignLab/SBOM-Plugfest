@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -241,7 +240,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     this.loadComponent(component);
 
-                    this.product = product == null ? component : product;
+                    this.topComponent = topComponent == null ? component : topComponent;
 
                 }
 
@@ -280,7 +279,7 @@ public class TranslatorCDXXML extends TranslatorCore {
             }
         } else {
             dependencies.put(
-                    this.product.getUniqueID(),
+                    this.topComponent.getUniqueID(),
                     components.values().stream().map(x->x.getUniqueID()).collect(Collectors.toCollection(ArrayList::new))
             );
         }
@@ -289,13 +288,13 @@ public class TranslatorCDXXML extends TranslatorCore {
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
         try { // TODO should these errors be thrown?
-            dependencyBuilder(components, this.product,null);
+            dependencyBuilder(components, this.topComponent,null);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
         }
 
         try {
-            defaultDependencies(this.product);
+            defaultDependencies(this.topComponent);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Something went wrong with defaulting dependencies. A dependency tree may" +
                     " not exist.");
