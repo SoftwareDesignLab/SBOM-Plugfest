@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 ## [3.7.0] - 2023-05-31
 ### Added
-
+- New QA Refactor
+  - Unified Metric testing process
+    - `UniquenessProcessor` - Collection of Tests for checking a component's UIDs (Hashes, PURLs, etc)
+      - `HasHashDataTest` - Test if a component has any hash values and the number of hashes if present
+      -  `ValidTestDataTest` - Test hashes if they match a valid hash schema
+      - `AccuratePURLTest` - Test a component's PURL(s) if its data matches the component's stored data
 ### Changed
 - `DiffReport` is now more JSON friendly object
   - Consolidated `Comparer`, `Comparison`, and `ComponentVersion`
