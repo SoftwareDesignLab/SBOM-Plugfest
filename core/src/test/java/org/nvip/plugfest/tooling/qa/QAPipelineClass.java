@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.qa;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
+import org.nvip.plugfest.tooling.qa.processors.UniquenessProcessor;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.DependencyTree;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -50,6 +51,7 @@ public class QAPipelineClass {
         // Throw the SBOM into the QA Pipeline
         Set<AttributeProcessor> processors = new HashSet<>();
         processors.add(new CompletenessProcessor());
+        processors.add(new UniquenessProcessor());
         QualityReport test_quality_report = QAPipeline.process("SBOM1", test_SBOM, processors);
 
         // Make sure quality report is an actual QualityReport and is not null
