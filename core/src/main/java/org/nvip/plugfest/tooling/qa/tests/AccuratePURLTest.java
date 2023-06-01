@@ -15,8 +15,15 @@ import java.util.Set;
  * @author Matthew Morrison
  */
 public class AccuratePURLTest extends MetricTest{
-
+    // the test name for the results
     private static final String TEST_NAME = "AccuratePURL";
+
+    /**
+     * Test ecery component for purls. If they are present, test if
+     * PURLs match the component's stored data
+     * @param sbom SBOM to test
+     * @return a collection of results for each component and their PURL(s)
+     */
     @Override
     public List<Result> test(SBOM sbom) {
         // list to hold results for each component
@@ -50,38 +57,88 @@ public class AccuratePURLTest extends MetricTest{
         // purls are present in the component, test each purl for matching
         // info with component
         else{
-            // hold the component name and version
-            String componentName = c.getName();
-            String componentVersion = c.getVersion();
             for(PURL p: componentPURL){
-                String name = p.getName();
-                String version = p.getVersion();
-                //TODO Check PURL Namespace and component group?
-                // Looks like component group is not saved info
-
-                // if purl's name and version matches the component's
-                // name and version, info matches with component and
-                // test passes
-                if(name.equals(componentName) &&
-                        version.equals(componentVersion)){
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL " +
-                            "matches component data");
-                }
-                // information was not matching, test fails
-                else{
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                            " does not match component data");
-                }
-                r.addContext(c, "Matching PURLs");
-                r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-                r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-
-                purlResults.add(r);
-
+                // test the validity of the purl's name and add its result
+                purlResults.add(testPURLName(c, p));
+                // test the validity of the purl's version and add its result
+                purlResults.add(testPURLVersion(c, p));
             }
 
         }
         return purlResults;
 
+    }
+
+    /**
+     * Method checks if the purl's name matches the components name
+     * @param c the component to compare with
+     * @param p the purl to compare with
+     * @return the result of checking if the PURL and component name matches
+     */
+    private Result testPURLName(Component c, PURL p){
+        // get the purl and component's name
+        String purlName = p.getName();
+        String componentName = c.getName();
+
+        Result r;
+
+        // if purlName is empty, test automatically fails, cannot check
+        // if names match
+        if(isEmptyOrNull(purlName)){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                    "does not have a name");
+        }
+        // if the two names do not match, the test fails
+        else if(!purlName.equals(componentName)){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                    "name does not match component's name");
+        }
+        // if the two names do match, the test passes
+        else{
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                    "name matches component's name");
+        }
+        // add context about the findings
+        r.addContext(c, "Matching PURL data");
+        r.updateInfo(Result.Context.FIELD_NAME, "PURL Name");
+        r.updateInfo(Result.Context.STRING_VALUE, p.toString());
+
+        return r;
+    }
+
+    /**
+     * Method checks if the purl's version matches the components version
+     * @param c the component to compare with
+     * @param p the purl to compare with
+     * @return the result of checking if the PURL and component version matches
+     */
+    private Result testPURLVersion(Component c, PURL p){
+        // get the purl and component's version
+        String purlVersion = p.getVersion();
+        String componentVersion = c.getVersion();
+
+        Result r;
+        // if purlVersion is empty, test automatically fails, cannot check
+        // if names match
+        if(isEmptyOrNull(purlVersion)){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                    "does not have a version");
+        }
+        // if the two versions do not match, the test fails
+        else if(!purlVersion.equals(componentVersion)){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                    "version does not match component's version");
+        }
+        // if the two versions do match, the test passes
+        else{
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                    "version matches component's version");
+        }
+        // add context about the findings
+        r.addContext(c, "Matching PURL data");
+        r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
+        r.updateInfo(Result.Context.STRING_VALUE, p.toString());
+
+        return r;
     }
 }
