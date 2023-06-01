@@ -153,16 +153,13 @@ public class IsRegisteredTest extends MetricTest{
 
     /**
      * Extract data for maven based packages.
-     * Source: <a href="https://mvnrepository.com/">...</a>
+     * Source: <a href="https://central.sonatype.com/artifact/">...</a> -> returns 403
+     * New Source: <a href="https://central.sonatype.com/artifact/">...</a>
      * @param p purl to use to query for info
      * @return an int response code when opening up a connection with the PURL
      * @throws IOException issue with http connection
      */
     private int extractFromMaven(PURL p) throws IOException{
-        //todo returns 403 using this url
-        // looks like response is stale for site, need to find another way to check
-        // expired Thu, 01 Jan 1970 00:00:01 GMT?
-
         // maven requires namespace
         if(p.getNamespace() == null || p.getNamespace().size() == 0)
             return 0;
@@ -176,7 +173,7 @@ public class IsRegisteredTest extends MetricTest{
         for(int i = 0; i < p.getNamespace().size(); i++)
             namespaceUrl.append(p.getNamespace().get(i).toLowerCase()).append("/");
 
-        URL url = new URL ("https://mvnrepository.com/artifact/" +
+        URL url = new URL ("https://central.sonatype.com/artifact/" +
                 namespaceUrl +
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
@@ -510,28 +507,6 @@ public class IsRegisteredTest extends MetricTest{
                 channel + "/" + subdir + "/" +
                 p.getName().toLowerCase() + "-" + p.getVersion() + "-" +
                 build + "." + type);
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        // get the response code from this url
-        return huc.getResponseCode();
-    }
-
-    /**
-     * Extract data from GitHub based packages
-     * Source: <a href="https://github.com/">...</a>
-     * @param p purl to use to query for info
-     * @return an int response code when opening up a connection with PURL info
-     * @throws IOException issue with http connection
-     */
-    private int extractFromGithub(PURL p) throws IOException{
-
-        // Query GitHub package page
-        // namespace and repo name are required
-        // add the version if needed (can be a commit or tag)
-        //TODO determine if version is tag or commit?
-        URL url = new URL("https://github.com/" +
-                p.getNamespace() + "/" +
-                p.getName().toLowerCase() + "/" +
-                (p.getVersion() != null ? "commit/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
         return huc.getResponseCode();
