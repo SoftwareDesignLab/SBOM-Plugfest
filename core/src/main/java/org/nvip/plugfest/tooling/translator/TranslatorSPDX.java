@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -38,45 +39,29 @@ public class TranslatorSPDX extends TranslatorCore {
 
     private static final String EXTRACTED_LICENSE_TAG = "##### Extracted"; // starts with
 
-    private static final String EXTRACTED_LICENSE_ID = "LicenseID: ";
+    private static final String EXTRACTED_LICENSE_ID = "LicenseID";
 
-    private static final String EXTRACTED_LICENSE_NAME = "LicenseName: ";
+    private static final String EXTRACTED_LICENSE_NAME = "LicenseName";
 
-    private static final String RELATIONSHIP_KEY = "Relationship: ";
+    private static final String RELATIONSHIP_KEY = "Relationship";
 
-    private static final String SPEC_VERSION_TAG = "SPDXVersion: ";
+    private static final String SPEC_VERSION_TAG = "SPDXVersion";
 
-    private static final String ID_TAG = "SPDXID: ";
+    private static final String ID_TAG = "SPDXID";
 
-    private static final String TIMESTAMP_TAG = "Created: ";
+    private static final String TIMESTAMP_TAG = "Created";
 
-    private static final String DOCUMENT_NAMESPACE_TAG = "DocumentNamespace: ";
+    private static final String DOCUMENT_NAMESPACE_TAG = "DocumentNamespace";
 
-    private static final String AUTHOR_TAG = "Creator: ";
+    private static final String AUTHOR_TAG = "Creator";
 
     // Used as an identifier for main SBOM information. Sometimes used as reference in relationships to show header contains main component.
     private static final String DOCUMENT_REFERENCE_TAG = "SPDXRef-DOCUMENT";
 
+    private static final Pattern TAG_VALUE_PATTERN = Pattern.compile("(\\S+): (.+)");
+
     public TranslatorSPDX() {
         super("spdx");
-    }
-
-
-    private String getTagContents(String fileContents, String tag) {
-        String tagContents = "";
-        int firstIndex;
-        int lastIndex;
-
-        while (fileContents.contains(tag)) {
-            // Get boundaries of this tag
-            firstIndex = fileContents.indexOf(tag);
-            lastIndex = fileContents.indexOf(TAG, firstIndex + 1);
-
-            // Use this data to update tagContents with the found tag
-            tagContents += fileContents.substring(firstIndex, lastIndex - 1); // Remove newline
-        }
-
-        return tagContents;
     }
 
 
@@ -110,77 +95,54 @@ public class TranslatorSPDX extends TranslatorCore {
         bom_data.put("sbomVersion", "1");
         bom_data.put("format", "spdx");
 
-        // Break into chunks
-
-        // Top level SBOM data (metadata, etc.)
+        /*
+            Top level SBOM data (metadata, etc.)
+        */
         int firstIndex = fileContents.indexOf(TAG);
         String header = fileContents.substring(0, firstIndex - 2); // Remove newlines
         fileContents = fileContents.substring(firstIndex);
 
-        // Extracted Licensing Info
+        // Process header
+        Matcher m = TAG_VALUE_PATTERN.matcher(header);
+        while(m.find()) {
+            switch (m.group(1)) {
+                case DOCUMENT_NAMESPACE_TAG -> bom_data.put("serialNumber", m.group(2));
+                case SPEC_VERSION_TAG -> bom_data.put("specVersion", m.group(2));
+                case AUTHOR_TAG -> {
+                    if (!bom_data.containsKey("author")) bom_data.put("author", m.group(2));
+                    else bom_data.put("author", bom_data.get("author") + " " + m.group(2));
+                }
+                case ID_TAG -> bom_data.put("id", m.group(1));
+                case TIMESTAMP_TAG -> bom_data.put("timestamp", m.group(2));
+                default -> bom_data.put(m.group(1), m.group(2));
+            }
+        }
+
+        /*
+            Extracted Licensing Info
+         */
         String extractedLicenses = getTagContents(fileContents, EXTRACTED_LICENSE_TAG); // Remove newline
 
-        // Files
+        /*
+            Files
+         */
         String unpackagedFiles = getTagContents(fileContents, UNPACKAGED_TAG); // Remove newline
 
-        // Packages
+        /*
+            Packages
+         */
         String packageContents = getTagContents(fileContents, PACKAGE_TAG);
 
-        // Relationships
+        /*
+            Relationships
+         */
         // Regex to get every Relationship: tag in file
 
-        return null;
+        this.createSBOM();
 
-        //        /**
-//         * Parse through top level SBOM data
-//         */
-//        // Get next line until end of file is found or un-packaged tag not found
-//        while ( (current_line = tryReadingLine(br, fileName)) != null
-//                && !current_line.contains(UNPACKAGED_TAG)
-//                && !current_line.contains(PACKAGE_TAG)
-//                && !current_line.contains(EXTRACTED_LICENSE_TAG)
-//                && !current_line.contains(RELATIONSHIP_TAG)
-//                && !current_line.contains(RELATIONSHIP_KEY)
-//        ) {
-//            if (current_line.contains(": ")) {
-//
-//                switch (current_line.split(": ", 2)[0] + ": ") {
-//
-//                    case DOCUMENT_NAMESPACE_TAG:
-//                        String sbom_serial_number = current_line.split(": ", 2)[1];
-//
-//                        // Add DocumentNamespace value to sbom materials collection
-//                        bom_data.put("serialNumber", sbom_serial_number);
-//                        break;
-//
-//                    case SPEC_VERSION_TAG:
-//                        bom_data.put("specVersion", current_line.split(": ", 2)[1]);
-//                        break;
-//
-//                    case AUTHOR_TAG:
-//                        if(!bom_data.containsKey("author")) {
-//                            bom_data.put("author", current_line.split(":", 2)[1]);
-//                        } else {
-//                            bom_data.put("author", bom_data.get("author") + " " + current_line.split(":", 2)[1]);
-//                        }
-//                        break;
-//
-//                    case ID_TAG:
-//                        bom_data.put("id", current_line.split(": ", 2)[1]);
-//                        break;
-//
-//                    case TIMESTAMP_TAG:
-//                        bom_data.put("timestamp", current_line.split(": ", 2)[1]);
-//                        break;
-//
-//                    default:
-//                        bom_data.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
-//
-//                }
-//
-//            }
-//
-//        }
+        return sbom;
+
+
 //
 //        /**
 //         * Parse through extracted licenses (if any) and store them
@@ -433,21 +395,29 @@ public class TranslatorSPDX extends TranslatorCore {
     }
 
     /**
-     * Method to read in line from file through BufferedReader class
-     * @param br instantiated BufferedReader
-     * @param fileName name of file
-     * @return current line read in
-     * @throws TranslatorException after catching IOException
+     * Private helper method to get all tag-value pairs categorized under the specified tag (ex. ##### Unpackaged
+     * Files). The tags will be located anywhere in the file; the order of tags does not impact translation of the SBOM.
+     *
+     * @param fileContents The file contents to get the tag from.
+     * @param tag The tag to get all tag-value pairs of.
+     * @return An "excerpt" from the {@code fileContents} string containing all tag-value pairs categorized under {@code
+     * tag}.
      */
-    private static String tryReadingLine(BufferedReader br, String fileName) throws TranslatorException {
-        String current_line;
-        try {
-            current_line = br.readLine();
-        } catch (IOException e) {
-            // Theoretically this should never happen because we're reading from a string lmao
-            throw new TranslatorException("Error translating in" + fileName + ": An IOException occurred");
-        }
-        return current_line;
-    }
+    private String getTagContents(String fileContents, String tag) {
+        String tagContents = "";
+        int firstIndex;
+        int lastIndex;
 
+        while (fileContents.contains(tag)) {
+            // Get boundaries of this tag
+            firstIndex = fileContents.indexOf(tag);
+            lastIndex = fileContents.indexOf(TAG, firstIndex + 1);
+
+            // Use this data to update tagContents with the found tag
+            tagContents += fileContents.substring(firstIndex, lastIndex - 1); // Remove newline
+            fileContents = fileContents.substring(0, firstIndex) + fileContents.substring(lastIndex);
+        }
+
+        return tagContents;
+    }
 }
