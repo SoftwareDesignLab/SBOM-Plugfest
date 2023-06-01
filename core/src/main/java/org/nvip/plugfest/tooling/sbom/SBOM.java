@@ -304,6 +304,16 @@ public class SBOM {
         this.signature = signature;
     }
 
+    public void addMetadata(String m){
+        metadata.add(m);
+    }
+    public void setMetadata(Set<String> md){
+        metadata = md;
+    }
+    public Set<String> getMetadata(){
+        return metadata;
+    }
+
     ///
     /// Overrides
     ///
@@ -346,20 +356,6 @@ public class SBOM {
 
         // Now we can return
         return retVal;
-    }
-
-    /**
-     * Add additional ambiguous metadata to SBOM
-     * @param m String representation of data
-     */
-    public void addMetadata(String m){
-        metadata.add(m);
-    }
-    public void setMetadata(Set<String> md){
-        metadata = md;
-    }
-    public Set<String> getMetadata(){
-        return metadata;
     }
 
     /**
