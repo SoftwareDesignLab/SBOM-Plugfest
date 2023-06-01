@@ -58,4 +58,8 @@ export class QualityReport {
   getResultByGrade(num: -1 | 1 | 0) {
     return this.results.filter(result => result.pass === num);
   }
+
+  getResultsForCategory(category: string) {
+    return this.results.filter(result => result.category === category)
+  }
 }
