@@ -128,27 +128,6 @@ public class TranslatorSPDX extends TranslatorCore {
             Extracted Licensing Info
          */
         String extractedLicenses = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
-
-        /*
-            Files
-         */
-        String unpackagedFiles = getTagContents(fileContents, UNPACKAGED_TAG);
-
-        /*
-            Packages
-         */
-        String packageContents = getTagContents(fileContents, PACKAGE_TAG);
-
-        /*
-            Relationships
-         */
-        // Regex to get every Relationship: tag in file
-
-        this.createSBOM();
-
-        return sbom;
-
-
 //
 //        /**
 //         * Parse through extracted licenses (if any) and store them
@@ -184,50 +163,38 @@ public class TranslatorSPDX extends TranslatorCore {
 //                }
 //            }
 //        }
-//
-//        /**
-//         * Parse through unpackaged files, add them to components HashSet
-//         */
-//        // While line isn't null, package tag, relationship tag, or a relationship key
-//        while ( current_line != null
-//                && !current_line.contains(PACKAGE_TAG)
-//                && !current_line.contains(RELATIONSHIP_TAG)
-//                && !current_line.contains(RELATIONSHIP_KEY)
-//        ) {
-//            if (current_line.contains(PACKAGE_TAG) || current_line.contains(RELATIONSHIP_TAG)) break;
-//
-//            if (!current_line.isEmpty()) { // Skip over empty lines
-//                current_line = tryReadingLine(br, fileName);
-//                continue;
-//            }
-//
-//            // Information for un-packaged component
-//            HashMap<String, String> file_materials = new HashMap<>();
-//
-//            // If current line is empty (new un-packaged component)
-//            // Loop through the contents until the next empty line or tag
-//            while (!(current_line = tryReadingLine(br, fileName)).contains(TAG) && !current_line.isEmpty()) {
-//
-//                // If line contains separator, split line into Key:Value then store it into component materials map
-//                if ( current_line.contains(": ")) {
-//                    file_materials.put(current_line.split(": ", 2)[0], current_line.split(": ", 2)[1]);
-//                }
-//            }
-//
-//            // Create new component from materials
-//            Component unpackaged_component = new Component(
-//                    file_materials.get("FileName"),
-//                    "Unknown",
-//                    file_materials.get("PackageVersion"),
-//                    file_materials.get("SPDXID")
-//            );
-//            unpackaged_component.setUnpackaged(true);
-//
-//            // Add unpackaged file to components
-//            this.components.put(unpackaged_component.getUniqueID(), unpackaged_component);
-//        }
-//
-//        /**
+
+        /*
+            Files
+         */
+
+        String unpackagedFilesContents = getTagContents(fileContents, UNPACKAGED_TAG);
+        List<String> files = List.of(unpackagedFilesContents.split("\n")); // Split over newline
+
+        for(String fileBlock : files) {
+            m = TAG_VALUE_PATTERN.matcher(fileBlock);
+            HashMap<String, String> file_materials = new HashMap<>();
+            while(m.find()) {
+                file_materials.put(m.group(1), m.group(2));
+            }
+
+            // Create new component from materials
+            Component unpackaged_component = new Component(
+                    file_materials.get("FileName"),
+                    "Unknown", // TODO
+                    file_materials.get("PackageVersion"),
+                    file_materials.get("SPDXID")
+            );
+            unpackaged_component.setUnpackaged(true);
+
+            // Add unpackaged file to components
+            this.components.put(unpackaged_component.getUniqueID(), unpackaged_component); // TODO is unique id correct?
+        }
+
+        /*
+            Packages
+         */
+        String packageContents = getTagContents(fileContents, PACKAGE_TAG);//        /**
 //         * Parse through components, add them to components HashSet
 //         */
 //        // Loop through every Package until Relationships or end of file
@@ -366,11 +333,12 @@ public class TranslatorSPDX extends TranslatorCore {
 //                current_line = tryReadingLine(br, fileName);
 //            }
 //        }
-//
-//        try {
-//            br.close();
-//        } catch (IOException ignored) {}
-//
+
+        /*
+            Relationships
+         */
+        // Regex to get every Relationship: tag in file
+
 //        if (product_id.contains(DOCUMENT_REFERENCE_TAG)) {
 //            product_data.put("name", bom_data.get("DocumentName"));
 //            product_data.put("publisher", bom_data.get("N/A"));
@@ -380,10 +348,10 @@ public class TranslatorSPDX extends TranslatorCore {
 //        } else {
 //            product = components.get(product_id);
 //        }
-//
-//        // Create the new SBOM Object with top level data
-//        this.createSBOM();
-//
+
+        // Create the new SBOM Object with top level data
+        this.createSBOM();
+
 //        // Create the top level component
 //        // Build the dependency tree using dependencyBuilder
 //        try {
@@ -392,12 +360,11 @@ public class TranslatorSPDX extends TranslatorCore {
 //            Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
 //            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
 //        }
-//
-//        this.defaultDependencies(this.product);
-//
-//        // Return SBOM object
-//        return this.sbom;
 
+//        this.defaultDependencies(this.product);
+
+        // Return the final SBOM object
+        return sbom;
     }
 
     /**
