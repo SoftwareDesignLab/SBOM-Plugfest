@@ -78,8 +78,6 @@ public class TranslatorSPDX extends TranslatorCore {
     protected SBOM translateContents(String fileContents, String file_path) throws TranslatorException {
 
         // Top level component information
-        String sbom_serial_number;
-
         String product_id = "";
 
         String fileName = file_path.substring(file_path.lastIndexOf('/') + 1).trim().toLowerCase(); // todo make sure this works
@@ -119,21 +117,7 @@ public class TranslatorSPDX extends TranslatorCore {
                 switch (current_line.split(": ", 2)[0] + ": ") {
 
                     case DOCUMENT_NAMESPACE_TAG:
-                        // Attempt to get UUID from current line using regex
-                        // replaceAll regex provided by:
-                        // https://stackoverflow.com/questions/25852961/how-to-remove-brackets-character-in-string-java
-                        sbom_serial_number = Arrays.toString(
-                                uuid_pattern
-                                        .matcher(current_line)
-                                        .results()
-                                        .map(MatchResult::group)
-                                        .toArray(String[]::new)
-                        ).replaceAll("[\\[\\](){}]", "");
-
-                        // If a UUID is found, set it as the SBOM serial number, otherwise default to DocumentNamespace value
-                        sbom_serial_number = (sbom_serial_number.isBlank()) // TODO: Verify change (sbom_serial_number was never null, only possibly empty)
-                                ? bom_data.get("DocumentNamespace")
-                                : sbom_serial_number;
+                        String sbom_serial_number = current_line.split(": ", 2)[1];
 
                         // Add DocumentNamespace value to sbom materials collection
                         bom_data.put("serialNumber", sbom_serial_number);
