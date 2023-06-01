@@ -79,6 +79,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         NodeList sbomMeta;
         NodeList sbomComp;
         NodeList sbomDependencies;
+        NodeList appTools;
 
         // Get SBOM Metadata and Components
         try {
@@ -108,6 +109,14 @@ public class TranslatorCDXXML extends TranslatorCore {
             Debug.log(Debug.LOG_TYPE.WARN, "No dependencies found. Dependency Tree may not build correctly. " +
                     "File: " + file_path);
             sbomDependencies = null;
+        }
+
+        try {
+            appTools = ((Element) (sbom_xml_file.getElementsByTagName("tools")).item(0)).getElementsByTagName("tool");
+        } catch (Exception e) {
+            Debug.log(Debug.LOG_TYPE.WARN, "No tools found yet. Components with no author will be assumed as tools. " +
+                    "File: " + file_path);
+            appTools = null;
         }
 
         // Get important SBOM items from header (schema, serial, version)
@@ -285,6 +294,12 @@ public class TranslatorCDXXML extends TranslatorCore {
             );
         }
 
+        if(appTools != null){
+            for(int i = 0; i < appTools.getLength(); i++){
+                Node tool = appTools.item(i);
+                int x = 0;
+            }
+        }
 
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
