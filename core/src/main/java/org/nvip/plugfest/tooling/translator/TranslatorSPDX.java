@@ -27,9 +27,8 @@ import java.util.stream.Stream;
  */
 public class TranslatorSPDX extends TranslatorCore {
 
-    /**
-     * Constants
-     */
+    //#region Constants
+
     private static final String TAG = "#####";
 
     private static final String UNPACKAGED_TAG = "##### Unpackaged files";
@@ -66,9 +65,15 @@ public class TranslatorSPDX extends TranslatorCore {
     private static final Pattern RELATIONSHIP_PATTERN = Pattern.compile(RELATIONSHIP_KEY + ": (\\S*) (\\S*) " +
             "(\\S*)");
 
+    //#endregion
+
+    //#region Constructors
+
     public TranslatorSPDX() {
         super("spdx");
     }
+
+    //#endregion
 
 
     /**
@@ -78,32 +83,21 @@ public class TranslatorSPDX extends TranslatorCore {
      * @param file_path Original path to SPDX SBOM
      * @return internal SBOM object from contents
      */
-    // TODO: Break into sub-methods
     @Override
     protected SBOM translateContents(String fileContents, String file_path) throws TranslatorException {
-
         // Top level component information
         String product_id = "";
-
-        String fileName = file_path.substring(file_path.lastIndexOf('/') + 1).trim().toLowerCase(); // todo make sure this works
-
         // Collection for components, packaged and unpackaged
         // Key = SPDXID , Value = Component
         HashMap<String, Component> components = new HashMap<>();
-
-        // Collection of packages, used  for adding head components to top component if in the header (SPDXRef-DOCUMENT)
-        // Value (SPDX_ID)
+        // Collection of package IDs used for adding head components to top component if in the header SPDXRef-DOCUMENT
         ArrayList<String> packages = new ArrayList<>();
-
-        // Map of external licenses mapping ID to name
-        Map<String, String> externalLicenses = new HashMap<>();
-
-        bom_data.put("sbomVersion", "1");
-        bom_data.put("format", "spdx");
+        Map<String, String> externalLicenses = new HashMap<>(); // Map of external licenses mapping ID to name
 
         /*
             Top level SBOM data (metadata, etc.)
         */
+
         fileContents = fileContents.replaceAll("\r", ""); // Remove carriage return characters if windows
         int firstIndex = fileContents.indexOf(TAG); // Find first index of next "section"
         String header;
@@ -116,10 +110,13 @@ public class TranslatorSPDX extends TranslatorCore {
         }
 
         this.parseHeader(header);
+        bom_data.put("sbomVersion", "1");
+        bom_data.put("format", "spdx");
 
         /*
             Extracted Licensing Info
          */
+
         String extractedLicenseContent = getTagContents(fileContents, EXTRACTED_LICENSE_TAG);
         List<String> extractedLicenses = List.of(extractedLicenseContent.split("\n\n"));
 
@@ -144,34 +141,12 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Packages
          */
+
         String packageContents = getTagContents(fileContents, PACKAGE_TAG);
         List<String> packageList = Stream.of(packageContents.split("\n\n")).filter(pkg -> !pkg.contains(TAG)).toList();
 
         for (String pkg : packageList) {
-            // If new package/component is found
-            Map<String, String> componentMaterials = new HashMap<>();
-            Set<String> cpes = new HashSet<>();
-            Set<String> purls = new HashSet<>();
-            // Set<String> swids = new HashSet<>();
-
-            Matcher m = TAG_VALUE_PATTERN.matcher(pkg);
-
-            while (m.find()) {
-                // Special case for external references
-                if (m.group(1).equals(EXTERNAL_REFERENCE_TAG)) {
-                    Matcher externalRef = EXTERNAL_REF_PATTERN.matcher(m.group(0));
-                    if (!externalRef.find()) continue; // TODO invalid formatting?
-                    if (externalRef.group(1).equalsIgnoreCase("security")) cpes.add(externalRef.group(3));
-                    else if (externalRef.group(2).equalsIgnoreCase("purl")) purls.add(externalRef.group(3));
-                    // TODO find examples of how SPDX represents SWID and implement that here
-
-                    continue; // Now that the external ref line has been parsed, continue
-                }
-
-                componentMaterials.put(m.group(1), m.group(2));
-            }
-
-            Component component = buildComponent(componentMaterials, externalLicenses, cpes, purls);
+            Component component = buildComponent(pkg, externalLicenses);
 
             // Add packaged component to components list
             this.loadComponent(component);
@@ -183,8 +158,8 @@ public class TranslatorSPDX extends TranslatorCore {
         /*
             Relationships
          */
-        // Find all relationships in the file regardless of content
 
+        // Find all relationships in the file contents regardless of where they are
         Matcher relationship = RELATIONSHIP_PATTERN.matcher(fileContents);
         while(relationship.find()) {
             switch(relationship.group(2)) {
@@ -309,8 +284,30 @@ public class TranslatorSPDX extends TranslatorCore {
         return unpackaged_component;
     }
 
-    private Component buildComponent(Map<String, String> componentMaterials, Map<String, String> externalLicenses,
-                                     Set<String> cpes, Set<String> purls) {
+    private Component buildComponent(String packageBlock, Map<String, String> externalLicenses) {
+        Map<String, String> componentMaterials = new HashMap<>();
+        Set<String> cpes = new HashSet<>();
+        Set<String> purls = new HashSet<>();
+        // Set<String> swids = new HashSet<>();
+
+        Matcher m = TAG_VALUE_PATTERN.matcher(packageBlock);
+
+        while (m.find()) {
+            // Special case for external references
+            if (m.group(1).equals(EXTERNAL_REFERENCE_TAG)) {
+                Matcher externalRef = EXTERNAL_REF_PATTERN.matcher(m.group(0));
+                if (!externalRef.find()) continue; // TODO invalid formatting?
+
+                if (externalRef.group(1).equalsIgnoreCase("security")) cpes.add(externalRef.group(3));
+                else if (externalRef.group(2).equalsIgnoreCase("purl")) purls.add(externalRef.group(3));
+                // TODO find examples of how SPDX represents SWID and implement that here
+
+                continue; // Now that the external ref line has been parsed, continue
+            }
+
+            componentMaterials.put(m.group(1), m.group(2));
+        }
+
         // Cleanup package originator
         String supplier = null;
         if (componentMaterials.get("PackageSupplier") != null) {
