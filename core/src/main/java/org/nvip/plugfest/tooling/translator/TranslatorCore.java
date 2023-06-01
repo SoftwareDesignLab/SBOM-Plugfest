@@ -29,7 +29,7 @@ public abstract class TranslatorCore {
     protected SBOM sbom;
 
     // The top level component (what the SBOM is about)
-    protected Component product;
+    protected Component topComponent;
 
     // Top level SBOM data
     protected HashMap<String, String> bom_data;
@@ -94,8 +94,8 @@ public abstract class TranslatorCore {
 
         // If there is no top component (product) already, try to create it
         // Otherwise, make sure it's in the SBOM
-        if (product == null) {
-            product = new Component(
+        if (topComponent == null) {
+            topComponent = new Component(
                     product_data.get("name"),
                     product_data.get("publisher"),
                     product_data.get("version"),
@@ -103,7 +103,7 @@ public abstract class TranslatorCore {
             );
         }
 
-        sbom.addComponent(null, product);
+        sbom.addComponent(null, topComponent);
     }
 
     /**

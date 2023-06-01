@@ -181,7 +181,7 @@ public class TranslatorSPDX extends TranslatorCore {
             product_data.put("id", bom_data.get("id"));
             defaultTopComponent(product_data.get("id"), packages);
         } else {
-            product = components.get(product_id);
+            topComponent = components.get(product_id);
         }
 
         // Create the new SBOM Object with top level data
@@ -190,13 +190,13 @@ public class TranslatorSPDX extends TranslatorCore {
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
         try {
-            this.dependencyBuilder(components, this.product, null);
+            this.dependencyBuilder(components, this.topComponent, null);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
             Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
         }
 
-        this.defaultDependencies(this.product);
+        this.defaultDependencies(this.topComponent);
 
         // Return the final SBOM object
         return sbom;
