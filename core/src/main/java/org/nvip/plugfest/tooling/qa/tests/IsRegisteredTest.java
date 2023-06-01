@@ -159,6 +159,10 @@ public class IsRegisteredTest extends MetricTest{
      * @throws IOException issue with http connection
      */
     private int extractFromMaven(PURL p) throws IOException{
+        //todo returns 403 using this url
+        // looks like response is stale for site, need to find another way to check
+        // expired Thu, 01 Jan 1970 00:00:01 GMT?
+
         // maven requires namespace
         if(p.getNamespace() == null || p.getNamespace().size() == 0)
             return 0;
