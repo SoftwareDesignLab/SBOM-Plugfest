@@ -32,11 +32,14 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
         }
 
         for (String p : purlStrings) {
-            if (!this.purlRegex.matcher(p.strip()).matches()) {
-                results.add(new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE"));
+            Result r;
+            if (this.purlRegex.matcher(p.strip()).matches()) {
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
             } else {
-                results.add(new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE"));
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE");
             }
+            r.addContext(sbom, "purl");
+            results.add(r);
         }
 
         // return findings

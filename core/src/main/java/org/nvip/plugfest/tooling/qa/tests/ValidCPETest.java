@@ -15,9 +15,6 @@ public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest 
 
     private Pattern cpe23Regex;
 
-    /***
-     * Regex for CPE
-     */
     public ValidCPETest() {
         this.cpe23Regex = Pattern.compile("cpe:2\\.3:[aho\\*\\-](:(((\\?*|\\*?)([a-zA-Z0-9\\-\\._]|(\\\\[\\\\\\*\\?" +
                 "!\"#$$%&'\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){5}(:(([a-zA-Z]{2,3}" +
@@ -25,28 +22,26 @@ public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest 
                 "\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){4}", Pattern.MULTILINE);
     }
 
-    /**
-     * Validates the CPE
-     * @param sbom SBOM to test
-     * @return
-     */
     @Override
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
+        Set<String> cpes = new HashSet<>();
 
         for (Component c : sbom.getAllComponents()) {
             for (String cpe : c.getCpes()) {
-                if (cpe == null)
-                    continue;
-                Result r;
-                if (this.cpe23Regex.matcher(cpe.strip()).matches()) {
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, "CPE Passed");
-                } else {
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE Failed");
-                }
-                r.addContext(sbom, "cpe");
-                results.add(r);
+                cpes.add(cpe);
             }
+        }
+
+        for (String cpe : cpes) {
+            Result r;
+            if (this.cpe23Regex.matcher(cpe.strip()).matches()) {
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "TODO: MESSAGE");
+            } else {
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "TODO: MESSAGE");
+            }
+            r.addContext(sbom, "cpe");
+            results.add(r);
         }
 
         // return findings
