@@ -7,6 +7,7 @@ import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
+import org.nvip.plugfest.tooling.qa.processors.UniquenessProcessor;
 import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
 import org.nvip.plugfest.tooling.qa.processors.LicensingProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -115,6 +116,7 @@ public class APIController {
         // todo get tests/processors from user that they want to run?
         Set<AttributeProcessor> processors = new HashSet<>();
         processors.add(new CompletenessProcessor());
+        processors.add(new UniquenessProcessor());
         processors.add(new RegisteredProcessor());
         // add uniqueness processor
         processors.add(new LicensingProcessor());
