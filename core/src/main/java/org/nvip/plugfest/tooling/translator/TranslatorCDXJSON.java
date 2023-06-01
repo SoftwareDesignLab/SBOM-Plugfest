@@ -6,9 +6,7 @@ import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
-import org.nvip.plugfest.tooling.translator.TranslatorCore;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.*;
@@ -123,14 +121,14 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 this.loadComponent(new_component);
 
                 // If a top component doesn't exist, make this new component the top component
-                this.product = product == null ? new_component : product;
+                this.topComponent = topComponent == null ? new_component : topComponent;
 
             }
 
         }
 
         // Add the top component to the sbom
-        if(this.sbom.getAllComponents().size() == 0) { this.sbom.addComponent(null, product); }
+        if(this.sbom.getAllComponents().size() == 0) { this.sbom.addComponent(null, topComponent); }
 
         // Create dependency collection
         //Map<String, List<String>> dependencies;
@@ -156,7 +154,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
             Debug.log(Debug.LOG_TYPE.WARN, "Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies.put(
-                    this.product.getUniqueID(),
+                    this.topComponent.getUniqueID(),
                     components.values().stream().map(x->x.getUniqueID()).collect(Collectors.toCollection(ArrayList::new))
             );
         }
@@ -165,14 +163,14 @@ public class TranslatorCDXJSON extends TranslatorCore {
         // Otherwise, default the dependencyTree by adding all subcomponents as children to the top component
         if( dependencies != null ) {
             try {
-                this.dependencyBuilder(components, this.product, null);
+                this.dependencyBuilder(components, this.topComponent, null);
             } catch (Exception e) {
                 Debug.log(Debug.LOG_TYPE.WARN, "Error building dependency tree. Dependency tree may be incomplete " +
                         "for: " + file_path);
             }
         }
 
-        this.defaultDependencies(this.product);
+        this.defaultDependencies(this.topComponent);
 
         return this.sbom;
 
