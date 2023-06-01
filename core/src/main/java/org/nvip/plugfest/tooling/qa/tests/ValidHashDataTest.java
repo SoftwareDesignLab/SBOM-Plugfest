@@ -64,13 +64,13 @@ public class ValidHashDataTest extends MetricTest{
                 Hash.Algorithm hashAlgo =  h.getAlgorithm();
                 // hash is unknown/unsupported and not a valid type, test fails
                 if(hashAlgo.equals(Hash.Algorithm.UNKNOWN)){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Hash is " +
-                            "unknown or unsupported");
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Hash " +
+                            "Algorithm is unknown or unsupported: " + hashAlgo);
                 }
                 // hash is a valid type, test passes
                 else{
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Hash is " +
-                            "a valid type");
+                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Hash " +
+                            "Algorithm is a valid type: " + hashAlgo);
                 }
                 r.addContext(c, "Hash Validation");
                 r.updateInfo(Result.Context.FIELD_NAME, "Hashes");
