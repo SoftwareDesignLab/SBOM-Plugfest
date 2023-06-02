@@ -393,7 +393,7 @@ public class SBOM {
     }
 
     public Tool checkForTool(String m){
-        if(m.startsWith("[tool")){
+        if(m.toLowerCase().startsWith("[tool")){
             String[] split = m.split("\\s+");
             Tool t = new Tool();
             t.setVendor(split[2]);

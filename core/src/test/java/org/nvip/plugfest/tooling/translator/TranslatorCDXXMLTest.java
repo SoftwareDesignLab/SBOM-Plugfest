@@ -18,6 +18,7 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.nvip.plugfest.tooling.translator.utils.Utils.*;
 
 
 /**
@@ -133,15 +134,5 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
     }
 
 
-    /**
-     * Helper method to check that SBOM metadata does not contain app tools
-     * @param sbom to check
-     */
-    private static void checkMetaData(SBOM sbom) {
-        for (String m: sbom.getMetadata()
-        ) {
-            assertNull(sbom.checkForTool(m));
-        }
-    }
 
 }

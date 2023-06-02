@@ -8,9 +8,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import static org.nvip.plugfest.tooling.translator.utils.Utils.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +43,17 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(18, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
+        assertEquals(17, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
+
+        if(pathToSBOM.equals(TEST_SMALL_CDX_JSON)) {
+            assertEquals(1, sbom.getMetadata().size());
+            assertEquals(2, sbom.getAppTools().size());
+        }
+        else{
+            assertEquals(0, sbom.getMetadata().size());
+            assertEquals(1, sbom.getAppTools().size());
+        }
+        checkMetaData(sbom);
     }
 
     @Test
@@ -54,6 +63,8 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(124, sbom.getAllComponents().size());
+        assertEquals(1, sbom.getMetadata().size());
+        assertEquals(1, sbom.getAppTools().size());
     }
 
     @Test
@@ -63,6 +74,9 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(48, sbom.getAllComponents().size());
+        assertEquals(1, sbom.getMetadata().size());
+        assertEquals(1, sbom.getAppTools().size());
+        checkMetaData(sbom);
     }
 
     @Test

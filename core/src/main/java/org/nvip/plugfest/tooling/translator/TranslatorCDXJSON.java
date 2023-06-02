@@ -51,12 +51,23 @@ public class TranslatorCDXJSON extends TranslatorCore {
         bom_data.put("sbomVersion", String.valueOf(json_sbom.getVersion()));
         bom_data.put("serialNumber", json_sbom.getSerialNumber());
 
+        String[] authorAndTimestamp = new String[2];
+
         // Ensure metadata is not null before we begin querying it
         Metadata metadata = json_sbom.getMetadata();
         if(metadata != null) {
-            bom_data.put("author", json_sbom.getMetadata().getAuthors() == null ?
-                    json_sbom.getMetadata().getTools().toString() : json_sbom.getMetadata().getAuthors().toString());
-            bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
+
+            String author;
+            if(json_sbom.getMetadata().getAuthors() != null) {
+                author = json_sbom.getMetadata().getAuthors().toString();
+                bom_data.put("author", author);
+                authorAndTimestamp[0] = "[" + author + "]";
+            }
+
+            String timestamp = json_sbom.getMetadata().getTimestamp().toString();
+
+            bom_data.put("timestamp" , timestamp);
+            authorAndTimestamp[1] = "[" + timestamp + "]";;
 
             if(json_sbom.getMetadata().getAuthors() != null)
                 return null;
@@ -73,8 +84,12 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
         this.createSBOM();
 
-        if(metadata != null)
+        if(metadata != null) {
             sbom.setAppTools(new HashSet<>(metadata.getTools()));
+            if(authorAndTimestamp[0] != null)
+                sbom.addMetadata(authorAndTimestamp[0]);
+            sbom.addMetadata(authorAndTimestamp[1]);
+        }
 
         // Create new collection of components
         HashMap<String, Component> components = new HashMap<>();
@@ -83,6 +98,12 @@ public class TranslatorCDXJSON extends TranslatorCore {
         for(org.cyclonedx.model.Component cdx_component : json_sbom.getComponents()) {
 
             if( cdx_component != null ) {
+
+                if(cdx_component.getType() == org.cyclonedx.model.Component.Type.APPLICATION){
+                    sbom.addMetadata("[Tool - " + cdx_component.getAuthor() + " " + // treat author as apptool vendor
+                            cdx_component.getName() + " " + cdx_component.getVersion() + "]");
+                    continue;
+                }
 
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(
@@ -114,12 +135,6 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 // Set the component's unique ID
                 new_component.setUniqueID(cdx_component.getBomRef());
-
-                // assume a component with no publishers to be an application tool
-                if((new_component.getPublisher() == null || new_component.getPublisher().equals("")) && new_component.toString().contains("Library")){
-                    sbom.addMetadata("[Application tool - Name: " + cdx_component.getName() + " -  Version: " + cdx_component.getVersion() + "]");
-                    continue;
-                }
 
                 // Add component to component list
                 this.loadComponent(new_component);
