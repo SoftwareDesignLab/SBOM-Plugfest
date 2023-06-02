@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+import { ClientService } from '@services/client.service';
 import { DataHandlerService } from '@services/data-handler.service';
 import { IpcRenderer } from 'electron';
 
@@ -12,8 +13,9 @@ export class UploadComponent {
   isLoading = false;
   @ViewChild('container') container!: ElementRef;
   @Input() stepper: any;
+  errorResponse: any;
 
-  constructor(private dataHandler: DataHandlerService) {
+  constructor(private dataHandler: DataHandlerService, private clientService: ClientService) {
     if (window.require) {
       try {
         this.ipc = window.require('electron').ipcRenderer;
@@ -35,6 +37,17 @@ export class UploadComponent {
 
       this.dataHandler.AddFiles(files);
     });
+  }
+
+  parse(contents: string, fileName: string) {
+    this.clientService.post("parse", {'fileName': fileName, 'contents': contents }).subscribe(
+      response => {
+        console.log('Error response:', response);
+      },
+      error => {
+        this.errorResponse = error.message;
+      }
+    );
   }
 
   getSBOMAlias(path: string) {
