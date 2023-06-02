@@ -29,9 +29,14 @@ public class HasLicenseDataTest extends MetricTest{
 
         // Check for components
         for(Component c : sbom.getAllComponents()){
-            results.add( isEmptyOrNull(c.getLicenses())
+            // Check if licenses exist
+            Result r = isEmptyOrNull(c.getLicenses())
             ? new Result(TEST_NAME, Result.STATUS.FAIL, "No Licenses Found")
-            : new Result(TEST_NAME, Result.STATUS.PASS, c.getLicenses().size() + "Licenses Found"));
+            : new Result(TEST_NAME, Result.STATUS.PASS, c.getLicenses().size() + " Licenses Found");
+
+            r.addContext(c, "licenses");
+
+            results.add(r);
         }
 
         return results;
