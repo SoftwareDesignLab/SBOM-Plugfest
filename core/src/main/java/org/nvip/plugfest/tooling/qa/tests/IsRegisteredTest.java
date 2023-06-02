@@ -20,6 +20,7 @@ import java.util.Set;
  *
  * Test each component in a given SBOM if it is registered with a
  * given package manager through its PURL
+ * @author Matthew Morrison
  */
 public class IsRegisteredTest extends MetricTest{
     // name of the test for results
