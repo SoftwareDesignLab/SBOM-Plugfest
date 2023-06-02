@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -126,6 +125,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
+        // Create the new SBOM Object with top level data
+        this.createSBOM();
 
         /*
          * Cycle through all components and correctly attach them to Java SBOM object
@@ -239,15 +240,13 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     this.loadComponent(component);
 
-                    this.product = product_data.isEmpty() ? component : null;
+                    this.topComponent = topComponent == null ? component : topComponent;
+
                 }
 
             }
 
         }
-
-        // Create the new SBOM Object with top level data
-        this.createSBOM();
 
         if (sbomDependencies!=null) {
 
@@ -280,7 +279,7 @@ public class TranslatorCDXXML extends TranslatorCore {
             }
         } else {
             dependencies.put(
-                    this.product.getUniqueID(),
+                    this.topComponent.getUniqueID(),
                     components.values().stream().map(x->x.getUniqueID()).collect(Collectors.toCollection(ArrayList::new))
             );
         }
@@ -289,13 +288,13 @@ public class TranslatorCDXXML extends TranslatorCore {
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
         try { // TODO should these errors be thrown?
-            dependencyBuilder(components, this.product,null);
+            dependencyBuilder(components, this.topComponent,null);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
         }
 
         try {
-            defaultDependencies(this.product);
+            defaultDependencies(this.topComponent);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Something went wrong with defaulting dependencies. A dependency tree may" +
                     " not exist.");
@@ -361,12 +360,10 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("author", author.equals("") ? sbom_materials.get("vendor") : author);
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
 
-        if(!sbom_component.isEmpty()) {
-            product_data.put("name", sbom_component.get("name"));
-            product_data.put("publisher", sbom_component.get("publisher") == null
-                    ? sbom_materials.get("author") : sbom_component.get("publisher"));
-            product_data.put("version", sbom_component.get("version"));
-            product_data.put("id", sbom_component.get("bom-ref"));
-        }
+        product_data.put("name" , sbom_component.get("name"));
+        product_data.put("publisher", sbom_component.get("publisher") == null
+                ? sbom_materials.get("author") : sbom_component.get("publisher"));
+        product_data.put("version", sbom_component.get("version"));
+        product_data.put("id", sbom_component.get("bom-ref"));
     }
 }

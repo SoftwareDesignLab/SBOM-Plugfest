@@ -4,12 +4,34 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.8.0] - 2023-06-01
+### Added
+- `Debug` class from SVIP and replace (most) system calls with this to improve verbosity of our output.
+- `TranslatorException` class to catch translator errors at the top-level.
+  - This allows error handling at the API level with a simple failure message.
+
+### Changed
+- `TranslatorSPDX` now uses regex and string manipulation to parse through an SPDX tag-value file instead of 
+  attempting to read it line-by-line.
+- `TranslatorCDXJSONTest` now adds UIDs to each component only if they are not null.
+  - `Component` construction was changed to only use the constructor with `name`, `version`, and `publisher` attributes.
+- Most translator error logs now throw a `TranslatorException`
+
+### Fixed
+- Removed `PURL` class usage from `Component` and replaced it with a simple string. The `PURl` class should now only 
+  be used in metric tests.
+
+---
 ## [3.7.1] - 2023-05-31
 ### Added
 - Tests in `TranslatorCDXJSONTest`, `TranslatorCDXXMLest`, & `TranslatorSPDXTest` to check for null UIDs in all 
-  translated components.
+  translated components and ensure correct processing of SBOMs with no metadata.
+- `TranslatorSPDX` now has the capability to read in multiple external licenses. See 
+  [the specification](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/) for details.
 
 ### Changed
+- `TranslatorPlugfest` now checks for key tokens in file contents as well as the file extension to determine the 
+  translator to use.
 - `TranslatorCDXJSONTest` now adds UIDs to each component only if they are not null.
   - `Component` construction was changed to only use the constructor with `name`, `version`, and `publisher` attributes.
 
