@@ -200,6 +200,9 @@ public class TranslatorCDXXML extends TranslatorCore {
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("purl")) {
                             purls.add(component_elements.item(j).getTextContent());
                         }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("group")) {
+                            component_items.put("group", component_elements.item(j).getTextContent());
+                        }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
                             hashes.add(
                                     new Hash(
