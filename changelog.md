@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 ## [3.7.0] - 2023-05-31
 ### Added
-
+- New QA Refactor
+  - Unified Metric testing process
+    - `RegisteredProcessor` - Collection of Tests for checking if components are registered in their package manager
+      - `IsRegisteredTest` - Using a component's purl(s), check if package is registered with their package manager
 ### Changed
 - `DiffReport` is now more JSON friendly object
   - Consolidated `Comparer`, `Comparison`, and `ComponentVersion`
