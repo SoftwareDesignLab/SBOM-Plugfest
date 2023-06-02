@@ -10,8 +10,17 @@ Created: 2023-03-10T14:43:10Z
 
 ##### Extracted Licensing Information
 
-LicenseID: LicenseRef-TestLicense
-LicenseName: Test License
+LicenseID: LicenseRef-TestLicense-0
+LicenseName: Test License 0
+ExtractedText: Test license text
+LicenseCrossReference: https://google.com
+
+LicenseID: LicenseRef-TestLicense-1
+LicenseName: Test License 1
+ExtractedText: <text>Test license text
+Test multiline license text
+</text>
+LicenseCrossReference: https://bing.com
 
 ##### Unpackaged files
 
@@ -689,7 +698,7 @@ PackageOriginator: Person: Timo Teräs <timo.teras@iki.fi>
 PackageDownloadLocation: https://musl.libc.org/
 FilesAnalyzed: false
 PackageSourceInfo: acquired package info from APK DB: /lib/apk/db/installed
-PackageLicenseConcluded: MIT
+PackageLicenseConcluded: MIT AND LicenseRef-TestLicense-1
 PackageLicenseDeclared: MIT
 PackageCopyrightText: NOASSERTION
 PackageDescription: the musl c library (libc) implementation
@@ -742,7 +751,7 @@ PackageOriginator: Person: Sören Tempel <soeren+alpine@soeren-tempel.net>
 PackageDownloadLocation: https://busybox.net/
 FilesAnalyzed: false
 PackageSourceInfo: acquired package info from APK DB: /lib/apk/db/installed
-PackageLicenseConcluded: GPL-2.0-only AND LicenseRef-TestLicense
+PackageLicenseConcluded: GPL-2.0-only AND LicenseRef-TestLicense-0
 PackageLicenseDeclared: GPL-2.0-only
 PackageCopyrightText: NOASSERTION
 PackageDescription: EXternal ssl_client for busybox wget

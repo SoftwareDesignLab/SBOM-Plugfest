@@ -14,6 +14,7 @@ import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -119,15 +120,48 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
     }
 
     @Test
-    @DisplayName("Extracted Licensing Information")
-    void extractedLicensingTest() throws TranslatorException {
+    @DisplayName("Single-Line Licensing Information")
+    void extractedLicenseOneLineTest() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(TEST_SPDX_v2_3_SBOM_LICENSINGINFO);
         for(Component component : sbom.getAllComponents()) {
             if(!component.getName().equals("ssl_client")) continue;
 
             Set<String> licenses = component.getLicenses();
-            Debug.log(Debug.LOG_TYPE.SUMMARY, "Found licenses in component ssl_client: " + licenses.toString());
-            assertTrue(licenses.contains("Test License")); // The extracted license NAME (not ID) found in the SBOM
+            assertEquals(1, licenses.size());
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Found licenses in component ssl_client: " + licenses);
+
+            Map<String, Map<String, String>> extractedLicenses = component.getExtractedLicenses();
+            assertEquals(1, extractedLicenses.size());
+            Debug.log(Debug.LOG_TYPE.SUMMARY,
+                    "Found extracted licenses in component ssl_client: " + extractedLicenses);
+
+            Map<String, String> attributes = extractedLicenses.get("LicenseRef-TestLicense-0");
+            assertEquals("Test License 0", attributes.get("name"));
+            assertEquals("Test license text", attributes.get("text"));
+            assertEquals("https://google.com", attributes.get("crossRef"));
+        }
+    }
+
+    @Test
+    @DisplayName("Multi-Line Licensing Information")
+    void extractedLicensingMultiLineTest() throws TranslatorException {
+        SBOM sbom = this.TRANSLATOR.translate(TEST_SPDX_v2_3_SBOM_LICENSINGINFO);
+        for(Component component : sbom.getAllComponents()) {
+            if(!component.getName().equals("musl")) continue;
+
+            Set<String> licenses = component.getLicenses();
+            assertEquals(1, licenses.size());
+            Debug.log(Debug.LOG_TYPE.SUMMARY, "Found licenses in component musl: " + licenses);
+
+            Map<String, Map<String, String>> extractedLicenses = component.getExtractedLicenses();
+            assertEquals(1, extractedLicenses.size());
+            Debug.log(Debug.LOG_TYPE.SUMMARY,
+                    "Found extracted licenses in component musl: " + extractedLicenses);
+
+            Map<String, String> attributes = extractedLicenses.get("LicenseRef-TestLicense-1");
+            assertEquals("Test License 1", attributes.get("name"));
+            assertTrue(attributes.get("text").contains("\n"));
+            assertEquals("https://bing.com", attributes.get("crossRef"));
         }
     }
 
