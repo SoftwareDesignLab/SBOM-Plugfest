@@ -37,6 +37,10 @@ public class TranslatorSPDX extends TranslatorCore {
 
     private static final String EXTRACTED_LICENSE_NAME = "LicenseName";
 
+    private static final String EXTRACTED_LICENSE_TEXT = "ExtractedText";
+
+    private static final String EXTRACTED_LICENSE_CROSSREF = "LicenseCrossReference";
+
     private static final String RELATIONSHIP_KEY = "Relationship";
 
     private static final String SPEC_VERSION_TAG = "SPDXVersion";
@@ -85,7 +89,8 @@ public class TranslatorSPDX extends TranslatorCore {
         HashMap<String, Component> components = new HashMap<>();
         // Collection of package IDs used for adding head components to top component if in the header SPDXRef-DOCUMENT
         ArrayList<String> packages = new ArrayList<>();
-        Map<String, String> externalLicenses = new HashMap<>(); // Map of external licenses mapping ID to name
+        // Map of external licenses to mirror Component.externalLicenses attribute
+        Map<String, Map<String, String>> externalLicenses = new HashMap<>();
 
         /*
             Top level SBOM data (metadata, etc.)
@@ -267,20 +272,33 @@ public class TranslatorSPDX extends TranslatorCore {
      * @param extractedLicenseBlock An extracted licensing information "block" in the document.
      * @param externalLicenses The map of external licenses to append to.
      */
-    private void parseExternalLicense(String extractedLicenseBlock, Map<String, String> externalLicenses) {
-        String licenseId = null;
-        String licenseName = null;
+    private void parseExternalLicense(String extractedLicenseBlock, Map<String, Map<String, String>> externalLicenses) {
+        // Required fields
+        String id = null;
+        String name = null;
+
+        // Optional attributes
+        Map<String, String> attributes = new HashMap<>();
 
         Matcher m = TAG_VALUE_PATTERN.matcher(extractedLicenseBlock);
         while(m.find()) {
             switch (m.group(1)) {
-                case EXTRACTED_LICENSE_ID -> licenseId = m.group(2);
-                case EXTRACTED_LICENSE_NAME -> licenseName = m.group(2);
+                case EXTRACTED_LICENSE_ID -> id = m.group(2);
+                case EXTRACTED_LICENSE_NAME -> name = m.group(2);
+                case EXTRACTED_LICENSE_TEXT -> attributes.put("text", m.group(2));
+                case EXTRACTED_LICENSE_CROSSREF -> attributes.put("crossRef", m.group(2));
                 default -> {} // TODO more fields?
             }
         }
 
-        if (licenseId != null && licenseName != null) externalLicenses.put(licenseId, licenseName);
+        if (id != null && name != null) {
+            attributes.put("name", name);
+            externalLicenses.put(id, attributes);
+            Debug.log(Debug.LOG_TYPE.DEBUG, "External license found with ID " + id + " and name " + name);
+        } else {
+            Debug.log(Debug.LOG_TYPE.WARN, String.format("External license skipped due to one or more of the " +
+                    "following fields not existing:\nID: %s\nName: %s", id, name));
+        }
     }
 
     /**
@@ -314,7 +332,7 @@ public class TranslatorSPDX extends TranslatorCore {
      * @param packageBlock A package "block" in the document.
      * @return A {@code Component} with the data of the package "block".
      */
-    private Component buildComponent(String packageBlock, Map<String, String> externalLicenses) {
+    private Component buildComponent(String packageBlock, Map<String, Map<String, String>> externalLicenses) {
         Map<String, String> componentMaterials = new HashMap<>();
         Set<String> cpes = new HashSet<>();
         Set<String> purls = new HashSet<>();
@@ -371,8 +389,14 @@ public class TranslatorSPDX extends TranslatorCore {
         // Add external licenses found
         List<String> externalLicensesToRemove = new ArrayList<>();
         for(String license : licenses) {
-            if (license.contains("LicenseRef") && externalLicenses.get(license) != null) {
-                component.addExtractedLicense(license, externalLicenses.get(license), null, null);
+            Map<String, String> attributes = externalLicenses.get(license);
+            if (attributes != null) {
+                component.addExtractedLicense(
+                        license,
+                        attributes.get("name"),
+                        attributes.get("text"),
+                        attributes.get("crossRef"));
+
                 externalLicensesToRemove.add(license);
             }
         }
@@ -381,7 +405,7 @@ public class TranslatorSPDX extends TranslatorCore {
         // Clean up all other licenses
         licenses = // Remove NONE/NOASSERTION as well as any extracted licenses (IDs containing LicenseRef).
                 (HashSet<String>) licenses.stream().filter(l ->
-                        !l.equals("NONE") && !l.equals("NOASSERTION") && !l.contains("LicenseRef"))
+                        !l.equals("NONE") && !l.equals("NOASSERTION"))
                         .collect(Collectors.toSet());
 
         component.setLicenses(licenses);
