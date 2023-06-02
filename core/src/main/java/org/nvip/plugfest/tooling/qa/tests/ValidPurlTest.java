@@ -16,6 +16,9 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
 
     private Pattern purlRegex;
 
+    /***
+     * Regex for purl
+     */
     public ValidPurlTest() {
         this.purlRegex = Pattern.compile("^pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@([a-zA-Z0-9-~._%]+))?(\\?(([a-zA-Z][a-zA-Z0-9_.-]*=.+)&)*([a-zA-Z][a-zA-Z0-9-~._%]*=.+))?(#([a-zA-Z0-9-~._%]*\\/)+[a-zA-Z0-9-~._%]*)?", Pattern.MULTILINE);
     }
@@ -28,26 +31,22 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
     @Override
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
-        Set<String> purlStrings = new HashSet<>();
 
         for (Component c : sbom.getAllComponents()) {
             for (PURL p : c.getPurls()) {
-                purlStrings.add(p.toString());
+                if (p == null)
+                    continue;
+                Result r;
+                if (this.purlRegex.matcher(p.toString().strip()).matches()) {
+                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Purl Passed");
+                } else {
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Purl Failed");
+                }
+                r.addContext(sbom, "purl");
+                results.add(r);
             }
         }
 
-        for (String p : purlStrings) {
-            if (p == null)
-                continue;
-            Result r;
-            if (this.purlRegex.matcher(p.strip()).matches()) {
-                r = new Result(TEST_NAME, Result.STATUS.PASS, "Purl Passed");
-            } else {
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Purl Failed");
-            }
-            r.addContext(sbom, "purl");
-            results.add(r);
-        }
 
         // return findings
         return results;
