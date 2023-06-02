@@ -112,7 +112,8 @@ public class APIController {
         processors.add(new CompletenessProcessor());
         processors.add(new UniquenessProcessor());
         processors.add(new RegisteredProcessor());
-        // add uniqueness processor
+        processors.add(new UniquenessProcessor());
+        processors.add(new RegisteredProcessor());
         processors.add(new LicensingProcessor());
         // add metadata processor
         // add registered processor
