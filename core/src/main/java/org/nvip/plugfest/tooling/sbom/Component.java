@@ -400,7 +400,7 @@ public class Component {
         Map<String, String> licenseContents = new HashMap<>() {{
             this.put("name", name);
             if(text != null) this.put("text", text);
-            if(crossRef != null) this.put("crossRef", text);
+            if(crossRef != null) this.put("crossRef", crossRef);
         }};
 
         extractedLicenses.put(id, licenseContents);

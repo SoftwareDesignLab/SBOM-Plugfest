@@ -285,7 +285,13 @@ public class TranslatorSPDX extends TranslatorCore {
             switch (m.group(1)) {
                 case EXTRACTED_LICENSE_ID -> id = m.group(2);
                 case EXTRACTED_LICENSE_NAME -> name = m.group(2);
-                case EXTRACTED_LICENSE_TEXT -> attributes.put("text", m.group(2));
+                case EXTRACTED_LICENSE_TEXT -> {
+                    // Find a multiline block. If one does not exist, just put the one line of text.
+                    Matcher extractedText = Pattern.compile("<text>(\\X*)</text>").matcher(extractedLicenseBlock);
+                    String text = m.group(2); // The first line of text.
+                    if (extractedText.find()) text = extractedText.group(1); // Multiline text, if any.
+                    attributes.put("text", text); // Add the attribute
+                }
                 case EXTRACTED_LICENSE_CROSSREF -> attributes.put("crossRef", m.group(2));
                 default -> {} // TODO more fields?
             }
