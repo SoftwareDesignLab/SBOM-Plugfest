@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -13,7 +12,8 @@ import java.sql.Time;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * File: TranslatorPlugFestTest.java
@@ -112,20 +112,17 @@ public class TranslatorPlugFestTest {
     }
 
     @Test
-    @Disabled("This needs to be fixed")
     public void driver_translates_json_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);
-        //assertEquals("[org.cyclonedx.model.Tool@9e23bc53]", sbom.getSupplier()); // todo get a test sbom that has suppliers
-        assertNull(sbom.getSupplier());
+        assertEquals("[org.cyclonedx.model.Tool@9e23bc53]", sbom.getSupplier());
     }
 
     @Test
     public void driver_translates_spdx_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
         assertNotNull(sbom);
-        //assertEquals(" Tool: spdx-sbom-generator-source-code", sbom.getSupplier()); // todo fix
-        assertEquals("Tool: spdx-sbom-generator-source-code", sbom.getSupplier());
+        assertEquals(" Tool: spdx-sbom-generator-source-code", sbom.getSupplier());
     }
 
     @Test

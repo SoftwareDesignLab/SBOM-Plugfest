@@ -416,7 +416,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("author", author.toString().equals("") ? sbom_materials.get("vendor") : author.toString());
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
 
-        if (sbom_component.isEmpty()) return null;
+        if (sbom_component.isEmpty()) return result;
 
         product_data.put("name" , sbom_component.get("name"));
         product_data.put("publisher", sbom_component.get("publisher") == null
