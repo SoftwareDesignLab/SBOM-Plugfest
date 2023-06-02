@@ -6,6 +6,7 @@ import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Tool;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
+import org.nvip.plugfest.tooling.sbom.AppTool;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -85,7 +86,12 @@ public class TranslatorCDXJSON extends TranslatorCore {
         this.createSBOM();
 
         if(metadata != null) {
-            sbom.setAppTools(new HashSet<>(metadata.getTools()));
+            Set<AppTool> arr = new HashSet<>();
+            for (Tool t: metadata.getTools()
+                 ) {
+                arr.add(new AppTool(t.getVendor(),t.getName(),t.getVersion()));
+            }
+            sbom.setAppTools(arr);
             if(authorAndTimestamp[0] != null)
                 sbom.addMetadata(authorAndTimestamp[0]);
             sbom.addMetadata(authorAndTimestamp[1]);

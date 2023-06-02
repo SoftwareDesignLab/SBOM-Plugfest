@@ -1,7 +1,5 @@
 package org.nvip.plugfest.tooling.sbom;
 
-import org.cyclonedx.model.Tool;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -72,7 +70,7 @@ public class SBOM {
     /**
      *  Application tools
      */
-    public Set<Tool> appTools;
+    public Set<AppTool> appTools;
 
 
     /**
@@ -316,7 +314,7 @@ public class SBOM {
     public void addMetadata(String m){
         if(metadata == null)
             metadata = new HashSet<>();
-        Tool potentialTool = checkForTool(m);
+        AppTool potentialTool = checkForTool(m);
         if(!getAppTools().contains(potentialTool))
             if(potentialTool != null)
                 addAppTool(potentialTool);
@@ -332,17 +330,17 @@ public class SBOM {
         return metadata;
     }
 
-    public Set<Tool> getAppTools() {
+    public Set<AppTool> getAppTools() {
         if(appTools == null)
             appTools = new HashSet<>();
         return appTools;
     }
 
-    public void setAppTools(Set<Tool> appTools) {
+    public void setAppTools(Set<AppTool> appTools) {
         this.appTools = appTools;
     }
 
-    public void addAppTool(Tool a){
+    public void addAppTool(AppTool a){
         if(appTools == null)
             appTools = new HashSet<>();
         appTools.add(a);
@@ -392,14 +390,10 @@ public class SBOM {
         return retVal;
     }
 
-    public Tool checkForTool(String m){
+    public AppTool checkForTool(String m){
         if(m.toLowerCase().startsWith("[tool")){
             String[] split = m.split("\\s+");
-            Tool t = new Tool();
-            t.setVendor(split[2]);
-            t.setName(split[3]);
-            t.setVersion(split[4]);
-            return t;
+            return new AppTool(split[2], split[3], split[4]);
         }
         return null;
     }

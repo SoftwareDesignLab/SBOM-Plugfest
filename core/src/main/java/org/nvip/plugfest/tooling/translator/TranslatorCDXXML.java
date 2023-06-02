@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.cyclonedx.model.Tool;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
 import org.w3c.dom.*;
@@ -237,7 +236,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                     // No apparent publisher means this is most likely an application tool
                     Component component;
                     if(component_items.containsKey("type") && component_items.get("type").equalsIgnoreCase("application")){
-                        Tool t = new Tool();
+                        AppTool t = new AppTool();
                         t.setName(component_items.get("name"));
                         t.setVersion(component_items.get("version"));
                         sbom.addAppTool(t);
@@ -312,7 +311,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                 Element elem = (Element) tool;
                 NodeList component_elements = elem.getElementsByTagName("*");
 
-                Tool t = new Tool();
+                AppTool t = new AppTool();
 
                 // Iterate through each element in that component
                 for (int j = 0; j < component_elements.getLength(); j++) {

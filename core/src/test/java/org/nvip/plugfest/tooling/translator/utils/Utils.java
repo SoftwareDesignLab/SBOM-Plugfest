@@ -2,9 +2,6 @@ package org.nvip.plugfest.tooling.translator.utils;
 
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * File: Utils.java
  * Utility class for Translator tests
