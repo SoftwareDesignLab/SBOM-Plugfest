@@ -19,7 +19,7 @@ public class AccuratePURLTest extends MetricTest{
     private static final String TEST_NAME = "AccuratePURL";
 
     /**
-     * Test ecery component for purls. If they are present, test if
+     * Test every component for purls. If they are present, test if
      * PURLs match the component's stored data
      * @param sbom SBOM to test
      * @return a collection of results for each component and their PURL(s)
@@ -122,31 +122,36 @@ public class AccuratePURLTest extends MetricTest{
         Result r;
         // if purlVersion is empty, test automatically fails, cannot check
         // if versions match
-        if(isEmptyOrNull(purlVersion)){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                    "does not have a version");
-            r.addContext(c, "Matching PURL data");
-            r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
-            // if purl is null, toString will produce NPE, so it needs to
-            // be skipped
-            return r;
-        }
-        // since version is not a required element.
-        // if the component does not have a version, test cannot be performed
-        else if(isEmptyOrNull(componentVersion)){
+        if(isEmptyOrNull(componentVersion)){
             r = new Result(TEST_NAME, Result.STATUS.ERROR, "Component does " +
                     "not have version, test cannot be completed");
         }
-        // if the two versions do not match, the test fails
-        else if(!purlVersion.equals(componentVersion)){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                    "version does not match component's version");
-        }
-        // if the two versions do match, the test passes
         else{
-            r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL " +
-                    "version matches component's version");
+            if(isEmptyOrNull(purlVersion)){
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                        "does not have a version");
+                r.addContext(c, "Matching PURL data");
+                r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
+                return r;
+            }
+            // if the two versions do not match, the test fails
+            else if(!purlVersion.equals(componentVersion)){
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+                        "version does not match component's version");
+            }
+            // if the two versions do match, the test passes
+            else{
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL " +
+                        "version matches component's version");
+            }
+            // add context about the findings
+            r.addContext(c, "Matching PURL data");
+            r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
+            r.updateInfo(Result.Context.STRING_VALUE, p.toString());
+
+            return r;
         }
+
         // add context about the findings
         r.addContext(c, "Matching PURL data");
         r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
