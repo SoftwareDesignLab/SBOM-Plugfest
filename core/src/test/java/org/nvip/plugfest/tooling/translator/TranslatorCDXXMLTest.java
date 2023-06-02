@@ -56,7 +56,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         if(pathToSBOM.equals(test_small_cdx)) {
             assertEquals(6, sbom.getMetadata().size());
             assertEquals(1, sbom.appTools.size());
-            checkMetaData(sbom);
+            assertFalse(toolsInMetadata(sbom));
         }
 
     }
@@ -72,7 +72,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals(6, sbom.getMetadata().size());
         assertEquals(1, sbom.appTools.size());
 
-        checkMetaData(sbom);
+        assertFalse(toolsInMetadata(sbom));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals(6, sbom.getMetadata().size());
         assertEquals(1, sbom.appTools.size());
 
-        checkMetaData(sbom);
+        assertFalse(toolsInMetadata(sbom));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals(15, sbom.getMetadata().size());
         assertEquals(1, sbom.appTools.size());
 
-        checkMetaData(sbom);
+        assertFalse(toolsInMetadata(sbom));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals(11, sbom.getMetadata().size());
         assertEquals(1, sbom.appTools.size());
 
-        checkMetaData(sbom);
+        assertFalse(toolsInMetadata(sbom));
     }
 
     @Test
