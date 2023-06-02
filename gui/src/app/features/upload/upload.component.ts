@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { ClientService } from '@services/client.service';
-import { DataHandlerService } from '@services/data-handler.service';
+import { DataHandlerService, FileStatus } from '@services/data-handler.service';
 import { IpcRenderer } from 'electron';
 
 @Component({
@@ -39,35 +39,33 @@ export class UploadComponent {
     });
   }
 
-  parse(contents: string, fileName: string) {
-    this.clientService.post("parse", {'fileName': fileName, 'contents': contents }).subscribe(
-      response => {
-        console.log('Error response:', response);
-      },
-      error => {
-        this.errorResponse = error.message;
-      }
-    );
-  }
-
   getSBOMAlias(path: string) {
     return this.dataHandler.getSBOMAlias(path);
   }
 
   ContainsFiles() {
-    return Object.keys(this.dataHandler.metrics).length > 0 || this.GetLoadingFiles().length > 0;
+    return this.GetLoadingFiles().length > 0 || this.GetValidSBOMs().length > 0;
   }
-
-  GetFiles() {
-    return this.dataHandler.metrics;
-  }
+  
 
   GetLoadingFiles() {
-    return this.dataHandler.loadingFiles;
+    return this.dataHandler.GetSBOMsOfType(FileStatus.LOADING);
   }
 
   GetValidSBOMs() {
-    return this.dataHandler.GetValidSBOMs();
+    return this.dataHandler.GetSBOMsOfType(FileStatus.VALID);
+  }
+  
+  GetErrorSBOMs() {
+    return this.dataHandler.GetSBOMsOfType(FileStatus.ERROR);
+  }
+
+  GetLoadedFiles() {
+    return this.GetValidSBOMs().push(...this.GetErrorSBOMs());
+  }
+
+  GetLoadedFileKeys() {
+    return Object.keys(this.GetLoadedFiles());
   }
 
   SelectAll() {
@@ -76,6 +74,10 @@ export class UploadComponent {
 
   DeselectAll() {
     this.setAllSelected(false);
+  }
+
+  GetSbomInfo(path: string) {
+    return this.dataHandler.GetSBOMInfo(path);
   }
 
   DeleteSelected() {
@@ -99,8 +101,7 @@ export class UploadComponent {
   }
 
   RemoveFile(file: string) {
-    this.dataHandler.filePaths = this.dataHandler.filePaths.filter((x) => x != file);
-    delete this.dataHandler.metrics[file];
+    this.dataHandler.DeleteFile(file);
   }
 
   private scrollToEnd() {

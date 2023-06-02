@@ -3,13 +3,23 @@
         <h1>UPLOAD SBOMS</h1>
         <div class="uploaded-files-container flex col" #container *ngIf="ContainsFiles()">
             <div class="uploaded-files flex col" *ngIf="ContainsFiles()">
-                <div class="file flex center" *ngFor="let item of GetFiles() | keyvalue">
-                    <icon icon="{{item.value !== null ? 'done' : 'close'}}" color="{{item.value !== null ? 'var(--green)' : 'var(--red)'}}"
-                        [matTooltip]="item.value !== null ? 'SBOM is valid' : 'SBOM is not valid'">
+                <div class="file flex center" *ngFor="let item of GetValidSBOMs()">
+                    <icon icon="done" color="var(--green)">
+                        [matTooltip]="SBOM is valid">
                     </icon>
                     <div class="sbom flex">
-                        {{getSBOMAlias(item.key)}}
-                        <input type="checkbox" [value]="item.key"/>
+                        {{getSBOMAlias(item)}}
+                        <input type="checkbox" [value]="item"/>
+                    </div>
+                </div>
+
+                <div class="file flex center" *ngFor="let item of GetErrorSBOMs()">
+                    <icon icon="close" color="var(--red)">
+                        [matTooltip]="'SBOM is not valid (' + GetSbomInfo(item).extra + ')'" >
+                    </icon>
+                    <div class="sbom flex">
+                        {{getSBOMAlias(item)}}
+                        <input type="checkbox" [value]="item"/>
                     </div>
                 </div>
             </div>
