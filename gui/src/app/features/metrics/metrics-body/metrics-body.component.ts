@@ -15,7 +15,7 @@ export class MetricsBodyComponent {
     if(!this.handler.selectedQualityReport)
       return null;
 
-    return this.handler.metrics[this.handler.selectedQualityReport];
+    return this.handler.GetSBOMInfo(this.handler.selectedQualityReport).metrics;
   }
 
   getPassedPercent(testResult: any) {
