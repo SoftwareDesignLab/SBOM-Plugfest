@@ -8,6 +8,7 @@ import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
 import org.nvip.plugfest.tooling.qa.processors.UniquenessProcessor;
+import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
@@ -114,7 +115,6 @@ public class APIController {
         // todo get tests/processors from user that they want to run?
         Set<AttributeProcessor> processors = new HashSet<>();
         processors.add(new CompletenessProcessor());
-        processors.add(new UniquenessProcessor());
 
         //run the QA
         QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
