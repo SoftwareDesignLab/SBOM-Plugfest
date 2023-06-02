@@ -80,6 +80,7 @@ public class SBOM {
         this.dependencyTree = new DependencyTree();
         this.signature = new HashSet<>();
         this.serialNumber = "urn:uuid:" + UUID.randomUUID().toString();
+        this.metadata = new HashSet<>();
     }
 
     /**
@@ -118,6 +119,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
+        this.metadata = new HashSet<>();
     }
 
     /**
@@ -140,6 +142,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
+        this.metadata = new HashSet<>();
     }
 
     /**
