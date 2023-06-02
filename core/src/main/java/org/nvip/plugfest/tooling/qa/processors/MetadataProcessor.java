@@ -21,6 +21,7 @@ public class MetadataProcessor extends AttributeProcessor{
 
         /*
         TODO
+         hasMetaData: check if the sbom contains metadata
          validPURL: PURL matches regex
          validCPE: CPE matches regex
          validSWID: SWID matches regex
