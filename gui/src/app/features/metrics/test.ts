@@ -17,51 +17,52 @@ interface AdditionalInfo {
 
 export class QualityReport {
   test: test;
-  categories: string[] = [];
+  processors: string[] = [];
   results: any[] = [];
-  identifiers: Set<string> = new Set<string>();
+  identifiers: string[] = [];
   componentResults: { [key: string]: testResult[] } = {};
+  colors = [
+    "var(--red)",
+    "var(--purple)",
+    "var(--yellow)",
+    "var(--blue)",
+    "var(--green)",
+    "var(--orange)",
+    "var(--pink)",
+  ];
 
   constructor(test: test) {
     this.test = test;
-    this.categories = Object.keys(this.test.attributeResults);
-    this.categories.forEach((category) => {
-      const tests = Object.keys(this.test.attributeResults[category]);
+    this.processors = Object.keys(this.test.attributeResults);
+    const ids = new Set<string>();
+    this.processors.forEach((processor) => {
+      const tests = Object.keys(this.test.attributeResults[processor]);
       tests.forEach((test) => {
-        this.test.attributeResults[category][test].forEach((result) => {
-          this.identifiers.add(result.additionalInfo["IDENTIFIER"] || "");
+        this.test.attributeResults[processor][test].forEach((result) => {
+          if (result.additionalInfo["IDENTIFIER"]) {
+            ids.add(result.additionalInfo["IDENTIFIER"]);
+          }
           this.results.push({
             result,
-            category,
+            processor,
             test,
             message: result.message,
             pass: result.pass,
             type: result.additionalInfo["TYPE"] || "",
-            fieldName: result.additionalInfo['FIELD_NAME'],
+            fieldName: result.additionalInfo["FIELD_NAME"],
             identifier: result.additionalInfo["IDENTIFIER"] || "",
           });
         });
       });
     });
+    this.identifiers = Array.from(ids);
   }
 
   /**
     filters results by component
     @param identifier - component identifier
   */
-  getResultsByComponent(identifier: string): testResult[] {
+  getResultsByComponent(identifier: string): any[] {
     return this.results.filter((result) => result.identifier === identifier);
-  }
-
-  getResultsbyType(type: string) {
-    return this.results.filter((result)=> result.type === type);
-  }
-
-  getResultByGrade(num: -1 | 1 | 0) {
-    return this.results.filter(result => result.pass === num);
-  }
-
-  getResultsForCategory(category: string) {
-    return this.results.filter(result => result.category === category)
   }
 }

@@ -5,11 +5,12 @@
     --bg: #191d20;
     --red: #ff5858;
     --orange: #ffb158;
-    --yellow:#ffec588;
+    --yellow: #ffe658;
     --green: #58ff82;
     --teal: #58ffe6;
     --blue: #5863ff;
     --purple: #e358ff;
+    --pink: hsl(308, 100%, 88%);
     --gray: gray;
 }
 

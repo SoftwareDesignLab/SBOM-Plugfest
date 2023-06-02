@@ -12,20 +12,49 @@ export class MetricsBodyComponent {
   testResult: testResult | null = null;
   qr: QualityReport | null = null;
   filteredArray: any[] = [];
+  showPassed = false;
+  componentView = false;
+  testFilter = "";
 
   get result() {
     this.qr = this.handler.metrics[this.handler.selectedQualityReport];
+    if (this.testFilter.length) {
+      return this.handler.metrics[this.handler.selectedQualityReport]?.results.filter(res => res.processor === this.testFilter);
+    }
     return this.handler.metrics[this.handler.selectedQualityReport]?.results;
   }
 
+  get processors() {
+    return this.qr?.processors || [];
+  }
+
   get identifiers() {
-    return this.qr?.identifiers ? Array.from(this.qr.identifiers.values()) : [];
+    return this.qr?.identifiers || [];
   }
 
   getTestMessage(result: any) {
-    return `${result.field} ${result.message.toLowerCase()} ${
-      result.t? info["STRING_VALUE"] : ""
-    }`
+    return `${result.fieldName}: ${result.message.toLowerCase()}`;
+  }
+
+  getColor(result: any) {
+    return this.qr?.colors[this.qr?.processors.indexOf(result.processor)] || "";
+  }
+
+  getProcessorColor(name: string) {
+    return this.qr?.colors[this.qr?.processors.indexOf(name)] || "";
+  }
+
+  getGrade(num: number) {
+    switch (num) {
+      case -1:
+        return "Error";
+      case 0:
+        return "Failed";
+      case 1:
+        return "Passed";
+      default:
+        return "N/A";
+    }
   }
 
   getKeys(obj: Object) {

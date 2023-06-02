@@ -1,22 +1,73 @@
 <div class="metrics-body flex col center">
-    <div class="results" *ngIf="result">
-        <app-accordion [extra]="[(result ? result.length : '0') + ' Result(s)']" style="flex-direction: column;" [expanded]="true">
-            <div body>
-                <app-accordion *ngFor="let res of result" style="flex-direction: column;" [extra]="[  '% Passed' ]" color="var(--red)">
-                    <div title class="title">
-                    <span>{{res.message}}</span>
-                    </div>
-                    <div body>
-                        {{res | json}}
-                    </div>
-                </app-accordion>
+  <div class="flex buttons">
+    <app-button (click)="componentView = !componentView"
+      >Group by Component</app-button
+    ><app-button (click)="showPassed = !showPassed"
+      >Show {{ showPassed ? "Failed" : "Passed/Failed" }}</app-button
+    >
+  </div>
+
+  <div class="flex" *ngIf="processors.length > 1">
+    <div class="label hover" [ngStyle]="{'background-color': getProcessorColor(processor) }" *ngFor="let processor of processors" (click)="testFilter = processor">{{processor}}</div>
+  </div>
+  <div class="results" *ngIf="result">
+    <div *ngIf="!componentView; else components">
+      <app-accordion
+        [extra]="[(result ? result.length : '0') + ' Result(s)']"
+        style="flex-direction: column"
+        [expanded]="true"
+      >
+        <div body>
+          <div *ngFor="let res of result">
+            <app-accordion
+              style="flex-direction: column"
+              *ngIf="(!showPassed && res.pass !== 1) || showPassed"
+              [color]="getColor(res)"
+              [extra]="[getGrade(res.pass).toString()]"
+            >
+              <span title>{{ res.identifier }}:{{ res.message }}</span>
+              <div body>
+                <span>{{ getTestMessage(res) }}</span>
+              </div>
+            </app-accordion>
+          </div>
+        </div>
+      </app-accordion>
+    </div>
+    <ng-template #components>
+      <div *ngIf="qr">
+        <div *ngFor="let identifier of identifiers">
+          <app-accordion style="flex-direction: column">
+            <div title class="title">
+              <span>{{ identifier }}</span>
             </div>
-        </app-accordion>
-    </div>
+            <div body>
+              <div *ngFor="let res of qr?.getResultsByComponent(identifier)">
+                <app-accordion
+                  *ngIf="(!showPassed && res.pass !== 1) || showPassed"
+                  [extra]="[getGrade(res.pass).toString()]"
+                  [color]="getColor(res)"
+                >
+                  <span title>{{ res.identifier }}:{{ res.message }}</span>
+                  <div body>
+                    <span>{{ getTestMessage(res) }}</span>
+                  </div>
+                </app-accordion>
+              </div>
+            </div>
+          </app-accordion>
+        </div>
+      </div>
+    </ng-template>
+
     <div class="text flex center" *ngIf="!result">
-        Please select an SBOM to see test results
+      Please select an SBOM to see test results
     </div>
-    <div class="text flex center" *ngIf="result && getKeys(result).length === 0">
-        There aren't any test results with the selected SBOM
+    <div
+      class="text flex center"
+      *ngIf="result && getKeys(result).length === 0"
+    >
+      There aren't any test results with the selected SBOM
     </div>
+  </div>
 </div>
