@@ -4,6 +4,37 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.8.3] - 2023-06-02
+### Changed
+- `TranslatorCDXXML.java`
+  - Now creates the SBOM object and top component after components have been parsed
+  - Top component defaulting changed to execute upon empty top component data collection
+  - resolveMetadata now returns before assigning top component data if the top component collection is empty
+
+---
+## [3.8.2] - 2023-06-02
+### Added
+
+### Changed
+- Updated the Quick Start guide in README.md.
+
+### Fixed
+- Fixed `UTF-8 Not Supported Error` caused by using the `@RequestBody` annotation with a class object.
+- `Debug.log()` had an unchecked cast to `Exception`; this was fixed by checking the type.
+
+---
+## [3.8.1] - 2023-06-01
+### Added
+- Added test file cdxgen-8.4.6-source.json .
+  - Added test data entry for the Authors of the metadata in the downloaded file above.
+
+### Changed
+- Stringify the `authors` object in `TranslatorCDXJSON.java` .
+- Modified `TranslatorCDXJSONTest` to run the newly added test source file cdxgen-8.4.6-source.json .
+
+### Fixed
+
+---
 ## [3.8.0] - 2023-06-01
 ### Added
 - `Debug` class from SVIP and replace (most) system calls with this to improve verbosity of our output.

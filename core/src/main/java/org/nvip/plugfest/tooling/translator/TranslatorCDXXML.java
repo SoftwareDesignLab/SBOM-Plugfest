@@ -260,13 +260,18 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     this.loadComponent(component);
 
-                    this.topComponent = topComponent == null ? component : topComponent;
+                    // If we don't have any product data to use for a topComponent,
+                    // then default this component as the top component
+                    this.topComponent = product_data.isEmpty() ? component : null;
 
                 }
 
             }
 
         }
+
+        // Create the new SBOM Object with top level data
+        this.createSBOM();
 
         if (sbomDependencies!=null) {
 
@@ -410,6 +415,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         // Update data used to construct SBOM
         bom_data.put("author", author.toString().equals("") ? sbom_materials.get("vendor") : author.toString());
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
+
+        if (sbom_component.isEmpty()) return null;
 
         product_data.put("name" , sbom_component.get("name"));
         product_data.put("publisher", sbom_component.get("publisher") == null
