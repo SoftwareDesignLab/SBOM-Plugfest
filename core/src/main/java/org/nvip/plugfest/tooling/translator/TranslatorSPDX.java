@@ -379,7 +379,7 @@ public class TranslatorSPDX extends TranslatorCore {
 
         component.setLicenses(licenses);
 
-        // Other package info
+        // Other package info TODO tests
         String packageDownloadLocation = componentMaterials.get("PackageDownloadLocation");
         String filesAnalyzed = componentMaterials.get("FilesAnalyzed"); // true or false
         String packageVerificationCode = componentMaterials.get("PackageVerificationCode");
@@ -387,18 +387,18 @@ public class TranslatorSPDX extends TranslatorCore {
         // PackageDownloadLocation
         if (packageDownloadLocation != null
                 && !packageDownloadLocation.equals("NONE") && !packageDownloadLocation.equals("NOASSERTION")) {
-            // TODO
+            component.setDownloadLocation(packageDownloadLocation);
         }
 
         // FilesAnalyzed
         if (filesAnalyzed != null) {
-            // TODO
+            component.setFilesAnalyzed(filesAnalyzed.equalsIgnoreCase("true"));
         }
 
         // PackageVerificationCode
         if (packageVerificationCode != null
                 && !packageVerificationCode.equals("NONE") && !packageVerificationCode.equals("NOASSERTION")) {
-            // TODO
+            component.setVerificationCode(packageVerificationCode);
         }
 
         return component;

@@ -37,6 +37,11 @@ public class Component {
     private boolean unpackaged;
 
     /**
+     * If files were analyzed to create the component.
+     */
+    private boolean filesAnalyzed;
+
+    /**
      * Unique identifiers of the component (ex: CDX uses purl and/or cpe)
      */
     private Set<String> cpes;
@@ -58,7 +63,7 @@ public class Component {
     /**
      * UUIDs for the children of the given component
      */
-    private final Set<UUID> children;
+    private Set<UUID> children;
 
     /**
      * Version of the component (version assigned by publisher)
@@ -68,7 +73,7 @@ public class Component {
     /**
      * List of vulnerabilities found (created by NVIP)
      */
-    private final Set<Vulnerability> vulnerabilities;
+    private Set<Vulnerability> vulnerabilities;
 
     /**
      * Represent the license of the component
@@ -79,22 +84,42 @@ public class Component {
      * Represent the conflicts of the component with other components
      * Note: This should ONLY be used in the master SBOM and never in individual sboms
      */
-    private final Set<ComponentConflict> componentConflicts;
+    private Set<ComponentConflict> componentConflicts;
+
+    /**
+     * Download location for the package. This field is exclusive to SPDX.
+     */
+    private String downloadLocation;
+
+    /**
+     * Unique verification code for the package. This field is exclusive to SPDX. See
+     * <a href="https://spdx.github.io/spdx-spec/v2.3/package-information/#79-package-verification-code-field">
+     *     the specification</a> for more. Note that this is not the same as a hash.
+     */
+    private String verificationCode;
 
     /**
      * Constructs a component with no attributes
      */
     public Component() {
         // This should not be a parameter passed as children will not be instantiated first
-        this.children = new HashSet<>();
-        this.vulnerabilities = new HashSet<>();
+        this.uuid = UUID.randomUUID();
+        this.name = null;
+        this.publisher = "Unknown";
+        this.unpackaged = false;
+        this.filesAnalyzed = false;
         this.cpes = new HashSet<>();
         this.purls = new HashSet<>();
         this.swids = new HashSet<>();
         this.hashes = new HashSet<>();
+        this.uniqueID = null;
+        this.children = new HashSet<>();
+        this.version = null;
+        this.vulnerabilities = new HashSet<>();
+        this.licenses = new HashSet<>();
         this.componentConflicts = new HashSet<>();
-        this.unpackaged = false;
-        this.uuid = UUID.randomUUID();
+        this.downloadLocation = null;
+        this.verificationCode = null;
     }
 
     /**
@@ -108,11 +133,6 @@ public class Component {
         this();
         this.name = name;
         this.version = version;
-        this.publisher = "Unknown";
-        this.cpes = new HashSet<>();
-        this.purls = new HashSet<>();
-        this.swids = new HashSet<>();
-        this.uuid = UUID.randomUUID();
     }
 
     /**
@@ -164,16 +184,23 @@ public class Component {
      * @param component Component to copy from
      */
     public void copyFrom(Component component) {
+        this.uuid = component.uuid;
         this.name = component.name;
         this.publisher = component.publisher;
-        this.cpes = new HashSet<>(component.cpes);
-        this.purls = new HashSet<>(component.purls);
-        this.swids = new HashSet<>(component.swids);
-        this.hashes = new HashSet<>(component.hashes);
-        this.children.addAll(component.children);
+        this.unpackaged = component.unpackaged;
+        this.filesAnalyzed = component.filesAnalyzed;
+        this.cpes = component.cpes;
+        this.purls = component.purls;
+        this.swids = component.swids;
+        this.hashes = component.hashes;
+        this.uniqueID = component.uniqueID;
+        this.children = component.children;
         this.version = component.version;
-        this.vulnerabilities.addAll(component.vulnerabilities);
+        this.vulnerabilities = component.vulnerabilities;
         this.licenses = component.licenses;
+        this.componentConflicts = component.componentConflicts;
+        this.downloadLocation = component.downloadLocation;
+        this.verificationCode = component.verificationCode;
     }
 
     ///
@@ -315,6 +342,30 @@ public class Component {
 
     public Set<Vulnerability> getVulnerabilities() {
         return vulnerabilities;
+    }
+
+    public boolean areFilesAnalyzed() {
+        return filesAnalyzed;
+    }
+
+    public void setFilesAnalyzed(boolean filesAnalyzed) {
+        this.filesAnalyzed = filesAnalyzed;
+    }
+
+    public String getDownloadLocation() {
+        return downloadLocation;
+    }
+
+    public void setDownloadLocation(String downloadLocation) {
+        this.downloadLocation = downloadLocation;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     ///
