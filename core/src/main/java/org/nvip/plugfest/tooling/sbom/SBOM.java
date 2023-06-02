@@ -392,7 +392,7 @@ public class SBOM {
         return retVal;
     }
 
-    private Tool checkForTool(String m){
+    public Tool checkForTool(String m){
         if(m.startsWith("[tool")){
             String[] split = m.split("\\s+");
             Tool t = new Tool();
