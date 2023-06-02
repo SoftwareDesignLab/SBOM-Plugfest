@@ -14,18 +14,35 @@ export class MetricsBodyComponent {
   filteredArray: any[] = [];
   showPassed = false;
   componentView = false;
-  testFilter = "";
+  processorFilter = "";
 
   get result() {
     this.qr = this.handler.metrics[this.handler.selectedQualityReport];
-    if (this.testFilter.length) {
-      return this.handler.metrics[this.handler.selectedQualityReport]?.results.filter(res => res.processor === this.testFilter);
+    if (this.processorFilter.length) {
+      return this.handler.metrics[
+        this.handler.selectedQualityReport
+      ]?.results.filter((res) => res.processor === this.processorFilter);
     }
     return this.handler.metrics[this.handler.selectedQualityReport]?.results;
   }
 
   get processors() {
     return this.qr?.processors || [];
+  }
+
+  getIdentifierMessages(identifier: string) {
+    if (!this.qr) {
+      return [];
+    }
+    return Object.keys(this.qr?.mergedResults[identifier]);
+  }
+
+  getResults(identifier: string, message: string) {
+    return this.qr?.mergedResults[identifier][message] || null;
+  }
+
+  getFirstResult(identifier: string, message: string) {
+    return this.qr?.mergedResults[identifier][message][0] || null;
   }
 
   get identifiers() {

@@ -61,3 +61,6 @@ app-button {
   padding: 5px;
   border-radius: 5px;
 }
+app-accordion {
+  margin: 1px;
+}

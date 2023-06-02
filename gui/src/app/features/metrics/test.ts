@@ -31,6 +31,8 @@ export class QualityReport {
     "var(--pink)",
   ];
 
+  mergedResults: { [key: string]: { [key: string]: any[] } } = {};
+
   constructor(test: test) {
     this.test = test;
     this.processors = Object.keys(this.test.attributeResults);
@@ -42,7 +44,7 @@ export class QualityReport {
           if (result.additionalInfo["IDENTIFIER"]) {
             ids.add(result.additionalInfo["IDENTIFIER"]);
           }
-          this.results.push({
+          const formattedRes = {
             result,
             processor,
             test,
@@ -51,7 +53,20 @@ export class QualityReport {
             type: result.additionalInfo["TYPE"] || "",
             fieldName: result.additionalInfo["FIELD_NAME"],
             identifier: result.additionalInfo["IDENTIFIER"] || "",
-          });
+          };
+          this.results.push(formattedRes);
+
+          if (formattedRes.identifier && formattedRes.result.message) {
+            if (!this.mergedResults[formattedRes?.identifier]) {
+                this.mergedResults[formattedRes.identifier] = { [formattedRes.message]: [formattedRes]}
+            } else {
+                if (this.mergedResults[formattedRes?.identifier][formattedRes.message]) {
+                    this.mergedResults[formattedRes?.identifier][formattedRes.message].push(formattedRes);
+                } else {
+                    this.mergedResults[formattedRes?.identifier][formattedRes.message] = [formattedRes];
+                }
+            }
+          }
         });
       });
     });
