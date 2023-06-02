@@ -10,6 +10,7 @@ import java.util.*;
  *
  * Test each component in the given SBOM if they have license data
  * @author Matthew Morrison
+ * @author Derek Garcia
  */
 public class HasLicenseDataTest extends MetricTest{
 
@@ -25,89 +26,16 @@ public class HasLicenseDataTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         // create a list to hold each result of sbom components
         List<Result> results = new ArrayList<>();
-        SBOM.Type type = sbom.getOriginFormat();
 
-        if(type == SBOM.Type.Other){
-            Result r = new Result(TEST_NAME, Result.STATUS.ERROR, "Invalid SBOM " +
-                    "Type");
-            r.addContext(sbom, "SBOM Type, License Data Check");
-            results.add(r);
-            return results;
-        }
-        // if SBOM is a valid type, test licenses based on its type
-        //CycloneDX format
-        else if(type == SBOM.Type.CYCLONE_DX){
-            for(Component c : sbom.getAllComponents()){
-                results.addAll(testComponentLicenseCDX(c));
-            }
-        }
-        // SPDX format
-        else{
-            for(Component c : sbom.getAllComponents()){
-                results.addAll(testComponentLicenseSPDX(c));
-            }
+        // Check for components
+        for(Component c : sbom.getAllComponents()){
+            results.add( isEmptyOrNull(c.getLicenses())
+            ? new Result(TEST_NAME, Result.STATUS.FAIL, "No Licenses Found")
+            : new Result(TEST_NAME, Result.STATUS.PASS, c.getLicenses().size() + "Licenses Found"));
         }
 
 
         return results;
     }
-
-    /**
-     * for every component in a CycloneDX SBOM, test if there is valid data present
-     * for the component's licenses
-     * @param c the component to be tested
-     * @return a collection of results of every license for the component
-     */
-    private List<Result> testComponentLicenseCDX(Component c){
-        List<Result> results = new ArrayList<>();
-        Result r;
-        // if no licenses are declared, test automatically fails
-        if(isEmptyOrNull(c.getLicenses())){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "No Licenses " +
-                    "Detected");
-            r.addContext(c, "licenses");
-            results.add(r);
-        }
-        // licenses are present, check for data
-        else{
-            // TODO Where can I get detailed info for the licenses?
-            // cyclonedx licenses are under id or name
-                for(String l : c.getLicenses()){
-                    // TODO check if ID or Name is not null and return
-                }
-
-        }
-        return results;
-    }
-
-    /**
-     * for every component in an SPDX SBOM, test if there is valid data present
-     * for the component's licenses
-     * @param c the component to be tested
-     * @return a collection of results of every license for the component
-     */
-    private List<Result> testComponentLicenseSPDX(Component c){
-        List<Result> results = new ArrayList<>();
-        Result r;
-        // if no licenses are declared, test automatically fails
-        if(isEmptyOrNull(c.getLicenses())){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "No Licenses " +
-                    "Detected");
-            r.addContext(c, "licenses");
-            results.add(r);
-        }
-        // licenses are present, check for data
-        else{
-            // TODO Where can I get detailed info for the licenses?
-
-            // spdx licenses are under PackageLicenseConcluded and
-            // PackageLicenseDeclared
-                //TODO check for PackageLicenseConcluded or
-                // PackageLicenseDeclared
-
-        }
-        return results;
-    }
-
 
 }
