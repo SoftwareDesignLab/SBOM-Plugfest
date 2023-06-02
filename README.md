@@ -33,8 +33,9 @@
   - Checks to make sure components have a name, publisher, version
   - Checks if attributes are formatted correctly and checks CPE and PURL formatting 
 - Registered Processor Tests
-  - Uses PURLs to search for information about the package using package manager APIs
-  - Confirms that name and publisher match resource and package is registered with package manager
+  - IsRegisteredTest:
+    - Uses PURLs to search for information about the package using package manager APIs
+    - Confirms that name and version match resource and package is registered with package manager 
   
 ## Translator
 - Parse SBOMS from files and deserialize from formats:
