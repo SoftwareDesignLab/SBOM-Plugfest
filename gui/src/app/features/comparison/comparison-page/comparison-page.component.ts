@@ -4,7 +4,7 @@ import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { Comparison } from "../comparison";
 import { SBOM } from "@models/sbom";
 
-import { DataHandlerService } from "@services/data-handler.service";
+import { DataHandlerService, FileStatus } from "@services/data-handler.service";
 
 @Component({
   selector: "app-comparison-page",
@@ -64,7 +64,7 @@ export class ComparisonPageComponent {
   }
 
   GetValidSBOMs() {
-    return this.dataHandler.GetValidSBOMs();
+    return this.dataHandler.GetSBOMsOfType(FileStatus.VALID);
   }
 
   GetDropdownSBOMs() {
