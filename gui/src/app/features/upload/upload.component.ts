@@ -15,7 +15,7 @@ export class UploadComponent {
   @Input() stepper: any;
   errorResponse: any;
 
-  constructor(private dataHandler: DataHandlerService, private clientService: ClientService) {
+  constructor(private dataHandler: DataHandlerService) {
     if (window.require) {
       try {
         this.ipc = window.require('electron').ipcRenderer;
