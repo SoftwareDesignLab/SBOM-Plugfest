@@ -34,7 +34,6 @@ public class HasLicenseDataTest extends MetricTest{
             : new Result(TEST_NAME, Result.STATUS.PASS, c.getLicenses().size() + "Licenses Found"));
         }
 
-
         return results;
     }
 
