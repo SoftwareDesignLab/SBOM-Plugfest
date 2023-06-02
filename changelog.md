@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.9.0] - 2023-06-02
 ### Added
 - Several fields to `Component`:
+  - `group` - The group of the component, found either in the PURL or the CycloneDX component itself.
   - `downloadLocation` - SPDX-only field
   - `filesAnalyzed` - SPDX-only field
   - `verificationCode` - SPDX-only field

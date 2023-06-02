@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.translator;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -381,6 +382,12 @@ public class TranslatorSPDX extends TranslatorCore {
         // Append CPEs and Purls
         component.setCpes(cpes);
         component.setPurls(purls);
+        if (component.getPurls().size() > 0) {
+            try {
+                PURL purl = new PURL(component.getPurls().stream().toList().get(0));
+                component.setGroup(purl.getType());
+            } catch (Exception ignored) {}
+        }
         component.setSwids(swids);
 
         // License materials map
