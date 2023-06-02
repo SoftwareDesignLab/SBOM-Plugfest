@@ -115,6 +115,8 @@ public class APIController {
         // todo get tests/processors from user that they want to run?
         Set<AttributeProcessor> processors = new HashSet<>();
         processors.add(new CompletenessProcessor());
+        processors.add(new UniquenessProcessor());
+        processors.add(new RegisteredProcessor());
 
         //run the QA
         QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
