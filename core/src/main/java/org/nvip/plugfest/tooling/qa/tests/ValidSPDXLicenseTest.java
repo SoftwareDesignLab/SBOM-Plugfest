@@ -28,7 +28,7 @@ public class ValidSPDXLicenseTest extends MetricTest{
     private static final String SPDX_LICENSE_LIST_URL = "https://spdx.org/licenses/";
 
     // Regexes
-    private static final String SPDX_TABLE_REGEX = "<table class=\"sortable\">[\\s\\S]*?<tbody>([\\s\\S]*)<\\/tbody>";
+    private static final String SPDX_TABLE_REGEX = "<tbody>([\\s\\S]*?)<\\/tbody>";
     private static final String SPDX_ROW_REGEX = "<a.*?>(.*?)<\\/a>[\\s\\S]*?<code.*?>(.*?)<\\/code>";
 
     private final HashSet<String> SPDX_LICENSE_NAMES = new HashSet<>();
