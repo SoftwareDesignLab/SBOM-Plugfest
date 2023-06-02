@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { qualityReport } from '../qualityReport';
 import { DataHandlerService } from '@services/data-handler.service';
 
@@ -7,7 +7,7 @@ import { DataHandlerService } from '@services/data-handler.service';
   templateUrl: './metrics-body.component.html',
   styleUrls: ['./metrics-body.component.css']
 })
-export class MetricsBodyComponent {
+export class MetricsBodyComponent implements OnChanges {
   constructor(private handler: DataHandlerService) {}
 
   //TODO: convert to input
@@ -20,5 +20,9 @@ export class MetricsBodyComponent {
 
   getPassedPercent(testResult: any) {
     return (testResult.successfulTests / testResult.tests.length * 100).toFixed(2);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+   this.handler.RunAllMetrics();
   }
 }
