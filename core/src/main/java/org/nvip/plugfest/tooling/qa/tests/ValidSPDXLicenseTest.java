@@ -31,11 +31,12 @@ public class ValidSPDXLicenseTest extends MetricTest{
     private static final String SPDX_TABLE_REGEX = "<tbody>([\\s\\S]*?)<\\/tbody>";
     private static final String SPDX_ROW_REGEX = "<a.*?>(.*?)<\\/a>[\\s\\S]*?<code.*?>(.*?)<\\/code>";
 
-    private final HashSet<String> SPDX_LICENSE_NAMES = new HashSet<>();
     private final Set<String> SPDX_LICENSE_IDENTIFIERS = new HashSet<>();
+    private final HashSet<String> SPDX_LICENSE_NAMES = new HashSet<>();
 
-    private final Set<String> DEPRECIATED_SPDX_LICENSE_NAMES = new HashSet<>();
     private final Set<String> DEPRECIATED_SPDX_LICENSE_IDENTIFIERS = new HashSet<>();
+    private final Set<String> DEPRECIATED_SPDX_LICENSE_NAMES = new HashSet<>();
+
 
 
     /**
@@ -56,10 +57,9 @@ public class ValidSPDXLicenseTest extends MetricTest{
             return results;
         }
 
-        int count = 0;
         // for every component, test for valid SPDX Licenses
         for(Component c : sbom.getAllComponents()){
-            System.out.println(count++ + " / " + sbom.getAllComponents().size());
+
             // Skip if no licences
             if(isEmptyOrNull(c.getLicenses()))
                 continue;
@@ -116,8 +116,8 @@ public class ValidSPDXLicenseTest extends MetricTest{
 
         // Add all names and identifiers
         while(m.find()){
-            names.add(m.group(1));
-            identifiers.add(m.group(2));
+            names.add(m.group(1).toLowerCase());
+            identifiers.add(m.group(2).toLowerCase());
         }
     }
 
@@ -130,78 +130,42 @@ public class ValidSPDXLicenseTest extends MetricTest{
      */
     private List<Result> testSPDXLicense(Component c) {
         List<Result> results = new ArrayList<>();
-        Result r = null;
+        Result r;
 
         // for every license id
         //TODO only held as a string. A License object should be created
         for(String l : c.getLicenses()){
-            // First attempt to use license as identifier
-            try {
-                // Ping endpoint
-                URL url = new URL(SPDX_LICENSE_LIST_URL + l);
-                HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-                huc.setRequestMethod("GET");
-
-                // valid SPDX License Identifier
-                if(huc.getResponseCode() == HttpURLConnection.HTTP_OK){
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid SPDX License Identifier");
-                } else {
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
-                }
+            // Test if valid Identifier
+            if(SPDX_LICENSE_IDENTIFIERS.contains(l.toLowerCase())){
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid SPDX License Identifier");
+            } else {
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
             }
-            // an issue with the url connection or link occurred
-            catch(Exception e){
-                r = new Result(TEST_NAME, Result.STATUS.ERROR, "Connection Failed");
-                Debug.log(Debug.LOG_TYPE.ERROR, "Connection failure: " + SPDX_LICENSE_LIST_URL + l);
+            r.updateInfo(Result.Context.STRING_VALUE, l);
+            r.addContext(c, "license");
+            results.add(r);
 
-            } finally {
+            // Test if valid name
+            if(SPDX_LICENSE_NAMES.contains(l.toLowerCase())){
+                r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid SPDX License Name");
+            } else {
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Name");
+            }
+            r.updateInfo(Result.Context.STRING_VALUE, l);
+            r.addContext(c, "license");
+            results.add(r);
 
-                // update r and add to results
-                assert r != null;   // should not happen
+            // Test if depreciated Identifier
+            if(DEPRECIATED_SPDX_LICENSE_IDENTIFIERS.contains(l.toLowerCase())){
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Valid SPDX License Identifier but is depreciated");
                 r.updateInfo(Result.Context.STRING_VALUE, l);
                 r.addContext(c, "license");
                 results.add(r);
             }
 
-            // Second attempt to use license as name
-            try {
-                // Ping endpoint
-                URL url = new URL(SPDX_LICENSE_LIST_URL);
-                HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-                huc.setRequestMethod("GET");
-
-                // valid SPDX License Identifier
-                if(huc.getResponseCode() == HttpURLConnection.HTTP_OK){
-                    // Get HTML
-                    InputStream in = huc.getInputStream();
-                    String encoding = huc.getContentEncoding();
-                    encoding = encoding == null ? "UTF-8" : encoding;
-                    String html = IOUtils.toString(in, encoding);
-
-                    // Create table regex
-                    Pattern p = new Pattern(SPDX_TABLE_REGEX, REFlags.MULTILINE);
-                    Matcher m = p.matcher(html);
-
-                    // Search for License name
-                    if(m.find() && m.group(0).contains(">" + l + "<\\/a>")){
-                        r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid SPDX License Name");
-                    } else {
-                        r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Name");
-                    }
-
-                // Issue querying SPDX License page
-                } else {
-                    r = new Result(TEST_NAME, Result.STATUS.ERROR, "Couldn't query " + SPDX_LICENSE_LIST_URL);
-                    Debug.log(Debug.LOG_TYPE.ERROR, "Connection failure: " + SPDX_LICENSE_LIST_URL);
-                }
-
-            }
-            // an issue with the url connection or link occurred
-            catch(Exception e){
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Name");
-
-            } finally {
-                // update r and add to results
+            // Test if depreciated Name
+            if(DEPRECIATED_SPDX_LICENSE_NAMES.contains(l.toLowerCase())){
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Valid SPDX License Name but is depreciated");
                 r.updateInfo(Result.Context.STRING_VALUE, l);
                 r.addContext(c, "license");
                 results.add(r);
