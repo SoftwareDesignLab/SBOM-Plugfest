@@ -48,13 +48,24 @@
   > Check: `java -version`
 
 ## Quick Start
-### Backend
-1. `./gradlew bootJar`
-2. `java -jar .\api\build\libs\api-3.1.0.jar`
-### Frontend
-1. `cd gui`
-2. `npm install`
-3. `npm start`
+### Launch Bundled Application
+```
+cd gui
+npm install
+npm start
+```
+### Launch Separately
+```
+# Start back-end in root directory
+# Or run api/src/main/java/org/nvip/plugfest/tooling/APIApplication in your IDE of choice, this works with debug mode!
+./gradlew bootJar
+java -jar .\api\build\libs\api-3.1.0.jar
+
+# Then start front-end
+cd gui
+npm install
+npm run dev
+```
 
 ## Contributors
 **Principal Investigator:** [Mehdi Mirakhorli](mailto:mxmvse@rit.edu)
