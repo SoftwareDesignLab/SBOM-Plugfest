@@ -4,6 +4,14 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.7.1] - 2023-06-02
+### Added
+- New License processor. New tests include:
+  - `HasLicenseDataTest` - checks to see if has license data
+  - `ValidSPDXLicenseTest` - validates SPDX Licensing information
+    > Checks to see if the SPDX License Name/ID is valid and if it's depreciated
+### Changed
+### Fixed
 ## [3.7.0] - 2023-05-31
 ### Added
 - New QA Refactor
