@@ -69,7 +69,7 @@ public class ValidSPDXLicenseTest extends MetricTest{
             // First attempt to use license as identifier
             try {
                 // Ping endpoint
-                URL url = new URL(SPDX_LICENSE_LIST_URL + l);
+                URL url = new URL(SPDX_LICENSE_LIST_URL + l.replace(" ", "%"));
                 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
                 huc.setRequestMethod("GET");
 
@@ -79,11 +79,15 @@ public class ValidSPDXLicenseTest extends MetricTest{
             }
             // an issue with the url connection or link occurred
             catch(Exception e){
+                e.printStackTrace();
                 r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
 
             } finally {
+
                 // update r and add to results
-                assert r != null;
+                if(r == null)
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
+
                 r.updateInfo(Result.Context.STRING_VALUE, l);
                 r.addContext(c, "license");
                 results.add(r);
