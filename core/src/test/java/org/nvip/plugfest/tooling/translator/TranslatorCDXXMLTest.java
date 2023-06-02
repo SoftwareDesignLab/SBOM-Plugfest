@@ -92,6 +92,12 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
     }
 
     @Test
+    public void sbom_get_originTemp_test() throws TranslatorException {
+        SBOM sbom = this.TRANSLATOR.translate("src/test/java/org/nvip/plugfest/tooling/sample_boms/gobom-source.xml");
+        assertNotNull(sbom);
+    }
+
+    @Test
     @DisplayName("Test for null UIDs")
     void nullUIDTest() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(test_large_cdx);
