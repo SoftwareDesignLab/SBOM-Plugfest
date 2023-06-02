@@ -141,6 +141,15 @@ public class SBOM {
     }
 
     /**
+     * Get the name of the head component of the SBOM, aka the bom/document name.
+     *
+     * @return The name of the SBOM.
+     */
+    public String getName() {
+        return getComponent(getHeadUUID()).getName();
+    }
+
+    /**
      * Get a set of all components in the project
      *
      * @return Set of components
