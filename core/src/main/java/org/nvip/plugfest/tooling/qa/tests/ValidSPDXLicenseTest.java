@@ -69,8 +69,14 @@ public class ValidSPDXLicenseTest extends MetricTest{
         return results;
     }
 
+    /**
+     * Query the SPDX License page and get all license details
+     *
+     * @return true if success, fails otherwise
+     */
     private boolean loadSPDXLicenseData(){
         try {
+            // Open connection
             URL url = new URL(SPDX_LICENSE_LIST_URL);
             HttpURLConnection huc = (HttpURLConnection) url.openConnection();
             huc.setRequestMethod("GET");
@@ -103,14 +109,23 @@ public class ValidSPDXLicenseTest extends MetricTest{
                 }
             }
         } catch (Exception e){
+            // failure
             Debug.log(Debug.LOG_TYPE.ERROR, e);
             return false;
         }
-
+        // success
         return true;
     }
 
+    /**
+     * Populate the given sets with table information
+     *
+     * @param tableHTML html table details with spdx license info
+     * @param names Set of SPDX License Names to update
+     * @param identifiers Set of SPDX License Identifiers to update
+     */
     private void popululateDataSets(String tableHTML, Set<String> names, Set<String> identifiers){
+        // build regex
         Pattern p = new Pattern(SPDX_ROW_REGEX, REFlags.MULTILINE);
         Matcher m = p.matcher(tableHTML);
 
