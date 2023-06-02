@@ -73,7 +73,6 @@ public class IsRegisteredTest extends MetricTest{
                             "PURL is null, test cannot run");
                     r.addContext(c, "PURL Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-                    r.updateInfo(Result.Context.STRING_VALUE, p.toString());
                     purlResults.add(r);
                 }
                 // purl is not null, the test can continue
@@ -106,7 +105,7 @@ public class IsRegisteredTest extends MetricTest{
                             case "conda" -> response = extractFromConda(p);
                             // an invalid or not recognized package manager type
                             default -> {
-                                r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                                r = new Result(TEST_NAME, Result.STATUS.FAIL,
                                         "Package Manager is not valid or " +
                                                 "not recognized: " +
                                                 packageManager);
