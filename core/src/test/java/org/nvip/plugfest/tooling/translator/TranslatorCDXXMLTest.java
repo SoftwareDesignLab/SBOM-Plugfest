@@ -8,7 +8,6 @@
 
 package org.nvip.plugfest.tooling.translator;
 
-import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -20,9 +19,8 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.nvip.plugfest.tooling.translator.utils.Utils.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 /**
  * File: TranslatorCDXXMLTest.java
@@ -60,6 +58,13 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(18, sbom.getAllComponents().size());
+
+        if(pathToSBOM.equals(test_small_cdx)) {
+            assertEquals(6, sbom.getMetadata().size());
+            assertEquals(1, sbom.appTools.size());
+            checkMetaData(sbom);
+        }
+
     }
 
     @Test
@@ -70,6 +75,10 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(434, sbom.getAllComponents().size());
+        assertEquals(6, sbom.getMetadata().size());
+        assertEquals(1, sbom.appTools.size());
+
+        checkMetaData(sbom);
     }
 
     @Test
@@ -81,6 +90,10 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(1, sbom.getAllComponents().size());
+        assertEquals(6, sbom.getMetadata().size());
+        assertEquals(1, sbom.appTools.size());
+
+        checkMetaData(sbom);
     }
 
     @Test
@@ -88,6 +101,10 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_SBOM_1_2_DEPENDENCIES.toString());
         assertNotNull(sbom);
         assertEquals(202, sbom.getAllComponents().size());
+        assertEquals(15, sbom.getMetadata().size());
+        assertEquals(1, sbom.appTools.size());
+
+        checkMetaData(sbom);
     }
 
     @Test
@@ -95,6 +112,10 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_SBOM_1_4_DEPENDENCIES);
         assertNotNull(sbom);
         assertEquals(631, sbom.getAllComponents().size());
+        assertEquals(11, sbom.getMetadata().size());
+        assertEquals(1, sbom.appTools.size());
+
+        checkMetaData(sbom);
     }
 
     @Test
@@ -124,5 +145,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
             Debug.logBlock();
         }
     }
+
+
 
 }

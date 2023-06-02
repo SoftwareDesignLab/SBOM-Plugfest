@@ -62,12 +62,25 @@ public class SBOM {
     private Set<Signature> signature;
 
     /**
+     * Metadata of SBOM
+     */
+    private Set<String> metadata;
+
+
+    /**
+     *  Application tools
+     */
+    public Set<AppTool> appTools;
+
+
+    /**
      * Default constructor
      */
     public SBOM () {
         this.dependencyTree = new DependencyTree();
         this.signature = new HashSet<>();
         this.serialNumber = "urn:uuid:" + UUID.randomUUID().toString();
+        this.metadata = new HashSet<>();
     }
 
     /**
@@ -106,6 +119,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
+        this.metadata = new HashSet<>();
     }
 
     /**
@@ -128,6 +142,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
+        this.metadata = new HashSet<>();
     }
 
     /**
@@ -308,6 +323,41 @@ public class SBOM {
         this.signature = signature;
     }
 
+    public void addMetadata(String m){
+        if(metadata == null)
+            metadata = new HashSet<>();
+        AppTool potentialTool = checkForTool(m);
+        if(!getAppTools().contains(potentialTool))
+            if(potentialTool != null)
+                addAppTool(potentialTool);
+            else metadata.add(m);
+    }
+    public void setMetadata(Set<String> md){
+        for (String m: md
+             ) {
+            addMetadata(m);
+        }
+    }
+    public Set<String> getMetadata(){
+        return metadata;
+    }
+
+    public Set<AppTool> getAppTools() {
+        if(appTools == null)
+            appTools = new HashSet<>();
+        return appTools;
+    }
+
+    public void setAppTools(Set<AppTool> appTools) {
+        this.appTools = appTools;
+    }
+
+    public void addAppTool(AppTool a){
+        if(appTools == null)
+            appTools = new HashSet<>();
+        appTools.add(a);
+    }
+
     ///
     /// Overrides
     ///
@@ -350,6 +400,14 @@ public class SBOM {
 
         // Now we can return
         return retVal;
+    }
+
+    public AppTool checkForTool(String m){
+        if(m.toLowerCase().startsWith("[tool")){
+            String[] split = m.split("\\s+");
+            return new AppTool(split[2], split[3], split[4]);
+        }
+        return null;
     }
 
     /**

@@ -1,9 +1,6 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.awt.desktop.ScreenSleepEvent;
@@ -113,7 +110,8 @@ public class TranslatorPlugFestTest {
     }
 
     @Test
-    @Disabled("This needs to be fixed")
+    @Disabled
+    @DisplayName("FIX") // todo
     public void driver_translates_json_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);

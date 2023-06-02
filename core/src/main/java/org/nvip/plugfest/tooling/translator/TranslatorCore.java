@@ -92,6 +92,9 @@ public abstract class TranslatorCore {
                     " SBOM. File: " + this.FILE_EXTN);
         }
 
+        if (bom_data.get("DataLicense") != null)
+            sbom.addMetadata("[dataLicense " + bom_data.get("DataLicense") + "]");
+
         // If there is no top component (product) already, try to create it
         // Otherwise, make sure it's in the SBOM
         if (topComponent == null) {
