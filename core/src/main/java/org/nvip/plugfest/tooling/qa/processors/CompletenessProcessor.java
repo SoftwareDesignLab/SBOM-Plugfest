@@ -1,7 +1,5 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
-import org.nvip.plugfest.tooling.qa.tests.EmptyOrNullTest;
-
 /**
  * file: CompletenessProcessor.java
  *
@@ -15,7 +13,6 @@ public class CompletenessProcessor extends AttributeProcessor{
      */
     public CompletenessProcessor(){
        this.attributeName = "Completeness";
-       this.metricTests.add(new EmptyOrNullTest());
        /*
         todo
         minElementFields - Check SBOM for min elements

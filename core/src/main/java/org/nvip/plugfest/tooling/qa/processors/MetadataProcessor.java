@@ -1,6 +1,6 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
-import org.nvip.plugfest.tooling.qa.tests.HasSupplierTest;
+import org.nvip.plugfest.tooling.qa.tests.HasMinElsMetaDataTest;
 
 /**
  * file: MetadataProcessor.java
@@ -17,17 +17,13 @@ public class MetadataProcessor extends AttributeProcessor{
     public MetadataProcessor(){
         this.attributeName = "Metadata";
 
-
-        this.metricTests.add(new HasSupplierTest());
+        this.metricTests.add(new HasMinElsMetaDataTest());
 
         /*
         TODO
-         emptyOrNull: check if the field is empty or null
-         minElementFields: Check if the field is empty or null
          validPURL: PURL matches regex
          validCPE: CPE matches regex
          validSWID: SWID matches regex
-         hasSupplier: check author details
          hasGenerationDetails: see if there are details on the tool that generated report
          */
     }
