@@ -22,6 +22,11 @@ public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest 
                 "\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){4}", Pattern.MULTILINE);
     }
 
+    /**
+     * Validates the CPE
+     * @param sbom SBOM to test
+     * @return
+     */
     @Override
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
