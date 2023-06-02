@@ -131,7 +131,7 @@ public class AccuratePURLTest extends MetricTest{
         }
         // if the two versions do match, the test passes
         else{
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
+            r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL " +
                     "version matches component's version");
         }
         // add context about the findings
