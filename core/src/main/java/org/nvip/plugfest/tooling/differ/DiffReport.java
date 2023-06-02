@@ -246,10 +246,10 @@ public class DiffReport {
                     case COMPONENT_LICENSE_MISMATCH -> {
                         // get licenses
                         Set<String> licenseA = new HashSet<>(conflict.getComponentA().getLicenses());
-                        Set<String> licenseB = new HashSet<>(conflict.getComponentA().getLicenses());
+                        Set<String> licenseB = new HashSet<>(conflict.getComponentB().getLicenses());
 
                         // remove duplicates
-                        licenseA.removeAll(conflict.getComponentA().getLicenses());
+                        licenseA.removeAll(conflict.getComponentB().getLicenses());
                         licenseB.removeAll(conflict.getComponentA().getLicenses());
                         for (String license : licenseA) {
                             body.addComponentConflict(
@@ -278,10 +278,10 @@ public class DiffReport {
                     case COMPONENT_CPE_MISMATCH -> {
                         // get licenses
                         Set<String> cpeA = new HashSet<>(conflict.getComponentA().getCpes());
-                        Set<String> cpeB = new HashSet<>(conflict.getComponentA().getCpes());
+                        Set<String> cpeB = new HashSet<>(conflict.getComponentB().getCpes());
 
                         // remove duplicates
-                        cpeA.removeAll(conflict.getComponentA().getCpes());
+                        cpeA.removeAll(conflict.getComponentB().getCpes());
                         cpeB.removeAll(conflict.getComponentA().getCpes());
                         for (String cpe : cpeA) {
                             body.addComponentConflict(
@@ -302,10 +302,10 @@ public class DiffReport {
                     case COMPONENT_PURL_MISMATCH -> {
                         // get cpes
                         Set<PURL> purlA = new HashSet<>(conflict.getComponentA().getPurls());
-                        Set<PURL> purlB = new HashSet<>(conflict.getComponentA().getPurls());
+                        Set<PURL> purlB = new HashSet<>(conflict.getComponentB().getPurls());
 
                         // remove duplicates
-                        purlA.removeAll(conflict.getComponentA().getPurls());
+                        purlA.removeAll(conflict.getComponentB().getPurls());
                         purlB.removeAll(conflict.getComponentA().getPurls());
                         for (PURL purl : purlA) {
                             body.addComponentConflict(
@@ -329,7 +329,7 @@ public class DiffReport {
                         Set<String> swidB = new HashSet<>(conflict.getComponentA().getSwids());
 
                         // remove duplicates
-                        swidA.removeAll(conflict.getComponentA().getSwids());
+                        swidA.removeAll(conflict.getComponentB().getSwids());
                         swidB.removeAll(conflict.getComponentA().getSwids());
                         for (String swid : swidA) {
                             body.addComponentConflict(

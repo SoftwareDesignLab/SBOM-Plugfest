@@ -32,10 +32,10 @@
 - Completeness Test
   - Checks to make sure components have a name, publisher, version
   - Checks if attributes are formatted correctly and checks CPE and PURL formatting 
-- Data Verification Test
-  - Uses PURLs to search for information about the package using package manager APIs
-  - Confirms that name and publisher match resource
-  - Also checks to see if the assigned version number exists in resource
+- Registered Processor Tests
+  - IsRegisteredTest:
+    - Uses PURLs to search for information about the package using package manager APIs
+    - Confirms that name and version match resource and package is registered with package manager 
   
 ## Translator
 - Parse SBOMS from files and deserialize from formats:

@@ -4,6 +4,7 @@ import { ClientService } from './client.service';
 import { IpcRenderer } from 'electron';
 import { Comparison } from '@features/comparison/comparison';
 import {QualityReport, test} from '@features/metrics/test';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -93,8 +94,8 @@ export class DataHandlerService {
 
         //last time running
         if(i == total) {
-          let fileData: string[] = [];
-          let filePaths: string[] = [];
+          let files = [];
+          let paths = [];
 
           //Ensure that the compare is first in list
 
@@ -105,20 +106,28 @@ export class DataHandlerService {
             let path = keys[i];
 
               if(path === main) {
-                fileData.unshift(toSend[path]);
-                filePaths.unshift(path);
+                files.unshift({
+                  'fileName': path,
+                  'contents': data
+                })
+
+                paths.unshift(path);
               } else {
-                fileData.push(toSend[path]);
-                filePaths.push(path);
+                files.push({
+                  'fileName': path,
+                  'contents': data
+                })
+
+                paths.push(path);
               }
           }
 
-          this.lastSentFilePaths = filePaths;
+          this.lastSentFilePaths = paths;
 
-          // this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
-          //   this.comparison = result;
-          //   this.loadingComparison = false;
-          // })
+          this.client.post("compare", files, new HttpParams().set('targetIndex', 0)).subscribe((result: any) => {
+            this.comparison = result;
+            this.loadingComparison = false;
+          })
         }
       })
     })

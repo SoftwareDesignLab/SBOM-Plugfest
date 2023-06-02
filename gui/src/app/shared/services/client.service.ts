@@ -28,7 +28,8 @@ export class ClientService {
     return this.http.get(this.SERVER_URL + path, this.httpOptions);
   }
 
-  post(path: string, obj?: Object) {
-    return this.http.post(this.SERVER_URL + path, obj);
+  post(path: string, body: any,  params: HttpParams = new HttpParams()) {
+    this.httpOptions.params = params;
+    return this.http.post(this.SERVER_URL + path, body, this.httpOptions);
   }
 }
