@@ -134,11 +134,6 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
-        // Create the new SBOM Object with top level data
-        this.createSBOM();
-        if(resolvedMetadata != null)
-            sbom.setMetadata(resolvedMetadata);
-
         /*
          * Cycle through all components and correctly attach them to Java SBOM object
          */
@@ -275,6 +270,8 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
+        if(resolvedMetadata != null)
+            sbom.setMetadata(resolvedMetadata);
 
         if (sbomDependencies!=null) {
 
