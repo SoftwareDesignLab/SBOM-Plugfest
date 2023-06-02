@@ -35,6 +35,11 @@ public class Component {
     private String publisher;
 
     /**
+     * Group name of this component
+     */
+    private String group;
+
+    /**
      * If the component is unpackaged (not included in SPDX notation)
      */
     private boolean unpackaged;
@@ -124,6 +129,7 @@ public class Component {
         this.uuid = UUID.randomUUID();
         this.name = null;
         this.publisher = "Unknown";
+        this.group = null;
         this.unpackaged = false;
         this.filesAnalyzed = false;
         this.cpes = new HashSet<>();
@@ -244,6 +250,14 @@ public class Component {
 
     public void setPublisher(String publisher) {
         this.publisher = publisher;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public String getVersion() {
