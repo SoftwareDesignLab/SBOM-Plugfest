@@ -56,8 +56,4 @@ export class MetricsBodyComponent {
         return "N/A";
     }
   }
-
-  getKeys(obj: Object) {
-    return Object.keys(obj);
-  }
 }
