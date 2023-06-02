@@ -20,6 +20,11 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
         this.purlRegex = Pattern.compile("^pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@([a-zA-Z0-9-~._%]+))?(\\?(([a-zA-Z][a-zA-Z0-9_.-]*=.+)&)*([a-zA-Z][a-zA-Z0-9-~._%]*=.+))?(#([a-zA-Z0-9-~._%]*\\/)+[a-zA-Z0-9-~._%]*)?", Pattern.MULTILINE);
     }
 
+    /***
+     * Validates the PURL
+     * @param sbom SBOM to test
+     * @return
+     */
     @Override
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
