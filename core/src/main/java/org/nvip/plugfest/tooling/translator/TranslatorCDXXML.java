@@ -126,8 +126,6 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
-        // Create the new SBOM Object with top level data
-        this.createSBOM();
 
         /*
          * Cycle through all components and correctly attach them to Java SBOM object
@@ -241,13 +239,15 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     this.loadComponent(component);
 
-                    this.product = product == null ? component : product;
-
+                    this.product = product_data.isEmpty() ? component : null;
                 }
 
             }
 
         }
+
+        // Create the new SBOM Object with top level data
+        this.createSBOM();
 
         if (sbomDependencies!=null) {
 
@@ -361,10 +361,12 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("author", author.equals("") ? sbom_materials.get("vendor") : author);
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
 
-        product_data.put("name" , sbom_component.get("name"));
-        product_data.put("publisher", sbom_component.get("publisher") == null
-                ? sbom_materials.get("author") : sbom_component.get("publisher"));
-        product_data.put("version", sbom_component.get("version"));
-        product_data.put("id", sbom_component.get("bom-ref"));
+        if(!sbom_component.isEmpty()) {
+            product_data.put("name", sbom_component.get("name"));
+            product_data.put("publisher", sbom_component.get("publisher") == null
+                    ? sbom_materials.get("author") : sbom_component.get("publisher"));
+            product_data.put("version", sbom_component.get("version"));
+            product_data.put("id", sbom_component.get("bom-ref"));
+        }
     }
 }
