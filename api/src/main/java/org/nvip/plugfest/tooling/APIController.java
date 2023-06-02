@@ -8,6 +8,7 @@ import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
 import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
+import org.nvip.plugfest.tooling.qa.processors.LicensingProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.springframework.http.HttpStatus;
@@ -115,6 +116,12 @@ public class APIController {
         Set<AttributeProcessor> processors = new HashSet<>();
         processors.add(new CompletenessProcessor());
         processors.add(new RegisteredProcessor());
+        // add uniqueness processor
+        processors.add(new LicensingProcessor());
+        // add metadata processor
+        // add registered processor
+        // add cdx metrics
+        // add spdx metrics
 
         //run the QA
         QualityReport report = QAPipeline.process(sbomArgument.fileName, sbom, processors);
