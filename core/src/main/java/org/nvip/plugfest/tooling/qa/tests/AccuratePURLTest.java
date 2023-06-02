@@ -62,6 +62,9 @@ public class AccuratePURLTest extends MetricTest{
                 purlResults.add(testPURLName(c, p));
                 // test the validity of the purl's version and add its result
                 purlResults.add(testPURLVersion(c, p));
+
+                //TODO Component's need to hold group/vendor info in order
+                // to compare with PURL
             }
 
         }
