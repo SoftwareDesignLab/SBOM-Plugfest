@@ -90,13 +90,12 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
     @ParameterizedTest
     @ValueSource(strings = {TEST_CDX_JSON})
     @DisplayName("Test on PlugFest Audit excel line 24")
-    //Cannot invoke "org.cyclonedx.model.Component.getName()" because "top_component_meta" is null
     public void build_SBOM_cdx_json_test(String pathToSBOM) throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(5, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
+        assertEquals(5, sbom.getAllComponents().size());
     }
 
 }

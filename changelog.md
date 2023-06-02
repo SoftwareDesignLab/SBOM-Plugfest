@@ -4,6 +4,18 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.8.1] - 2023-06-01
+### Added
+- Added test file cdxgen-8.4.6-source.json .
+  - Added test data entry for the Authors of the metadata in the downloaded file above.
+
+### Changed
+- Stringify the `authors` object in `TranslatorCDXJSON.java` .
+- Modified `TranslatorCDXJSONTest` to run the newly added test source file cdxgen-8.4.6-source.json .
+
+### Fixed
+
+---
 ## [3.8.0] - 2023-06-01
 ### Added
 - `Debug` class from SVIP and replace (most) system calls with this to improve verbosity of our output.
