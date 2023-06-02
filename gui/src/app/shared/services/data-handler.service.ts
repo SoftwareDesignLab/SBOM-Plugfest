@@ -58,7 +58,7 @@ export class DataHandlerService {
 
   RunMetricsOnFile(path: string) {
     this.ipc.invoke('getFileData', path).then((data: any) => {
-      this.client.post("qa", new HttpParams().set("contents",data).set("fileName", path)).subscribe((result) => {
+      this.client.post("qa", {'fileName': path, 'contents': data}).subscribe((result) => {
         this.metrics[path] = result;
         this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
       },
@@ -94,8 +94,8 @@ export class DataHandlerService {
 
         //last time running
         if(i == total) {
-          let fileData: string[] = [];
-          let filePaths: string[] = [];
+          let files = [];
+          let paths = [];
 
           //Ensure that the compare is first in list
 
@@ -106,17 +106,25 @@ export class DataHandlerService {
             let path = keys[i];
 
               if(path === main) {
-                fileData.unshift(toSend[path]);
-                filePaths.unshift(path);
+                files.unshift({
+                  'fileName': path,
+                  'contents': data
+                })
+
+                paths.unshift(path);
               } else {
-                fileData.push(toSend[path]);
-                filePaths.push(path);
+                files.push({
+                  'fileName': path,
+                  'contents': data
+                })
+
+                paths.push(path);
               }
           }
 
-          this.lastSentFilePaths = filePaths;
+          this.lastSentFilePaths = paths;
 
-          this.client.post("compare", new HttpParams().set('contents', JSON.stringify(fileData)).set('fileNames', JSON.stringify(filePaths))).subscribe((result: any) => {
+          this.client.post("compare", files, new HttpParams().set('targetIndex', 0)).subscribe((result: any) => {
             this.comparison = result;
             this.loadingComparison = false;
           })
