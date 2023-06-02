@@ -2,7 +2,6 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,14 +35,20 @@ public class TranslatorCDXXML extends TranslatorCore {
      * @throws ParserConfigurationException if the DocumentBuilder cannot be created
      */
     @Override
-    protected SBOM translateContents(String contents, String file_path) throws ParserConfigurationException {
+    protected SBOM translateContents(String contents, String file_path) throws TranslatorException {
         // Top level SBOM materials
         HashMap<String, String> header_materials = new HashMap<>();
 
         // Initialize Document Builder
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+        DocumentBuilder documentBuilder;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new TranslatorException(e.getMessage());
+        }
 
         // Get parsed XML SBOM file and normalize
         Document sbom_xml_file;
@@ -78,14 +83,13 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbomHead = sbom_xml_file.getElementsByTagName("bom").item(0).getAttributes();
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "Invalid format, 'bom' not found in: " + file_path);
-            return null;
+            throw new TranslatorException("Invalid format, 'bom' not found in: " + file_path);
         }
 
         try {
             sbomMeta = ((Element) (sbom_xml_file.getElementsByTagName("metadata")).item(0)).getElementsByTagName("*");
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "'metadata' not found in: " + file_path);
+            Debug.log(Debug.LOG_TYPE.WARN, "'metadata' not found in: " + file_path);
             sbomMeta = null;
         }
 
@@ -114,7 +118,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         }
 
         // Get important SBOM items from meta  (timestamp, tool info)
-        resolveMetadata(sbomMeta); // TODO if false is returned, warn that no metadata has been found
+        resolveMetadata(sbomMeta);
 
         bom_data.put("format", "cyclonedx");
         bom_data.put("specVersion", header_materials.get("xmlns"));
@@ -166,7 +170,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                     Element elem = (Element) compItem;
                     NodeList component_elements = elem.getElementsByTagName("*");
 
-                    Set<PURL> purls = new HashSet<>();
+                    Set<String> purls = new HashSet<>();
                     Set<String> cpes = new HashSet<>();
                     Set<Hash> hashes = new HashSet<>();
 
@@ -183,10 +187,7 @@ public class TranslatorCDXXML extends TranslatorCore {
                             cpes.add(component_elements.item(j).getTextContent());
                         }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("purl")) {
-                            try {
-                                purls.add(new PURL(component_elements.item(j).getTextContent()));
-                            } catch (Exception ignored){
-                            }
+                            purls.add(component_elements.item(j).getTextContent());
                         }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
                             hashes.add(
@@ -237,9 +238,9 @@ public class TranslatorCDXXML extends TranslatorCore {
                     // Set licenses for component
                     component.setLicenses(component_licenses);
 
-                    this.loadComponent(component.getUniqueID(), component);
+                    this.loadComponent(component);
 
-                    this.product = product == null ? component : product;
+                    this.topComponent = topComponent == null ? component : topComponent;
 
                 }
 
@@ -278,7 +279,7 @@ public class TranslatorCDXXML extends TranslatorCore {
             }
         } else {
             dependencies.put(
-                    this.product.getUniqueID(),
+                    this.topComponent.getUniqueID(),
                     components.values().stream().map(x->x.getUniqueID()).collect(Collectors.toCollection(ArrayList::new))
             );
         }
@@ -286,14 +287,14 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
-        try {
-            dependencyBuilder(components, this.product,null);
+        try { // TODO should these errors be thrown?
+            dependencyBuilder(components, this.topComponent,null);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
         }
 
         try {
-            defaultDependencies(this.product);
+            defaultDependencies(this.topComponent);
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Something went wrong with defaulting dependencies. A dependency tree may" +
                     " not exist.");
@@ -303,8 +304,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         return this.sbom;
     }
 
-    private boolean resolveMetadata(NodeList sbomMeta) {
-        if(sbomMeta == null) return false;
+    private void resolveMetadata(NodeList sbomMeta) {
+        if(sbomMeta == null) return;
 
         // Collected data
         String author = "";
@@ -364,7 +365,5 @@ public class TranslatorCDXXML extends TranslatorCore {
                 ? sbom_materials.get("author") : sbom_component.get("publisher"));
         product_data.put("version", sbom_component.get("version"));
         product_data.put("id", sbom_component.get("bom-ref"));
-
-        return true;
     }
 }

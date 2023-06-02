@@ -29,7 +29,7 @@ public abstract class TranslatorCore {
     protected SBOM sbom;
 
     // The top level component (what the SBOM is about)
-    protected Component product;
+    protected Component topComponent;
 
     // Top level SBOM data
     protected HashMap<String, String> bom_data;
@@ -67,14 +67,14 @@ public abstract class TranslatorCore {
      * @param filePath path to the bom
      * @return SBOM object, null if failed
      */
-    protected abstract SBOM translateContents(String contents, String filePath) throws IOException, ParseException, ParserConfigurationException;
+    protected abstract SBOM translateContents(String contents, String filePath) throws TranslatorException;
 
     /**
      * Builds an SBOM with the parsed top level information. It will also attempt to
      * create a top level component (the product the SBOM is for) with the available
      * information.
      */
-    protected void createSBOM() {
+    protected void createSBOM() throws TranslatorException {
 
         // Attempt to create the SBOM with top level data, if an error is thrown return null and exit
         try {
@@ -88,34 +88,22 @@ public abstract class TranslatorCore {
                     null
             );
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "Error: Internal SBOM could not be created. Cancelling translation for this SBOM. \n " +
-                    "File: " + this.FILE_EXTN + "\n"
-            );
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
-//            e.printStackTrace();
-            sbom = null;
-            System.exit(0);
+            throw new TranslatorException("Error: Internal SBOM could not be created. Cancelling translation for this" +
+                    " SBOM. File: " + this.FILE_EXTN);
         }
 
         // If there is no top component (product) already, try to create it
         // Otherwise, make sure it's in the SBOM
-        if (product == null) {
-            try {
-                product = new Component(
-                        product_data.get("name"),
-                        product_data.get("publisher"),
-                        product_data.get("version"),
-                        product_data.get("id")
-                );
-                sbom.addComponent(null, product);
-            } catch (Exception e) {
-                Debug.log(Debug.LOG_TYPE.ERROR,
-                        "Error: Could not create top component from SBOM metadata. File: " + this.FILE_EXTN);
-            }
-        } else {
-            sbom.addComponent(null, product);
+        if (topComponent == null) {
+            topComponent = new Component(
+                    product_data.get("name"),
+                    product_data.get("publisher"),
+                    product_data.get("version"),
+                    product_data.get("id")
+            );
         }
 
+        sbom.addComponent(null, topComponent);
     }
 
     /**
@@ -219,9 +207,9 @@ public abstract class TranslatorCore {
 
     }
 
-    protected void loadComponent(String key, Component component) {
-        components.put(key, component);
-        remainder.add(key);
+    protected void loadComponent(Component component) {
+        components.put(component.getUUID().toString(), component);
+        remainder.add(component.getUUID().toString());
     }
 
     /**
@@ -247,7 +235,7 @@ public abstract class TranslatorCore {
      * @throws ParseException
      * @throws ParserConfigurationException
      */
-    public SBOM translate(String filePath) throws IOException, ParseException, ParserConfigurationException {
+    public SBOM translate(String filePath) throws TranslatorException {
 
         // File contents
         String contents;

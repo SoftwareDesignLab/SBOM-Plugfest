@@ -55,13 +55,20 @@ public class DataVerificationTest extends MetricTest {
         final TestResults testResults = new TestResults(c); // Init TestResults for this component
 
         //check if the component is missing a purl
-        Set<PURL> purls = c.getPurls();
+        Set<String> purls = c.getPurls();
         if(purls.isEmpty()){
             testResults.addTest(new Test(false, "Component has no PURL"));
             return testResults;
         }
         //if not run the test
-        for (PURL p: c.getPurls()){
+        for (String purlString: c.getPurls()){
+            PURL p;
+            try {
+                p = new PURL(purlString);
+            } catch (Exception e) {
+                testResults.addTest(new Test(true,"Invalid PURL string: ", purlString));
+                continue;
+            }
 
             try{
                 // type from https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst

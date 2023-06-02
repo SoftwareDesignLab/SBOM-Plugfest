@@ -3,11 +3,10 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
-import org.nvip.plugfest.tooling.translator.TranslatorCore;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.*;
@@ -33,13 +32,18 @@ public class TranslatorCDXJSON extends TranslatorCore {
      * @return internal SBOM object
      */
     @Override
-    protected SBOM translateContents(String fileContents, String file_path) throws ParseException {
+    protected SBOM translateContents(String fileContents, String file_path) throws TranslatorException {
 
         // Initialize JSON Parser
         JsonParser parser = new JsonParser();
 
         // Use JSON Parser to parse cdx.json file and store into cyclonedx Bom Object
-        Bom json_sbom = parser.parse(fileContents.getBytes());
+        Bom json_sbom;
+        try {
+            json_sbom = parser.parse(fileContents.getBytes());
+        } catch (ParseException e) {
+            throw new TranslatorException(e.getMessage());
+        }
 
         // TODO these are essential fields, throw an actual error if any of these are null
         bom_data.put("format", json_sbom.getBomFormat());
@@ -50,8 +54,17 @@ public class TranslatorCDXJSON extends TranslatorCore {
         // Ensure metadata is not null before we begin querying it
         Metadata metadata = json_sbom.getMetadata();
         if(metadata != null) {
-            bom_data.put("author", json_sbom.getMetadata().getAuthors() == null ?
-                    json_sbom.getMetadata().getTools().toString() : json_sbom.getMetadata().getAuthors().toString());
+            List<OrganizationalContact> authorList = json_sbom.getMetadata().getAuthors();
+            if (authorList != null) {
+                String authors = authorList.stream().map(
+                                                          n -> (n.getName() == null ?  "" : "Name: "    + n.getName())  +
+                                                               (n.getEmail() == null ? "" : ", Email: " + n.getEmail()) +
+                                                               (n.getPhone() == null ? "" : ", Phone: " + n.getPhone())
+                                                       )
+                                                   .collect(Collectors.joining(" ; ", "{ ", " }")); // at least {}
+                bom_data.put("author", authors);
+            }
+
             bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
 
             // Top component analysis (check if not null as well)
@@ -74,24 +87,21 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
             if( cdx_component != null ) {
 
-                // Get CPE, PURL, and SWIDs
-                String cpe = cdx_component.getCpe() == null ? null : cdx_component.getCpe();
-                PURL purl = null;
-                try {
-                    purl = new PURL(cdx_component.getPurl());
-                } catch (Exception ignored){
-                }
-                String swid = cdx_component.getSwid() == null ? null : String.valueOf(cdx_component.getSwid());
-
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(
                         cdx_component.getName(),
                         cdx_component.getPublisher(),
-                        cdx_component.getVersion(),
-                        Collections.singleton(cpe),
-                        Collections.singleton(purl),
-                        Collections.singleton(swid)
-                );
+                        cdx_component.getVersion());
+
+                // Get CPE, PURL, and SWIDs
+                String cpe = cdx_component.getCpe();
+                if (cpe != null) new_component.setCpes(Collections.singleton(cpe));
+
+                String purl = cdx_component.getPurl();
+                if (purl != null) new_component.setPurls(Collections.singleton(purl));
+
+                String swid = String.valueOf(cdx_component.getSwid());
+                if (swid != null) new_component.setSwids(Collections.singleton(swid));
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
                 try {
@@ -100,8 +110,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     // Getting a NullPointerException on licenses is fine. It just means the component had none.
                 } catch (Exception e) {
                     // This may be an actual error
-                    Debug.log(Debug.LOG_TYPE.ERROR, "An error occurred while getting licenses:");
-                    Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+                    throw new TranslatorException("An error occurred while getting licenses: " + e.getMessage());
 //                    e.printStackTrace();
                 }
 
@@ -109,17 +118,17 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 new_component.setUniqueID(cdx_component.getBomRef());
 
                 // Add component to component list
-                this.loadComponent(new_component.getUniqueID(), new_component);
+                this.loadComponent(new_component);
 
                 // If a top component doesn't exist, make this new component the top component
-                this.product = product == null ? new_component : product;
+                this.topComponent = topComponent == null ? new_component : topComponent;
 
             }
 
         }
 
         // Add the top component to the sbom
-        if(this.sbom.getAllComponents().size() == 0) { this.sbom.addComponent(null, product); }
+        if(this.sbom.getAllComponents().size() == 0) { this.sbom.addComponent(null, topComponent); }
 
         // Create dependency collection
         //Map<String, List<String>> dependencies;
@@ -142,10 +151,10 @@ public class TranslatorCDXJSON extends TranslatorCore {
                     );
         } catch (NullPointerException nullPointerException) {
             // If dependencies fail, default
-            Debug.log(Debug.LOG_TYPE.ERROR, "Could not find dependencies from CycloneDX Object. " +
+            Debug.log(Debug.LOG_TYPE.WARN, "Could not find dependencies from CycloneDX Object. " +
                     "Defaulting all components to point to head component. File: " + file_path);
             dependencies.put(
-                    this.product.getUniqueID(),
+                    this.topComponent.getUniqueID(),
                     components.values().stream().map(x->x.getUniqueID()).collect(Collectors.toCollection(ArrayList::new))
             );
         }
@@ -154,14 +163,14 @@ public class TranslatorCDXJSON extends TranslatorCore {
         // Otherwise, default the dependencyTree by adding all subcomponents as children to the top component
         if( dependencies != null ) {
             try {
-                this.dependencyBuilder(components, this.product, null);
+                this.dependencyBuilder(components, this.topComponent, null);
             } catch (Exception e) {
                 Debug.log(Debug.LOG_TYPE.WARN, "Error building dependency tree. Dependency tree may be incomplete " +
                         "for: " + file_path);
             }
         }
 
-        this.defaultDependencies(this.product);
+        this.defaultDependencies(this.topComponent);
 
         return this.sbom;
 

@@ -235,9 +235,7 @@ public class CompletenessTest extends MetricTest {
      */
     private Test testPURLs(Component c) {
         // Check PURLs and return a number of invalid PURLs
-        Set<String> purlStrings = new HashSet<>();
-        for (PURL p: c.getPurls()) {purlStrings.add(p.toString());}
-        final int invalid = getNumInvalidStrings(purlStrings, purlRegex);
+        final int invalid = getNumInvalidStrings(c.getPurls(), purlRegex);
         if (invalid > 0) // If there are invalid PURLs, mark as failed
             return new Test(false, "Had ", Integer.toString(invalid), " PURL(s) with Invalid Format.");
         return new Test(true, "PURL(s) have Valid Format."); // Test passed
@@ -254,7 +252,15 @@ public class CompletenessTest extends MetricTest {
 
         int invalid = 0;
         // test all stored purls
-        for (PURL p: c.getPurls()) {
+        for (String purlString : c.getPurls()) {
+            PURL p;
+
+            try {
+                p = new PURL(purlString);
+            } catch (Exception e) {
+                invalid++;
+                continue;
+            }
 
             // increment invalid if name, version, or publisher don't match
             if(!p.getName().equals(c.getName()) ||
