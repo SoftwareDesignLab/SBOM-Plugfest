@@ -26,8 +26,17 @@ public class ValidSPDXLicenseTest extends MetricTest{
 
     private static final String TEST_NAME = "ValidSPDXLicense";
     private static final String SPDX_LICENSE_LIST_URL = "https://spdx.org/licenses/";
-    // Regex to isolate License name table
-    private static final String SPDX_NAME_TABLE_REGEX = "<table class=\"sortable\">[\\s\\S]*?<tbody>([\\s\\S]*)<\\/tbody>";
+
+    // Regexes
+    private static final String SPDX_TABLE_REGEX = "<table class=\"sortable\">[\\s\\S]*?<tbody>([\\s\\S]*)<\\/tbody>";
+    private static final String SPDX_ROW_REGEX = "<a.*?>(.*?)<\\/a>[\\s\\S]*?<code.*?>(.*?)<\\/code>";
+
+    private final HashSet<String> SPDX_LICENSE_NAMES = new HashSet<>();
+    private final Set<String> SPDX_LICENSE_IDENTIFIERS = new HashSet<>();
+
+    private final Set<String> DEPRECIATED_SPDX_LICENSE_NAMES = new HashSet<>();
+    private final Set<String> DEPRECIATED_SPDX_LICENSE_IDENTIFIERS = new HashSet<>();
+
 
     /**
      * Test all SBOM components for their licenses and if they are a valid SPDX
@@ -41,16 +50,75 @@ public class ValidSPDXLicenseTest extends MetricTest{
         // create a list to hold each result of sbom components
         List<Result> results = new ArrayList<>();
 
+        // Error if can't populate sets
+        if(!loadSPDXLicenseData()){
+            results.add(new Result(TEST_NAME, Result.STATUS.ERROR, "Couldn't query " + SPDX_LICENSE_LIST_URL));
+            return results;
+        }
+
+        int count = 0;
         // for every component, test for valid SPDX Licenses
         for(Component c : sbom.getAllComponents()){
-            // Skip if no licenese
+            System.out.println(count++ + " / " + sbom.getAllComponents().size());
+            // Skip if no licences
             if(isEmptyOrNull(c.getLicenses()))
                 continue;
 
             results.addAll(testSPDXLicense(c));
         }
-
         return results;
+    }
+
+    private boolean loadSPDXLicenseData(){
+        try {
+            URL url = new URL(SPDX_LICENSE_LIST_URL);
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setRequestMethod("GET");
+
+            // valid SPDX License Identifier
+            if(huc.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                // Get HTML
+                InputStream in = huc.getInputStream();
+                String encoding = huc.getContentEncoding();
+                encoding = encoding == null ? "UTF-8" : encoding;
+                String html = IOUtils.toString(in, encoding);
+
+                // Create table regex
+                Pattern p = new Pattern(SPDX_TABLE_REGEX, REFlags.MULTILINE);
+                Matcher m = p.matcher(html);
+
+                // Populate Active Licenses
+                if(!m.find()){
+                    throw new Exception("Failed to parse SPDX License table");
+                } else {
+                    // todo numNames != numIDs, names can have >1 Ids
+                    popululateDataSets(m.group(1), SPDX_LICENSE_NAMES, SPDX_LICENSE_IDENTIFIERS);
+                }
+
+                // Populate Depreciated Licenses
+                if(!m.find()){
+                    throw new Exception("Failed to parse Depreciated SPDX License table");
+                } else {
+                    popululateDataSets(m.group(1), DEPRECIATED_SPDX_LICENSE_NAMES, DEPRECIATED_SPDX_LICENSE_IDENTIFIERS);
+                }
+            }
+        } catch (Exception e){
+            Debug.log(Debug.LOG_TYPE.ERROR, e);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void popululateDataSets(String tableHTML, Set<String> names, Set<String> identifiers){
+        Pattern p = new Pattern(SPDX_ROW_REGEX, REFlags.MULTILINE);
+        Matcher m = p.matcher(tableHTML);
+
+        // Add all names and identifiers
+        while(m.find()){
+            names.add(m.group(1));
+            identifiers.add(m.group(2));
+        }
     }
 
     /**
@@ -111,7 +179,7 @@ public class ValidSPDXLicenseTest extends MetricTest{
                     String html = IOUtils.toString(in, encoding);
 
                     // Create table regex
-                    Pattern p = new Pattern(SPDX_NAME_TABLE_REGEX, REFlags.MULTILINE);
+                    Pattern p = new Pattern(SPDX_TABLE_REGEX, REFlags.MULTILINE);
                     Matcher m = p.matcher(html);
 
                     // Search for License name
