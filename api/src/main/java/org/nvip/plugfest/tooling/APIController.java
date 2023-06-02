@@ -47,10 +47,7 @@ public class APIController {
      * @return Wrapped Comparison object or error message
      */
     @PostMapping("/compare")
-    public ResponseEntity<?> compare(
-            @RequestParam("targetIndex") Integer targetIndex,
-            @RequestBody SBOMArgument[] sboms)
-    {
+    public ResponseEntity<?> compare(@RequestParam("targetIndex") Integer targetIndex, SBOMArgument[] sboms) {
         // Attempt to load comparison queue
         List<SBOM> compareQueue = new ArrayList<>();
         for(SBOMArgument sbom : sboms){
@@ -90,10 +87,7 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<QualityReport> qa(
-            HttpServletRequest servletRequest,
-            @RequestBody SBOMArgument sbomArgument)
-    {
+    public ResponseEntity<QualityReport> qa(HttpServletRequest servletRequest, SBOMArgument sbomArgument) {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -132,7 +126,7 @@ public class APIController {
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<SBOM> parse(@RequestBody SBOMArgument sbomArgument)
+    public ResponseEntity<SBOM> parse(SBOMArgument sbomArgument)
     {
         SBOM sbom = TranslatorPlugFest.translateContents(sbomArgument.contents, sbomArgument.fileName);
 
