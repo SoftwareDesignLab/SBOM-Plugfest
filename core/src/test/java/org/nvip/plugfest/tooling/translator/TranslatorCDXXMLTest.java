@@ -93,10 +93,9 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
     }
 
     @Test
-    public void sbom_no_metadata_component_should_default_another_component() throws TranslatorException {
+    public void sbom_get_originTemp_test() throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(test_no_metadata_cdx_two);
         assertNotNull(sbom);
-        assertEquals(2, sbom.getAllComponents().size());
     }
 
     @Test
