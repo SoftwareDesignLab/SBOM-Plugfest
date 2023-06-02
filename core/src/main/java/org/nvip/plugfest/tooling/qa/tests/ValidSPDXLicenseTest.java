@@ -5,6 +5,7 @@ import jregex.Matcher;
 import jregex.Pattern;
 import jregex.REFlags;
 import org.apache.commons.io.IOUtils;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -69,25 +70,26 @@ public class ValidSPDXLicenseTest extends MetricTest{
             // First attempt to use license as identifier
             try {
                 // Ping endpoint
-                URL url = new URL(SPDX_LICENSE_LIST_URL + l.replace(" ", "%"));
+                URL url = new URL(SPDX_LICENSE_LIST_URL + l);
                 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
                 huc.setRequestMethod("GET");
 
                 // valid SPDX License Identifier
-                if(huc.getResponseCode() == HttpURLConnection.HTTP_OK)
+                if(huc.getResponseCode() == HttpURLConnection.HTTP_OK){
                     r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid SPDX License Identifier");
+                } else {
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
+                }
             }
             // an issue with the url connection or link occurred
             catch(Exception e){
-                e.printStackTrace();
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
+                r = new Result(TEST_NAME, Result.STATUS.ERROR, "Connection Failed");
+                Debug.log(Debug.LOG_TYPE.ERROR, "Connection failure: " + SPDX_LICENSE_LIST_URL + l);
 
             } finally {
 
                 // update r and add to results
-                if(r == null)
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
-
+                assert r != null;   // should not happen
                 r.updateInfo(Result.Context.STRING_VALUE, l);
                 r.addContext(c, "license");
                 results.add(r);
@@ -113,7 +115,7 @@ public class ValidSPDXLicenseTest extends MetricTest{
                     Matcher m = p.matcher(html);
 
                     // Search for License name
-                    if(m.find() && m.group(0).contains(">" + l + "<")){
+                    if(m.find() && m.group(0).contains(">" + l + "<\\/a>")){
                         r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid SPDX License Name");
                     } else {
                         r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Name");
@@ -122,12 +124,13 @@ public class ValidSPDXLicenseTest extends MetricTest{
                 // Issue querying SPDX License page
                 } else {
                     r = new Result(TEST_NAME, Result.STATUS.ERROR, "Couldn't query " + SPDX_LICENSE_LIST_URL);
+                    Debug.log(Debug.LOG_TYPE.ERROR, "Connection failure: " + SPDX_LICENSE_LIST_URL);
                 }
 
             }
             // an issue with the url connection or link occurred
             catch(Exception e){
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Identifier");
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid SPDX License Name");
 
             } finally {
                 // update r and add to results
