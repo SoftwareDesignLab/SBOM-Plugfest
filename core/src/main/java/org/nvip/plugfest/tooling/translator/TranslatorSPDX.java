@@ -368,14 +368,21 @@ public class TranslatorSPDX extends TranslatorCore {
         if (componentMaterials.get("PackageLicenseDeclared") != null)
             licenses.addAll(Arrays.asList(componentMaterials.get("PackageLicenseDeclared").split(" AND ")));
 
-        // Clean up licenses
-        licenses = // Remove NONE/NOASSERTION with .filter()
-                (HashSet<String>) licenses.stream().filter(l -> !l.equals("NONE") && !l.equals("NOASSERTION"))
-                        .map(l -> { // Replace external licenses with .map()
-                            if (l.contains("LicenseRef") && externalLicenses.get(l) != null)
-                                return externalLicenses.get(l);
-                            return l;
-                        }).collect(Collectors.toSet());
+        // Add external licenses found
+        List<String> externalLicensesToRemove = new ArrayList<>();
+        for(String license : licenses) {
+            if (license.contains("LicenseRef") && externalLicenses.get(license) != null) {
+                component.addExtractedLicense(license, externalLicenses.get(license), null, null);
+                externalLicensesToRemove.add(license);
+            }
+        }
+        externalLicensesToRemove.forEach(licenses::remove); // Remove all found external licenses
+
+        // Clean up all other licenses
+        licenses = // Remove NONE/NOASSERTION as well as any extracted licenses (IDs containing LicenseRef).
+                (HashSet<String>) licenses.stream().filter(l ->
+                        !l.equals("NONE") && !l.equals("NOASSERTION") && !l.contains("LicenseRef"))
+                        .collect(Collectors.toSet());
 
         component.setLicenses(licenses);
 
