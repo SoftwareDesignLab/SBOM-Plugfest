@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
