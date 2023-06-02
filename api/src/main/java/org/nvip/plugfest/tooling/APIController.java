@@ -40,9 +40,7 @@ public class APIController {
      * @return Wrapped Comparison object or error message
      */
     @PostMapping("/compare")
-    public ResponseEntity<?> compare(
-            @RequestParam("targetIndex") Integer targetIndex,
-            @RequestBody SBOMFile[] sboms)
+    public ResponseEntity<?> compare(@RequestParam("targetIndex") Integer targetIndex, SBOMFile[] sboms)
     {
         // null/empty sboms check
         int nullCheck = Utils.sbomFileArrNullCheck(sboms);
@@ -95,10 +93,7 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<?> qa(
-            HttpServletRequest servletRequest,
-            @RequestBody Utils.SBOMFile sbomFile)
-    {
+    public ResponseEntity<?> qa(HttpServletRequest servletRequest, Utils.SBOMFile sbomFile) {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -137,7 +132,7 @@ public class APIController {
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<?> parse(@RequestBody SBOMFile sbomFile)
+    public ResponseEntity<?> parse(SBOMFile sbomFile)
     {
         SBOM sbom;
 
