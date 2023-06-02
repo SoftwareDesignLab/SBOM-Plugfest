@@ -4,6 +4,22 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.9.0] - 2023-06-02
+### Added
+- Several fields to `Component`:
+  - `downloadLocation` - SPDX-only field
+  - `filesAnalyzed` - SPDX-only field
+  - `verificationCode` - SPDX-only field
+  - `extractedLicenses` - SPDX-only field - this is a map from a license ID to its attributes, and contains all 
+    extracted licenses found in the component. These licenses are not contained in the normal `licenses` set.
+- `SBOM.getName()` method to get the name of the project described by the SBOM.
+
+### Changed
+- Updated `TranslatorSPDX` and `TranslatorSPDXTest` to reflect the added translation of the above fields.
+
+### Fixed
+
+---
 ## [3.8.2] - 2023-06-02
 ### Added
 
