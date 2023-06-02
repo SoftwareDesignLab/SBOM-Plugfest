@@ -4,6 +4,14 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.8.3] - 2023-06-02
+### Changed
+- `TranslatorCDXXML.java`
+  - Now creates the SBOM object and top component after components have been parsed
+  - Top component defaulting changed to execute upon empty top component data collection
+  - resolveMetadata now returns before assigning top component data if the top component collection is empty
+
+---
 ## [3.8.2] - 2023-06-02
 ### Added
 
