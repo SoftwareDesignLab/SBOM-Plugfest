@@ -379,6 +379,28 @@ public class TranslatorSPDX extends TranslatorCore {
 
         component.setLicenses(licenses);
 
+        // Other package info
+        String packageDownloadLocation = componentMaterials.get("PackageDownloadLocation");
+        String filesAnalyzed = componentMaterials.get("FilesAnalyzed"); // true or false
+        String packageVerificationCode = componentMaterials.get("PackageVerificationCode");
+
+        // PackageDownloadLocation
+        if (packageDownloadLocation != null
+                && !packageDownloadLocation.equals("NONE") && !packageDownloadLocation.equals("NOASSERTION")) {
+            // TODO
+        }
+
+        // FilesAnalyzed
+        if (filesAnalyzed != null) {
+            // TODO
+        }
+
+        // PackageVerificationCode
+        if (packageVerificationCode != null
+                && !packageVerificationCode.equals("NONE") && !packageVerificationCode.equals("NOASSERTION")) {
+            // TODO
+        }
+
         return component;
     }
 }
