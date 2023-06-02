@@ -93,6 +93,10 @@ public class TranslatorCDXJSON extends TranslatorCore {
                         cdx_component.getPublisher(),
                         cdx_component.getVersion());
 
+                // Get group
+                String group = cdx_component.getGroup();
+                if (group != null) new_component.setGroup(group);
+
                 // Get CPE, PURL, and SWIDs
                 String cpe = cdx_component.getCpe();
                 if (cpe != null) new_component.setCpes(Collections.singleton(cpe));

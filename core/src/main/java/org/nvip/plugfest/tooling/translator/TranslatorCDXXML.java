@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -125,8 +126,6 @@ public class TranslatorCDXXML extends TranslatorCore {
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
-        // Create the new SBOM Object with top level data
-        this.createSBOM();
 
         /*
          * Cycle through all components and correctly attach them to Java SBOM object
@@ -189,6 +188,9 @@ public class TranslatorCDXXML extends TranslatorCore {
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("purl")) {
                             purls.add(component_elements.item(j).getTextContent());
                         }
+                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("group")) {
+                            component_items.put("group", component_elements.item(j).getTextContent());
+                        }
                         else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
                             hashes.add(
                                     new Hash(
@@ -240,13 +242,18 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     this.loadComponent(component);
 
-                    this.topComponent = topComponent == null ? component : topComponent;
+                    // If we don't have any product data to use for a topComponent,
+                    // then default this component as the top component
+                    this.topComponent = product_data.isEmpty() ? component : null;
 
                 }
 
             }
 
         }
+
+        // Create the new SBOM Object with top level data
+        this.createSBOM();
 
         if (sbomDependencies!=null) {
 
@@ -359,6 +366,8 @@ public class TranslatorCDXXML extends TranslatorCore {
         // Update data used to construct SBOM
         bom_data.put("author", author.equals("") ? sbom_materials.get("vendor") : author);
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
+
+        if (sbom_component.isEmpty()) return;
 
         product_data.put("name" , sbom_component.get("name"));
         product_data.put("publisher", sbom_component.get("publisher") == null
