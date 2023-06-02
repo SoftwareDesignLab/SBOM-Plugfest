@@ -255,7 +255,6 @@ public class TranslatorSPDX extends TranslatorCore {
                 }
                 case ID_TAG -> bom_data.put("id", m.group(1));
                 case TIMESTAMP_TAG -> bom_data.put("timestamp", m.group(2));
-                case EXTRACTED_LICENSE_NAME -> bom_data.put("dataLicense", m.group(2));
                 default -> bom_data.put(m.group(1), m.group(2));
             }
         }

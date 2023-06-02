@@ -85,13 +85,15 @@ public abstract class TranslatorCore {
                     bom_data.get("author"),
                     bom_data.get("serialNumber"),
                     bom_data.get("timestamp"),
-                    //bom_data.get("dataLicense"),
                     null
             );
         } catch (Exception e) {
             throw new TranslatorException("Error: Internal SBOM could not be created. Cancelling translation for this" +
                     " SBOM. File: " + this.FILE_EXTN);
         }
+
+        if (bom_data.get("DataLicense") != null)
+            sbom.addMetadata("[dataLicense " + bom_data.get("DataLicense") + "]");
 
         // If there is no top component (product) already, try to create it
         // Otherwise, make sure it's in the SBOM
