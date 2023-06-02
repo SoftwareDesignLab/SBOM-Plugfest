@@ -79,7 +79,6 @@ public class AccuratePURLTest extends MetricTest{
         // get the purl and component's name
         String purlName = p.getName();
         String componentName = c.getName();
-
         Result r;
 
         // if purlName is empty, test automatically fails, cannot check
@@ -123,6 +122,17 @@ public class AccuratePURLTest extends MetricTest{
         if(isEmptyOrNull(purlVersion)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
                     "does not have a version");
+            r.addContext(c, "Matching PURL data");
+            r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
+            // if purl is null, toString will produce NPE, so it needs to
+            // be skipped
+            return r;
+        }
+        // since version is not a required element.
+        // if the component does not have a version, test cannot be performed
+        else if(isEmptyOrNull(componentVersion)){
+            r = new Result(TEST_NAME, Result.STATUS.ERROR, "Component does " +
+                    "not have version, test cannot be completed");
         }
         // if the two versions do not match, the test fails
         else if(!purlVersion.equals(componentVersion)){
