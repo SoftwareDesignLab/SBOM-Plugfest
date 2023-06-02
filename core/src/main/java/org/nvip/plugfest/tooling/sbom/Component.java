@@ -1,8 +1,11 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -81,6 +84,21 @@ public class Component {
     private Set<String> licenses;
 
     /**
+     * All extracted licenses found in this component.
+     * <ul>
+     *     <li>The key of the first map is the ID of the license.</li>
+     *     <li>The value of the first map is another map that contains all license data with the following keys:
+     *          <ul>
+     *              <li>{@code name}     - The name of the license.</li>
+     *              <li>{@code text}     - The extracted text of the license (if any).</li>
+     *              <li>{@code crossRef} - The cross reference of the license (if any).</li>
+     *          </ul>
+     *     </li>
+     * </ul>
+     */
+    private Map<String, Map<String, String>> extractedLicenses;
+
+    /**
      * Represent the conflicts of the component with other components
      * Note: This should ONLY be used in the master SBOM and never in individual sboms
      */
@@ -117,6 +135,7 @@ public class Component {
         this.version = null;
         this.vulnerabilities = new HashSet<>();
         this.licenses = new HashSet<>();
+        this.extractedLicenses = new HashMap<>();
         this.componentConflicts = new HashSet<>();
         this.downloadLocation = null;
         this.verificationCode = null;
@@ -366,6 +385,44 @@ public class Component {
 
     public void setVerificationCode(String verificationCode) {
         this.verificationCode = verificationCode;
+    }
+
+    /**
+     * Add an extracted license to this component with the following properties.
+     *
+     * @param id The ID of the license.
+     * @param name The name of the license.
+     * @param text The text of the license (if any).
+     * @param crossRef The cross-reference of the license (if any).
+     */
+    public void addExtractedLicense(@NonNull String id, @NonNull String name, @Nullable String text,
+                                    @Nullable String crossRef) {
+        Map<String, String> licenseContents = new HashMap<>() {{
+            this.put("name", name);
+            if(text != null) this.put("text", text);
+            if(crossRef != null) this.put("crossRef", text);
+        }};
+
+        extractedLicenses.put(id, licenseContents);
+    }
+
+    /**
+     * Returns all extracted licenses in a {@code Map<String, Map<String, String>>}.
+     * <ul>
+     *     <li>The key of the first map is the ID of the license.</li>
+     *     <li>The value of the first map is another map that contains all license data with the following keys:
+     *          <ul>
+     *              <li>{@code name}     - The name of the license.</li>
+     *              <li>{@code text}     - The extracted text of the license (if any).</li>
+     *              <li>{@code crossRef} - The cross reference of the license (if any).</li>
+     *          </ul>
+     *     </li>
+     * </ul>
+     *
+     * @return All extracted licenses.
+     */
+    public Map<String, Map<String, String>> getExtractedLicenses() {
+        return extractedLicenses;
     }
 
     ///
