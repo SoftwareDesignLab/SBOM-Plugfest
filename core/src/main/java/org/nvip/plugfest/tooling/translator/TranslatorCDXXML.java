@@ -137,7 +137,8 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
-        sbom.setMetadata(resolvedMetadata);
+        if(resolvedMetadata != null)
+            sbom.setMetadata(resolvedMetadata);
 
         /*
          * Cycle through all components and correctly attach them to Java SBOM object
@@ -235,7 +236,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     // No apparent publisher means this is most likely an application tool
                     Component component;
-                    if(!component_items.containsKey("publisher")){
+                    if(component_items.containsKey("type") && component_items.get("type").equalsIgnoreCase("application")){
                         Tool t = new Tool();
                         t.setName(component_items.get("name"));
                         t.setVersion(component_items.get("version"));
@@ -401,8 +402,8 @@ public class TranslatorCDXXML extends TranslatorCore {
                         sbomMeta.item(b).getNodeName(),
                         sbomMeta.item(b).getTextContent()
                 );
-                result.add("["+sbomMeta.item(b).getNodeName() + " - " +
-                        sbomMeta.item(b).getTextContent()+"]");
+                result.add("["+sbomMeta.item(b).getNodeName().replaceAll("\n", "") + " - " +
+                        sbomMeta.item(b).getTextContent().replaceAll("\n", "")+"]");
             }
         }
 

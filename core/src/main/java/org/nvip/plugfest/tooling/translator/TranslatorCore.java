@@ -85,6 +85,7 @@ public abstract class TranslatorCore {
                     bom_data.get("author"),
                     bom_data.get("serialNumber"),
                     bom_data.get("timestamp"),
+                    //bom_data.get("dataLicense"),
                     null
             );
         } catch (Exception e) {

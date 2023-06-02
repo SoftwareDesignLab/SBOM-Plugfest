@@ -316,16 +316,25 @@ public class SBOM {
     public void addMetadata(String m){
         if(metadata == null)
             metadata = new HashSet<>();
-        metadata.add(m);
+        Tool potentialTool = checkForTool(m);
+        if(!getAppTools().contains(potentialTool))
+            if(potentialTool != null)
+                addAppTool(potentialTool);
+            else metadata.add(m);
     }
     public void setMetadata(Set<String> md){
-        metadata = md;
+        for (String m: md
+             ) {
+            addMetadata(m);
+        }
     }
     public Set<String> getMetadata(){
         return metadata;
     }
 
     public Set<Tool> getAppTools() {
+        if(appTools == null)
+            appTools = new HashSet<>();
         return appTools;
     }
 
@@ -381,6 +390,18 @@ public class SBOM {
 
         // Now we can return
         return retVal;
+    }
+
+    private Tool checkForTool(String m){
+        if(m.startsWith("[tool")){
+            String[] split = m.split("\\s+");
+            Tool t = new Tool();
+            t.setVendor(split[2]);
+            t.setName(split[3]);
+            t.setVersion(split[4]);
+            return t;
+        }
+        return null;
     }
 
     /**
