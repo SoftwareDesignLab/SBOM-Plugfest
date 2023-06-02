@@ -4,6 +4,17 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.8.2] - 2023-06-02
+### Added
+
+### Changed
+- Updated the Quick Start guide in README.md.
+
+### Fixed
+- Fixed `UTF-8 Not Supported Error` caused by using the `@RequestBody` annotation with a class object.
+- `Debug.log()` had an unchecked cast to `Exception`; this was fixed by checking the type.
+
+---
 ## [3.8.1] - 2023-06-01
 ### Added
 - Added test file cdxgen-8.4.6-source.json .
