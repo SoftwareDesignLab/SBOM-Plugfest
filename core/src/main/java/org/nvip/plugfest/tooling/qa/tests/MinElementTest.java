@@ -1,15 +1,10 @@
 package org.nvip.plugfest.tooling.qa.tests;
-import org.nvip.plugfest.tooling.qa.tests.Result;
+
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import org.nvip.plugfest.tooling.sbom.Signature;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 public class MinElementTest extends MetricTest {
     private static final String TEST_NAME = "EmptyOrNull";
