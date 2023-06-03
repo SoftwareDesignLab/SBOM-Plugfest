@@ -27,13 +27,13 @@ public class PURL {
             "(?(?=.*\\?.*(?:#|$))\\?(.*?)(?=#|$))" +        // Get qualifiers if present
             "(?(?=.*#.*$)#(.*?)$)";     // Get subpath, if present
 
-    private String scheme;  // required
-    private String type;    // required
+    private final String scheme;  // required
+    private final String type;    // required
     private List<String> namespace;   // Optional and type-specific
-    private String name;    // required
-    private String version; // Optional
+    private final String name;    // required
+    private final String version; // Optional
     private LinkedHashMap<String, String> qualifiers = null;    // Optional
-    private String subpath; // Optional
+    private final String subpath; // Optional
 
     /**
      * Create new purl object from a given purl identifier string
