@@ -88,7 +88,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - `HasLicenseDataTest` - checks to see if has license data
   - `ValidSPDXLicenseTest` - validates SPDX Licensing information
     > Checks to see if the SPDX License Name/ID is valid and if it's depreciated
-
+- New Metadata processor. New tests include:
+  - `HasMinElsMetaDataTest` - Checks for SBOM and metadata minimum elements in a SBOM
+    > Checks for Spec Version, SBOM Version, SBOM Type, Serial Number, and other minimum elements
 ### Changed
 - `TranslatorPlugfest` now checks for key tokens in file contents as well as the file extension to determine the 
   translator to use.
