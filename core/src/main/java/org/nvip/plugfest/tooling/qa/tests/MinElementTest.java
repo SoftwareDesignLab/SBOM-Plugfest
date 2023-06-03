@@ -6,12 +6,22 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * file: MinElementTest.java
+ *
+ * Tests for the 7 minimum data fields as stated by the NTIA
+ * <a href="https://www.ntia.doc.gov/files/ntia/publications/sbom_minimum_elements_report.pdf">...</a>
+ *
+ * @author Derek Garcia
+ */
 public class MinElementTest extends MetricTest {
-    private static final String TEST_NAME = "EmptyOrNull";
+    private static final String TEST_NAME = "MinimumElements";
+
     /**
-     * Tests minimum element
+     * Test for minimum Elements
+     *
      * @param sbom SBOM to test
-     * @return
+     * @return List of results
      */
     @Override
     public List<Result> test(SBOM sbom) {
@@ -30,9 +40,10 @@ public class MinElementTest extends MetricTest {
     }
 
     /**
-     * Testing the data fields
-     * @param sbom
-     * @return
+     * Testing the data fields for the SBOM itself
+     *
+     * @param sbom SBOM to test
+     * @return List of results
      */
     private List<Result> testSBOMFields(SBOM sbom){
         List<Result> results = new ArrayList<>();
@@ -121,5 +132,4 @@ public class MinElementTest extends MetricTest {
         // todo shouldn't default to true
         return new Result(TEST_NAME, Result.STATUS.PASS, "Value is not null");
     }
-
 }
