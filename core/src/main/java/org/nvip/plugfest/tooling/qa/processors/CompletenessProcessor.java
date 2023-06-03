@@ -15,7 +15,6 @@ public class CompletenessProcessor extends AttributeProcessor{
      */
     public CompletenessProcessor(){
        this.attributeName = "Completeness";
-       this.metricTests.add(new EmptyOrNullTest());
        this.metricTests.add(new MinElementTest());
        this.metricTests.add(new ValidPurlTest());
        this.metricTests.add(new ValidCPETest());
