@@ -39,6 +39,7 @@ public class MinElementTest extends MetricTest {
         return results;
     }
 
+
     /**
      * Testing the data fields for the SBOM itself
      *
@@ -49,22 +50,14 @@ public class MinElementTest extends MetricTest {
         List<Result> results = new ArrayList<>();
         Result r;   // utility result for adding additional detail todo clunky solution, could be improved
 
-        // Test Spec version
-        r = resultEmptyOrNull(sbom.getSpecVersion());
-        r.addContext(sbom,"specVersion");
-        results.add(r);
-
-        // Test serialNumber
-        r = resultEmptyOrNull(sbom.getSerialNumber());
-        r.addContext(sbom,"serialNumber");
-        results.add(r);
-
         // Test supplier
-        r = resultEmptyOrNull(sbom.getSupplier());
-        r.addContext(sbom,"supplier");
+        // "The name of the entity that creates the SBOM data for this component."
+        r = resultEmptyOrNull(sbom.getSupplier());  // todo should be author, not supplier?
+        r.addContext(sbom,"author");
         results.add(r);
 
         // Test timestamp
+        // "Record of the date and time of the SBOM data assembly"
         r = resultEmptyOrNull(sbom.getTimestamp());
         r.addContext(sbom,"timestamp");
         results.add(r);
@@ -72,8 +65,10 @@ public class MinElementTest extends MetricTest {
         return results;
     }
 
+
     /**
      * Test major component fields for content
+     *
      * @param c Component to test
      * @return Collection of results
      */
@@ -82,29 +77,46 @@ public class MinElementTest extends MetricTest {
         List<Result> results = new ArrayList<>();
         Result r;   // utility result for adding additional detail todo clunky solution, could be improved
 
-        // Test name
-        r = resultEmptyOrNull(c.getName());
-        r.addContext(c,"name");
-        results.add(r);
-
-        // Test publisher
+        // Test publisher/supplier
+        // "The name of an entity that creates, defines, and identifies components."
         r = resultEmptyOrNull(c.getPublisher());
         r.addContext(c,"publisher");
         results.add(r);
 
+        // Test name
+        // "Designation assigned to a unit of software defined by the original supplier."
+        r = resultEmptyOrNull(c.getName());
+        r.addContext(c,"name");
+        results.add(r);
+
         // Test version
+        // "Identifier used by the supplier to specify a change in software from a previously identified version."
         r = resultEmptyOrNull(c.getVersion());
         r.addContext(c,"version");
         results.add(r);
 
 
-        // Test UID
+        // Test UIDs
+        // "Other identifiers that are used to identify a component, or serve as a look-up key for relevant databases."
         r = resultEmptyOrNull(c.getUniqueID());
         r.addContext(c,"uniqueID");
         results.add(r);
 
+        r = resultEmptyOrNull(c.getCpes());
+        r.addContext(c,"cpes");
+        results.add(r);
+
+        r = resultEmptyOrNull(c.getPurls());
+        r.addContext(c,"purls");
+        results.add(r);
+
+        r = resultEmptyOrNull(c.getSwids());
+        r.addContext(c,"swids");
+        results.add(r);
+
         return results;
     }
+
 
     /**
      * Enhanced empty/null check that returns a result
