@@ -125,14 +125,15 @@ public class CPE {
 
         return "cpe:" + this.cpeVersion +
                 ":" + typeString +
-                ":" + this.vendor == "null" ? "*" : this.vendor +
-                ":" + this.product == null ? "*" : this.product +
-                ":" + this.update == null ? "*" : this.update +
-                ":" + this.edition == null ? "*" : this.edition +
-                ":" + this.language == null ? "*" : this.language +
-                ":" + this.sw_edition == null ? "*" : this.sw_edition +
-                ":" + this.target_sw== null ? "*" : this.target_sw +
-                ":" + this.target_hw == null ? "*" : this.target_hw +
-                ":" + this.other == null ? "*" : this.other;
+                ":" + this.vendor +
+                ":" + this.product +
+                ":" + this.version +
+                ":" + this.update +
+                ":" + this.edition  +
+                ":" + this.language +
+                ":" + this.sw_edition  +
+                ":" + this.target_sw +
+                ":" + this.target_hw +
+                ":" + this.other;
     }
 }
