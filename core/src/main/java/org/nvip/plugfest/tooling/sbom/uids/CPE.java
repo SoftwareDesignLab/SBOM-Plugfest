@@ -110,4 +110,29 @@ public class CPE {
         this.target_hw = matcher.group(10);
         this.other = matcher.group(11);
     }
+
+    @Override
+    public String toString() {
+        // cpe:<cpe_version>:<part>:<vendor>:<product>:<version>:<update>:<edition>:<language>:<sw_edition>:<target_sw>:<target_hw>:<other>
+
+        // Get application string
+        String typeString = "";
+        switch (this.part) {
+            case APPLICATION -> typeString = "a";
+            case HARDWARE -> typeString = "h";
+            case OPERATING_SYSTEMS -> typeString = "o";
+        }
+
+        return "cpe:" + this.cpeVersion +
+                ":" + typeString +
+                ":" + this.vendor == "null" ? "*" : this.vendor +
+                ":" + this.product == null ? "*" : this.product +
+                ":" + this.update == null ? "*" : this.update +
+                ":" + this.edition == null ? "*" : this.edition +
+                ":" + this.language == null ? "*" : this.language +
+                ":" + this.sw_edition == null ? "*" : this.sw_edition +
+                ":" + this.target_sw== null ? "*" : this.target_sw +
+                ":" + this.target_hw == null ? "*" : this.target_hw +
+                ":" + this.other == null ? "*" : this.other;
+    }
 }
