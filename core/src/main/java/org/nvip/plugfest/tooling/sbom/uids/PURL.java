@@ -17,7 +17,7 @@ import java.util.*;
 public class PURL {
 
     // Purl scheme: scheme:type/namespace/name@version?qualifiers#subpath
-    private final String PURL_REGEX =
+    private static final String PURL_REGEX =
             "(.*?):" +      // Get scheme
             "(?:/*)" +    // Skip over any/all '/' characters
             "([\\w\\d.+\\-]*)/" +                     // Get type
@@ -42,7 +42,7 @@ public class PURL {
      * @throws Exception purl given is invalid
      */
     public PURL(String purl) throws Exception {
-        Pattern purlPattern = new Pattern(this.PURL_REGEX, Pattern.MULTILINE);
+        Pattern purlPattern = new Pattern(PURL_REGEX, Pattern.MULTILINE);
 
         Matcher matcher = purlPattern.matcher(purl);
 
@@ -54,8 +54,8 @@ public class PURL {
         if(matcher.group(1) == null || matcher.group(2) == null || matcher.group(4) == null){
             throw new Exception("Invalid purl, missing the following: "+
                     ( matcher.group(1) == null ? "Schema " : "" ) +
-                    ( matcher.group(1) == null ? "Type " : "" ) +
-                    ( matcher.group(1) == null ? "Name " : "" )
+                    ( matcher.group(2) == null ? "Type " : "" ) +
+                    ( matcher.group(4) == null ? "Name " : "" )
             );
         }
 
