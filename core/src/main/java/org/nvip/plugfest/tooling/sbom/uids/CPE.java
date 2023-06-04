@@ -24,6 +24,8 @@ public class CPE {
      TODO: Only temporary regex, this has no built in string value checking and only for 2.3
      */
     private static final String CPE_REGEX = "cpe:2\\.3:([aho]?):(.*?):(.*?):(.*?):(.*?):(.*?):(.*?):(.*?):(.*?):(.*?):(.*?)$";
+    private static final String WILDCARD = "*";
+    private static final String WILDCARD_REGEX = ".*";
 
     // Supported types for CPE
     public enum Type{
@@ -81,8 +83,8 @@ public class CPE {
      * @throws Exception cpe given is invalid
      */
     public CPE(String cpe) throws Exception {
+        // Build regex
         Pattern cpePattern = new Pattern(CPE_REGEX, Pattern.MULTILINE);
-
         Matcher matcher = cpePattern.matcher(cpe);
 
         // Regex fails to match to string
@@ -127,6 +129,52 @@ public class CPE {
         this.target_sw = matcher.group(9);
         this.target_hw = matcher.group(10);
         this.other = matcher.group(11);
+    }
+
+    /**
+     * Compares 2 strings to test for equivalence and accounts for wildcard characters
+     *
+     * @param a String a
+     * @param b String b
+     * @return if a and b are equivalent
+     */
+    private boolean isEqualWildcard(String a, String b){
+        // Check for direct equivalence first
+        if(a.equals(b))
+            return true;
+
+        String wildCardString = "";
+        String other = "";
+
+        // Get wildcard and target string
+        if(a.contains(WILDCARD)){
+            wildCardString = a;
+            other = b;
+        } else {
+            wildCardString = b;
+            other = a;
+        }
+
+        // Convert wildCardString to regex
+        String regex = wildCardString.replace(WILDCARD, WILDCARD_REGEX);
+        Pattern pattern = new Pattern(regex, Pattern.MULTILINE);
+
+        // Test regex
+        return pattern.matches(other);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // Check if same object
+        if (this == o)
+            return true;
+
+        // Check if null or different class
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        // Compare CPE strings to check for equivalence
+        return isEqualWildcard(this.toString(), o.toString());
     }
 
     @Override
