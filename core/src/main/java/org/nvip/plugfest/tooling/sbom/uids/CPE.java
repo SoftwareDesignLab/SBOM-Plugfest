@@ -4,6 +4,8 @@ import jregex.Matcher;
 import jregex.Pattern;
 import org.nvip.plugfest.tooling.Debug;
 
+import java.util.Arrays;
+
 /**
  * file: CPE.java
  *
@@ -35,41 +37,41 @@ public class CPE {
     private final Type part;
 
     // "Values for this attribute SHOULD describe or identify the person or organization that manufactured or created the product."
-    private String vendor;
+    private final String vendor;
 
     // "Values for this attribute SHOULD describe or identify the most common and recognizable title or name of the product."
-    private String product;
+    private final String product;
 
     // "Values for this attribute SHOULD be vendor-specific alphanumeric strings characterizing the particular release
     // version of the product."
-    private String version;
+    private final String version;
 
     // "Values for this attribute SHOULD be vendor-specific alphanumeric strings characterizing the particular update,
     // service pack, or point release of the product."
-    private String update;
+    private final String update;
 
     // "The edition attribute is considered deprecated in [the 2.3] specification, and it SHOULD be assigned the logical
     // value ANY except where required for backward compatibility with version 2.2 of the CPE specification. "
-    private String edition;
+    private final String edition;
 
     // "Values for this attribute SHALL be valid language tags as defined by [RFC5646], and SHOULD be used to define the
     // language supported in the user interface of the product being described"
-    private String language;
+    private final String language;
 
     // "Values for this attribute SHOULD characterize how the product is tailored to a particular market or class
     //of end users."
-    private String sw_edition;
+    private final String sw_edition;
 
     // "Values for this attribute SHOULD characterize the software computing environment within which the product operates"
-    private String target_sw;
+    private final String target_sw;
 
     // "Values for this attribute SHOULD characterize the instruction set architecture (e.g., x86) on which the
     // product being described or identified by the WFN operates"
-    private String target_hw;
+    private final String target_hw;
 
     // "Values for this attribute SHOULD capture any other general descriptive or identifying information which
     // is vendor- or product-specific and which does not logically fit in any other attribute value."
-    private String other;
+    private final String other;
 
 
     /**
@@ -89,6 +91,22 @@ public class CPE {
             throw new Exception("Unable to parse cpe \"" + cpe + "\"");
         }
 
+        // Check for missing fields
+        if(Arrays.stream(matcher.groups()).toList().contains(null)){
+            throw new Exception("Invalid purl, missing the following: "+
+                    ( matcher.group(1) == null ? "Type " : "" ) +
+                    ( matcher.group(2) == null ? "Vendor " : "" ) +
+                    ( matcher.group(3) == null ? "Product " : "" ) +
+                    ( matcher.group(4) == null ? "Version " : "" ) +
+                    ( matcher.group(5) == null ? "Update " : "" ) +
+                    ( matcher.group(6) == null ? "Edition " : "" ) +
+                    ( matcher.group(7) == null ? "Language " : "" ) +
+                    ( matcher.group(8) == null ? "sw_edition " : "" ) +
+                    ( matcher.group(9) == null ? "target_sw " : "" ) +
+                    ( matcher.group(10) == null ? "target_hw " : "" ) +
+                    ( matcher.group(11) == null ? "other " : "" )
+            );
+        }
 
         // get type
         switch (matcher.group(1)) {
