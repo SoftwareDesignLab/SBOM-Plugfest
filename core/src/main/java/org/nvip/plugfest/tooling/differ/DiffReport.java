@@ -131,7 +131,7 @@ public class DiffReport {
 
             switch (conflictType) {
                 case SUPPLIER_MISMATCH -> {
-                    targetValue = targetSBOM.getMetadata().getSuppliers().toString(); // todo ensure this is a good string representation
+                    targetValue = targetSBOM.getMetadata().getSuppliers().toString();
                     otherValue = otherSBOM.getMetadata().getSuppliers().toString();
                 }
                 // todo not implemented // todo is this not synonymous with supplier?
