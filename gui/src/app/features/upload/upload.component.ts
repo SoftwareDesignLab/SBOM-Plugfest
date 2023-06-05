@@ -44,7 +44,7 @@ export class UploadComponent {
   }
 
   ContainsFiles() {
-    return this.GetLoadingFiles().length > 0 || this.GetValidSBOMs().length > 0;
+    return this.GetLoadingFiles().length > 0 || this.GetLoadedFiles() > 0;
   }
   
 
