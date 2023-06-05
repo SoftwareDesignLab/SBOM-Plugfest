@@ -10,6 +10,7 @@ import org.nvip.plugfest.tooling.sbom.AppTool;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,9 +66,10 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 authorAndTimestamp[0] = "[" + author + "]";
             }
 
-            String timestamp = json_sbom.getMetadata().getTimestamp().toString();
-
-            bom_data.put("timestamp" , timestamp);
+            Date timestamp = json_sbom.getMetadata().getTimestamp();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            bom_data.put("timestamp" , format.format(timestamp));
             authorAndTimestamp[1] = "[" + timestamp + "]";;
 
             // Top component analysis (check if not null as well)
