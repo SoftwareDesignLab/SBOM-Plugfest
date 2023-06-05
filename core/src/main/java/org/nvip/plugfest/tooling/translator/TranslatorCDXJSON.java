@@ -70,9 +70,6 @@ public class TranslatorCDXJSON extends TranslatorCore {
             bom_data.put("timestamp" , timestamp);
             authorAndTimestamp[1] = "[" + timestamp + "]";;
 
-            if(json_sbom.getMetadata().getAuthors() != null)
-                return null;
-
             // Top component analysis (check if not null as well)
             org.cyclonedx.model.Component topComponent = metadata.getComponent();
             if(topComponent != null) {
