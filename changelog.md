@@ -5,13 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 
-## [3.9.0] - 2023-06-05
+## [3.9.1] - 2023-06-05
+> Uniqueness processor is not complete, see issue [#160](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/160)
 ### Added
 - New Uniqueness Processor. New tests include:
   - `HasHashDataTest` - checks to see if component contains Hashes
   - `ValidHashDataTest` - checks to see if component Hashes are a supported type
   - `AccuratePURLTest` - checks to see if a component's PURL(s) matches stored component data
-  - `AccurateCPE test` - checks to see if a component's CPE(s) matches stored component data
+  - `AccurateCPETest` - checks to see if a component's CPE(s) matches stored component data
 
 ### Changed
 
