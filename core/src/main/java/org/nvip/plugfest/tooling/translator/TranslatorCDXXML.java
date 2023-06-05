@@ -343,16 +343,16 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
-        try { // TODO should these errors be thrown?
+        try {
             dependencyBuilder(components, this.topComponent,null);
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "Error processing dependency tree.");
+            Debug.log(Debug.LOG_TYPE.WARN, "Error processing dependency tree.");
         }
 
         try {
             defaultDependencies(this.topComponent);
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.ERROR, "Something went wrong with defaulting dependencies. A dependency tree may" +
+            Debug.log(Debug.LOG_TYPE.WARN, "Something went wrong with defaulting dependencies. A dependency tree may" +
                     " not exist.");
         }
 
