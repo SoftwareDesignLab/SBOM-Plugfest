@@ -7,7 +7,6 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * file: AccuratePURLTest.java
@@ -48,8 +47,6 @@ public class AccuratePURLTest extends MetricTest{
     private List<Result> matchingPURLs(Component c){
         List<Result> purlResults = new ArrayList<>();
         Result r;
-        // TODO once PR changes have been added. Purls will be Strings
-        /*
         // Test each stored purl
         for(String p: c.getPurls()){
             PURL purl;
@@ -58,32 +55,40 @@ public class AccuratePURLTest extends MetricTest{
                 purl = new PURL(p);
 
                 // Check if name is equal
+                // both at minimum should have a name
                 purlResults.add(isEqual(c, "component name", purl.getName(), c.getName()));
 
-                // If both versions are not null, test if equal
-                if(purl.getVersion() != null && c.getVersion() != null)
+                // test version
+
+                // Test if purl and/or component is missing a version
+                r = hasNullValues(c, purl.getVersion(), c.getVersion(), "Version");
+
+                // both component and purl have versions, continue to comparison test
+                if(r == null){
                     purlResults.add(isEqual(c, "version", purl.getVersion(), c.getVersion()));
-
-                // If PURL is missing a version and component is not
-                if(purl.getVersion() != null && c.getVersion() == null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL has version and Component does not");
-                    r.addContext(c, "Purl Version");
-                    r.updateInfo(Result.Context.STRING_VALUE, purl.getVersion());
-                    purlResults.add(r);
                 }
-
-                // If Component is missing a version and PURL is not
-                if(purl.getVersion() == null && c.getVersion() != null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and PURL does not");
-                    r.addContext(c, "Component Version");
-                    r.updateInfo(Result.Context.STRING_VALUE, c.getVersion());
+                // CPE and/or Component is missing a version, add result to list
+                else{
                     purlResults.add(r);
                 }
 
                 // Check if namespace matches publisher
-                // todo multiple namespaces? Are we assuming publisher is the namespace?
-                if(purl.getNamespace().size() == 1)
-                    purlResults.add(isEqual(c, "publisher", purl.getNamespace().get(0), c.getPublisher()));
+                //TODO determine how namespace is used? Per package manager?
+                if(purl.getNamespace().size() == 1){
+                    // Test if purl and/or component is missing publisher info
+                    r = hasNullValues(c, purl.getNamespace().get(0), c.getPublisher(), "Publisher");
+
+                    // both component and purl have publisher info, continue to comparison test
+                    if(r == null){
+                        purlResults.add(isEqual(c, "Publisher",
+                                purl.getNamespace().get(0), c.getPublisher()));
+                    }
+                    // CPE and/or Component is missing vendor info, add result to list
+                    else{
+                        purlResults.add(r);
+                    }
+                }
+
 
             } catch (Exception e){
                 // Failed to parse purl string
@@ -96,7 +101,7 @@ public class AccuratePURLTest extends MetricTest{
                 purlResults.add(r);
             }
         }
-         */
+
 
         return purlResults;
     }
@@ -125,5 +130,55 @@ public class AccuratePURLTest extends MetricTest{
         // Add context and return
         r.addContext(c, "PURL:" + field);
         return r;
+    }
+
+    /**
+     * For testing in optional fields, test if a field is present for both
+     * the purl and component
+     * @param purlValue value stored in the purl string
+     * @param componentValue value stored in the Component
+     * @return a result if one or both values are null OR null if both values
+     * are present and not empty/null
+     */
+    private Result hasNullValues(Component c, String purlValue, String componentValue, String fieldName){
+        // booleans to hold if purl and/or component field are present or not
+        // (true if empty/null, else false)
+        boolean purlValueNull = isEmptyOrNull(purlValue);
+        boolean componentValueNull = isEmptyOrNull(componentValue);
+
+        // at least one of the fields is null
+        Result r;
+        String failMessage;
+        String contextMessage = String.format("PURL %s", fieldName);
+        // If component is missing the field info and CPE is not
+        if(!purlValueNull && componentValueNull){
+            failMessage = String.format("PURL has %s info and component does " +
+                    "not", fieldName);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, failMessage);
+            r.addContext(c, contextMessage);
+            r.updateInfo(Result.Context.STRING_VALUE, purlValue);
+            return r;
+        }
+        // If CPE is missing the field info and component is not
+        else if(purlValueNull && !componentValueNull){
+            failMessage = String.format("Component has %s info and PURL does " +
+                    "not", fieldName);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, failMessage);
+            r.addContext(c, contextMessage);
+            return r;
+        }
+        // If both component and CPE are missing the field's info
+        else if(purlValueNull && componentValueNull){
+            failMessage = String.format("Both Component and PURL missing %s " +
+                    "info", fieldName);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, failMessage);
+            r.addContext(c, contextMessage);
+            return r;
+        }
+        // both fields are not null and have values, return null so actual
+        // test for comparison can occur
+        else{
+            return null;
+        }
     }
 }

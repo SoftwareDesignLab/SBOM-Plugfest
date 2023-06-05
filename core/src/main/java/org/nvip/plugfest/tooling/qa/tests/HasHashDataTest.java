@@ -17,7 +17,6 @@ import java.util.List;
 public class HasHashDataTest extends MetricTest{
 
     private static final String TEST_NAME = "HasHashData";
-
     /**
      * Test all SBOM components for hashes
      * @param sbom SBOM to test
@@ -33,7 +32,6 @@ public class HasHashDataTest extends MetricTest{
         for(Component c: sbom.getAllComponents()){
             results.add(hasHashData(c));
         }
-
         // return list of results for all components
         return results;
     }
