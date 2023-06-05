@@ -14,6 +14,7 @@ import java.util.Set;
  *
  * Test purls for if they match stored component data
  * @author Matthew Morrison
+ * @author Derek Garcia
  */
 public class AccuratePURLTest extends MetricTest{
     // the test name for the results
