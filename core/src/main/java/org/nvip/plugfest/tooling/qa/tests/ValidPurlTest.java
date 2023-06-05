@@ -15,7 +15,7 @@ import java.util.List;
 public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest {
     private static final String TEST_NAME = "ValidPurl";
 
-    /***
+    /**
      * Validates the PURL
      *
      * @param sbom SBOM to test
@@ -43,7 +43,7 @@ public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid Purl String");
                 }
 
-                r.addContext(sbom, "purl");
+                r.addContext(c, "purl");
                 results.add(r);
             }
         }

@@ -1,53 +1,55 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
-import org.nvip.plugfest.tooling.qa.tests.Result;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.CPE;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
-public class ValidCPETest extends org.nvip.plugfest.tooling.qa.tests.MetricTest {
+/**
+ * file: ValidCPETest.java
+ *
+ * Tests if the cpes are valid
+ *
+ * @author Derek Garcia
+ */
+public class ValidCPETest extends MetricTest {
     private static final String TEST_NAME = "ValidCPE";
 
-    private Pattern cpe23Regex;
-
-    /***
-     * Regex for CPE
-     */
-    public ValidCPETest() {
-        this.cpe23Regex = Pattern.compile("cpe:2\\.3:[aho\\*\\-](:(((\\?*|\\*?)([a-zA-Z0-9\\-\\._]|(\\\\[\\\\\\*\\?" +
-                "!\"#$$%&'\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){5}(:(([a-zA-Z]{2,3}" +
-                "(-([a-zA-Z]{2}|[0-9]{3}))?)|[\\*\\-]))(:(((\\?*|\\*?)([a-zA-Z0-9\\-\\._]|(\\\\[\\\\\\*\\?!\"#$$%&'" +
-                "\\(\\)\\+,/:;<=>@\\[\\]\\^`\\{\\|}~]))+(\\?*|\\*?))|[\\*\\-])){4}", Pattern.MULTILINE);
-    }
-
     /**
-     * Validates the CPE
+     * Validates the PURL
+     *
      * @param sbom SBOM to test
-     * @return
+     * @return Collection of results
      */
     @Override
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
         for (Component c : sbom.getAllComponents()) {
+            // Skip if no CPEs
+            if(isEmptyOrNull(c.getCpes()))
+                continue;
+            Result r;
+
+            // Else attempt to make object
             for (String cpe : c.getCpes()) {
-                if (cpe == null)
-                    continue;
-                Result r;
-                if (this.cpe23Regex.matcher(cpe.strip()).matches()) {
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, "CPE Passed");
-                } else {
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE Failed");
+                // Attempt to make new Purl Object
+                try{
+                    new CPE(cpe);    // throws error if given purl string is invalid
+                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid CPE String");
+                } catch (Exception e){
+                    Debug.log(Debug.LOG_TYPE.WARN, "Failed to parse CPE \"" + cpe +"\" | " + e.getMessage());    // log incase regex fails
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid CPE String");
                 }
-                r.addContext(sbom, "cpe");
+
+                r.addContext(c, "cpe");
                 results.add(r);
             }
         }
+
 
         // return findings
         return results;
