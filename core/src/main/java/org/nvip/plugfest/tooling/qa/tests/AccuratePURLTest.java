@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -39,124 +40,88 @@ public class AccuratePURLTest extends MetricTest{
     /**
      * For every PURLs in the component, test that the PURLs information
      * matches the stored component data
+     *
      * @param c the component to test
      * @return a list of results for each PURL in the component
      */
     private List<Result> matchingPURLs(Component c){
         List<Result> purlResults = new ArrayList<>();
         Result r;
-        Set<PURL> componentPURL = c.getPurls();
-        // if no purls are present in the component, test cannot be performed
-        if(componentPURL.isEmpty()){
-            r = new Result(TEST_NAME, Result.STATUS.ERROR, "Component does " +
-                    "not contain PURLs");
-            r.addContext(c, "Matching PURLs");
-            r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-            purlResults.add(r);
-        }
-        // purls are present in the component, test each purl for matching
-        // info with component
-        else{
-            for(PURL p: componentPURL){
-                // test the validity of the purl's name and add its result
-                purlResults.add(testPURLName(c, p));
-                // test the validity of the purl's version and add its result
-                purlResults.add(testPURLVersion(c, p));
+        /*
+        // Test each stored purl
+        for(String p: c.getPurls()){
+            PURL purl;
+            // Try to parse PURL string
+            try{
+                purl = new PURL(p);
 
-                //TODO Component's need to hold group/vendor info in order
-                // to compare with PURL
+                // Check if name is equal
+                purlResults.add(isEqual(c, "component name", purl.getName(), c.getName()));
+
+                // If both versions are not null, test if equal
+                if(purl.getVersion() != null && c.getVersion() != null)
+                    purlResults.add(isEqual(c, "version", purl.getVersion(), c.getVersion()));
+
+                // If PURL is missing a version and component is not
+                if(purl.getVersion() != null && c.getVersion() == null){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL has version and Component does not");
+                    r.addContext(c, "Purl Version");
+                    r.updateInfo(Result.Context.STRING_VALUE, purl.getVersion());
+                    purlResults.add(r);
+                }
+
+                // If Component is missing a version and PURL is not
+                if(purl.getVersion() == null && c.getVersion() != null){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and PURL does not");
+                    r.addContext(c, "Component Version");
+                    r.updateInfo(Result.Context.STRING_VALUE, c.getVersion());
+                    purlResults.add(r);
+                }
+
+                // Check if namespace matches publisher
+                // todo multiple namespaces? Are we assuming publisher is the namespace?
+                if(purl.getNamespace().size() == 1)
+                    purlResults.add(isEqual(c, "publisher", purl.getNamespace().get(0), c.getPublisher()));
+
+            } catch (Exception e){
+                // Failed to parse purl string
+                Debug.log(Debug.LOG_TYPE.DEBUG, "Unable to parse PURL \"" + p + "\"");
+                r = new Result(TEST_NAME, Result.STATUS.FAIL, e.getMessage());
+
+                r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                r.updateInfo(Result.Context.STRING_VALUE, p);
+
+                purlResults.add(r);
             }
-
         }
+         */
+
         return purlResults;
-
     }
 
     /**
-     * Method checks if the purl's name matches the components name
-     * @param c the component to compare with
-     * @param p the purl to compare with
-     * @return the result of checking if the PURL and component name matches
+     * Checks if 2 fields are equal
+     *
+     * @param c Component
+     * @param field name of field that is being checked
+     * @param purlValue Value stored in the PURL string
+     * @param componentValue Value stored in the Component
+     * @return Result with the findings
      */
-    private Result testPURLName(Component c, PURL p){
-        // get the purl and component's name
-        String purlName = p.getName();
-        String componentName = c.getName();
+    private Result isEqual(Component c, String field, String purlValue, String componentValue){
         Result r;
+        // Check if purl value is different
+        if(!purlValue.equals(componentValue)){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL does not match " + field);
+            r.updateInfo(Result.Context.STRING_VALUE, componentValue);
 
-        // if purlName is empty, test automatically fails, cannot check
-        // if names match
-        if(isEmptyOrNull(purlName)){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                    "does not have a name");
-        }
-        // if the two names do not match, the test fails
-        else if(!purlName.equals(componentName)){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                    "name does not match component's name");
-        }
-        // if the two names do match, the test passes
-        else{
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                    "name matches component's name");
-        }
-        // add context about the findings
-        r.addContext(c, "Matching PURL data");
-        r.updateInfo(Result.Context.FIELD_NAME, "PURL Name");
-        r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-
-        return r;
-    }
-
-    /**
-     * Method checks if the purl's version matches the components version
-     * @param c the component to compare with
-     * @param p the purl to compare with
-     * @return the result of checking if the PURL and component version matches
-     */
-    private Result testPURLVersion(Component c, PURL p){
-        // get the purl and component's version
-        String purlVersion = p.getVersion();
-        String componentVersion = c.getVersion();
-
-        Result r;
-        // if purlVersion is empty, test automatically fails, cannot check
-        // if versions match
-        if(isEmptyOrNull(componentVersion)){
-            r = new Result(TEST_NAME, Result.STATUS.ERROR, "Component does " +
-                    "not have version, test cannot be completed");
-        }
-        else{
-            if(isEmptyOrNull(purlVersion)){
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                        "does not have a version");
-                r.addContext(c, "Matching PURL data");
-                r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
-                return r;
-            }
-            // if the two versions do not match, the test fails
-            else if(!purlVersion.equals(componentVersion)){
-                r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL " +
-                        "version does not match component's version");
-            }
-            // if the two versions do match, the test passes
-            else{
-                r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL " +
-                        "version matches component's version");
-            }
-            // add context about the findings
-            r.addContext(c, "Matching PURL data");
-            r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
-            r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-
-            return r;
+            // Else they both match
+        } else {
+            r = new Result(TEST_NAME, Result.STATUS.PASS, "PURL matches " + field);
         }
 
-        // add context about the findings
-        r.addContext(c, "Matching PURL data");
-        r.updateInfo(Result.Context.FIELD_NAME, "PURL version");
-        r.updateInfo(Result.Context.STRING_VALUE, p.toString());
-
+        // Add context and return
+        r.addContext(c, "PURL:" + field);
         return r;
     }
 }

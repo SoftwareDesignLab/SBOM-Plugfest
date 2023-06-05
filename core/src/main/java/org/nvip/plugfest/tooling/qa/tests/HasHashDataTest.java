@@ -46,7 +46,7 @@ public class HasHashDataTest extends MetricTest{
     public Result hasHashData(Component c){
         Result r;
         // get the list of hashes from the component
-        List<Hash> hashList= new ArrayList<>(c.getHashes());
+        List<Hash> hashList = new ArrayList<>(c.getHashes());
         // if the hash list is empty, no hashes are present, test fails
         if(hashList.isEmpty()){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component does " +
