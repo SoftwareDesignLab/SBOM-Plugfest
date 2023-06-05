@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.sbom;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.qa.tests.Result;
 import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
@@ -121,6 +122,11 @@ public class Component {
      *     the specification</a> for more. Note that this is not the same as a hash.
      */
     private String verificationCode;
+
+    /**
+     * Metrics/Test results regarding this component
+     */
+    private Map<String, List<Result>> metrics;
 
     /**
      * Constructs a component with no attributes
