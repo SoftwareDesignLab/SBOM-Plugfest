@@ -64,25 +64,32 @@ public class AccurateCPETest extends MetricTest{
                 // test name
                 results.add(isEqual(c, "component name", cpeObj.getProduct(), c.getName()));
 
-                // test version
-                results.add(isEqual(c, "version", cpeObj.getVersion(), c.getVersion()));
 
-//
-//                // If PURL is missing a version and component is not
-//                if(cpeObj.getVersion() != null && c.getVersion() == null){
-//                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL has version and Component does not");
-//                    r.addContext(c, "Purl Version");
-//                    r.updateInfo(Result.Context.STRING_VALUE, cpeObj.getVersion());
-//                    results.add(r);
-//                }
-//
-//                // If Component is missing a version and PURL is not
-//                if(cpeObj.getVersion() == null && c.getVersion() != null){
-//                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and PURL does not");
-//                    r.addContext(c, "Component Version");
-//                    r.updateInfo(Result.Context.STRING_VALUE, c.getVersion());
-//                    results.add(r);
-//                }
+                // test version
+                // If component is missing a version and CPE is not
+                if(cpeObj.getVersion() != null && c.getVersion() == null){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE has version and Component does not");
+                    r.addContext(c, "CPE Version");
+                    r.updateInfo(Result.Context.STRING_VALUE, cpeObj.getVersion());
+                    results.add(r);
+                }
+                // If CPE is missing a version and component is not
+                else if(cpeObj.getVersion() == null && c.getVersion() != null){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and CPE does not");
+                    r.addContext(c, "CPE Version");
+                    results.add(r);
+                }
+                // If both component and CPE are missing a version
+                else if(cpeObj.getVersion() == null && c.getVersion() == null){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                            "Both Component and CPE missing versions");
+                    r.addContext(c, "CPE Version");
+                    results.add(r);
+                }
+                else{
+                    results.add(isEqual(c, "version", cpeObj.getVersion(), c.getVersion()));
+                }
+                // TODO same checks for publisher/vendor?
 
                 // TODO other elements to test? Any relevant info in CPE to test in component?
 
