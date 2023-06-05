@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
-import org.checkerframework.checker.units.qual.C;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -58,38 +57,38 @@ public class AccurateCPETest extends MetricTest{
             try{
                 cpeObj = new CPE(cpe);
 
-                // test Vendor
-                results.add(isEqual(c, "vendor", cpeObj.getVendor(), c.getPublisher()));
-
                 // test name
+                // both at minimum should have a name
                 results.add(isEqual(c, "component name", cpeObj.getProduct(), c.getName()));
 
 
                 // test version
-                // If component is missing a version and CPE is not
-                if(cpeObj.getVersion() != null && c.getVersion() == null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE has version and Component does not");
-                    r.addContext(c, "CPE Version");
-                    r.updateInfo(Result.Context.STRING_VALUE, cpeObj.getVersion());
-                    results.add(r);
-                }
-                // If CPE is missing a version and component is not
-                else if(cpeObj.getVersion() == null && c.getVersion() != null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and CPE does not");
-                    r.addContext(c, "CPE Version");
-                    results.add(r);
-                }
-                // If both component and CPE are missing a version
-                else if(cpeObj.getVersion() == null && c.getVersion() == null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                            "Both Component and CPE missing versions");
-                    r.addContext(c, "CPE Version");
-                    results.add(r);
-                }
-                else{
+
+                // Test if CPE and/or component is missing a version
+                r = hasNullValues(c, cpeObj.getVersion(), c.getVersion(), "Version");
+
+                // both component and CPE have versions, continue to comparison test
+                if(r == null){
                     results.add(isEqual(c, "version", cpeObj.getVersion(), c.getVersion()));
                 }
-                // TODO same checks for publisher/vendor?
+                // CPE and/or Component is missing a version, add result to list
+                else{
+                    results.add(r);
+                }
+
+                // test Vendor
+
+                // Test if CPE and/or component is missing vendor info
+                r = hasNullValues(c, cpeObj.getVendor(), c.getPublisher(), "Vendor");
+
+                // both component and CPE have vendor info, continue to comparison test
+                if(r == null){
+                    results.add(isEqual(c, "Vendor", cpeObj.getVendor(), c.getPublisher()));
+                }
+                // CPE and/or Component is missing vendor info, add result to list
+                else{
+                    results.add(r);
+                }
 
                 // TODO other elements to test? Any relevant info in CPE to test in component?
 
@@ -120,12 +119,13 @@ public class AccurateCPETest extends MetricTest{
      */
     private Result isEqual(Component c, String field, String cpeValue, String componentValue){
         Result r;
-        // Check if cpe value is different
-        if(CPE.isEqualWildcard(cpeValue, componentValue)){
-            r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE does not match " + field);
+        // Check if cpe value is different, if so, test fails
+        if(!CPE.isEqualWildcard(cpeValue, componentValue)){
+            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                    "CPE does not match " + field);
             r.updateInfo(Result.Context.STRING_VALUE, componentValue);
 
-        // Else they both match
+        // Else they both match, test passes
         } else {
             r = new Result(TEST_NAME, Result.STATUS.PASS, "CPE matches " + field);
         }
@@ -133,5 +133,55 @@ public class AccurateCPETest extends MetricTest{
         // Add context and return
         r.addContext(c, "CPE:" + field);
         return r;
+    }
+
+    /**
+     * For testing in optional fields, test if a field is present for both
+     * the cpe and component
+     * @param cpeValue value stored in the CPE string
+     * @param componentValue value stored in the Component
+     * @return a result if one or both values are null OR null if both values
+     * are present and not empty/null
+     */
+    private Result hasNullValues(Component c, String cpeValue, String componentValue, String fieldName){
+        // booleans to hold if cpe and/or component field are present or not
+        // (true if empty/null, else false)
+        boolean cpeValueNull = isEmptyOrNull(cpeValue);
+        boolean componentValueNull = isEmptyOrNull(componentValue);
+
+        // at least one of the fields is null
+        Result r;
+        String failMessage;
+        String contextMessage = String.format("CPE %s", fieldName);
+        // If component is missing the field info and CPE is not
+        if(!cpeValueNull && componentValueNull){
+            failMessage = String.format("CPE has %s info and component does " +
+                    "not", fieldName);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, failMessage);
+            r.addContext(c, contextMessage);
+            r.updateInfo(Result.Context.STRING_VALUE, cpeValue);
+            return r;
+        }
+        // If CPE is missing the field info and component is not
+        else if(cpeValueNull && !componentValueNull){
+            failMessage = String.format("Component has %s info and CPE does " +
+                    "not", fieldName);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, failMessage);
+            r.addContext(c, contextMessage);
+            return r;
+        }
+        // If both component and CPE are missing the field's info
+        else if(cpeValueNull && componentValueNull){
+            failMessage = String.format("Both Component and CPE missing %s " +
+                    "info", fieldName);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL, failMessage);
+            r.addContext(c, contextMessage);
+            return r;
+        }
+        // both fields are not null and have values, return null so actual
+        // test for comparison can occur
+        else{
+            return null;
+        }
     }
 }
