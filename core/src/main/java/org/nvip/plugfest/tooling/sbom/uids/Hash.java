@@ -74,7 +74,7 @@ public class Hash {
      * @param a Algorithm to check
      * @return true if exclusive, false otherwise
      */
-    public boolean isSPDXExclusive(Algorithm a){
+    public static boolean isSPDXExclusive(Algorithm a){
         return a == SHA224 ||
                a == BLAKE2b512 ||
                a == MD2 ||

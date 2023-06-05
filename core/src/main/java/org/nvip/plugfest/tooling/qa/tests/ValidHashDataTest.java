@@ -18,8 +18,6 @@ import java.util.Set;
  */
 public class ValidHashDataTest extends MetricTest{
 
-    // SPDX  SHA224,    ,   BLAKE2b-512, MD2, MD4, MD6, ADLER32
-    // CDX
     private static final String TEST_NAME = "ValidHashData";
 
     /**
@@ -32,14 +30,26 @@ public class ValidHashDataTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         // list to hold results for each component
         List<Result> results = new ArrayList<>();
-
+        Result r;
         for(Component c: sbom.getAllComponents()){
 
+            // Skip if no hashes
             if(c.getHashes().isEmpty())
                 continue;
 
+            // Check all stored hashes
             for(Hash hash : c.getHashes()){
-                if(sbom.getOriginFormat() == SBOM.Type.CYCLONE_DX && Hash.SPDXAlgorithm..getAlgorithm())
+
+                // Check for unsupported hash
+                if(sbom.getOriginFormat() == SBOM.Type.CYCLONE_DX && Hash.isSPDXExclusive(hash.getAlgorithm())){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "CycloneDX SBOM has an unsupported Hash");
+                    r.addContext(c, "Hash");
+                    r.updateInfo(Result.Context.STRING_VALUE, hash.getValue());
+                    results.add(r);
+                }
+
+
+
             }
 
 
