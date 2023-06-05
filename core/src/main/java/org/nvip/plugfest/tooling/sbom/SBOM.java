@@ -1,8 +1,6 @@
 package org.nvip.plugfest.tooling.sbom;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * File: SBOM.java
@@ -64,7 +62,7 @@ public class SBOM {
     /**
      * Metadata of SBOM
      */
-    private Set<String> metadata;
+    private Map<String, String> metadata;
 
 
     /**
@@ -80,7 +78,7 @@ public class SBOM {
         this.dependencyTree = new DependencyTree();
         this.signature = new HashSet<>();
         this.serialNumber = "urn:uuid:" + UUID.randomUUID().toString();
-        this.metadata = new HashSet<>();
+        this.metadata = new HashMap<>();
     }
 
     /**
@@ -119,7 +117,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
-        this.metadata = new HashSet<>();
+        this.metadata = new HashMap<>();
     }
 
     /**
@@ -142,7 +140,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
-        this.metadata = new HashSet<>();
+        this.metadata = new HashMap<>();
     }
 
     /**
@@ -323,22 +321,22 @@ public class SBOM {
         this.signature = signature;
     }
 
-    public void addMetadata(String m){
+    public void addMetadata(String k, String v){
         if(metadata == null)
-            metadata = new HashSet<>();
-        AppTool potentialTool = checkForTool(m);
+            metadata = new HashMap<>();
+        AppTool potentialTool = checkForTool(v);
         if(!getAppTools().contains(potentialTool))
             if(potentialTool != null)
                 addAppTool(potentialTool);
-            else metadata.add(m);
+            else metadata.put(k,v);
     }
-    public void setMetadata(Set<String> md){
-        for (String m: md
+    public void setMetadata(Map<String,String> md){
+        for (String m: md.keySet()
              ) {
-            addMetadata(m);
+            addMetadata(m, md.get(m));
         }
     }
-    public Set<String> getMetadata(){
+    public Map<String,String> getMetadata(){
         return metadata;
     }
 

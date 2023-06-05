@@ -127,7 +127,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         }
 
         // Get important SBOM items from meta  (timestamp, tool info)
-        Set<String> resolvedMetadata = resolveMetadata(sbomMeta);
+        Map<String, String> resolvedMetadata = resolveMetadata(sbomMeta);
 
         bom_data.put("format", "cyclonedx");
         bom_data.put("specVersion", header_materials.get("xmlns"));
@@ -356,10 +356,10 @@ public class TranslatorCDXXML extends TranslatorCore {
         return this.sbom;
     }
 
-    private Set<String> resolveMetadata(NodeList sbomMeta) {
+    private Map<String, String> resolveMetadata(NodeList sbomMeta) {
         if(sbomMeta == null) return null;
 
-        Set<String> result = new HashSet<>();
+        HashMap<String, String> result = new HashMap<>();
 
         // Collected data
         StringBuilder author = new StringBuilder();
@@ -406,7 +406,8 @@ public class TranslatorCDXXML extends TranslatorCore {
                         sbomMeta.item(b).getNodeName(),
                         sbomMeta.item(b).getTextContent()
                 );
-                result.add("["+sbomMeta.item(b).getNodeName().replaceAll("\n", "") + " - " +
+                String key = sbomMeta.item(b).getNodeName().replaceAll("\n", "");
+                result.put(key, "["+ key + " - " +
                         sbomMeta.item(b).getTextContent().replaceAll("\n", "")+"]");
             }
         }

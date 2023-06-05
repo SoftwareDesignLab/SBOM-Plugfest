@@ -15,7 +15,7 @@ public class Utils {
      * @param sbom to check
      */
     public static boolean checkForAppTools(SBOM sbom) {
-        for (String m: sbom.getMetadata()
+        for (String m: sbom.getMetadata().values()
         ) {
             if(sbom.checkForTool(m) != null)
                 return true;

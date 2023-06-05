@@ -90,14 +90,14 @@ public class TranslatorCDXJSON extends TranslatorCore {
             sbom.setAppTools(tools);
 
             if (authorAndTimestamp[0] != null) {
-                sbom.addMetadata(authorAndTimestamp[0]);
+                sbom.addMetadata("author", authorAndTimestamp[0]);
                 sbom.setSupplier(authorAndTimestamp[0]);
             }
 
             if (sbom.getSupplier() == null && tools.size() > 0)
                 sbom.setSupplier(tools.iterator().next().toString());
 
-            sbom.addMetadata(authorAndTimestamp[1]);
+            sbom.addMetadata("timestamp", authorAndTimestamp[1]);
         }
 
         // Create new collection of components
@@ -109,7 +109,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
             if( cdx_component != null ) {
 
                 if(cdx_component.getType() == org.cyclonedx.model.Component.Type.APPLICATION){
-                    sbom.addMetadata("[Tool - " + cdx_component.getAuthor() + " " + // treat author as apptool vendor
+                    sbom.addMetadata("tool","[Tool - " + cdx_component.getAuthor() + " " + // treat author as apptool vendor
                             cdx_component.getName() + " " + cdx_component.getVersion() + "]");
                     continue;
                 }
