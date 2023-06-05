@@ -234,14 +234,13 @@ public class TranslatorCDXXML extends TranslatorCore {
 
                     // No apparent publisher means this is most likely an application tool
                     Component component;
-                    if(component_items.containsKey("type") && component_items.get("type").equalsIgnoreCase("application")){
-                        AppTool t = new AppTool();
-                        t.setName(component_items.get("name"));
-                        t.setVersion(component_items.get("version"));
-                        sbom.addAppTool(t);
-                                continue;}
-                    else
-                    // Create a new component with required information
+                    if(component_items.containsKey("type") &&
+                            component_items.get("type").equalsIgnoreCase("application")) {
+                        // TODO vendor?
+                        sbom.getMetadata().addTool(null, component_items.get("name"), component_items.get("version"));
+                                continue;
+                    } else {
+                        // Create a new component with required information
                         component = new Component(
                                 component_items.get("name"),
                                 component_items.get("publisher"),
@@ -249,24 +248,22 @@ public class TranslatorCDXXML extends TranslatorCore {
                                 component_items.get("bom-ref")
                         );
 
-                    // Set CPEs, PURLs, and Hashes
-                    component.setCpes(cpes);
-                    component.setPurls(purls);
-                    component.setHashes(hashes);
+                        // Set CPEs, PURLs, and Hashes
+                        component.setCpes(cpes);
+                        component.setPurls(purls);
+                        component.setHashes(hashes);
 
-                    // Set licenses for component
-                    component.setLicenses(component_licenses);
+                        // Set licenses for component
+                        component.setLicenses(component_licenses);
 
-                    this.loadComponent(component);
+                        this.loadComponent(component);
 
-                    // If we don't have any product data to use for a topComponent,
-                    // then default this component as the top component
-                    this.topComponent = product_data.isEmpty() ? component : null;
-
+                        // If we don't have any product data to use for a topComponent,
+                        // then default this component as the top component
+                        this.topComponent = product_data.isEmpty() ? component : null;
+                    }
                 }
-
             }
-
         }
 
         if (this.product_data.isEmpty())
@@ -274,8 +271,9 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
-        if(resolvedMetadata != null)
-            sbom.setMetadata(resolvedMetadata);
+        if(resolvedMetadata != null) {
+            sbom.getMetadata().setTimestamp(bom_data.get("timestamp")); // TODO add other properties
+        }
 
         if (sbomDependencies!=null) {
 
@@ -320,24 +318,23 @@ public class TranslatorCDXXML extends TranslatorCore {
                 Element elem = (Element) tool;
                 NodeList component_elements = elem.getElementsByTagName("*");
 
-                AppTool t = new AppTool();
+                Map<String, String> toolData = new HashMap<>();
 
                 // Iterate through each element in that component
                 for (int j = 0; j < component_elements.getLength(); j++) {
 
                     if (component_elements.item(j).getNodeName().equalsIgnoreCase("vendor")) {
-                        t.setVendor(component_elements.item(j).getTextContent());
+                        toolData.put("vendor", component_elements.item(j).getTextContent());
                     }
                     else if (component_elements.item(j).getNodeName().equalsIgnoreCase("name")) {
-                        t.setName(component_elements.item(j).getTextContent());
+                        toolData.put("name", component_elements.item(j).getTextContent());
                     }
                     else if (component_elements.item(j).getNodeName().equalsIgnoreCase("version")) {
-                        t.setVersion(component_elements.item(j).getTextContent());
+                        toolData.put("version", component_elements.item(j).getTextContent());
                     }
                 }
 
-                sbom.addAppTool(t);
-
+                sbom.getMetadata().addTool(toolData.get("vendor"), toolData.get("name"), toolData.get("version"));
             }
         }
 
@@ -417,7 +414,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         }
 
 
-        // Update data used to construct SBOM
+        // Update data used to construct SBOM TODO update for metadata class
         bom_data.put("author", author.toString().equals("") ? sbom_materials.get("vendor") : author.toString());
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
 

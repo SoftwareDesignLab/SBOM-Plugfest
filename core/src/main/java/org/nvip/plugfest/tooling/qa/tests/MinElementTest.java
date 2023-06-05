@@ -52,13 +52,13 @@ public class MinElementTest extends MetricTest {
 
         // Test supplier
         // "The name of the entity that creates the SBOM data for this component."
-        r = resultEmptyOrNull(sbom.getSupplier());  // todo should be author, not supplier?
-        r.addContext(sbom,"author");
+        r = resultEmptyOrNull(sbom.getMetadata().getSuppliers());
+        r.addContext(sbom,"suppliers");
         results.add(r);
 
         // Test timestamp
         // "Record of the date and time of the SBOM data assembly"
-        r = resultEmptyOrNull(sbom.getTimestamp());
+        r = resultEmptyOrNull(sbom.getMetadata().getTimestamp());
         r.addContext(sbom,"timestamp");
         results.add(r);
 

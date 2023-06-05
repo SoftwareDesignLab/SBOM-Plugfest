@@ -46,11 +46,11 @@ public class SBOMConflict {
         if (aSBOM.getSerialNumber() != null && !aSBOM.getSerialNumber().equals(bSBOM.getSerialNumber())) {
             conflictTypes.add(SBOMConflictType.SERIAL_NUMBER_MISMATCH);
         }
-        if (aSBOM.getTimestamp() != null && !aSBOM.getTimestamp().equals(bSBOM.getTimestamp())) {
-            conflictTypes.add(SBOMConflictType.TIMESTAMP_MISMATCH);
+        if (aSBOM.getMetadata().getTimestamp() != null && !aSBOM.getMetadata().getTimestamp() .equals(bSBOM.getMetadata().getTimestamp())) {
+            conflictTypes.add(SBOMConflictType.TIMESTAMP_MISMATCH); // TODO metadata?
         }
-        if (aSBOM.getSupplier() != null && !aSBOM.getSupplier().equals(bSBOM.getSupplier())) {
-            conflictTypes.add(SBOMConflictType.SUPPLIER_MISMATCH);
+        if (aSBOM.getMetadata().getSuppliers() != null && !aSBOM.getMetadata().getSuppliers().equals(bSBOM.getMetadata().getSuppliers())) {
+            conflictTypes.add(SBOMConflictType.SUPPLIER_MISMATCH); // TODO metadata?
         }
         if (aSBOM.getSbomVersion() != null && !aSBOM.getSbomVersion().equals(bSBOM.getSbomVersion())) {
             conflictTypes.add(SBOMConflictType.SBOM_VERSION_MISMATCH);

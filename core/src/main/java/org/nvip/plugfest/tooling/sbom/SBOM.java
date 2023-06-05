@@ -45,16 +45,6 @@ public class SBOM {
     private String serialNumber;
 
     /**
-     * The creator or manufacturer of the software the SBOM is about
-     */
-    private String supplier;
-
-    /**
-     * Date and time of when the SBOM was created
-     */
-    private String timestamp;
-
-    /**
      * Signatures on the SBOM
      */
     private Set<Signature> signature;
@@ -62,23 +52,16 @@ public class SBOM {
     /**
      * Metadata of SBOM
      */
-    private Map<String, String> metadata;
-
-
-    /**
-     *  Application tools
-     */
-    public Set<AppTool> appTools;
-
+    private SBOMMetadata metadata;
 
     /**
      * Default constructor
      */
-    public SBOM () {
+    public SBOM() {
         this.dependencyTree = new DependencyTree();
         this.signature = new HashSet<>();
-        this.serialNumber = "urn:uuid:" + UUID.randomUUID().toString();
-        this.metadata = new HashMap<>();
+        this.serialNumber = "urn:uuid:" + UUID.randomUUID();
+        this.metadata = new SBOMMetadata();
     }
 
     /**
@@ -112,12 +95,10 @@ public class SBOM {
         this.originFormat = assignOriginFormat(originFormat);
         this.specVersion = specVersion;
         this.sbomVersion = sbomVersion;
-        this.supplier = supplier;
         this.dependencyTree = dependencyTree;
         this.serialNumber = serialNumber;
-        this.timestamp = timestamp;
         this.signature = signature;
-        this.metadata = new HashMap<>();
+        this.metadata = new SBOMMetadata(timestamp, supplier);
     }
 
     /**
@@ -135,12 +116,10 @@ public class SBOM {
         this.originFormat = originFormat;
         this.specVersion = specVersion;
         this.sbomVersion = sbomVersion;
-        this.supplier = supplier;
         this.dependencyTree = dependencyTree;
         this.serialNumber = serialNumber;
-        this.timestamp = timestamp;
         this.signature = signature;
-        this.metadata = new HashMap<>();
+        this.metadata = new SBOMMetadata(timestamp, supplier);
     }
 
     /**
@@ -150,7 +129,10 @@ public class SBOM {
      */
     public SBOM(SBOM from) {
         // This sets the dependencytree to null so it does not allow copying of dependencies
-        this(from.getOriginFormat(), from.getSpecVersion(), from.getSbomVersion(), from.getSupplier(), from.getSerialNumber(), from.getTimestamp(), from.getSignature(), null);
+        this(from.getOriginFormat(), from.getSpecVersion(), from.getSbomVersion(),
+                from.getMetadata().getSuppliers(),
+                from.getSerialNumber(),
+                from.getMetadata().getTimestamp(), from.getSignature(), null);
     }
 
     /**
@@ -293,24 +275,12 @@ public class SBOM {
         this.sbomVersion = sbomVersion;
     }
 
-    public String getSupplier() { return supplier; }
-
-    public void setSupplier(String supplier) { this.supplier = supplier; }
-
     public String getSerialNumber() {
         return serialNumber;
     }
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
     }
 
     public Set<Signature> getSignature() {
@@ -321,40 +291,25 @@ public class SBOM {
         this.signature = signature;
     }
 
-    public void addMetadata(String k, String v){
-        if(metadata == null)
-            metadata = new HashMap<>();
-        AppTool potentialTool = checkForTool(v);
-        if(!getAppTools().contains(potentialTool))
-            if(potentialTool != null)
-                addAppTool(potentialTool);
-            else metadata.put(k,v);
-    }
-    public void setMetadata(Map<String,String> md){
-        for (String m: md.keySet()
-             ) {
-            addMetadata(m, md.get(m));
-        }
-    }
-    public Map<String,String> getMetadata(){
+    public SBOMMetadata getMetadata(){
         return metadata;
     }
 
-    public Set<AppTool> getAppTools() {
-        if(appTools == null)
-            appTools = new HashSet<>();
-        return appTools;
-    }
-
-    public void setAppTools(Set<AppTool> appTools) {
-        this.appTools = appTools;
-    }
-
-    public void addAppTool(AppTool a){
-        if(appTools == null)
-            appTools = new HashSet<>();
-        appTools.add(a);
-    }
+//    public Set<AppTool> getTools() {
+//        if(appTools == null)
+//            appTools = new HashSet<>();
+//        return appTools;
+//    }
+//
+//    public void setAppTools(Set<AppTool> appTools) {
+//        this.appTools = appTools;
+//    }
+//
+//    public void addAppTool(AppTool a){
+//        if(appTools == null)
+//            appTools = new HashSet<>();
+//        appTools.add(a);
+//    }
 
     ///
     /// Overrides
@@ -366,7 +321,7 @@ public class SBOM {
                 "  + Serial Number: " + getSerialNumber() + "\n" +
                 "  + Version: " + getSpecVersion() + "\n" +
                 "  + Tool Version: " + getSbomVersion() + "\n" +
-                "  + Time Stamp: " + getTimestamp() + "\n";
+                "  + Metadata: " + getMetadata() + "\n";
     }
 
     /**
@@ -381,8 +336,8 @@ public class SBOM {
         if (this.getOriginFormat() != null) {
             retVal += this.getSbomVersion().hashCode();
         }
-        if (this.getTimestamp() != null) {
-            retVal += this.getTimestamp().hashCode();
+        if (this.getMetadata() != null) {
+            retVal += this.getMetadata().hashCode();
         }
         if (this.getSerialNumber() != null) {
             retVal += this.getSerialNumber().hashCode();
@@ -400,13 +355,13 @@ public class SBOM {
         return retVal;
     }
 
-    public AppTool checkForTool(String m){
-        if(m.toLowerCase().startsWith("[tool")){
-            String[] split = m.split("\\s+");
-            return new AppTool(split[2], split[3], split[4]);
-        }
-        return null;
-    }
+//    public AppTool checkForTool(String m){
+//        if(m.toLowerCase().startsWith("[tool")){
+//            String[] split = m.split("\\s+");
+//            return new AppTool(split[2], split[3], split[4]);
+//        }
+//        return null;
+//    }
 
     /**
      * Check if the component is in the dependency tree

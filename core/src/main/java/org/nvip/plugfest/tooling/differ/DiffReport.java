@@ -130,8 +130,8 @@ public class DiffReport {
             String targetValue = null, otherValue = null;
             switch (conflictType) {
                 case SUPPLIER_MISMATCH -> {
-                    targetValue = targetSBOM.getSupplier();
-                    otherValue = otherSBOM.getSupplier();
+                    targetValue = targetSBOM.getMetadata().getSuppliers();
+                    otherValue = otherSBOM.getMetadata().getSuppliers();
                 }
                 // todo not implemented
                 case AUTHOR_MISMATCH -> {
@@ -139,8 +139,8 @@ public class DiffReport {
                     otherValue = "";
                 }
                 case TIMESTAMP_MISMATCH -> {
-                    targetValue = targetSBOM.getTimestamp();
-                    otherValue = otherSBOM.getTimestamp();
+                    targetValue = targetSBOM.getMetadata().getTimestamp();
+                    otherValue = otherSBOM.getMetadata().getTimestamp();
                 }
                 case ORIGIN_FORMAT_MISMATCH -> {
                     targetValue = targetSBOM.getOriginFormat().name();

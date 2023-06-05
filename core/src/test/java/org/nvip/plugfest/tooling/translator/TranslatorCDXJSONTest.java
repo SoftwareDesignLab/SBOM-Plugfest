@@ -48,11 +48,11 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
 
         if(pathToSBOM.equals(TEST_SMALL_CDX_JSON)) {
             assertEquals(1, sbom.getMetadata().size());
-            assertEquals(2, sbom.getAppTools().size());
+            assertEquals(2, sbom.getTools().size());
         }
         else{
             assertEquals(0, sbom.getMetadata().size());
-            assertEquals(1, sbom.getAppTools().size());
+            assertEquals(1, sbom.getTools().size());
         }
         assertFalse(checkForAppTools(sbom));
     }
@@ -65,7 +65,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(124, sbom.getAllComponents().size());
         assertEquals(1, sbom.getMetadata().size());
-        assertEquals(1, sbom.getAppTools().size());
+        assertEquals(1, sbom.getTools().size());
         assertFalse(checkForAppTools(sbom));
 
     }
@@ -78,7 +78,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(48, sbom.getAllComponents().size());
         assertEquals(1, sbom.getMetadata().size());
-        assertEquals(1, sbom.getAppTools().size());
+        assertEquals(1, sbom.getTools().size());
         assertFalse(checkForAppTools(sbom));
     }
 

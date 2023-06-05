@@ -6,7 +6,6 @@ import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Tool;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
-import org.nvip.plugfest.tooling.sbom.AppTool;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -85,21 +84,13 @@ public class TranslatorCDXJSON extends TranslatorCore {
         this.createSBOM();
 
         if(metadata != null) {
-            Set<AppTool> tools = new HashSet<>();
-            for (Tool t: metadata.getTools())
-                tools.add(new AppTool(t.getVendor(),t.getName(),t.getVersion()));
+            for (Tool t : metadata.getTools())
+                sbom.getMetadata().addTool(t.getVendor(), t.getName(), t.getVersion());
 
-            sbom.setAppTools(tools);
+            if (authorAndTimestamp[0] != null)
+                sbom.getMetadata().addSupplier(authorAndTimestamp[0]);
 
-            if (authorAndTimestamp[0] != null) {
-                sbom.addMetadata("author", authorAndTimestamp[0]);
-                sbom.setSupplier(authorAndTimestamp[0]);
-            }
-
-            if (sbom.getSupplier() == null && tools.size() > 0)
-                sbom.setSupplier(tools.iterator().next().toString());
-
-            sbom.addMetadata("timestamp", authorAndTimestamp[1]);
+            sbom.getMetadata().setTimestamp(authorAndTimestamp[1]);
         }
 
         // Create new collection of components
@@ -111,8 +102,8 @@ public class TranslatorCDXJSON extends TranslatorCore {
             if( cdx_component != null ) {
 
                 if(cdx_component.getType() == org.cyclonedx.model.Component.Type.APPLICATION){
-                    sbom.addMetadata("tool","[Tool - " + cdx_component.getAuthor() + " " + // treat author as apptool vendor
-                            cdx_component.getName() + " " + cdx_component.getVersion() + "]");
+                    sbom.getMetadata().addTool(
+                            cdx_component.getAuthor(), cdx_component.getName(), cdx_component.getVersion());
                     continue;
                 }
 
