@@ -48,6 +48,7 @@ public class AccuratePURLTest extends MetricTest{
     private List<Result> matchingPURLs(Component c){
         List<Result> purlResults = new ArrayList<>();
         Result r;
+        // TODO once PR changes have been added. Purls will be Strings
         /*
         // Test each stored purl
         for(String p: c.getPurls()){

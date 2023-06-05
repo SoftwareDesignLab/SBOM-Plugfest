@@ -214,7 +214,6 @@ public class CPE {
     public String getOther() {
         return other;
     }
-
     @Override
     public boolean equals(Object o) {
         // Check if same object
