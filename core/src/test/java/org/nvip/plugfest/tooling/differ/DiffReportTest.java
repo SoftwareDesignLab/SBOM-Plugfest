@@ -33,12 +33,12 @@ public class DiffReportTest {
         try{
             Component test_component_a = new Component(
                     "red", "red_publisher", "1.1.0",
-                    Set.of("cpe2.3::test_red_cpe"), Set.of(new PURL("pkg:redpackage/red@1.1.0")), Set.of("random_red_swid")
+                    Set.of("cpe2.3::test_red_cpe"), Set.of("pkg:redpackage/red@1.1.0"), Set.of("random_red_swid")
             );
 
             Component test_component_b = new Component(
                     "blue", "blue_publisher", "1.1.0",
-                    Set.of("cpe2.3::test_blue_cpe"), Set.of(new PURL("pkg:bluepackage/blue@1.1.0")), Set.of("random_blue_swid")
+                    Set.of("cpe2.3::test_blue_cpe"), Set.of("pkg:bluepackage/blue@1.1.0"), Set.of("random_blue_swid")
             );
 
             HashSet<String> licences = new HashSet<>();
@@ -110,12 +110,12 @@ public class DiffReportTest {
         try{
             Component test_component_a = new Component(
                     "red", "red_publisher", "1.1.0",
-                    Set.of("cpe2.3::test_red_cpe"), Set.of(new PURL("pkg:redpackage/red@1.1.0")), Set.of("random_red_swid")
+                    Set.of("cpe2.3::test_red_cpe"), Set.of("pkg:redpackage/red@1.1.0"), Set.of("random_red_swid")
             );
 
             Component test_component_b = new Component(
                     "blue", "blue_publisher", "1.1.0",
-                    Set.of("cpe2.3::test_blue_cpe"), Set.of(new PURL("pkg:bluepackage/blue@1.1.0")), Set.of("random_blue_swid")
+                    Set.of("cpe2.3::test_blue_cpe"), Set.of("pkg:bluepackage/blue@1.1.0"), Set.of("random_blue_swid")
             );
 
             HashSet<String> licences = new HashSet<>();
@@ -161,7 +161,7 @@ public class DiffReportTest {
         try{
             Component test_component_a = new Component(
                     "yellow", "yellow_publisher", "1.2.3",
-                    Set.of("cpe2.3::test_yellow_cpe"), Set.of(new PURL("pkg:yellowpackage/blue@1.2.3")), Set.of("random_yellow_swid")
+                    Set.of("cpe2.3::test_yellow_cpe"), Set.of("pkg:yellowpackage/blue@1.2.3"), Set.of("random_yellow_swid")
             );
 
             s.addComponent(null, test_component_a);
@@ -188,7 +188,7 @@ public class DiffReportTest {
         try{
             Component test_component_a = new Component(
                     "red", "other", "1.5.0",
-                    Set.of("cpe2.3::other_red_cpe"), Set.of(new PURL("pkg:other/red@1.5.0")), Set.of("rand_red_swid")
+                    Set.of("cpe2.3::other_red_cpe"), Set.of("pkg:other/red@1.5.0"), Set.of("rand_red_swid")
             );
 
             HashSet<String> licences = new HashSet<>();
