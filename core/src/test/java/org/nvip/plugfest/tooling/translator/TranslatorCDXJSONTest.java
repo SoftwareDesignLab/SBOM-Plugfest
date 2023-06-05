@@ -46,7 +46,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals(17, sbom.getAllComponents().size());
 
         if(pathToSBOM.equals(TEST_SMALL_CDX_JSON)) {
-//            assertEquals(1, sbom.getMetadata().size()); TODO
+            assertEquals(4, sbom.getMetadata().toString().split(";").length);
             assertEquals(2, sbom.getMetadata().getTools().size());
         }
         else{

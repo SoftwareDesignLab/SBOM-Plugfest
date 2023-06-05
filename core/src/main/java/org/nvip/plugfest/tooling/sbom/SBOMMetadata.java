@@ -127,7 +127,7 @@ public class SBOMMetadata {
         if(component!= null)
             sb.append("Component: ").append(component).append("; ");
         if(dataLicense!= null)
-            sb.append("Data License: ").append(dataLicense);
+            sb.append("Data License: ").append(dataLicense).append(";");
 
         return sb.toString();
 

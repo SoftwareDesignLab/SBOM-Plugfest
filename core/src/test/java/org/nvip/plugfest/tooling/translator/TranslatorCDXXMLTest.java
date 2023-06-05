@@ -60,7 +60,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals(18, sbom.getAllComponents().size());
 
         if(pathToSBOM.equals(test_small_cdx)) {
-            assertEquals(5, sbom.getMetadata().toString().split(";").length);
+            assertEquals(4, sbom.getMetadata().toString().split(";").length - 1);
             assertEquals(1, sbom.getMetadata().getTools().size());
         }
 
@@ -74,7 +74,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(434, sbom.getAllComponents().size());
-        assertEquals(5, sbom.getMetadata().toString().split(";").length);
+        assertEquals(4, sbom.getMetadata().toString().split(";").length - 1);
         assertEquals(1, sbom.getMetadata().getTools().size());
     }
 
@@ -87,7 +87,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(1, sbom.getAllComponents().size());
-        assertEquals(5, sbom.getMetadata().toString().split(";").length);
+        assertEquals(4, sbom.getMetadata().toString().split(";").length - 1);
         assertEquals(1, sbom.getMetadata().getTools().size());
     }
 
@@ -96,7 +96,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_SBOM_1_2_DEPENDENCIES.toString());
         assertNotNull(sbom);
         assertEquals(202, sbom.getAllComponents().size());
-        assertEquals(5, sbom.getMetadata().toString().split(";").length);
+        assertEquals(4, sbom.getMetadata().toString().split(";").length - 1);
         assertEquals(1, sbom.getMetadata().getTools().size());
     }
 
@@ -105,7 +105,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_SBOM_1_4_DEPENDENCIES);
         assertNotNull(sbom);
         assertEquals(631, sbom.getAllComponents().size());
-        assertEquals(5, sbom.getMetadata().toString().split(";").length);
+        assertEquals(4, sbom.getMetadata().toString().split(";").length - 1);
         assertEquals(1, sbom.getMetadata().getTools().size());
     }
 
