@@ -6,7 +6,9 @@ import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * file: AccuratePURLTest.java
@@ -72,22 +74,22 @@ public class AccuratePURLTest extends MetricTest{
                     purlResults.add(r);
                 }
 
-                // Check if namespace matches publisher
+                // Check namespace
                 //TODO determine how namespace is used? Per package manager?
-                if(purl.getNamespace().size() == 1){
-                    // Test if purl and/or component is missing publisher info
-                    r = hasNullValues(c, purl.getNamespace().get(0), c.getPublisher(), "Publisher");
-
-                    // both component and purl have publisher info, continue to comparison test
-                    if(r == null){
-                        purlResults.add(isEqual(c, "Publisher",
-                                purl.getNamespace().get(0), c.getPublisher()));
-                    }
-                    // CPE and/or Component is missing vendor info, add result to list
-                    else{
-                        purlResults.add(r);
-                    }
-                }
+//                if(purl.getNamespace().size() == 1){
+//                    // Test if purl and/or component is missing publisher info
+//                    r = hasNullValues(c, purl.getNamespace().get(0), c.getPublisher(), "Publisher");
+//
+//                    // both component and purl have publisher info, continue to comparison test
+//                    if(r == null){
+//                        purlResults.add(isEqual(c, "Publisher",
+//                                purl.getNamespace().get(0), c.getPublisher()));
+//                    }
+//                    // CPE and/or Component is missing vendor info, add result to list
+//                    else{
+//                        purlResults.add(r);
+//                    }
+//                }
 
 
             } catch (Exception e){
