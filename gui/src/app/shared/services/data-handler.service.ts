@@ -64,7 +64,7 @@ export class DataHandlerService {
       },
       (error) => {
         this.files[path].status = FileStatus.ERROR;
-        this.files[path].extra = error;
+        this.files[path].extra = error.message;
       })
     });
   }

@@ -27,12 +27,22 @@
 - Generate detailed DiffReports from a target SBOM and a list of SBOMs. 
 
 ## Quality Attributes
-- Actionable Test
-  - Tests fields to ensure data contained is usable.
-- Completeness Test
-  - Checks to make sure components have a name, publisher, version
-  - Checks if attributes are formatted correctly and checks CPE and PURL formatting 
-- Registered Processor Tests
+- **Completeness Test**
+  - Checks if the [Minimum Elements for an SBOM](https://www.ntia.doc.gov/files/ntia/publications/sbom_minimum_elements_report.pdf) 
+    are present as recommend by the NTIA.
+    - [x] Supplier Name
+    - [x] Component Name
+    - [x] Version of the Component
+    - [ ] Other Unique Identifiers
+      - [x] CPE
+      - [x] PURL
+      - [ ] SWID
+    - [ ] Dependency Relationship
+    - [x] Author of SBOM Data
+    - [x] Timestamp
+  - Check if the CPE and PURL Identifiers are formatted correctly using regex.
+
+- **Registered Processor Tests**
   - IsRegisteredTest:
     - Uses PURLs to search for information about the package using package manager APIs
     - Confirms that name and version match resource and package is registered with package manager 
@@ -48,13 +58,24 @@
   > Check: `java -version`
 
 ## Quick Start
-### Backend
-1. `./gradlew bootJar`
-2. `java -jar .\api\build\libs\api-3.1.0.jar`
-### Frontend
-1. `cd gui`
-2. `npm install`
-3. `npm start`
+### Launch Bundled Application
+```
+cd gui
+npm install
+npm start
+```
+### Launch Separately
+```
+# Start back-end in root directory
+# Or run api/src/main/java/org/nvip/plugfest/tooling/APIApplication in your IDE of choice, this works with debug mode!
+./gradlew bootJar
+java -jar .\api\build\libs\api-3.1.0.jar
+
+# Then start front-end
+cd gui
+npm install
+npm run dev
+```
 
 ## Contributors
 **Principal Investigator:** [Mehdi Mirakhorli](mailto:mxmvse@rit.edu)

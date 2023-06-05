@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 
 /**
@@ -20,20 +22,23 @@ import java.util.Arrays;
  * @author Matt London
  */
 public class TranslatorPlugFest {
+    private final static String INVALID_FILE_CONTENTS = "Invalid SBOM file contents (could not assume schema).";
+    private final static Function<String, String> INVALID_FILE_TYPE = (ext) -> "File type " + ext + " not supported.";
 
     /**
      * Parse an SBOM using the appropriate translator and return the object
      *
      * @param path Path to the SBOM to translate
-     * @return SBOM object, null if failed
+     * @return SBOM object
+     * @throws TranslatorException if translation failed
      */
-    public static SBOM translate(String path) {
+    public static SBOM translate(String path) throws TranslatorException {
         // Read the contents at path into a string
         String contents = null;
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+            throw new TranslatorException(e.getMessage());
         }
 
         return translateContents(contents, path);
@@ -44,43 +49,39 @@ public class TranslatorPlugFest {
      *
      * @param contents contents of the bom
      * @param filePath path to the bom
-     * @return SBOM object, null if failed
+     * @return SBOM object
+     * @throws TranslatorException if translation failed
      */
-    public static SBOM translateContents(String contents, String filePath) {
-
-        SBOM sbom = null;
-
+    public static SBOM translateContents(String contents, String filePath) throws TranslatorException {
         try {
             TranslatorCore translator = getTranslator(contents, filePath);
 
-            if (translator == null) Debug.log(Debug.LOG_TYPE.ERROR, "Error translating file: " + filePath + ".\nReason: Invalid " +
-                    "SBOM file contents (could not assume schema)."); // TODO throw error
-            else sbom = translator.translateContents(contents, filePath);
+            SBOM result = translator.translateContents(contents, filePath);
+            if (result == null) throw new TranslatorException("Unknown error while translating.");
+            return result;
         }
         catch (Exception e) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
+            throw new TranslatorException(e.getMessage());
         }
-
-        return sbom;
     }
 
-    private static TranslatorCore getTranslator(String contents, String filePath) {
+    private static TranslatorCore getTranslator(String contents, String filePath) throws TranslatorException {
         String ext = filePath.substring(filePath.lastIndexOf('.') + 1).trim().toLowerCase();
 
         switch (ext.toLowerCase()) { // TODO possibly scan for an entire file header to ensure validity?
             case "json" -> {
                 if (contents.contains("\"bomFormat\": \"CycloneDX\"")) return new TranslatorCDXJSON();
 //                else if (contents.contains("\"SPDXID\" : \"SPDXRef-DOCUMENT\"")) return new TranslatorSPDXJSON();
-                else return null;
+                else throw new TranslatorException(INVALID_FILE_CONTENTS + " File: " + filePath);
             }
             case "xml" -> {
                 if (contents.contains("<bom xmlns=\"http://cyclonedx.org/schema/bom/")) return new TranslatorCDXXML();
 //                else if (contents.contains("<SPDXID>SPDXRef-DOCUMENT</SPDXID>")) return new TranslatorSPDXXML();
-                else return null;
+                else throw new TranslatorException(INVALID_FILE_CONTENTS + " File: " + filePath);
             }
 //            case "yml" -> { return new TranslatorSPDXYAML(); }
             case "spdx" -> { return new TranslatorSPDX(); }
-            default -> { return null; }
+            default -> { throw new TranslatorException(INVALID_FILE_TYPE.apply(ext)); }
         }
     }
 }

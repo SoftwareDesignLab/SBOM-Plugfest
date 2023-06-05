@@ -4,15 +4,115 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.9.0] - 2023-06-04
+> Completeness processor is not complete, see issue [#159](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/159)
+### Added
+- Several fields to `Component`:
+  - `group` - The group of the component, found either in the PURL or the CycloneDX component itself.
+  - `downloadLocation` - SPDX-only field
+  - `filesAnalyzed` - SPDX-only field
+  - `verificationCode` - SPDX-only field
+  - `extractedLicenses` - SPDX-only field - this is a map from a license ID to its attributes, and contains all
+    extracted licenses found in the component. These licenses are not contained in the normal `licenses` set.
+- `SBOM.getName()` method to get the name of the project described by the SBOM.
+- New Completeness Processor. New tests include:
+  - `ValidCPETest` - checks to see if valid CPE
+  - `ValidPurlTest` - checks to see if valid CPE
+- New CPE object for testing
+
+### Changed
+- Updated `TranslatorSPDX` and `TranslatorSPDXTest` to reflect the added translation of the above fields.
+- Refactored `EmptyOrNullTest` into `MinElementTest`
+  - Missing Relationships check
+- Temporary removed `ValidSWIDTest` and `HasRelationshipsTest`
+
+### Fixed
+
+---
+## [3.8.3] - 2023-06-02
+### Changed
+- `TranslatorCDXXML.java`
+  - Now creates the SBOM object and top component after components have been parsed
+  - Top component defaulting changed to execute upon empty top component data collection
+  - resolveMetadata now returns before assigning top component data if the top component collection is empty
+
+---
+## [3.8.2] - 2023-06-02
+### Added
+
+### Changed
+- Updated the Quick Start guide in README.md.
+
+### Fixed
+- Fixed `UTF-8 Not Supported Error` caused by using the `@RequestBody` annotation with a class object.
+- `Debug.log()` had an unchecked cast to `Exception`; this was fixed by checking the type.
+
+---
+## [3.8.1] - 2023-06-01
+### Added
+- Added test file cdxgen-8.4.6-source.json .
+  - Added test data entry for the Authors of the metadata in the downloaded file above.
+
+### Changed
+- Stringify the `authors` object in `TranslatorCDXJSON.java` .
+- Modified `TranslatorCDXJSONTest` to run the newly added test source file cdxgen-8.4.6-source.json .
+
+### Fixed
+
+---
+## [3.8.0] - 2023-06-01
+### Added
+- `Debug` class from SVIP and replace (most) system calls with this to improve verbosity of our output.
+- `TranslatorException` class to catch translator errors at the top-level.
+  - This allows error handling at the API level with a simple failure message.
+
+### Changed
+- `TranslatorSPDX` now uses regex and string manipulation to parse through an SPDX tag-value file instead of 
+  attempting to read it line-by-line.
+- `TranslatorCDXJSONTest` now adds UIDs to each component only if they are not null.
+  - `Component` construction was changed to only use the constructor with `name`, `version`, and `publisher` attributes.
+- Most translator error logs now throw a `TranslatorException`
+
+### Fixed
+- Removed `PURL` class usage from `Component` and replaced it with a simple string. The `PURl` class should now only 
+  be used in metric tests.
+
+---
+## [3.7.1] - 2023-05-31
+### Added
+- Tests in `TranslatorCDXJSONTest`, `TranslatorCDXXMLest`, & `TranslatorSPDXTest` to check for null UIDs in all 
+  translated components and ensure correct processing of SBOMs with no metadata.
+- `TranslatorSPDX` now has the capability to read in multiple external licenses. See 
+  [the specification](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/) for details.
+- New License processor. New tests include:
+  - `HasLicenseDataTest` - checks to see if has license data
+  - `ValidSPDXLicenseTest` - validates SPDX Licensing information
+    > Checks to see if the SPDX License Name/ID is valid and if it's depreciated
+
+### Changed
+- `TranslatorPlugfest` now checks for key tokens in file contents as well as the file extension to determine the 
+  translator to use.
+- `TranslatorCDXJSONTest` now adds UIDs to each component only if they are not null.
+  - `Component` construction was changed to only use the constructor with `name`, `version`, and `publisher` attributes.
+
+### Fixed
+
+---
 ## [3.7.0] - 2023-05-31
 ### Added
 - New QA Refactor
   - Unified Metric testing process
     - `RegisteredProcessor` - Collection of Tests for checking if components are registered in their package manager
       - `IsRegisteredTest` - Using a component's purl(s), check if package is registered with their package manager
+- Add `dev` launcher that launches just the front end.
+- When internal failure occurs, Translators throw a top-level `TranslatorException` which contains information 
+  regarding the specific error
+- `/compare` tests are implemented that check for user input that will produce a `HttpStatus.BAD_REQUEST` response
+
 ### Changed
 - `DiffReport` is now more JSON friendly object
   - Consolidated `Comparer`, `Comparison`, and `ComponentVersion`
+- `Utils.java` now holds `SBOMFile` class
 
 ### Fixed
 

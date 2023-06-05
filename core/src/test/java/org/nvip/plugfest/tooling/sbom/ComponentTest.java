@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
@@ -38,7 +39,7 @@ public class ComponentTest {
 
     Set<String> test_cpe = new HashSet<>(List.of(new String[]{"cpe:2.3:a:python_software_foundation:python:3.11.2:*:*:*:*:*:*:*"}));
 
-    Set<PURL> test_purl = new HashSet<>(List.of(new PURL[]{new PURL("pkg:generic/python@3.11.2")}));
+    Set<String> test_purl = new HashSet<>(List.of("pkg:generic/python@3.11.2"));
 
     Set<String> test_swid = new HashSet<>(List.of(new String[]{"python_software_identification_number"}));
 
@@ -83,7 +84,7 @@ public class ComponentTest {
 
     String test_random_cpe = "cpe:2.3:a:random_test_cpe:random:3.11.2:*:*:*:*:*:*:*";
 
-    PURL test_random_purl = new PURL("pkg:random/test@2.0.0");
+    String test_random_purl = "pkg:random/test@2.0.0";
 
     String test_random_swid = "random_test_identification_number";
 
@@ -225,13 +226,6 @@ public class ComponentTest {
     }
 
     @Test
-    public void addLicense_should_get_null_exception_without_existing_license_list() {
-        assertThrows(NullPointerException.class, () -> {
-            test_component.addLicense(test_license_three);
-        });
-    }
-
-    @Test
     public void addChild_test() {
         test_component.addChild(test_uuid_one);
     }
@@ -265,7 +259,7 @@ public class ComponentTest {
 
     @Test
     public void getPurl_test() throws Exception {
-        assertEquals(new HashSet<>(List.of(new PURL[]{new PURL("pkg:generic/python@3.11.2")})), test_component.getPurls());
+        assertEquals(new HashSet<>(List.of("pkg:generic/python@3.11.2")), test_component.getPurls());
     }
 
     @Test
