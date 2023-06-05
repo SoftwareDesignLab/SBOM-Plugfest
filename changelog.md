@@ -4,6 +4,21 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+
+## [3.9.1] - 2023-06-05
+> Uniqueness processor is not complete, see issue [#160](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/160)
+### Added
+- New Uniqueness Processor. New tests include:
+  - `HasHashDataTest` - checks to see if component contains Hashes
+  - `ValidHashDataTest` - checks to see if component Hashes are a supported type
+  - `AccuratePURLTest` - checks to see if a component's PURL(s) matches stored component data
+  - `AccurateCPETest` - checks to see if a component's CPE(s) matches stored component data
+
+### Changed
+
+### Fixed
+
+---
 ## [3.9.0] - 2023-06-04
 > Completeness processor is not complete, see issue [#159](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/159)
 ### Added
@@ -102,6 +117,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New QA Refactor
   - Unified Metric testing process
+    - `UniquenessProcessor` - Collection of Tests for checking a component's UIDs (Hashes, PURLs, etc)
+      - `HasHashDataTest` - Test if a component has any hash values and the number of hashes if present
+      `ValidTestDataTest` - Test hashes if they match a valid hash schema
+      - `AccuratePURLTest` - Test a component's PURL(s) if its data matches the component's stored data
     - `RegisteredProcessor` - Collection of Tests for checking if components are registered in their package manager
       - `IsRegisteredTest` - Using a component's purl(s), check if package is registered with their package manager
 - Add `dev` launcher that launches just the front end.

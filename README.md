@@ -41,7 +41,20 @@
     - [x] Author of SBOM Data
     - [x] Timestamp
   - Check if the CPE and PURL Identifiers are formatted correctly using regex.
-
+- **Uniqueness Test**
+  - Checks if a component's unique identifiers are accurate to the component data.
+    - [x] Has Hash Data: Does the component have hash data?
+    - [x] Valid Hash Data: Are the component's hashes a supported type?
+    - [ ] Accurate UIDs
+      - [x] CPE
+        - Does the CPE's data match the component's data? 
+          - Confirms that the CPE's name, version, and publisher match the component's stored data
+      - [ ] PURL
+        - Does the PURL's data match the component's data?
+          - Confirms that the PURL's name and version match the component's stored data
+          - Implementation of PURL's namespace is needed.
+      - [ ] SWID
+        - Does the SWID's data match the component's data?
 - **Registered Processor Tests**
   - IsRegisteredTest:
     - Uses PURLs to search for information about the package using package manager APIs

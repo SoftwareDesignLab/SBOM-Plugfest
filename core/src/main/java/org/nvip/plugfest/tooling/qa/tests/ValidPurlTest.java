@@ -1,6 +1,9 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
+import org.nvip.plugfest.tooling.Debug;
+import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +28,6 @@ public class ValidPurlTest extends MetricTest {
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
-        /*
-        // TODO once PR changes have been added. Purls will be Strings
         for (Component c : sbom.getAllComponents()) {
             // Skip if no PURLs
             if(isEmptyOrNull(c.getPurls()))
@@ -47,7 +48,6 @@ public class ValidPurlTest extends MetricTest {
                 results.add(r);
             }
         }
-         */
 
         // return findings
         return results;
