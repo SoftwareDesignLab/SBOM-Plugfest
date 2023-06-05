@@ -74,14 +74,8 @@ public class APIController {
         for(int i = 0; i < compareQueue.size(); i++)
             dr.compare(sboms[i].fileName, compareQueue.get(i));
 
-
-
         //encode and send report
-        try {
-            return new ResponseEntity<>(dr, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return Utils.encodeResponse(dr);
     }
 
     /**
@@ -93,7 +87,7 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<?> qa(HttpServletRequest servletRequest, Utils.SBOMFile sbomFile) {
+    public ResponseEntity<?> qa(HttpServletRequest servletRequest, SBOMFile sbomFile) {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -118,11 +112,7 @@ public class APIController {
         QualityReport report = QAPipeline.process(sbomFile.fileName, sbom, processors);
 
         //encode and send report
-        try {
-            return new ResponseEntity<>(report, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return Utils.encodeResponse(report);
     }
 
     /**
@@ -142,11 +132,7 @@ public class APIController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // TODO better status code?
         }
 
-        try {
-            return new ResponseEntity<>(sbom, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return Utils.encodeResponse(sbom);
     }
 }
 

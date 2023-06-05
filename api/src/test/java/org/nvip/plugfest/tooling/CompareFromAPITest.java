@@ -45,7 +45,7 @@ public class CompareFromAPITest {
         sboms.add(new SBOMFile(alpineSBOM, ""));
         sboms.add(new SBOMFile(pythonSBOM, ""));
         sboms.add(new SBOMFile(dockerSBOM, ""));
-        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        SBOMFile[] arr = sboms.toArray(new SBOMFile[0]);
 
         ResponseEntity<?> response = ctrl.compare(0, arr);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -57,7 +57,7 @@ public class CompareFromAPITest {
         sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
         sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
         sboms.add(new SBOMFile("", new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
-        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        SBOMFile[] arr = sboms.toArray(new SBOMFile[0]);
 
         ResponseEntity<?> response = ctrl.compare(0, arr);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -69,7 +69,7 @@ public class CompareFromAPITest {
     void oneSbomTest() throws IOException {
 
         sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
-        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        SBOMFile[] arr = sboms.toArray(new SBOMFile[0]);
         ResponseEntity<?> report =  ctrl.compare(0, arr);
         assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
 
@@ -82,7 +82,7 @@ public class CompareFromAPITest {
         sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
         sboms.add(new SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
         sboms.add(new SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
-        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        SBOMFile[] arr = sboms.toArray(new SBOMFile[0]);
 
         ResponseEntity<?> report =  ctrl.compare(4, arr);
         assertEquals(HttpStatus.BAD_REQUEST, report.getStatusCode());
@@ -108,7 +108,7 @@ public class CompareFromAPITest {
         sboms.add(new SBOMFile(alpineSBOM, new String(Files.readAllBytes(Paths.get(alpineSBOM)))));
         sboms.add(new SBOMFile(pythonSBOM, new String(Files.readAllBytes(Paths.get(pythonSBOM)))));
         sboms.add(new SBOMFile(dockerSBOM, new String(Files.readAllBytes(Paths.get(dockerSBOM)))));
-        SBOMFile[] arr = Utils.configSbomFileArr(sboms);
+        SBOMFile[] arr = sboms.toArray(new SBOMFile[0]);
 
         ResponseEntity<?> report =  ctrl.compare(0, arr);
         assertEquals(report.getStatusCode(), HttpStatus.OK);
