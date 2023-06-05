@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.sbom;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.nvip.plugfest.tooling.differ.conflicts.ComponentConflict;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import javax.annotation.Nonnull;

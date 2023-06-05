@@ -38,15 +38,15 @@ Description: Takes in an SBOM and returns a quality report on the SBOM
 Request Type: POST
 Params: [
     {
-        Name: contents
-        Type: JSON array of String
-        Required: True
-    },
-    {
-        Name: fileName
-        Type: Json array of String
-        Required: True
-    }
+             Name: contents
+             Type: JSON array of String
+             Required: True
+         },
+         {
+             Name: fileName
+             Type: Json array of String
+             Required: True
+         }
 ]
 Request Body: {}
 

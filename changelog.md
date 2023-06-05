@@ -4,7 +4,8 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
-## [3.9.0] - 2023-06-02
+## [3.9.0] - 2023-06-04
+> Completeness processor is not complete, see issue [#159](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/159)
 ### Added
 - Several fields to `Component`:
   - `group` - The group of the component, found either in the PURL or the CycloneDX component itself.
@@ -14,9 +15,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - `extractedLicenses` - SPDX-only field - this is a map from a license ID to its attributes, and contains all
     extracted licenses found in the component. These licenses are not contained in the normal `licenses` set.
 - `SBOM.getName()` method to get the name of the project described by the SBOM.
+- New Completeness Processor. New tests include:
+  - `ValidCPETest` - checks to see if valid CPE
+  - `ValidPurlTest` - checks to see if valid CPE
+- New CPE object for testing
 
 ### Changed
 - Updated `TranslatorSPDX` and `TranslatorSPDXTest` to reflect the added translation of the above fields.
+- Refactored `EmptyOrNullTest` into `MinElementTest`
+  - Missing Relationships check
+- Temporary removed `ValidSWIDTest` and `HasRelationshipsTest`
 
 ### Fixed
 

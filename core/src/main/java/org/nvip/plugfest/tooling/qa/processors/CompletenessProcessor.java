@@ -1,6 +1,6 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
-import org.nvip.plugfest.tooling.qa.tests.EmptyOrNullTest;
+import org.nvip.plugfest.tooling.qa.tests.*;
 
 /**
  * file: CompletenessProcessor.java
@@ -15,14 +15,11 @@ public class CompletenessProcessor extends AttributeProcessor{
      */
     public CompletenessProcessor(){
        this.attributeName = "Completeness";
-       this.metricTests.add(new EmptyOrNullTest());
-       /*
-        todo
-        minElementFields - Check SBOM for min elements
-        validPurl - Check if purl string is correct
-        validCPE - Check if CPE string is correct
-        validSWID - Check if SWID string is correct
-        hasRelationships - Check to see if a dependency tree was built
-        */
+       this.metricTests.add(new MinElementTest());
+       this.metricTests.add(new ValidPurlTest());
+       this.metricTests.add(new ValidCPETest());
+       //TODO
+       // ValidSWID Test
+       // HasRelationships test
    }
 }

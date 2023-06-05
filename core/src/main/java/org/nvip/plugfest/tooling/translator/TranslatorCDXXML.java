@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.checkerframework.checker.units.qual.C;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
 import org.w3c.dom.*;

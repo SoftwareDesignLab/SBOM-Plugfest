@@ -4,7 +4,6 @@ import { ClientService } from './client.service';
 import { HttpParams } from '@angular/common/http';
 import { IpcRenderer } from 'electron';
 import { Comparison } from '@features/comparison/comparison';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +11,9 @@ import { BehaviorSubject } from 'rxjs';
 export class DataHandlerService {
 
   private ipc!: IpcRenderer;
-  public filePaths: string[] = [];
-
   public lastSentFilePaths: string[] = [];
 
-  public metrics: { [id: string]: Object | null } = {};
-  public loadingFiles: string[] = [];
+  private files: { [path: string]: SBOMInfo } = {};
 
   public comparison!: Comparison;
 
@@ -38,17 +34,19 @@ export class DataHandlerService {
   }
 
   AddFiles(paths: string[]) {
-    this.loadingFiles.push(...paths);
-    this.filePaths.push(...paths);
-
     paths.forEach((path) => {
-      this.RunMetricsOnFile(path);
+
+      this.files[path] = {
+        status: FileStatus.LOADING,
+      }
+
+      this.ValidateFile(path);
     })
   }
 
   RunAllMetrics() {
-    this.filePaths.forEach((file) => {
-      this.RunMetricsOnFile(file);
+    Object.keys(this.files).forEach((file) => {
+      this.ValidateFile(file, true);
     })
   }
 
@@ -56,22 +54,33 @@ export class DataHandlerService {
     return this.loadingComparison;
   }
 
-  RunMetricsOnFile(path: string) {
+  ValidateFile(path: string, metrics: boolean = false) {
     this.ipc.invoke('getFileData', path).then((data: any) => {
-      this.client.post("qa", {'fileName': path, 'contents': data}).subscribe((result) => {
-        this.metrics[path] = result;
-        this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
+      this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
+        this.files[path].status = FileStatus.VALID;
+
+        if(metrics)
+          this.files[path].metrics = result;
       },
       (error) => {
-        this.metrics[path] = null;
-        this.loadingFiles = this.loadingFiles.filter((x) => x !== path);
+        this.files[path].status = FileStatus.ERROR;
+        this.files[path].extra = error.message;
       })
     });
   }
 
-  GetValidSBOMs() {
-    return Object.keys(this.metrics).filter((x) => this.metrics[x] !== null);
+  DeleteFile(path: string) {
+    delete this.files[path];
   }
+
+  GetSBOMsOfType(status: FileStatus) {
+    return Object.keys(this.files).filter((x) => this.files[x].status === status);
+  }
+
+  GetSBOMInfo(path: string) {
+    return this.files[path];
+  }
+
 
   getSBOMAlias(path: string) {
     const pathChar =  path.indexOf('/') !== -1 ? '/' : '\\';
@@ -133,4 +142,17 @@ export class DataHandlerService {
     })
   }
 
+}
+
+
+export interface SBOMInfo {
+  status: FileStatus;
+  metrics?: Object;
+  extra?: string;
+}
+
+export enum FileStatus {
+  LOADING,
+  ERROR,
+  VALID
 }

@@ -1,4 +1,4 @@
-package org.nvip.plugfest.tooling.sbom;
+package org.nvip.plugfest.tooling.sbom.uids;
 
 import java.util.Objects;
 
