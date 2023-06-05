@@ -9,7 +9,7 @@ import java.util.*;
 public class SBOMMetadata {
     private String timestamp;
     private Map<String, String> tools;
-    private String suppliers;
+    private Set<String> suppliers;
     private Component component;
     private Map<String, List<Result>> metrics;
     private String dataLicense;
@@ -28,7 +28,7 @@ public class SBOMMetadata {
         this.timestamp = timestamp;
     }
 
-    public SBOMMetadata(String timestamp, String suppliers) {
+    public SBOMMetadata(String timestamp, Set<String> suppliers) {
         this(timestamp);
         this.suppliers = suppliers;
     }
@@ -56,20 +56,17 @@ public class SBOMMetadata {
                 toolVersion == null ? "" : "-" + toolVersion));
     }
 
-    public String getSuppliers() {
+    public Set<String> getSuppliers() {
         return suppliers;
     }
 
     public void addSupplier(String supplier) {
-        if (this.suppliers == null) {
-            this.suppliers = supplier;
-            return;
-        }
-
-        this.suppliers += "; " + supplier;
+        if (this.suppliers == null)
+            this.suppliers = new HashSet<>();
+        this.suppliers.add(supplier);
     }
 
-    public void setSuppliers(String suppliers) {
+    public void setSuppliers(Set<String> suppliers) {
         this.suppliers = suppliers;
     }
 

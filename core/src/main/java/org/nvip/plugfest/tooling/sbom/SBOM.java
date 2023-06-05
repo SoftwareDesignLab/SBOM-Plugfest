@@ -70,13 +70,13 @@ public class SBOM {
      * @param originFormat : original format SBOM was sent in
      * @param specVersion  :  Version of this Object
      * @param sbomVersion  :  Version of the SBOM
-     * @param author
+     * @param authors       : SBOM contributors
      * @param serialNumber : Serial number of the SBOM
      * @param timestamp    :    Timestamp of when this SBOM was created
      * @param signature    :    signature to verify the SBOM
      */
-    public SBOM(String originFormat, String specVersion, String sbomVersion, String author, String serialNumber, String timestamp, Set<Signature> signature) {
-        this(originFormat, specVersion, sbomVersion, author, serialNumber, timestamp, signature, new DependencyTree());
+    public SBOM(String originFormat, String specVersion, String sbomVersion, Set<String> authors, String serialNumber, String timestamp, Set<Signature> signature) {
+        this(originFormat, specVersion, sbomVersion, authors, serialNumber, timestamp, signature, new DependencyTree());
     }
 
     /**
@@ -87,10 +87,10 @@ public class SBOM {
      * @param sbomVersion  : Version of the SBOM
      * @param serialNumber : Serial number of the SBOM
      * @param timestamp    : Timestamp of when this SBOM was created
-     * @param supplier     : Manufacturer of the software the SBOM is about
+     * @param suppliers     : Manufacturer of the software the SBOM is about
      * @param signature    : signature to verify the SBOM
      */
-    public SBOM(String originFormat, String specVersion, String sbomVersion, String supplier,
+    public SBOM(String originFormat, String specVersion, String sbomVersion, Set<String> suppliers,
                 String serialNumber, String timestamp, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = assignOriginFormat(originFormat);
         this.specVersion = specVersion;
@@ -98,7 +98,7 @@ public class SBOM {
         this.dependencyTree = dependencyTree;
         this.serialNumber = serialNumber;
         this.signature = signature;
-        this.metadata = new SBOMMetadata(timestamp, supplier);
+        this.metadata = new SBOMMetadata(timestamp, suppliers);
     }
 
     /**
@@ -111,7 +111,7 @@ public class SBOM {
      * @param timestamp:    Timestamp of when this SBOM was created
      * @param signature:    signature to verify the SBOM
      */
-    public SBOM(Type originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber,
+    public SBOM(Type originFormat, String specVersion, String sbomVersion, Set<String> suppliers, String serialNumber,
                 String timestamp, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = originFormat;
         this.specVersion = specVersion;
@@ -119,7 +119,7 @@ public class SBOM {
         this.dependencyTree = dependencyTree;
         this.serialNumber = serialNumber;
         this.signature = signature;
-        this.metadata = new SBOMMetadata(timestamp, supplier);
+        this.metadata = new SBOMMetadata(timestamp, suppliers);
     }
 
     /**

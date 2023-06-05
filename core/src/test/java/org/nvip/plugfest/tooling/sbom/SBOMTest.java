@@ -155,7 +155,7 @@ public class SBOMTest {
                 test_name_two, test_publisher_two, test_version_two, test_cpe_two, test_purl_two, test_swid_two
         );
         test_sbom = new SBOM(
-                test_originFormat, test_specVersion, test_sbomVersion, test_supplier,
+                test_originFormat, test_specVersion, test_sbomVersion, Collections.singleton(test_supplier), // creates an immutable set for testing purposes
                 test_serialNumber, test_timestamp, test_signatures, test_dependencytree
         );
     }

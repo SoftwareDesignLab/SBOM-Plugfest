@@ -78,11 +78,14 @@ public abstract class TranslatorCore {
 
         // Attempt to create the SBOM with top level data, if an error is thrown return null and exit
         try {
+            HashSet<String> authors = HashSet.newHashSet(1);
+            authors.add(bom_data.get("author"));
             sbom = new SBOM(
                     bom_data.get("format"),
                     bom_data.get("specVersion"),
                     bom_data.get("sbomVersion"),
-                    bom_data.get("author"),
+//                    Collections.singleton(bom_data.get("author")), // todo is this option generally okay? this creates an immutable set
+                    authors,
                     bom_data.get("serialNumber"),
                     bom_data.get("timestamp"),
                     null

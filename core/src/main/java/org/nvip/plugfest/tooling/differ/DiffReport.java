@@ -128,12 +128,13 @@ public class DiffReport {
         // todo move sbom conflicts here
         for(SBOMConflictType conflictType : sbomConflict.getConflicts()){
             String targetValue = null, otherValue = null;
+
             switch (conflictType) {
                 case SUPPLIER_MISMATCH -> {
-                    targetValue = targetSBOM.getMetadata().getSuppliers();
-                    otherValue = otherSBOM.getMetadata().getSuppliers();
+                    targetValue = targetSBOM.getMetadata().getSuppliers().toString(); // todo ensure this is a good string representation
+                    otherValue = otherSBOM.getMetadata().getSuppliers().toString();
                 }
-                // todo not implemented
+                // todo not implemented // todo is this not synonymous with supplier?
                 case AUTHOR_MISMATCH -> {
                     targetValue = "";
                     otherValue = "";

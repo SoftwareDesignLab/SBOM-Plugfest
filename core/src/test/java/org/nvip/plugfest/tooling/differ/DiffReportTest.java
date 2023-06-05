@@ -7,6 +7,7 @@ import org.nvip.plugfest.tooling.sbom.DependencyTree;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class DiffReportTest {
      * @return Template SBOM
      */
     private SBOM generateTemplateSBOM() {
-        SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", Collections.singleton("supplier"),
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
         try{
@@ -104,7 +105,7 @@ public class DiffReportTest {
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
         // Build other SBOM with random metadata details
-        SBOM s = new SBOM(SBOM.Type.Other, "7", "2", "Foo",
+        SBOM s = new SBOM(SBOM.Type.Other, "7", "2", Collections.singleton("Foo"),
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617a54", "2002-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
         try{
@@ -143,7 +144,7 @@ public class DiffReportTest {
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
         // Empty SBOM
-        SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", Collections.singleton("supplier"),
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
 
@@ -182,7 +183,7 @@ public class DiffReportTest {
         DiffReport d = new DiffReport("ONE", generateTemplateSBOM());
 
         // make new SBOM with modified component
-        SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", "supplier",
+        SBOM s = new SBOM(SBOM.Type.CYCLONE_DX, "1.4", "1", Collections.singleton("supplier"),
                 "urn:uuid:1b53623d-b96b-4660-8d25-f84b7f617c54", "2023-01-01T02:36:00-05:00",
                 new HashSet<>(), new DependencyTree());
         try{
