@@ -3,9 +3,10 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.Tool;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
+import org.nvip.plugfest.tooling.sbom.AppTool;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
@@ -51,21 +52,26 @@ public class TranslatorCDXJSON extends TranslatorCore {
         bom_data.put("sbomVersion", String.valueOf(json_sbom.getVersion()));
         bom_data.put("serialNumber", json_sbom.getSerialNumber());
 
+        String[] authorAndTimestamp = new String[2];
+
         // Ensure metadata is not null before we begin querying it
         Metadata metadata = json_sbom.getMetadata();
         if(metadata != null) {
-            List<OrganizationalContact> authorList = json_sbom.getMetadata().getAuthors();
-            if (authorList != null) {
-                String authors = authorList.stream().map(
-                                                          n -> (n.getName() == null ?  "" : "Name: "    + n.getName())  +
-                                                               (n.getEmail() == null ? "" : ", Email: " + n.getEmail()) +
-                                                               (n.getPhone() == null ? "" : ", Phone: " + n.getPhone())
-                                                       )
-                                                   .collect(Collectors.joining(" ; ", "{ ", " }")); // at least {}
-                bom_data.put("author", authors);
+
+            String author;
+            if(json_sbom.getMetadata().getAuthors() != null) {
+                author = json_sbom.getMetadata().getAuthors().toString();
+                bom_data.put("author", author);
+                authorAndTimestamp[0] = "[" + author + "]";
             }
 
-            bom_data.put("timestamp" , json_sbom.getMetadata().getTimestamp().toString());
+            String timestamp = json_sbom.getMetadata().getTimestamp().toString();
+
+            bom_data.put("timestamp" , timestamp);
+            authorAndTimestamp[1] = "[" + timestamp + "]";;
+
+            if(json_sbom.getMetadata().getAuthors() != null)
+                return null;
 
             // Top component analysis (check if not null as well)
             org.cyclonedx.model.Component topComponent = metadata.getComponent();
@@ -79,6 +85,18 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
         this.createSBOM();
 
+        if(metadata != null) {
+            Set<AppTool> arr = new HashSet<>();
+            for (Tool t: metadata.getTools()
+                 ) {
+                arr.add(new AppTool(t.getVendor(),t.getName(),t.getVersion()));
+            }
+            sbom.setAppTools(arr);
+            if(authorAndTimestamp[0] != null)
+                sbom.addMetadata(authorAndTimestamp[0]);
+            sbom.addMetadata(authorAndTimestamp[1]);
+        }
+
         // Create new collection of components
         HashMap<String, Component> components = new HashMap<>();
 
@@ -87,11 +105,21 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
             if( cdx_component != null ) {
 
+                if(cdx_component.getType() == org.cyclonedx.model.Component.Type.APPLICATION){
+                    sbom.addMetadata("[Tool - " + cdx_component.getAuthor() + " " + // treat author as apptool vendor
+                            cdx_component.getName() + " " + cdx_component.getVersion() + "]");
+                    continue;
+                }
+
                 // Create new component with a name, publisher, version along with CPEs/PURLs/SWIDs
                 Component new_component = new Component(
                         cdx_component.getName(),
                         cdx_component.getPublisher(),
                         cdx_component.getVersion());
+
+                // Get group
+                String group = cdx_component.getGroup();
+                if (group != null) new_component.setGroup(group);
 
                 // Get CPE, PURL, and SWIDs
                 String cpe = cdx_component.getCpe();

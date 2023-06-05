@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.sbom;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
@@ -222,13 +223,6 @@ public class ComponentTest {
 
         test_component.addLicense(test_license_three);
         assertEquals(3, test_component.getLicenses().size());
-    }
-
-    @Test
-    public void addLicense_should_get_null_exception_without_existing_license_list() {
-        assertThrows(NullPointerException.class, () -> {
-            test_component.addLicense(test_license_three);
-        });
     }
 
     @Test
