@@ -110,12 +110,10 @@ public class TranslatorPlugFestTest {
     }
 
     @Test
-    @Disabled
-    @DisplayName("FIX") // todo
     public void driver_translates_json_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);
-        assertEquals("[org.cyclonedx.model.Tool@9e23bc53]", sbom.getSupplier());
+        assertEquals("Tool: aquasecurity trivy-0.39.0", sbom.getSupplier());
     }
 
     @Test

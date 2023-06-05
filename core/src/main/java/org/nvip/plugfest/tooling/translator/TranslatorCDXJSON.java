@@ -86,14 +86,20 @@ public class TranslatorCDXJSON extends TranslatorCore {
         this.createSBOM();
 
         if(metadata != null) {
-            Set<AppTool> arr = new HashSet<>();
-            for (Tool t: metadata.getTools()
-                 ) {
-                arr.add(new AppTool(t.getVendor(),t.getName(),t.getVersion()));
-            }
-            sbom.setAppTools(arr);
-            if(authorAndTimestamp[0] != null)
+            Set<AppTool> tools = new HashSet<>();
+            for (Tool t: metadata.getTools())
+                tools.add(new AppTool(t.getVendor(),t.getName(),t.getVersion()));
+
+            sbom.setAppTools(tools);
+
+            if (authorAndTimestamp[0] != null) {
                 sbom.addMetadata(authorAndTimestamp[0]);
+                sbom.setSupplier(authorAndTimestamp[0]);
+            }
+
+            if (sbom.getSupplier() == null && tools.size() > 0)
+                sbom.setSupplier(tools.iterator().next().toString());
+
             sbom.addMetadata(authorAndTimestamp[1]);
         }
 

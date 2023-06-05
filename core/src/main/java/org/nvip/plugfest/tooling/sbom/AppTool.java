@@ -54,6 +54,13 @@ public class AppTool {
 
     // overrides
     @Override
+    public String toString() {
+        return "Tool: "
+                + (this.vendor != null ? this.vendor + " " : "")
+                + this.name + "-" + this.version;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AppTool appTool)) return false;
