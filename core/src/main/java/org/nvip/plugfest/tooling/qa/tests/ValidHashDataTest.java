@@ -35,6 +35,14 @@ public class ValidHashDataTest extends MetricTest{
 
         for(Component c: sbom.getAllComponents()){
 
+            if(c.getHashes().isEmpty())
+                continue;
+
+            for(Hash hash : c.getHashes()){
+                if(sbom.getOriginFormat() == SBOM.Type.CYCLONE_DX && Hash.SPDXAlgorithm..getAlgorithm())
+            }
+
+
         }
 
         // return list of results for all components
