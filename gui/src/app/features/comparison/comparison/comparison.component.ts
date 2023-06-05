@@ -12,7 +12,6 @@ import { SBOMComponent } from "@models/sbom";
 export class ComparisonComponent implements OnChanges {
   @Input() comparison: Comparison | null = null;
   path: any[] = [];
-  pathTitles: any[] = [];
   icon =  'check_circle'
 
   constructor(private dataHandler: DataHandlerService) {}
