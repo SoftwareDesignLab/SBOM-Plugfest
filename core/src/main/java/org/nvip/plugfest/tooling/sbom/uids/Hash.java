@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.sbom.uids;
 
+import jregex.Pattern;
+
 import java.util.Objects;
 
 import static org.nvip.plugfest.tooling.sbom.uids.Hash.Algorithm.*;
@@ -81,6 +83,65 @@ public class Hash {
                a == MD4 ||
                a == MD6 ||
                a == ADLER32;
+    }
+
+    /**
+     * Validates a hash function to make sure the length and content are correct
+     *
+     * @param a Hash algorithm
+     * @param hash Hash string
+     * @return True if hash passes, false otherwise
+     */
+    public static boolean validateHash(Algorithm a, String hash){
+        String hashRegex;
+        // Test against supported hashes
+        switch (a){
+            case ADLER32:
+                hashRegex = "^[a-fA-F0-9]{8}$";
+                break;
+            case SHA1:
+                hashRegex = "^[a-fA-F0-9]{40}$";
+                break;
+            case SHA224:
+                hashRegex = "^[a-fA-F0-9]{56}$";
+                break;
+            case SHA256:
+            case SHA3256:
+            case BLAKE2b256:
+            case BLAKE3:
+                hashRegex = "^[a-fA-F0-9]{64}$";
+                break;
+            case SHA384:
+            case SHA3384:
+            case BLAKE2b384:
+                hashRegex = "^[a-fA-F0-9]{96}$";
+                break;
+            case SHA512:
+            case SHA3512:
+            case BLAKE2b512:
+                hashRegex = "^[a-fA-F0-9]{128}$";
+                break;
+            case MD2:
+            case MD4:
+            case MD5:
+                hashRegex = "^[a-fA-F0-9]{32}$";
+                break;
+            // MD6 can be 128, 256, or 512 bits
+            // todo better way to distinguish?
+            case MD6:
+                Pattern p = new Pattern("^[a-fA-F0-9]{32}$", Pattern.MULTILINE);
+                if(p.matches(hash)) return true;
+                p = new Pattern("^[a-fA-F0-9]{64}$", Pattern.MULTILINE);
+                if(p.matches(hash)) return true;
+                p = new Pattern("^[a-fA-F0-9]{128}$", Pattern.MULTILINE);
+                return p.matches(hash);
+            default:
+                return false;
+        }
+
+        // Test regex
+        Pattern p = new Pattern(hashRegex, Pattern.MULTILINE);
+        return p.matches(hash);
     }
 
     ///
