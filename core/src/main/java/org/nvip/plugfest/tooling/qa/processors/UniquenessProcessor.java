@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
+import org.nvip.plugfest.tooling.qa.tests.AccurateCPETest;
 import org.nvip.plugfest.tooling.qa.tests.AccuratePURLTest;
 import org.nvip.plugfest.tooling.qa.tests.HasHashDataTest;
 import org.nvip.plugfest.tooling.qa.tests.ValidHashDataTest;
@@ -20,9 +21,9 @@ public class UniquenessProcessor extends AttributeProcessor {
         this.metricTests.add(new HasHashDataTest());
         this.metricTests.add(new ValidHashDataTest());
         this.metricTests.add(new AccuratePURLTest());
+        this.metricTests.add(new AccurateCPETest());
         /*
         TODO
-         accurateCPE: CPE matches stored component data
          accurateSWID: SWID matches stored swid data
          */
     }
