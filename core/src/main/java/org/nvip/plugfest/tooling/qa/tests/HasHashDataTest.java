@@ -1,8 +1,9 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.Hash;
+
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 
 import java.util.ArrayList;
 import java.util.List;
