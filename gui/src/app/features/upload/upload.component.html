@@ -4,9 +4,7 @@
         <div class="uploaded-files-container flex col" #container *ngIf="ContainsFiles()">
             <div class="uploaded-files flex col" *ngIf="ContainsFiles()">
                 <div class="file flex center" *ngFor="let item of GetValidSBOMs()">
-                    <icon icon="done" color="var(--green)">
-                        [matTooltip]="SBOM is valid">
-                    </icon>
+                    <icon icon="done" color="var(--green)" [matTooltip]="'SBOM is valid'"/>
                     <div class="sbom flex">
                         {{getSBOMAlias(item)}}
                         <input type="checkbox" [value]="item"/>
@@ -14,9 +12,7 @@
                 </div>
 
                 <div class="file flex center" *ngFor="let item of GetErrorSBOMs()">
-                    <icon icon="close" color="var(--red)">
-                        [matTooltip]="'SBOM is not valid (' + GetSbomInfo(item).extra + ')'" >
-                    </icon>
+                    <icon icon="close" color="var(--red)" [matTooltip]="'SBOM is not valid (' + GetSbomInfo(item).extra + ')'"/>
                     <div class="sbom flex">
                         {{getSBOMAlias(item)}}
                         <input type="checkbox" [value]="item"/>
