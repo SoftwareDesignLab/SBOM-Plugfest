@@ -124,7 +124,7 @@ public class SBOMMetadata {
             sb.append("Tools: ").append(tools).append("; ");
         if(suppliers!= null && !suppliers.toString().equals("[null]"))
             sb.append("Suppliers: ").append(suppliers).append("; ");
-        if(component!= null)
+        if(component!= null && component.toString().length() > 0)
             sb.append("Component: ").append(component).append("; ");
         if(dataLicense!= null)
             sb.append("Data License: ").append(dataLicense).append(";");
