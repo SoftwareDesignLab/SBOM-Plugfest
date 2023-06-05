@@ -51,36 +51,38 @@ public class AccurateCPETest extends MetricTest{
         List<Result> results = new ArrayList<>();
         Result r;
 
-        // Test each stored purl
+        // Test each stored cpe
         for(String cpe: c.getCpes()){
             CPE cpeObj;
-            // Try to parse PURL string
+            // Try to parse CPE string
             try{
                 cpeObj = new CPE(cpe);
 
+                // test Vendor
+                results.add(isEqual(c, "vendor", cpeObj.getVendor(), c.getPublisher()));
 
-                // Check if name is equal
-//                results.add(isEqual(c, "component name", cpeObj.getName(), c.getName()));
+                // test name
+                results.add(isEqual(c, "component name", cpeObj.getProduct(), c.getName()));
 
-                // If both versions are not null, test if equal
-                if(cpeObj.getVersion() != null && c.getVersion() != null)
-                    results.add(isEqual(c, "version", cpeObj.getVersion(), c.getVersion()));
+                // test version
+                results.add(isEqual(c, "version", cpeObj.getVersion(), c.getVersion()));
 
-                // If PURL is missing a version and component is not
-                if(cpeObj.getVersion() != null && c.getVersion() == null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL has version and Component does not");
-                    r.addContext(c, "Purl Version");
-                    r.updateInfo(Result.Context.STRING_VALUE, cpeObj.getVersion());
-                    results.add(r);
-                }
-
-                // If Component is missing a version and PURL is not
-                if(cpeObj.getVersion() == null && c.getVersion() != null){
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and PURL does not");
-                    r.addContext(c, "Component Version");
-                    r.updateInfo(Result.Context.STRING_VALUE, c.getVersion());
-                    results.add(r);
-                }
+//
+//                // If PURL is missing a version and component is not
+//                if(cpeObj.getVersion() != null && c.getVersion() == null){
+//                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL has version and Component does not");
+//                    r.addContext(c, "Purl Version");
+//                    r.updateInfo(Result.Context.STRING_VALUE, cpeObj.getVersion());
+//                    results.add(r);
+//                }
+//
+//                // If Component is missing a version and PURL is not
+//                if(cpeObj.getVersion() == null && c.getVersion() != null){
+//                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has version and PURL does not");
+//                    r.addContext(c, "Component Version");
+//                    r.updateInfo(Result.Context.STRING_VALUE, c.getVersion());
+//                    results.add(r);
+//                }
 
                 // Check if namespace matches publisher
                 // todo multiple namespaces? Are we assuming publisher is the namespace?
@@ -114,12 +116,12 @@ public class AccurateCPETest extends MetricTest{
      */
     private Result isEqual(Component c, String field, String cpeValue, String componentValue){
         Result r;
-        // Check if purl value is different
-        if(!cpeValue.equals(componentValue)){
+        // Check if cpe value is different
+        if(CPE.isEqualWildcard(cpeValue, componentValue)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "CPE does not match " + field);
             r.updateInfo(Result.Context.STRING_VALUE, componentValue);
 
-            // Else they both match
+        // Else they both match
         } else {
             r = new Result(TEST_NAME, Result.STATUS.PASS, "CPE matches " + field);
         }

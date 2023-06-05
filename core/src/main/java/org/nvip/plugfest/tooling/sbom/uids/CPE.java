@@ -138,7 +138,7 @@ public class CPE {
      * @param b String b
      * @return if a and b are equivalent
      */
-    private boolean isEqualWildcard(String a, String b){
+    public static boolean isEqualWildcard(String a, String b){
         // Check for direct equivalence first
         if(a.equals(b))
             return true;
