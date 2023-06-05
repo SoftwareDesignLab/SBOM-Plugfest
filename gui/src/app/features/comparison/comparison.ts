@@ -10,13 +10,13 @@ interface DiffReport {
   sbomConflicts: Conflict[];
   componentConflicts: {
     [id: string]: {
-      [id: string]: Conflict
+      [id: string]: Conflict[]
     }
   };
 }
 
 export interface Comparison {
-  targetSBOM: string;
+  target: string;
   diffReport: {
     [path: string]: DiffReport
   };
