@@ -84,10 +84,7 @@ public class AccurateCPETest extends MetricTest{
 //                    results.add(r);
 //                }
 
-                // Check if namespace matches publisher
-                // todo multiple namespaces? What order are are the cpe elements in?
-//                if(cpeObj.getNamespace().size() == 1)
-//                    results.add(isEqual(c, "publisher", cpeObj.getNamespace().get(0), c.getPublisher()));
+                // TODO other elements to test? Any relevatn info in CPE to test in component?
 
             } catch (Exception e){
                 // Failed to parse cpeObj string
