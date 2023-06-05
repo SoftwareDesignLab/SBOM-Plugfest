@@ -307,13 +307,13 @@ public class SBOMTest {
 
     @Test
     public void getTimestamp_test() {
-        assertEquals("2023-02-17T02:36:00-05:00", test_sbom.getTimestamp());
+        assertEquals("2023-02-17T02:36:00-05:00", test_sbom.getMetadata().getTimestamp());
     }
 
     @Test
     public void setTimestamp_test() {
-        test_sbom.setTimestamp(test_random_timestamp);
-        assertEquals("2023-02-16T02:36:00-15:00", test_sbom.getTimestamp());
+        test_sbom.getMetadata().setTimestamp(test_random_timestamp);
+        assertEquals("2023-02-16T02:36:00-15:00", test_sbom.getMetadata().getTimestamp());
     }
 
     @Test

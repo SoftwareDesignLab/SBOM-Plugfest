@@ -106,28 +106,28 @@ public class TranslatorPlugFestTest {
     public void driver_translates_xml_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
         assertNotNull(sbom);
-        assertEquals("anchore", sbom.getSupplier());
+        assertEquals("anchore", sbom.getMetadata().getSuppliers());
     }
 
     @Test
     public void driver_translates_json_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);
-        assertEquals("Tool: aquasecurity trivy-0.39.0", sbom.getSupplier());
+        assertEquals("Tool: aquasecurity trivy-0.39.0", sbom.getMetadata().getSuppliers());
     }
 
     @Test
     public void driver_translates_spdx_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
         assertNotNull(sbom);
-        assertEquals("Tool: spdx-sbom-generator-source-code", sbom.getSupplier());
+        assertEquals("Tool: spdx-sbom-generator-source-code", sbom.getMetadata().getSuppliers());
     }
 
     @Test
     public void driver_translates_xml_timestamp() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
         assertNotNull(sbom);
-        assertEquals("2023-02-21T08:50:33-05:00", sbom.getTimestamp());
+        assertEquals("2023-02-21T08:50:33-05:00", sbom.getMetadata().getTimestamp());
     }
 
     @Test
@@ -136,14 +136,14 @@ public class TranslatorPlugFestTest {
         // todo fix -fails ci/cd b/c this is in EDT and ci/cd defaults to UTC
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);
-        assertEquals("2023-04-05T16:49:04+00:00", sbom.getTimestamp());
+        assertEquals("2023-04-05T16:49:04+00:00", sbom.getMetadata().getTimestamp());
     }
 
     @Test
     public void driver_translates_spdx_timestamp() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
         assertNotNull(sbom);
-        assertEquals("2023-03-10T18:48:20Z", sbom.getTimestamp());
+        assertEquals("2023-03-10T18:48:20Z", sbom.getMetadata().getTimestamp());
     }
 
     @Test

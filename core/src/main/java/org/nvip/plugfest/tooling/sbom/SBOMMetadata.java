@@ -8,10 +8,11 @@ import java.util.*;
 
 public class SBOMMetadata {
     private String timestamp;
-    private final Map<String, String> tools;
+    private Map<String, String> tools;
     private String suppliers;
     private Component component;
-    private final Map<String, List<Result>> metrics;
+    private Map<String, List<Result>> metrics;
+    private String dataLicense;
 
     public SBOMMetadata() {
         this.timestamp = null;
@@ -19,6 +20,7 @@ public class SBOMMetadata {
         this.suppliers = null;
         this.component = null;
         this.metrics = new HashMap<>();
+        dataLicense = null;
     }
 
     public SBOMMetadata(String timestamp) {
@@ -81,5 +83,13 @@ public class SBOMMetadata {
 
     public Map<String, List<Result>> getMetrics() {
         return metrics;
+    }
+
+    public String getDataLicense() {
+        return dataLicense;
+    }
+
+    public void setDataLicense(String dataLicense) {
+        this.dataLicense = dataLicense;
     }
 }

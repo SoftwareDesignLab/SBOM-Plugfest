@@ -67,8 +67,8 @@ public class SBOMConflict {
         switch (conflictType) {
             case SUPPLIER_MISMATCH:
                 conflictString.append("Supplier Mismatch:\n");
-                conflictString.append("+ ").append(aSBOM.getSupplier()).append("\n");
-                conflictString.append("- ").append(bSBOM.getSupplier()).append("\n");
+                conflictString.append("+ ").append(aSBOM.getMetadata().getSuppliers()).append("\n");
+                conflictString.append("- ").append(bSBOM.getMetadata().getSuppliers()).append("\n");
                 break;
             case AUTHOR_MISMATCH:
                 // TODO author currently not implemented
@@ -77,8 +77,8 @@ public class SBOMConflict {
                 break;
             case TIMESTAMP_MISMATCH:
                 conflictString.append("Timestamp Mismatch:\n");
-                conflictString.append("+ ").append(aSBOM.getTimestamp()).append("\n");
-                conflictString.append("- ").append(bSBOM.getTimestamp()).append("\n");
+                conflictString.append("+ ").append(aSBOM.getMetadata().getSuppliers()).append("\n");
+                conflictString.append("- ").append(bSBOM.getMetadata().getSuppliers()).append("\n");
                 break;
             case ORIGIN_FORMAT_MISMATCH:
                 conflictString.append("Origin Format Mismatch:\n");

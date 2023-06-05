@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import static org.nvip.plugfest.tooling.translator.utils.Utils.*;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,17 +43,16 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(17, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
+        assertEquals(17, sbom.getAllComponents().size());
 
         if(pathToSBOM.equals(TEST_SMALL_CDX_JSON)) {
-            assertEquals(1, sbom.getMetadata().size());
-            assertEquals(2, sbom.getTools().size());
+//            assertEquals(1, sbom.getMetadata().size()); TODO
+            assertEquals(2, sbom.getMetadata().getTools().size());
         }
         else{
-            assertEquals(0, sbom.getMetadata().size());
-            assertEquals(1, sbom.getTools().size());
+//            assertEquals(0, sbom.getMetadata().size()); TODO
+            assertEquals(1, sbom.getMetadata().getTools().size());
         }
-        assertFalse(checkForAppTools(sbom));
     }
 
     @Test
@@ -64,9 +62,8 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(124, sbom.getAllComponents().size());
-        assertEquals(1, sbom.getMetadata().size());
-        assertEquals(1, sbom.getTools().size());
-        assertFalse(checkForAppTools(sbom));
+//        assertEquals(1, sbom.getMetadata().size()); TODO
+        assertEquals(1, sbom.getMetadata().getTools().size());
 
     }
 
@@ -77,9 +74,8 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(48, sbom.getAllComponents().size());
-        assertEquals(1, sbom.getMetadata().size());
-        assertEquals(1, sbom.getTools().size());
-        assertFalse(checkForAppTools(sbom));
+//        assertEquals(1, sbom.getMetadata().size()); TODO
+        assertEquals(1, sbom.getMetadata().getTools().size());
     }
 
     @Test

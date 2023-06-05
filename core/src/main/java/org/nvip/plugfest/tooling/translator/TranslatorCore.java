@@ -93,7 +93,7 @@ public abstract class TranslatorCore {
         }
 
         if (bom_data.get("DataLicense") != null)
-            sbom.addMetadata("datalicense", "[dataLicense " + bom_data.get("DataLicense") + "]");
+            sbom.getMetadata().setDataLicense(bom_data.get("DataLicense")); // TODO move to SPDX
 
         // If there is no top component (product) already, try to create it
         // Otherwise, make sure it's in the SBOM
