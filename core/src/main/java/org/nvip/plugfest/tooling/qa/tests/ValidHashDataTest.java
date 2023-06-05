@@ -1,24 +1,19 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 
-import jregex.Pattern;
 import org.nvip.plugfest.tooling.sbom.Component;
-import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import static org.nvip.plugfest.tooling.sbom.uids.Hash.Algorithm.SHA224;
-import static org.nvip.plugfest.tooling.sbom.uids.Hash.Algorithm.SHA384;
 
 /**
  * file: ValidHashDataTest.java
  *
  * Test each component's hashes if they match schema
  * @author Matthew Morrison
+ * @author Derek Garcia
  */
 public class ValidHashDataTest extends MetricTest{
 
@@ -62,7 +57,16 @@ public class ValidHashDataTest extends MetricTest{
                     results.add(r);
                 }
 
+                // Check if hash is valid
+                if(!Hash.validateHash(hash.getAlgorithm(), hash.getValue())){
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid " + hash.getAlgorithm() + " hash");
+                } else {
+                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid " + hash.getAlgorithm() + " hash");
+                }
 
+                r.addContext(c, "Hash");
+                r.updateInfo(Result.Context.STRING_VALUE, hash.getValue());
+                results.add(r);
             }
         }
 
