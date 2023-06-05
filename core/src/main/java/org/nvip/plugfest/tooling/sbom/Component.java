@@ -123,6 +123,7 @@ public class Component {
      */
     private String verificationCode;
 
+
     /**
      * Metrics/Test results regarding this component
      */
@@ -152,6 +153,7 @@ public class Component {
         this.componentConflicts = new HashSet<>();
         this.downloadLocation = null;
         this.verificationCode = null;
+        this.metrics = new HashMap<>();
     }
 
     /**
@@ -408,6 +410,13 @@ public class Component {
         this.verificationCode = verificationCode;
     }
 
+    public Map<String, List<Result>> getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(Map<String, List<Result>> metrics) {
+        this.metrics = metrics;
+    }
     /**
      * Add an extracted license to this component with the following properties.
      *
