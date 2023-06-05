@@ -1,88 +1,57 @@
-<div class="flex buttons">
-  <app-button *ngIf="keys && keys.length > 0" (click)="filterConflicts()">{{
-    filtered ? "Show All" : "Show Conflicts"
-  }}</app-button>
-
-  <app-button
-    *ngIf="keys && keys.length > 0"
-    (click)="targetMarked = !targetMarked"
-    >{{ targetMarked ? "Unmark" : "Mark" }} Target SBOM Values</app-button
-  >
-</div>
 <div *ngIf="comparison" class="comparison">
   <div class="header">
-    <app-button icon="arrow_back" (click)="decreaseDepth(path.length - 2)" [backgroundColor]="path.length === 1 ? 'var(--gray)' : 'var(--accent)'" />
+    <app-button icon="arrow_back" *ngIf="path.length > 0" [backgroundColor]="path.length === 1 ? 'var(--gray)' : 'var(--accent)'" />
     <div>
       <span
         class="path"
         *ngFor="let title of pathTitles; let i = index"
-        (click)="decreaseDepth(i)"
         >{{ title.trim() + "/" }}</span
       >
     </div>
   </div>
   <div>
-    <div *ngIf="path.length === 1">
+    <div *ngIf="path.length === 0">
       <app-accordion
-        *ngFor="let key of keys"
-        [extra]="[display[key].length + ' Ver(s)']"
-        (click)="increaseDepth(display[key], key)"
+        *ngFor="let compared of getFilteredCompared()"
+        (click)="path.push(compared); pathTitles.push(getSBOMAlias(compared))"
+        [extra]="[getMetadataConflicts(compared).length + getComponentConflictAmount(compared) + ' Conflicts']"
       >
         <div title class="title">
-          <mat-icon aria-hidden="true" [fontIcon]="icon" class="in-target" [ngStyle]="{'opacity':  targetSBOM[key] && targetMarked ? '1' : '0'}"/>
-          <span> {{ key }}</span>
+          <span> {{ getSBOMAlias(compared) }}</span>
         </div>
       </app-accordion>
     </div>
 
-    <div *ngIf="path.length === 2">
+    <div *ngIf="path.length === 1">
       <app-accordion
-        *ngFor="let version of path[1]"
-        [extra]="[getMatching(version)]"
-        [color]="matches(version) ? 'var(--green)' : 'var(--red)'"
-        (click)="increaseDepth(version, version.componentVersion)"
+        *ngFor="let conflicts of ['Metadata', 'Components']"
+        (click)="path.push(conflicts); pathTitles.push(conflicts)"
+        [extra]="[(conflicts == 'Metadata' ? getMetadataConflicts(getPathIndex(0)).length : getComponentConflictAmount(getPathIndex(0))) + ' Conflicts']"
       >
-        <div title class="title" >
-          <mat-icon
-            *ngIf="targetMarked && targetSBOM[pathTitles[1]].indexOf(version.componentVersion) !==-1"
-            aria-hidden="true"
-            [fontIcon]="icon"
-            class="in-target"/>
-          <span> {{ version.componentVersion }}</span>
+        <div title class="title">
+          <span> {{ conflicts }}</span>
+        </div>
+      </app-accordion>
+    </div>
+    
+    <div *ngIf="path.length === 2 && getPathIndex(2) === 'Metadata'">
+      <app-accordion
+        *ngFor="let conflict of getMetadataConflicts(getPathIndex(0))"
+        [extra]="[conflict.type]"
+      >
+        <div title class="title">
+          <span> {{ 'Target: ' + conflict.target }}</span>
+          <span> {{ 'This: ' + conflict.other }}</span>
         </div>
       </app-accordion>
     </div>
 
-    <div *ngIf="path.length === 3">
-      <div *ngFor="let attribute of attributes | keyvalue">
-        <app-accordion
-          *ngIf="attribute.value?.length"
-          [extra]="[(attribute.value?.length || 0) + ' Value(s)']"
-        >
-          <span title> {{ attribute.key }}</span>
-          <div body id="attribute-body">
-            <app-accordion
-              *ngFor="let value of attribute.value"
-              [extra]="[getMatching(value)]"
-              [color]="matches(value) ? 'var(--green)' : 'var(--red)'"
-            >
-              <div title class="title" >
-                <mat-icon
-                  *ngIf="targetMarked && (value.appearances ? value.appearances.indexOf(0) !== -1 : 0)"
-                  aria-hidden="true"
-                  [fontIcon]="icon"
-                  class="in-target"/>
-                <span> {{ value.uniqueId }}</span>
-              </div>
-              <div body>
-                <div *ngFor="let sbom of value.appearances">
-                  {{ getAliasFromIndex(sbom) }}
-                </div>
-              </div>
-            </app-accordion>
-          </div>
-        </app-accordion>
-      </div>
+    <div *ngIf="path.length === 3 && getPathIndex(2) === 'Components'">
+
+    </div>
+
+    <div *ngIf="path.length === 4 && getPathIndex(3) === 'Components'">
+
     </div>
   </div>
 </div>
