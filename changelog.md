@@ -76,6 +76,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   translated components and ensure correct processing of SBOMs with no metadata.
 - `TranslatorSPDX` now has the capability to read in multiple external licenses. See 
   [the specification](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/) for details.
+- New License processor. New tests include:
+  - `HasLicenseDataTest` - checks to see if has license data
+  - `ValidSPDXLicenseTest` - validates SPDX Licensing information
+    > Checks to see if the SPDX License Name/ID is valid and if it's depreciated
 
 ### Changed
 - `TranslatorPlugfest` now checks for key tokens in file contents as well as the file extension to determine the 
@@ -88,6 +92,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 ## [3.7.0] - 2023-05-31
 ### Added
+- New QA Refactor
+  - Unified Metric testing process
+    - `RegisteredProcessor` - Collection of Tests for checking if components are registered in their package manager
+      - `IsRegisteredTest` - Using a component's purl(s), check if package is registered with their package manager
 - Add `dev` launcher that launches just the front end.
 - When internal failure occurs, Translators throw a top-level `TranslatorException` which contains information 
   regarding the specific error
@@ -132,10 +140,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-## v3.2.1-- 5/18/23
+---
+## [3.2.1] - 2023-05-18
+> TODO: Add `dev` launcher that launches just the front end. See issue [#118](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/118)
 ### Added
-- Frontend launches backend and kills process on exit
-- Removed full filepath from upload screen
 
 ### Changed
 

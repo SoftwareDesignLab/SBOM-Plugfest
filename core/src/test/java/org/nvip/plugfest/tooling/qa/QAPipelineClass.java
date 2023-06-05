@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.qa;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
+import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.DependencyTree;
 import org.nvip.plugfest.tooling.sbom.SBOM;
