@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
+import org.nvip.plugfest.tooling.qa.tests.HasMetadataTest;
+
 /**
  * file: MetadataProcessor.java
  *
@@ -14,9 +16,9 @@ public class MetadataProcessor extends AttributeProcessor{
      */
     public MetadataProcessor(){
         this.attributeName = "Metadata";
+        this.metricTests.add(new HasMetadataTest());
         /*
         TODO
-         hasMetadata: Check to see if metadata is preseent
          emptyOrNull: check if the field is empty or null
          minElementFields: Check if the field is empty or null
          validPURL: PURL matches regex

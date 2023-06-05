@@ -1,55 +1,19 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
+
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
- * file: ValidPurlTest.java
- *
- * Tests if the purls are valid
- *
- * @author Derek Garcia
+ * For a given SBOM, check if the metadata purl matches regex (if applicable)
  */
-public class ValidPurlTest extends MetricTest {
-    private static final String TEST_NAME = "ValidPurl";
+public class ValidPURLTest extends MetricTest {
 
-    /**
-     * Validates the PURL
-     *
-     * @param sbom SBOM to test
-     * @return Collection of results
-     */
+    private final Pattern PURL_REGEX = Pattern.compile("^pkg:([a-zA-Z][a-zA-Z0-9-~._%]*\\/)+[a-zA-Z][a-zA-Z0-9-~._%]*(@([a-zA-Z0-9-~._%]+))?(\\?(([a-zA-Z][a-zA-Z0-9_.-]*=.+)&)*([a-zA-Z][a-zA-Z0-9-~._%]*=.+))?(#([a-zA-Z0-9-~._%]*\\/)+[a-zA-Z0-9-~._%]*)?", Pattern.MULTILINE);
     @Override
     public List<Result> test(SBOM sbom) {
-        List<Result> results = new ArrayList<>();
-
-        /*
-        // TODO once PR changes have been added. Purls will be Strings
-        for (Component c : sbom.getAllComponents()) {
-            // Skip if no PURLs
-            if(isEmptyOrNull(c.getPurls()))
-                continue;
-            Result r;
-            // Else attempt to make object
-            for (String p : c.getPurls()) {
-                // Attempt to make new Purl Object
-                try{
-                    new PURL(p);    // throws error if given purl string is invalid
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Valid Purl String");
-                } catch (Exception e){
-                    Debug.log(Debug.LOG_TYPE.WARN, "Failed to parse PURL \"" + p +"\" | " + e.getMessage());    // log incase regex fails
-                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid Purl String");
-                }
-
-                r.addContext(c, "purl");
-                results.add(r);
-            }
-        }
-         */
-
-        // return findings
-        return results;
+        return null;
     }
 }
