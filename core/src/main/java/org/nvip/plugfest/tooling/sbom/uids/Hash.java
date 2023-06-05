@@ -2,6 +2,8 @@ package org.nvip.plugfest.tooling.sbom.uids;
 
 import java.util.Objects;
 
+import static org.nvip.plugfest.tooling.sbom.uids.Hash.Algorithm.*;
+
 /**
  * Hash Object to hold Hash values
  *
@@ -29,16 +31,6 @@ public class Hash {
         MD6,
         ADLER32,
         UNKNOWN
-    }
-
-    // SPDX only Hashes
-    public enum SPDXAlgorithm{
-        SHA224,
-        BLAKE2b512,
-        MD2,
-        MD4,
-        MD6,
-        ADLER32
     }
 
     private final Algorithm algorithm;
@@ -74,6 +66,21 @@ public class Hash {
         }
 
         return Algorithm.UNKNOWN;   // unknown or unsupported algo
+    }
+
+    /**
+     * Check if algorithm is exclusive to SPDX
+     *
+     * @param a Algorithm to check
+     * @return true if exclusive, false otherwise
+     */
+    public boolean isSPDXExclusive(Algorithm a){
+        return a == SHA224 ||
+               a == BLAKE2b512 ||
+               a == MD2 ||
+               a == MD4 ||
+               a == MD6 ||
+               a == ADLER32;
     }
 
     ///
