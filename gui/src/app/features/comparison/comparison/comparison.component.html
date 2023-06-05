@@ -4,7 +4,7 @@
     <div>
       <span
         class="path"
-        *ngFor="let title of pathTitles; let i = index"
+        *ngFor="let title of path; let i = index"
         (click)="path.splice(0, i)"
         >{{ i === 0 ? getSBOMAlias(title.trim()) : title.trim() + "/" }}</span
       >
