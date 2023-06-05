@@ -84,7 +84,7 @@ public class AccurateCPETest extends MetricTest{
 //                    results.add(r);
 //                }
 
-                // TODO other elements to test? Any relevatn info in CPE to test in component?
+                // TODO other elements to test? Any relevant info in CPE to test in component?
 
             } catch (Exception e){
                 // Failed to parse cpeObj string
