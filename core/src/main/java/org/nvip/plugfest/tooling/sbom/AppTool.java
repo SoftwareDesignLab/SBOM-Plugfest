@@ -10,16 +10,38 @@ import java.util.Objects;
  */
 public class AppTool {
 
+    /**
+     * The vendor of the tool.
+     */
     private String vendor;
+
+    /**
+     * The name of the tool.
+     */
     private String name;
+
+    /**
+     * The version of the tool.
+     */
     private String version;
 
-    /*
-    Constructors
+    /**
+     * Default constructor with no parameters. Initializes all attributes to null.
      */
-    public AppTool(){}
+    public AppTool() {
+        this.vendor = null;
+        this.name = null;
+        this.version = null;
+    }
 
-    public AppTool(String vendor, String name, String version){
+    /**
+     * Constructor with a complete set of attributes.
+     *
+     * @param vendor The vendor of the tool.
+     * @param name The name of the tool.
+     * @param version The version of the tool.
+     */
+    public AppTool(String vendor, String name, String version) {
         this.vendor = vendor;
         this.name = name;
         this.version = version;
