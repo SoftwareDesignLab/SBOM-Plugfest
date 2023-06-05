@@ -109,7 +109,7 @@ public class APIController {
         // Check if the sbom is null
         if (sbom == null) {
             // todo return why sbom failed to parse, not just null
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // todo get tests/processors from user that they want to run?
@@ -148,7 +148,7 @@ public class APIController {
         try {
             // Explicitly return null if failed
             if (sbom == null) {
-                return new ResponseEntity<>(null, HttpStatus.OK);
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<>(sbom, HttpStatus.OK);
         } catch (Exception e) {
