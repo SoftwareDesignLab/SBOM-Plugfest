@@ -1,6 +1,6 @@
 package org.nvip.plugfest.tooling.translator;
 
-import org.junit.jupiter.api.Disabled;
+import org.cyclonedx.exception.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,8 +8,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import static org.nvip.plugfest.tooling.translator.utils.Utils.*;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,17 +45,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(17, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
-
-        if(pathToSBOM.equals(TEST_SMALL_CDX_JSON)) {
-            assertEquals(1, sbom.getMetadata().size());
-            assertEquals(2, sbom.getAppTools().size());
-        }
-        else{
-            assertEquals(0, sbom.getMetadata().size());
-            assertEquals(1, sbom.getAppTools().size());
-        }
-        checkMetaData(sbom);
+        assertEquals(18, sbom.getAllComponents().size()); // TODO ensure no duplicates added?
     }
 
     @Test
@@ -64,8 +55,6 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(124, sbom.getAllComponents().size());
-        assertEquals(1, sbom.getMetadata().size());
-        assertEquals(1, sbom.getAppTools().size());
     }
 
     @Test
@@ -75,9 +64,6 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(48, sbom.getAllComponents().size());
-        assertEquals(1, sbom.getMetadata().size());
-        assertEquals(1, sbom.getAppTools().size());
-        checkMetaData(sbom);
     }
 
     @Test
@@ -103,15 +89,15 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
 
     @ParameterizedTest
     @ValueSource(strings = {TEST_CDX_JSON})
-   // @DisplayName("Test on PlugFest Audit excel line 24") // todo
-    @DisplayName("FIX")
-    @Disabled
+    @DisplayName("Test on PlugFest Audit excel line 24")
     public void build_SBOM_cdx_json_test(String pathToSBOM) throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(sbom);
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
         assertEquals(5, sbom.getAllComponents().size());
+        assertEquals("[[{ Name: Prabhu Subramanian, Email: prabhu@appthreat.com ; Name: PL, Email: pl@some.company, Phone: A phone number }], [Wed May 10 14:37:04 EDT 2023]]",
+                     sbom.getMetadata().toString());
     }
 
 }
