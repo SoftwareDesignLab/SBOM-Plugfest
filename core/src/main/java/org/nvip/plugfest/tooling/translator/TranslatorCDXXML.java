@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.translator;
 
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
