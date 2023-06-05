@@ -161,6 +161,7 @@ public class SBOM {
      * @return UUID of added component (null if failed)
      */
     public UUID addComponent(UUID parent, Component toAdd) {
+        if (parent == null) this.getMetadata().setComponent(toAdd);
         return dependencyTree.addComponent(parent, toAdd);
     }
 
@@ -295,22 +296,6 @@ public class SBOM {
         return metadata;
     }
 
-//    public Set<AppTool> getTools() {
-//        if(appTools == null)
-//            appTools = new HashSet<>();
-//        return appTools;
-//    }
-//
-//    public void setAppTools(Set<AppTool> appTools) {
-//        this.appTools = appTools;
-//    }
-//
-//    public void addAppTool(AppTool a){
-//        if(appTools == null)
-//            appTools = new HashSet<>();
-//        appTools.add(a);
-//    }
-
     ///
     /// Overrides
     ///
@@ -354,14 +339,6 @@ public class SBOM {
         // Now we can return
         return retVal;
     }
-
-//    public AppTool checkForTool(String m){
-//        if(m.toLowerCase().startsWith("[tool")){
-//            String[] split = m.split("\\s+");
-//            return new AppTool(split[2], split[3], split[4]);
-//        }
-//        return null;
-//    }
 
     /**
      * Check if the component is in the dependency tree

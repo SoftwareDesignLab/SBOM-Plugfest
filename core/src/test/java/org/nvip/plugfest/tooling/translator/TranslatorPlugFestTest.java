@@ -110,17 +110,17 @@ public class TranslatorPlugFestTest {
     }
 
     @Test
-    public void driver_translates_json_supplier() throws TranslatorException {
+    public void driver_translates_json_tool() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_JSON);
         assertNotNull(sbom);
-        assertEquals("Tool: aquasecurity trivy-0.39.0", sbom.getMetadata().getSuppliers());
+        assertEquals("Tool: aquasecurity trivy-0.39.0", sbom.getMetadata().getTools().get("trivy"));
     }
 
     @Test
-    public void driver_translates_spdx_supplier() throws TranslatorException {
+    public void driver_translates_spdx_tool() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_SPDX);
         assertNotNull(sbom);
-        assertEquals("Tool: spdx-sbom-generator-source-code", sbom.getMetadata().getSuppliers());
+        assertEquals("Tool: spdx-sbom-generator-source-code", sbom.getMetadata().getTools().get("spdx-sbom-generator-source-code"));
     }
 
     @Test

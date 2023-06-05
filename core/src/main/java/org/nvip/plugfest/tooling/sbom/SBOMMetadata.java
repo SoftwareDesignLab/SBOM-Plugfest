@@ -92,4 +92,35 @@ public class SBOMMetadata {
     public void setDataLicense(String dataLicense) {
         this.dataLicense = dataLicense;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SBOMMetadata that)) return false;
+
+        if (!Objects.equals(timestamp, that.timestamp)) return false;
+        if (!tools.equals(that.tools)) return false;
+        if (!Objects.equals(suppliers, that.suppliers)) return false;
+        if (!Objects.equals(component, that.component)) return false;
+        return Objects.equals(dataLicense, that.dataLicense);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = timestamp != null ? timestamp.hashCode() : 0;
+        result = 31 * result + tools.hashCode();
+        result = 31 * result + (suppliers != null ? suppliers.hashCode() : 0);
+        result = 31 * result + (component != null ? component.hashCode() : 0);
+        result = 31 * result + (dataLicense != null ? dataLicense.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Timestamp: " + timestamp
+                + "; Tools: " + tools
+                + "; Suppliers: " + suppliers
+                + "; Component: " + component
+                + "; Data License: " + dataLicense;
+    }
 }

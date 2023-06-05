@@ -1,10 +1,12 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import com.google.common.base.Suppliers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -128,9 +130,10 @@ public class SBOMTest {
             "  + Serial Number: " + test_serialNumber + "\n" +
             "  + Version: " + test_specVersion + "\n" +
             "  + Tool Version: " + test_sbomVersion + "\n" +
-            "  + Time Stamp: " + test_timestamp + "\n";
+            "  + Metadata: Timestamp: " + test_timestamp
+            + "; Tools: {}; Suppliers: " + test_supplier + "; Component: null; Data License: null\n";
 
-    int test_hash_code = 770939883;
+    int test_hash_code = 111425207;
 
     public SBOMTest() throws Exception {
     }

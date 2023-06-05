@@ -272,8 +272,9 @@ public class TranslatorCDXXML extends TranslatorCore {
         // Create the new SBOM Object with top level data
         this.createSBOM();
         if(resolvedMetadata != null) {
-            sbom.getMetadata().setTimestamp(bom_data.get("timestamp")); // TODO is this taken care of by createSBOM()?
-            sbom.getMetadata().addSupplier(bom_data.get("author"));
+//            sbom.getMetadata().setTimestamp(bom_data.get("timestamp"));
+//            sbom.getMetadata().addSupplier(bom_data.get("author"));
+            // TODO what other metadata fields to add?
         }
 
         if (sbomDependencies!=null) {
