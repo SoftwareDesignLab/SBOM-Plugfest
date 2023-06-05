@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.translator;
 
+import org.checkerframework.checker.units.qual.C;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.*;
 import org.w3c.dom.*;
@@ -267,6 +268,9 @@ public class TranslatorCDXXML extends TranslatorCore {
             }
 
         }
+
+        if (this.product_data.isEmpty())
+            this.topComponent = new Component(file_path, "Unknown");
 
         // Create the new SBOM Object with top level data
         this.createSBOM();

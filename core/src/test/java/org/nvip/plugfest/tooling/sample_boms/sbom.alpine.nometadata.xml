@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:e986c321-a956-48be-9d8b-15d17354ac09" version="1">
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:f057a217-e332-4981-94dc-799d6a776f58" version="1">
   <components>
     <component bom-ref="pkg:apk/alpine/alpine-baselayout@3.4.0-r0?arch=x86_64&amp;upstream=alpine-baselayout&amp;distro=alpine-3.17.2&amp;package-id=92b19c7750fb559d" type="library">
       <publisher>Natanael Copa &lt;ncopa@alpinelinux.org&gt;</publisher>
