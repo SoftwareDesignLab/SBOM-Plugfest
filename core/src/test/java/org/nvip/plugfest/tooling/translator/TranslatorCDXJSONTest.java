@@ -107,7 +107,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
     @ValueSource(strings = {TEST_CDX_JSON})
    // @DisplayName("Test on PlugFest Audit excel line 24") // todo
     @DisplayName("FIX")
-    @Disabled
+    //@Disabled
     public void build_SBOM_cdx_json_test(String pathToSBOM) throws TranslatorException {
         SBOM sbom = this.TRANSLATOR.translate(pathToSBOM);
         assertNotNull(sbom);
