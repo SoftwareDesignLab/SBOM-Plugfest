@@ -90,6 +90,7 @@ public class SBOMMetadata {
         this.dataLicense = dataLicense;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,10 +115,21 @@ public class SBOMMetadata {
 
     @Override
     public String toString() {
-        return "Timestamp: " + timestamp
-                + "; Tools: " + tools
-                + "; Suppliers: " + suppliers
-                + "; Component: " + component
-                + "; Data License: " + dataLicense;
+
+        StringBuilder sb = new StringBuilder();
+
+        if(timestamp!= null)
+            sb.append("TimesStamp: ").append(timestamp).append("; ");
+        if(tools!= null)
+            sb.append("Tools: ").append(tools).append("; ");
+        if(suppliers!= null && !suppliers.toString().equals("[null]"))
+            sb.append("Suppliers: ").append(suppliers).append("; ");
+        if(component!= null)
+            sb.append("Component: ").append(component).append("; ");
+        if(dataLicense!= null)
+            sb.append("Data License: ").append(dataLicense);
+
+        return sb.toString();
+
     }
 }
