@@ -50,7 +50,6 @@ public class ValidCPETest extends MetricTest {
             }
         }
 
-
         // return findings
         return results;
     }
