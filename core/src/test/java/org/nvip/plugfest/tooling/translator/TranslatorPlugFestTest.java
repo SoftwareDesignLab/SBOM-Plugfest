@@ -106,7 +106,7 @@ public class TranslatorPlugFestTest {
     public void driver_translates_xml_supplier() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
         assertNotNull(sbom);
-        assertEquals("anchore", sbom.getMetadata().getSuppliers());
+        assertEquals("[anchore]", sbom.getMetadata().getSuppliers().toString());
     }
 
     @Test
