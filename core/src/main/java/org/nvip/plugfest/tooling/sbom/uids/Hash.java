@@ -31,6 +31,16 @@ public class Hash {
         UNKNOWN
     }
 
+    // SPDX only Hashes
+    public enum SPDXAlgorithm{
+        SHA224,
+        BLAKE2b512,
+        MD2,
+        MD4,
+        MD6,
+        ADLER32
+    }
+
     private final Algorithm algorithm;
     private final String value;
 
