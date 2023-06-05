@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.translator;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.SBOMMetadata;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
@@ -53,6 +54,8 @@ public class TranslatorSPDX extends TranslatorCore {
     private static final String DOCUMENT_NAMESPACE_TAG = "DocumentNamespace";
 
     private static final String AUTHOR_TAG = "Creator";
+
+    private static final String DATALICENSE_TAG = "DataLicense";
 
     // Used as an identifier for main SBOM information. Sometimes used as reference in relationships to show header contains main component.
     private static final String DOCUMENT_REFERENCE_TAG = "SPDXRef-DOCUMENT";
@@ -108,7 +111,7 @@ public class TranslatorSPDX extends TranslatorCore {
             fileContents = fileContents.substring(firstIndex); // Remove all header info from fileContents
         }
 
-        this.parseHeader(header);
+        SBOMMetadata metadata = this.parseHeader(header);
         bom_data.put("sbomVersion", "1");
         bom_data.put("format", "spdx");
 
@@ -192,6 +195,7 @@ public class TranslatorSPDX extends TranslatorCore {
 
         // Create the new SBOM Object with top level data
         this.createSBOM();
+        sbom.setMetadata(metadata);
 
         // Create the top level component
         // Build the dependency tree using dependencyBuilder
@@ -247,8 +251,11 @@ public class TranslatorSPDX extends TranslatorCore {
      * {@code bom_data} map in {@code TranslatorCore}.
      *
      * @param header The header data of the SPDX document.
+     * @return An SBOMMetadata instance containing any metadata found.
      */
-    private void parseHeader(String header) {
+    private SBOMMetadata parseHeader(String header) {
+        SBOMMetadata metadata = new SBOMMetadata();
+
         // Process header TODO throw error if required fields are not found. Create enum with all tags?
         Matcher m = TAG_VALUE_PATTERN.matcher(header);
         while(m.find()) {
@@ -256,14 +263,26 @@ public class TranslatorSPDX extends TranslatorCore {
                 case DOCUMENT_NAMESPACE_TAG -> bom_data.put("serialNumber", m.group(2));
                 case SPEC_VERSION_TAG -> bom_data.put("specVersion", m.group(2));
                 case AUTHOR_TAG -> {
-                    if (!bom_data.containsKey("author")) bom_data.put("author", m.group(2));
-                    else bom_data.put("author", bom_data.get("author") + " " + m.group(2));
+                    if (m.group(2).toLowerCase().contains("tool")) { // Tool: vendor name-version
+                        Map<String, String> toolInfo = splitTool(m.group(2));
+
+                        metadata.addTool(
+                                toolInfo.get("vendor"),
+                                toolInfo.get("name"),
+                                toolInfo.get("version")
+                        );
+                    } else {
+                        metadata.addSupplier(m.group(2));
+                    }
                 }
                 case ID_TAG -> bom_data.put("id", m.group(1));
-                case TIMESTAMP_TAG -> bom_data.put("timestamp", m.group(2));
+                case TIMESTAMP_TAG -> metadata.setTimestamp(m.group(2));
+                case DATALICENSE_TAG -> metadata.setDataLicense(m.group(2));
                 default -> bom_data.put(m.group(1), m.group(2));
             }
         }
+
+        return metadata;
     }
 
     /**
@@ -446,5 +465,43 @@ public class TranslatorSPDX extends TranslatorCore {
         }
 
         return component;
+    }
+
+    /**
+     * Splits a tool into its properties based on the SPDX format of "Tool: vendor name-version"
+     *
+     * @param tool The tool string
+     * @return A map of tool attributes with "vendor", "name", and "version" keys.
+     */
+    private Map<String, String> splitTool(String tool) {
+        Map<String, String> toolInfo = new HashMap<>();
+
+        // Remove "Tool: "
+        // Split into [vendor, name-version]
+        String[] toolComponents = tool.substring(6).split(" ");
+
+        if (toolComponents.length == 1) { // Assume this is name-version TODO find a better way to assume
+            if (toolComponents[0].contains("-") && toolComponents[0].contains(".")) { // Has a version
+                int nameVersionSplit = toolComponents[0].indexOf('-');
+
+                toolInfo.put("name", toolComponents[0].substring(0, nameVersionSplit));
+                toolInfo.put("version", toolComponents[0].substring(nameVersionSplit));
+            } else {
+                toolInfo.put("name", toolComponents[0]);
+            }
+        } else { // Assume this is vendor name-version
+            toolInfo.put("vendor", toolComponents[0]);
+
+            if (toolComponents[1].contains("-") && toolComponents[1].contains(".")) { // Has a version
+                int nameVersionSplit = toolComponents[1].indexOf('-');
+
+                toolInfo.put("name", toolComponents[1].substring(0, nameVersionSplit));
+                toolInfo.put("version", toolComponents[1].substring(nameVersionSplit));
+            } else {
+                toolInfo.put("name", toolComponents[1]);
+            }
+        }
+
+        return toolInfo;
     }
 }

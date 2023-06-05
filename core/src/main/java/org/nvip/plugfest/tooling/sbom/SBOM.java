@@ -296,6 +296,10 @@ public class SBOM {
         return metadata;
     }
 
+    public void setMetadata(SBOMMetadata metadata) {
+        this.metadata = metadata;
+    }
+
     ///
     /// Overrides
     ///
