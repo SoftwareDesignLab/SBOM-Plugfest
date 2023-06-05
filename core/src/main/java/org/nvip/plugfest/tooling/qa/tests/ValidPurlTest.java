@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Derek Garcia
  */
-public class ValidPurlTest extends org.nvip.plugfest.tooling.qa.tests.MetricTest {
+public class ValidPurlTest extends MetricTest {
     private static final String TEST_NAME = "ValidPurl";
 
     /**
