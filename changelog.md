@@ -4,6 +4,20 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.7.2] - 2023-06-04
+> Completeness processor is not complete, see issue [#159](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/159)
+### Added
+- New Completeness Processor. New tests include:
+  - `ValidCPETest` - checks to see if valid CPE
+  - `ValidPurlTest` - checks to see if valid CPE
+- New CPE object for testing
+### Changed
+  - Refactored `EmptyOrNullTest` into `MinElementTest`
+    - Missing Relationships check
+  - Temporary removed `ValidSWIDTest` and `HasRelationshipsTest`
+### Fixed
+
+---
 ## [3.7.1] - 2023-06-02
 ### Added
 - New License processor. New tests include:
@@ -12,6 +26,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     > Checks to see if the SPDX License Name/ID is valid and if it's depreciated
 ### Changed
 ### Fixed
+
+---
 ## [3.7.0] - 2023-05-31
 ### Added
 - New QA Refactor
