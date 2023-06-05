@@ -21,10 +21,10 @@ public class AccurateCPETest extends MetricTest{
     private static final String TEST_NAME = "AccurateCPE";
 
     /**
-     * Test every component for cpes. If they are present, test if
-     * PURLs match the component's stored data
+     * Test every component for CPEs. If they are present, test if
+     * CPEs match the component's stored data
      * @param sbom SBOM to test
-     * @return a collection of results for each component and their PURL(s)
+     * @return a collection of results for each component and their CPE(s)
      */
     @Override
     public List<Result> test(SBOM sbom) {
@@ -41,11 +41,11 @@ public class AccurateCPETest extends MetricTest{
 
 
     /**
-     * For every PURLs in the component, test that the PURLs information
+     * For every CPE in the component, test that the CPEs information
      * matches the stored component data
      *
      * @param c the component to test
-     * @return a list of results for each PURL in the component
+     * @return a list of results for each CPE in the component
      */
     private List<Result> matchingCPEs(Component c){
         List<Result> results = new ArrayList<>();
@@ -85,7 +85,7 @@ public class AccurateCPETest extends MetricTest{
 //                }
 
                 // Check if namespace matches publisher
-                // todo multiple namespaces? Are we assuming publisher is the namespace?
+                // todo multiple namespaces? What order are are the cpe elements in?
 //                if(cpeObj.getNamespace().size() == 1)
 //                    results.add(isEqual(c, "publisher", cpeObj.getNamespace().get(0), c.getPublisher()));
 
