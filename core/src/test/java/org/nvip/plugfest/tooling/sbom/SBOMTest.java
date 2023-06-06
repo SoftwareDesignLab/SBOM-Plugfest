@@ -187,6 +187,13 @@ public class SBOMTest {
     }
 
     @Test
+    public void getProject_test() {
+        assertNull(test_sbom.getProject());
+        test_sbom.addComponent(null, test_component_one);
+        assertEquals(test_component_one, test_sbom.getProject());
+    }
+
+    @Test
     public void getHeadUUID_test() {
         test_sbom.addComponent(null, test_component_one);
         UUID parent = test_sbom.getHeadUUID();

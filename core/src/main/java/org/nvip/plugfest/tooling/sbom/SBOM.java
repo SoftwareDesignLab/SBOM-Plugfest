@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
  *
  * @author Matt London
  * @author Kevin LaPorte
+ * @author Ian Dunn
  */
 public class SBOM {
 
