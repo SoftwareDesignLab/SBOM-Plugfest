@@ -1,14 +1,12 @@
 package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
-import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.*;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.AppTool;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -70,7 +68,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             bom_data.put("timestamp" , format.format(timestamp));
-            authorAndTimestamp[1] = "[" + timestamp + "]";;
+            authorAndTimestamp[1] = "[" + timestamp + "]";
 
             // Top component analysis (check if not null as well)
             org.cyclonedx.model.Component topComponent = metadata.getComponent();
@@ -135,6 +133,17 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 String swid = String.valueOf(cdx_component.getSwid());
                 if (swid != null) new_component.setSwids(Collections.singleton(swid));
+
+
+                List<Hash> raw_hashes = cdx_component.getHashes();
+                if (raw_hashes != null) {
+                    Set<org.nvip.plugfest.tooling.sbom.uids.Hash> hashes = new HashSet<>();
+                    for (Hash temp: raw_hashes){
+                        org.nvip.plugfest.tooling.sbom.uids.Hash temp2 = new org.nvip.plugfest.tooling.sbom.uids.Hash(temp.getAlgorithm(),temp.getValue());
+                        hashes.add(temp2);
+                    }
+                    new_component.setHashes(hashes);
+                }
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
                 try {
