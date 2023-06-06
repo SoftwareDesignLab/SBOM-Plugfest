@@ -417,6 +417,11 @@ public class Component {
     public void setMetrics(Map<String, List<Result>> metrics) {
         this.metrics = metrics;
     }
+
+    public void addMetricTest(String testName, List<Result> results) {
+        metrics.put(testName, results);
+    }
+
     /**
      * Add an extracted license to this component with the following properties.
      *

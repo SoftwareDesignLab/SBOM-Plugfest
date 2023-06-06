@@ -14,6 +14,7 @@ import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
 import org.nvip.plugfest.tooling.utils.Utils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.nvip.plugfest.tooling.utils.Utils.*;
@@ -42,7 +43,7 @@ public class APIController {
      * @return Wrapped Comparison object or error message
      */
     @PostMapping("/compare")
-    public ResponseEntity<?> compare(@RequestParam("targetIndex") Integer targetIndex, SBOMFile[] sboms)
+    public ResponseEntity<?> compare(@RequestParam("targetIndex") Integer targetIndex, @RequestBody SBOMFile[] sboms)
     {
         // null/empty sboms check
         int nullCheck = Utils.sbomFileArrNullCheck(sboms);
@@ -89,7 +90,10 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<?> qa(HttpServletRequest servletRequest, SBOMFile sbomFile) {
+    public ResponseEntity<?> qa(HttpServletRequest servletRequest, @RequestBody SBOMFile sbomFile) {
+        if (sbomFile.hasNullOrEmptyProperties()) return new ResponseEntity<>("SBOMFile may not contain null fields",
+                HttpStatus.BAD_REQUEST);
+
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -118,10 +122,10 @@ public class APIController {
         // add spdx metrics
 
         //run the QA
-        QualityReport report = QAPipeline.process(sbomFile.fileName, sbom, processors);
+        SBOM metricsReport = QAPipeline.process(sbomFile.fileName, sbom, processors);
 
         //encode and send report
-        return Utils.encodeResponse(report);
+        return Utils.encodeResponse(metricsReport);
     }
 
     /**
@@ -131,7 +135,7 @@ public class APIController {
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<?> parse(SBOMFile sbomFile)
+    public ResponseEntity<?> parse(@RequestBody SBOMFile sbomFile)
     {
         SBOM sbom;
 

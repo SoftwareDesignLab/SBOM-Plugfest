@@ -1,16 +1,17 @@
 package org.nvip.plugfest.tooling;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.nvip.plugfest.tooling.qa.QualityReport;
-import org.springframework.http.HttpStatus;
+import org.mockito.Mockito;
+import org.nvip.plugfest.tooling.utils.Utils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 /**
@@ -31,6 +32,13 @@ public class QAFromAPITest {
     private final String pythonSBOM = System.getProperty("user.dir")
             + "/src/test/java/org/nvip/plugfest/tooling/sample_sboms/sbom.python.2-3.spdx";
     private APIController ctrl;
+    private HttpServletRequest request;
+
+    @BeforeEach
+    public void setup(){
+        ctrl = new APIController();
+        request = Mockito.mock(HttpServletRequest.class);
+    }
 
     // TODO FIX
 //    @Test
@@ -64,11 +72,14 @@ public class QAFromAPITest {
 //        }
 //    }
 
-    @BeforeEach
-    public void setup(){
+    @Test
+    public void qaEncodingTest() throws IOException {
+        String contents = new String(Files.readAllBytes(Paths.get(smallDockerSBOM)));
+        Utils.SBOMFile file = new Utils.SBOMFile(smallDockerSBOM, contents);
 
-        ctrl = new APIController();
-
+        ResponseEntity<?> qa = ctrl.qa(request, file);
+//        assertEquals(qa.getStatusCode(), HttpStatus.OK);
+//        assertNotEquals(qa.getBody().getPassedComponents(), 0);
+//        System.out.println(qa.getBody());
     }
-
 }

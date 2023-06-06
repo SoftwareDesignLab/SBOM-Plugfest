@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.qa;
 
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
+import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.Set;
@@ -22,15 +23,15 @@ public class QAPipeline {
      * @param processors Collection of Processors to run against SBOM
      * @return QualityReport containing all results
      */
-    public static QualityReport process(String uid, SBOM sbom, Set<AttributeProcessor> processors){
+    public static SBOM process(String uid, SBOM sbom, Set<AttributeProcessor> processors){
          // Init QualityReport
          QualityReport qr = new QualityReport(uid);
 
-         // Run all added processors
+         // Run all added processors TODO do we need the qr object?
          for (AttributeProcessor p : processors)
              qr.updateAttribute(p.getAttributeName(), p.process(sbom));
 
-         // Return Master QR
-         return qr;
+         // Return updated SBOM
+         return sbom;
     }
 }

@@ -48,6 +48,8 @@ public class ValidCPETest extends MetricTest {
                 r.addContext(c, "cpe");
                 results.add(r);
             }
+
+            updateComponent(c, "cpe", results);
         }
 
         // return findings

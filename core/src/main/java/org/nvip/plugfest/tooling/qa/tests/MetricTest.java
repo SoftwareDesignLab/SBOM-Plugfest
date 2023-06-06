@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
+import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.Collection;
@@ -46,4 +47,8 @@ public abstract class MetricTest {
      * @return Collection of Results
      */
     public abstract List<Result> test(SBOM sbom);
+
+    public static void updateComponent(Component component, String testName, List<Result> results) {
+        component.addMetricTest(testName, results);
+    }
 }
