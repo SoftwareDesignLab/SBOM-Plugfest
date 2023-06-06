@@ -1,10 +1,7 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
 
-import org.nvip.plugfest.tooling.qa.tests.HasDataLicenseSPDXTest;
-import org.nvip.plugfest.tooling.qa.tests.HasDocumentNamespaceTest;
-import org.nvip.plugfest.tooling.qa.tests.HasDownloadLocationTest;
-import org.nvip.plugfest.tooling.qa.tests.HasSPDXIDTest;
+import org.nvip.plugfest.tooling.qa.tests.*;
 
 /**
  * file: SPDXMetricsProcessor.java
@@ -25,12 +22,12 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
         this.metricTests.add(new HasSPDXIDTest());
         this.metricTests.add(new HasDocumentNamespaceTest());
         this.metricTests.add(new HasDownloadLocationTest());
+        this.metricTests.add(new HasCreationInfoTest());
         /*
         TODO
            hasBomVersion -> in CDX Metrics Processor
            hasDocumentName
            hasDocumentNamespace
-           validCreationInfo
            hasDownloadLocation
            hasFilesAnalyzed
            hasVerificationCode
