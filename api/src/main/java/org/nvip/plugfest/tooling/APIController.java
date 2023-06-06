@@ -7,6 +7,7 @@ import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
+import org.nvip.plugfest.tooling.qa.processors.UniquenessProcessor;
 import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
 import org.nvip.plugfest.tooling.qa.processors.LicensingProcessor;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -42,7 +43,7 @@ public class APIController {
      * @return Wrapped Comparison object or error message
      */
     @PostMapping("/compare")
-    public ResponseEntity<?> compare(@RequestParam("targetIndex") Integer targetIndex, SBOMFile[] sboms)
+    public ResponseEntity<?> compare(@RequestParam("targetIndex") Integer targetIndex, @RequestBody SBOMFile[] sboms)
     {
         // null/empty sboms check
         int nullCheck = Utils.sbomFileArrNullCheck(sboms);
@@ -89,7 +90,7 @@ public class APIController {
      * @return - wrapped QualityReport object, null if failed
      */
     @PostMapping("/qa")
-    public ResponseEntity<?> qa(HttpServletRequest servletRequest, SBOMFile sbomFile) {
+    public ResponseEntity<?> qa(HttpServletRequest servletRequest, @RequestBody SBOMFile sbomFile) {
         try {
             servletRequest.setCharacterEncoding("UTF-8");
         }
@@ -109,8 +110,10 @@ public class APIController {
         // todo get tests/processors from user that they want to run?
         Set<AttributeProcessor> processors = new HashSet<>();
         processors.add(new CompletenessProcessor());
+        processors.add(new UniquenessProcessor());
         processors.add(new RegisteredProcessor());
-        // add uniqueness processor
+        processors.add(new UniquenessProcessor());
+        processors.add(new RegisteredProcessor());
         processors.add(new LicensingProcessor());
         // add metadata processor
         // add registered processor
@@ -131,7 +134,7 @@ public class APIController {
      * @return SBOM object, null if failed to parse
      */
     @PostMapping("/parse")
-    public ResponseEntity<?> parse(SBOMFile sbomFile)
+    public ResponseEntity<?> parse(@RequestBody SBOMFile sbomFile)
     {
         SBOM sbom;
 

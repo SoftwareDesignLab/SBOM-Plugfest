@@ -11,8 +11,8 @@ import java.util.Arrays;
  *
  * Class representation of a CPE
  * Specifications can be found in NIST's Common Platform Enumeration: Naming Specification Version 2.3
- * https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf
- * 
+ * <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf">...</a>
+ *
  * @author Derek Garcia
  */
 public class CPE {
@@ -138,7 +138,7 @@ public class CPE {
      * @param b String b
      * @return if a and b are equivalent
      */
-    private boolean isEqualWildcard(String a, String b){
+    public static boolean isEqualWildcard(String a, String b){
         // Check for direct equivalence first
         if(a.equals(b))
             return true;
@@ -163,6 +163,57 @@ public class CPE {
         return pattern.matches(other);
     }
 
+    ///
+    /// Getters
+    ///
+
+    public String getCpeVersion() {
+        return cpeVersion;
+    }
+
+    public Type getPart() {
+        return part;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getUpdate() {
+        return update;
+    }
+
+    public String getEdition() {
+        return edition;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getSw_edition() {
+        return sw_edition;
+    }
+
+    public String getTarget_sw() {
+        return target_sw;
+    }
+
+    public String getTarget_hw() {
+        return target_hw;
+    }
+
+    public String getOther() {
+        return other;
+    }
     @Override
     public boolean equals(Object o) {
         // Check if same object
