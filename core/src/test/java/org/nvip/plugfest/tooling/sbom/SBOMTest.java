@@ -131,7 +131,7 @@ public class SBOMTest {
             "  + Version: " + test_specVersion + "\n" +
             "  + Tool Version: " + test_sbomVersion + "\n" +
             "  + Metadata: Timestamp: " + test_timestamp
-            + "; Tools: {}; Suppliers: " + test_supplier + "; Component: null; Data License: null\n";
+            + "; Tools: {}; Suppliers: [" + test_supplier + "]; \n";
 
     int test_hash_code = 111425207;
 
