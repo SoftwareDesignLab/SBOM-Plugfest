@@ -55,6 +55,11 @@ public class SBOM {
     private SBOMMetadata metadata;
 
     /**
+     * Project information - the head component of the project
+     */
+    private Component project;
+
+    /**
      * Default constructor
      */
     public SBOM() {
@@ -161,7 +166,7 @@ public class SBOM {
      * @return UUID of added component (null if failed)
      */
     public UUID addComponent(UUID parent, Component toAdd) {
-//        if (parent == null) this.getMetadata().setComponent(toAdd); TODO
+        if (parent == null) this.project = toAdd;
         return dependencyTree.addComponent(parent, toAdd);
     }
 
@@ -298,6 +303,10 @@ public class SBOM {
 
     public void setMetadata(SBOMMetadata metadata) {
         this.metadata = metadata;
+    }
+
+    public Component getProject() {
+        return project;
     }
 
     ///
