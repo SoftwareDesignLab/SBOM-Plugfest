@@ -6,6 +6,7 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * file: HasCreationInfoTest.java
@@ -33,13 +34,10 @@ public class HasExtractedLicensesTest extends MetricTest{
         for(Component c : sbom.getAllComponents()){
             Map<String, Map<String, String>>  extractedLicenses = c.getExtractedLicenses();
             // skip if no extracted licenses are found for the component
-            if(extractedLicenses.isEmpty()){
-                continue;
-            }
-            else{
-                for(Map<String, String> license : extractedLicenses.values()){
+            if(!extractedLicenses.isEmpty()){
+                for(String licenseRef : extractedLicenses.keySet()){
                     String message = "Extracted license found for component "
-                            + c.getName() + ": " + license.get("name");
+                            + c.getName() + ": " + licenseRef;
                     r = new Result(TEST_NAME, Result.STATUS.PASS, message);
                     r.addContext(c, "Extracted Licenses");
                     results.add(r);
