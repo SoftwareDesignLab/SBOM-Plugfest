@@ -50,7 +50,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
             assertEquals(2, sbom.getMetadata().getTools().size());
         }
         else{
-            assertEquals(1, sbom.getMetadata().toString().split(";").length - 1);
+            assertEquals(1, sbom.getMetadata().getSize());
             assertEquals(1, sbom.getMetadata().getTools().size());
         }
     }
