@@ -136,6 +136,10 @@ export class DataHandlerService {
           this.client.post("compare", files, new HttpParams().set('targetIndex', 0)).subscribe((result: any) => {
             this.comparison = result;
             this.loadingComparison = false;
+          },
+          (error: any) => {
+            //TODO: Add error message here
+            this.loadingComparison = false;
           })
         }
       })
