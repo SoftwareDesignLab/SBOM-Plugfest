@@ -7,7 +7,7 @@
     </div>
     <div
       class="label hover"
-      [ngStyle]="{ 'background-color': getProcessorColor(processor) }"
+      [ngStyle]="{ 'background-color': getLabelColor(processor) }"
       *ngFor="let processor of processors"
       (click)="processorFilter = processorFilter === processor ? '' : processor"
     >
@@ -38,10 +38,10 @@
                   qr.mergedResults[identifier][message][0].pass
                 ).toString()
               ]"
-              [color]="getColor(qr.mergedResults[identifier][message][0])"
+              [color]="getResultColor(qr.mergedResults[identifier][message][0])"
             >
               <div title>{{ identifier }}: {{ message }}</div>
-              <div body *ngFor="let result of getResults(identifier, message)">
+              <div body *ngFor="let result of getMergedResult(identifier, message)">
                 {{ getTestMessage(result) }}
               </div>
             </app-accordion>
@@ -54,7 +54,7 @@
       </div>
       <div
         class="text flex center"
-        *ngIf="result && getKeys(result).length === 0"
+        *ngIf="result && result.length === 0"
       >
         There aren't any test results with the selected SBOM
       </div>

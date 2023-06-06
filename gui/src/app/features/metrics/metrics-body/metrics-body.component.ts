@@ -16,6 +16,7 @@ export class MetricsBodyComponent {
   componentView = false;
   processorFilter = "";
 
+  // Gets results for metrics tests
   get result() {
     this.qr = this.handler.metrics[this.handler.selectedQualityReport];
     if (this.processorFilter.length) {
@@ -26,10 +27,12 @@ export class MetricsBodyComponent {
     return this.handler.metrics[this.handler.selectedQualityReport]?.results;
   }
 
+  // Gets processor names
   get processors() {
     return this.qr?.processors || [];
   }
 
+  // Gets messages from specified identifier
   getIdentifierMessages(identifier: string) {
     if (!this.qr) {
       return [];
@@ -37,7 +40,8 @@ export class MetricsBodyComponent {
     return Object.keys(this.qr?.mergedResults[identifier]);
   }
 
-  getResults(identifier: string, message: string) {
+  // Gets formatted metrics results
+  getMergedResult(identifier: string, message: string) {
     let uniqueVals: any[] = [];
     if (this.qr?.mergedResults[identifier][message]) {
       return this.qr?.mergedResults[identifier][message].filter((result) => {
@@ -52,22 +56,27 @@ export class MetricsBodyComponent {
     return [];
   }
 
+  // gets list of identifiers
   get identifiers() {
     return this.qr?.identifiers || [];
   }
 
+  // Prints result message for drop down
   getTestMessage(result: any) {
     return ` ${result.stringValue || result.fieldName}`;
   }
 
-  getColor(result: any) {
+  // Gets color associated with test result
+  getResultColor(result: any) {
     return this.qr?.colors[this.qr?.processors.indexOf(result.processor)] || "";
   }
 
-  getProcessorColor(name: string) {
+  // Gets color for processor
+  getLabelColor(name: string) {
     return this.qr?.colors[this.qr?.processors.indexOf(name)] || "";
   }
 
+  // Gets if test passed/failed/errored
   getGrade(num: number) {
     switch (num) {
       case -1:
@@ -79,9 +88,5 @@ export class MetricsBodyComponent {
       default:
         return "N/A";
     }
-  }
-
-  getKeys(obj: Object) {
-    return Object.keys(obj);
   }
 }
