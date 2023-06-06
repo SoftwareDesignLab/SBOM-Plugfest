@@ -18,7 +18,7 @@ public class SBOMMetadata {
     public SBOMMetadata() {
         this.timestamp = null;
         this.tools = new HashMap<>();
-        this.suppliers = null;
+        this.suppliers = new HashSet<>();
         this.component = null;
         this.metrics = new HashMap<>();
         dataLicense = null;
@@ -105,6 +105,7 @@ public class SBOMMetadata {
         if (timestamp != null) size++;
         if (component != null) size++;
         if (dataLicense != null) size++;
+        if (licenseListVersion != null) size++;
 
         return size;
     }

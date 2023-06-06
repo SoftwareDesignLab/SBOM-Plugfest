@@ -63,6 +63,17 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(17, test.getAllComponents().size());
+
+        if(pathToSBOM.equals(TEST_SPDX_v2_3_SBOM)) {
+            assertEquals(5, test.getMetadata().getSize());
+            assertEquals(1, test.getMetadata().getTools().size());
+            assertEquals(1, test.getMetadata().getSuppliers().size());
+            assertNotNull(test.getMetadata().getTimestamp());
+            assertEquals("CC0-1.0", test.getMetadata().getDataLicense());
+            assertEquals("3.19", test.getMetadata().getLicenseListVersion());
+        } else {
+            assertEquals(0, test.getMetadata().getSize());
+        }
     }
 
     @Test
@@ -73,6 +84,13 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.2", test.getSpecVersion());
         assertEquals(138, test.getAllComponents().size());
+
+        // Metadata
+        assertEquals(3, test.getMetadata().getSize());
+        assertEquals(1, test.getMetadata().getTools().size());
+        assertEquals(0, test.getMetadata().getSuppliers().size());
+        assertNotNull(test.getMetadata().getTimestamp());
+        assertEquals("CC0-1.0", test.getMetadata().getDataLicense());
     }
 
 
@@ -84,6 +102,14 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(433, test.getAllComponents().size());
+
+        // Metadata
+        assertEquals(5, test.getMetadata().getSize());
+        assertEquals(1, test.getMetadata().getTools().size());
+        assertEquals(1, test.getMetadata().getSuppliers().size());
+        assertNotNull(test.getMetadata().getTimestamp());
+        assertEquals("CC0-1.0", test.getMetadata().getDataLicense());
+        assertEquals("3.19", test.getMetadata().getLicenseListVersion());
     }
 
 
@@ -107,6 +133,14 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.3", test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());
+
+        // Metadata
+        assertEquals(5, test.getMetadata().getSize());
+        assertEquals(1, test.getMetadata().getTools().size());
+        assertEquals(1, test.getMetadata().getSuppliers().size());
+        assertNotNull(test.getMetadata().getTimestamp());
+        assertEquals("CC0-1.0", test.getMetadata().getDataLicense());
+        assertEquals("3.19", test.getMetadata().getLicenseListVersion());
     }
 
     @Test
@@ -115,8 +149,9 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertNotNull(test);
         assertEquals(SBOM.Type.SPDX, test.getOriginFormat());
         assertEquals("1", test.getSbomVersion());
-        assertEquals(null, test.getSpecVersion());
+        assertNull(test.getSpecVersion());
         assertEquals(1, test.getAllComponents().size());
+        assertEquals(0, test.getMetadata().getSize());
     }
 
     @Test

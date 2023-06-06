@@ -78,7 +78,7 @@ public abstract class TranslatorCore {
 
         // Attempt to create the SBOM with top level data, if an error is thrown return null and exit
         try {
-            HashSet<String> authors = HashSet.newHashSet(1);
+            HashSet<String> authors = new HashSet<>();
             authors.add(bom_data.get("author"));
             sbom = new SBOM(
                     bom_data.get("format"),
