@@ -229,7 +229,7 @@ public class SBOMMetadata {
         if (dataLicense!= null)
             sb.append("License List Version: ").append(licenseListVersion);
 
-        return sb.append("\n").toString();
+        return sb.toString();
     }
 
     //#endregion
