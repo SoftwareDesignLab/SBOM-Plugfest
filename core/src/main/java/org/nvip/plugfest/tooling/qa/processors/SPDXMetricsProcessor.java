@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.qa.processors;
 
 
 import org.nvip.plugfest.tooling.qa.tests.HasDataLicenseSPDXTest;
+import org.nvip.plugfest.tooling.qa.tests.HasSPDXIDTest;
 
 /**
  * file: SPDXMetricsProcessor.java
@@ -19,12 +20,10 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
         this.attributeName = "SPDXMetrics";
 
         this.metricTests.add(new HasDataLicenseSPDXTest());
-
+        this.metricTests.add(new HasSPDXIDTest());
         /*
         TODO
-           hasBomVersion
-           hasDataLicense
-           hasSPDXID
+           hasBomVersion -> in CDX Metrics Processor
            hasDocumentName
            hasDocumentNamespace
            validCreationInfo
