@@ -41,6 +41,7 @@ export class MetricsBodyComponent {
   }
 
   // Gets formatted metrics results
+  // HOTFIX!!!!!!! REMOVE AFTER BACKEND IS UPDATED
   getMergedResult(identifier: string, message: string) {
     let uniqueVals: any[] = [];
     if (this.qr?.mergedResults[identifier][message]) {
