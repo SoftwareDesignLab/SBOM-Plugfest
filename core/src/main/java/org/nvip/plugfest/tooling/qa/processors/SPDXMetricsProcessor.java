@@ -25,6 +25,7 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
         this.metricTests.add(new HasCreationInfoTest());
         this.metricTests.add(new HasVerificationCodeTest());
         this.metricTests.add(new HasExtractedLicensesTest());
+        this.metricTests.add(new ExtractedLicenseMinElementTest());
         /*
         TODO
            hasBomVersion -> in CDX Metrics Processor
