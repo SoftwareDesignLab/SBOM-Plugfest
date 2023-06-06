@@ -13,6 +13,7 @@ public class SBOMMetadata {
     private Component component;
     private Map<String, List<Result>> metrics;
     private String dataLicense;
+    private String licenseListVersion;
 
     public SBOMMetadata() {
         this.timestamp = null;
@@ -90,6 +91,24 @@ public class SBOMMetadata {
         this.dataLicense = dataLicense;
     }
 
+    public String getLicenseListVersion() {
+        return licenseListVersion;
+    }
+
+    public void setLicenseListVersion(String licenseListVersion) {
+        this.licenseListVersion = licenseListVersion;
+    }
+
+    public int getSize() {
+        int size = tools.size() + suppliers.size();
+
+        if (timestamp != null) size++;
+        if (component != null) size++;
+        if (dataLicense != null) size++;
+
+        return size;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -119,7 +138,7 @@ public class SBOMMetadata {
         StringBuilder sb = new StringBuilder();
 
         if(timestamp!= null)
-            sb.append("TimesStamp: ").append(timestamp).append("; ");
+            sb.append("Timestamp: ").append(timestamp).append("; ");
         if(tools!= null)
             sb.append("Tools: ").append(tools).append("; ");
         if(suppliers!= null && !suppliers.toString().equals("[null]"))

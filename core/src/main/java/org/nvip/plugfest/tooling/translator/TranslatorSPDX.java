@@ -57,6 +57,8 @@ public class TranslatorSPDX extends TranslatorCore {
 
     private static final String DATALICENSE_TAG = "DataLicense";
 
+    private static final String LICENSELIST_TAG = "LicenseListVersion";
+
     // Used as an identifier for main SBOM information. Sometimes used as reference in relationships to show header contains main component.
     private static final String DOCUMENT_REFERENCE_TAG = "SPDXRef-DOCUMENT";
     private static final String EXTERNAL_REFERENCE_TAG = "ExternalRef";
@@ -278,6 +280,7 @@ public class TranslatorSPDX extends TranslatorCore {
                 case ID_TAG -> bom_data.put("id", m.group(1));
                 case TIMESTAMP_TAG -> metadata.setTimestamp(m.group(2));
                 case DATALICENSE_TAG -> metadata.setDataLicense(m.group(2));
+                case LICENSELIST_TAG -> metadata.setLicenseListVersion(m.group(2));
                 default -> bom_data.put(m.group(1), m.group(2));
             }
         }
