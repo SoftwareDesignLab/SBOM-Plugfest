@@ -33,8 +33,8 @@ public class HasBomRefTest extends MetricTest{
     }
 
     /**
-     * For a given component, chec if a unique id (bom-ref for cdx) is
-     * present
+     * For a given component, check if a unique id (bom-ref for CycloneDX)
+     * is present
      * @param c the component to test
      * @return the result of the component and if a bom-ref is present
      */
@@ -49,8 +49,10 @@ public class HasBomRefTest extends MetricTest{
         else{
             r = new Result(TEST_NAME, Result.STATUS.PASS, "Component " +
                     "has bom-ref identifier");
+            r.updateInfo(Result.Context.STRING_VALUE, c.getUniqueID());
         }
         r.addContext(c,"Bom-Ref Presence");
+        r.updateInfo(Result.Context.FIELD_NAME, "bom-ref");
         return r;
     }
 }
