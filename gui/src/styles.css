@@ -42,3 +42,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .metrics-body * .accordion-bar:nth-child(even) {
   background-color:  red !important;
 }
+
+.mat-expansion-panel-header-title {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto !important;
+    margin-right: 16px;
+    align-items: center;
+  }
