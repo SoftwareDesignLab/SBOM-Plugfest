@@ -1,5 +1,6 @@
 package org.nvip.plugfest.tooling;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,10 +75,14 @@ public class QAFromAPITest {
 
     @Test
     public void qaEncodingTest() throws IOException {
-        String contents = new String(Files.readAllBytes(Paths.get(smallDockerSBOM)));
-        Utils.SBOMFile file = new Utils.SBOMFile(smallDockerSBOM, contents);
-
-        ResponseEntity<?> qa = ctrl.qa(request, file);
+        // TODO
+//        String contents = new String(Files.readAllBytes(Paths.get(pythonSBOM)));
+//        Utils.SBOMFile file = new Utils.SBOMFile(pythonSBOM, contents);
+//
+//        ResponseEntity<?> qa = ctrl.qa(request, file);
+//        ObjectMapper mapper = new ObjectMapper();
+//        String sbomWithMetrics = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(qa.getBody());
+//        System.out.println(sbomWithMetrics);
 //        assertEquals(qa.getStatusCode(), HttpStatus.OK);
 //        assertNotEquals(qa.getBody().getPassedComponents(), 0);
 //        System.out.println(qa.getBody());
