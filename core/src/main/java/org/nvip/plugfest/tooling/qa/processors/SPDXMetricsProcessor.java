@@ -1,6 +1,8 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
 
+import org.nvip.plugfest.tooling.qa.tests.HasDataLicenseSPDXTest;
+
 /**
  * file: SPDXMetricsProcessor.java
  *
@@ -16,6 +18,7 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
     public SPDXMetricsProcessor(){
         this.attributeName = "SPDXMetrics";
 
+        this.metricTests.add(new HasDataLicenseSPDXTest());
 
         /*
         TODO
