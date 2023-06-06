@@ -3,7 +3,7 @@ package org.nvip.plugfest.tooling.qa;
 import org.junit.jupiter.api.Test;
 import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
 import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
-import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
+import org.nvip.plugfest.tooling.qa.processors.UniquenessProcessor;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.DependencyTree;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -37,12 +37,12 @@ public class QAPipelineClass {
 
         Component test_component_a = new Component(
                 "red", "red_publisher", "1.1.0",
-                Set.of("cpe2.3::test_red_cpe"), Set.of(new PURL("pkg:redpackage/red@1.1.0")), Set.of("random_red_swid")
+                Set.of("cpe2.3::test_red_cpe"), Set.of("pkg:redpackage/red@1.1.0"), Set.of("random_red_swid")
         );
 
         Component test_component_b = new Component(
                 "blue", "blue_publisher", "1.1.0",
-                Set.of("cpe2.3::test_blue_cpe"), Set.of(new PURL("pkg:bluepackage/blue@1.1.0")), Set.of("random_blue_swid")
+                Set.of("cpe2.3::test_blue_cpe"), Set.of("pkg:bluepackage/blue@1.1.0"), Set.of("random_blue_swid")
         );
 
         test_SBOM.addComponent(null, test_component_a);

@@ -1,13 +1,13 @@
-import { Component, Input } from "@angular/core";
-import { test, testResult, QualityReport } from "../test";
-import { DataHandlerService } from "@services/data-handler.service";
+import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { qualityReport } from '../qualityReport';
+import { DataHandlerService } from '@services/data-handler.service';
 
 @Component({
   selector: "app-metrics-body",
   templateUrl: "./metrics-body.component.html",
   styleUrls: ["./metrics-body.component.css"],
 })
-export class MetricsBodyComponent {
+export class MetricsBodyComponent implements OnChanges {
   constructor(private handler: DataHandlerService) {}
   testResult: testResult | null = null;
   qr: QualityReport | null = null;
@@ -24,6 +24,13 @@ export class MetricsBodyComponent {
       ]?.results.filter((res) => res.processor === this.processorFilter);
     }
     return this.handler.metrics[this.handler.selectedQualityReport]?.results;
+  }
+  //TODO: convert to input
+  GetQualityReport(): any {
+    if(!this.handler.selectedQualityReport)
+      return null;
+
+    return this.handler.GetSBOMInfo(this.handler.selectedQualityReport).metrics;
   }
 
   get processors() {
@@ -76,5 +83,9 @@ export class MetricsBodyComponent {
 
   getKeys(obj: Object) {
     return Object.keys(obj);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+   this.handler.RunAllMetrics();
   }
 }

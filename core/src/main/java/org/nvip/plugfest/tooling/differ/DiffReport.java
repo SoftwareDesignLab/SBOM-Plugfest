@@ -301,24 +301,24 @@ public class DiffReport {
                     }
                     case COMPONENT_PURL_MISMATCH -> {
                         // get cpes
-                        Set<PURL> purlA = new HashSet<>(conflict.getComponentA().getPurls());
-                        Set<PURL> purlB = new HashSet<>(conflict.getComponentB().getPurls());
+                        Set<String> purlA = new HashSet<>(conflict.getComponentA().getPurls());
+                        Set<String> purlB = new HashSet<>(conflict.getComponentB().getPurls());
 
                         // remove duplicates
                         purlA.removeAll(conflict.getComponentB().getPurls());
                         purlB.removeAll(conflict.getComponentA().getPurls());
-                        for (PURL purl : purlA) {
+                        for (String purl : purlA) {
                             body.addComponentConflict(
                                     conflict.getComponentA().getName(),
                                     conflict.getComponentB().getName(),
-                                    new ConflictData(COMPONENT_PURL_MISMATCH.name(), purl.toString(), null)
+                                    new ConflictData(COMPONENT_PURL_MISMATCH.name(), purl, null)
                             );
                         }
-                        for (PURL purl : purlB) {
+                        for (String purl : purlB) {
                             body.addComponentConflict(
                                     conflict.getComponentB().getName(),
                                     conflict.getComponentA().getName(),
-                                    new ConflictData(COMPONENT_PURL_MISMATCH.name(), null, purl.toString())
+                                    new ConflictData(COMPONENT_PURL_MISMATCH.name(), null, purl)
                             );
                         }
                         continue;

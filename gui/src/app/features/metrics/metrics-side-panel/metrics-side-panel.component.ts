@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataHandlerService } from '@services/data-handler.service';
+import { DataHandlerService, FileStatus } from '@services/data-handler.service';
 
 @Component({
   selector: 'app-metrics-side-panel',
@@ -13,7 +13,7 @@ export class MetricsSidePanelComponent {
   constructor(private handler: DataHandlerService) {}
 
   GetSBOMs() {
-    return this.handler.GetValidSBOMs();
+    return this.handler.GetSBOMsOfType(FileStatus.VALID);
   }
 
   SetSelectedSBOM(bom: string) {
