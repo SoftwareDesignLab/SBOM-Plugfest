@@ -1,9 +1,12 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Suppliers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import javax.xml.crypto.Data;
@@ -130,8 +133,7 @@ public class SBOMTest {
             "  + Serial Number: " + test_serialNumber + "\n" +
             "  + Version: " + test_specVersion + "\n" +
             "  + Tool Version: " + test_sbomVersion + "\n" +
-            "  + Metadata: Timestamp: " + test_timestamp
-            + "; Tools: {}; Suppliers: [" + test_supplier + "]; \n";
+            "  + Metadata: Timestamp: " + test_timestamp + "; Suppliers: [" + test_supplier + "]; \n";
 
     int test_hash_code = 111425207;
 
@@ -151,7 +153,7 @@ public class SBOMTest {
         test_component_one = new Component(
                 test_name, test_publisher, test_version, test_cpe, test_purl, test_swid
         );
-        test_component_one = new Component(
+        test_component_two = new Component(
                 test_name_two, test_publisher_two, test_version_two, test_cpe_two, test_purl_two, test_swid_two
         );
         test_sbom = new SBOM(
@@ -327,6 +329,18 @@ public class SBOMTest {
     @Test
     public void hashCode_test() {
         assertEquals(test_hash_code, test_sbom.hashCode());
+    }
+
+    @Test
+    void sbomSerializationTest() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        test_sbom.addComponent(null, test_component_one);
+        test_sbom.addComponent(test_component_one.getUUID(), test_component_two);
+
+        Debug.logBlockTitle("SBOM");
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(test_sbom));
+        Debug.logBlock();
     }
 
 }

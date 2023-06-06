@@ -1,5 +1,7 @@
 package org.nvip.plugfest.tooling.sbom;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.*;
 
 /**
@@ -141,15 +143,6 @@ public class SBOM {
     }
 
     /**
-     * Get the name of the head component of the SBOM, aka the bom/document name.
-     *
-     * @return The name of the SBOM.
-     */
-    public String getName() {
-        return getComponent(getHeadUUID()).getName();
-    }
-
-    /**
      * Get a set of all components in the project
      *
      * @return Set of components
@@ -198,6 +191,7 @@ public class SBOM {
      *
      * @return Head component UUID (null if failed)
      */
+    @JsonIgnore
     public UUID getHeadUUID() {
         return dependencyTree.getHeadUUID();
     }
