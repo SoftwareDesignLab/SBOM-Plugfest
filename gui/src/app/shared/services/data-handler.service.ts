@@ -15,7 +15,7 @@ export class DataHandlerService {
 
   private files: { [path: string]: SBOMInfo } = {};
 
-  public comparison!: Comparison;
+  public comparison!: Comparison | null;
 
   private loadingComparison: boolean = false;
 
@@ -139,6 +139,7 @@ export class DataHandlerService {
           },
           (error: any) => {
             //TODO: Add error message here
+            this.comparison = null;
             this.loadingComparison = false;
           })
         }
