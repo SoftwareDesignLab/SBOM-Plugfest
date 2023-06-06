@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="file flex center" *ngFor="let item of GetErrorSBOMs()">
-                    <icon icon="close" color="var(--red)" [matTooltip]="'SBOM is not valid (' + GetSbomInfo(item).extra + ')'"/>
+                    <icon icon="close" color="var(--red)" [matTooltip]="GetSbomInfo(item).extra || ''"/>
                     <div class="sbom flex">
                         {{getSBOMAlias(item)}}
                         <input type="checkbox" [value]="item"/>
