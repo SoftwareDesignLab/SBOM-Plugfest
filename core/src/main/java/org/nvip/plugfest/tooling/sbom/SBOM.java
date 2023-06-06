@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.sbom;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * File: SBOM.java
@@ -143,12 +144,26 @@ public class SBOM {
     }
 
     /**
-     * Get a set of all components in the project
+     * Get a set of all components in the project, including the head component.
      *
      * @return Set of components
      */
+    @JsonIgnore
     public Set<Component> getAllComponents() {
         return dependencyTree.getAllComponents();
+    }
+
+    /**
+     * Get a set of all components in the project that are children of the head component.
+     *
+     * @return A map from the component name to the component.
+     */
+    public Map<String, Component> getComponents() {
+        Set<Component> components = getAllComponents().stream()
+                .filter(c -> c.getUUID() != getHeadUUID()) // Filter out head component
+                .collect(Collectors.toSet());
+
+        return components.stream().collect(Collectors.toMap(Component::getName, component -> component));
     }
 
     /**
