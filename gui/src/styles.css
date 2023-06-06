@@ -38,3 +38,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     transition-duration: .35s;
     transform: translate(0, -3px);
 }
+
+.metrics-body * .accordion-bar:nth-child(even) {
+  background-color:  red !important;
+}

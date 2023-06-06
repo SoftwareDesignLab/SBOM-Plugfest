@@ -53,6 +53,7 @@ export class QualityReport {
             type: result.additionalInfo["TYPE"] || "",
             fieldName: result.additionalInfo["FIELD_NAME"],
             identifier: result.additionalInfo["IDENTIFIER"] || "",
+            stringValue: result.additionalInfo['STRING_VALUE'] || '',
           };
           this.results.push(formattedRes);
 

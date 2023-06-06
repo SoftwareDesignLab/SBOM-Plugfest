@@ -15,7 +15,6 @@ export class DataHandlerService {
   public lastSentFilePaths: string[] = [];
 
   public metrics: { [id: string]: QualityReport | null } = {};
-  public loadingFiles: string[] = [];
   private files: { [path: string]: SBOMInfo } = {};
 
   public comparison!: Comparison;
@@ -63,7 +62,7 @@ export class DataHandlerService {
         this.files[path].status = FileStatus.VALID;
 
         if(metrics)
-          this.files[path].metrics = new QualityReport(result as test);;
+          this.metrics[path] = new QualityReport(result as test);
       },
       (error) => {
         this.files[path].status = FileStatus.ERROR;

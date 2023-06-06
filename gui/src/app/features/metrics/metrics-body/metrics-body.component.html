@@ -27,6 +27,7 @@
             "
           >
             <app-accordion
+              class="merged-result"
               *ngIf="
                 (!showPassed &&
                   qr.mergedResults[identifier][message][0].pass !== 1) ||
@@ -41,15 +42,7 @@
             >
               <div title>{{ identifier }}: {{ message }}</div>
               <div body *ngFor="let result of getResults(identifier, message)">
-                {{ result.fieldName }}
-                <!-- <app-accordion
-
-              >
-                <span title>{{ res.identifier }}:{{ res.message }}</span>
-                <div body>
-                  <span>{{ getTestMessage(res) }}</span>
-                </div>
-              </app-accordion> -->
+                {{ getTestMessage(result) }}
               </div>
             </app-accordion>
           </div>

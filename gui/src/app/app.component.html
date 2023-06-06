@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%">
+<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%" (selectionChange)="checkIndex($event.selectedIndex)">
   <mat-step [completed]="GetValidSBOMs().length >= 1">
     <ng-template matStepLabel>
       <mat-icon>drive_folder_upload</mat-icon>

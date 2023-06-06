@@ -1,13 +1,13 @@
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { qualityReport } from '../qualityReport';
-import { DataHandlerService } from '@services/data-handler.service';
+import { Component } from "@angular/core";
+import { DataHandlerService } from "@services/data-handler.service";
+import { QualityReport, testResult } from "../test";
 
 @Component({
   selector: "app-metrics-body",
   templateUrl: "./metrics-body.component.html",
   styleUrls: ["./metrics-body.component.css"],
 })
-export class MetricsBodyComponent implements OnChanges {
+export class MetricsBodyComponent {
   constructor(private handler: DataHandlerService) {}
   testResult: testResult | null = null;
   qr: QualityReport | null = null;
@@ -25,13 +25,6 @@ export class MetricsBodyComponent implements OnChanges {
     }
     return this.handler.metrics[this.handler.selectedQualityReport]?.results;
   }
-  //TODO: convert to input
-  GetQualityReport(): any {
-    if(!this.handler.selectedQualityReport)
-      return null;
-
-    return this.handler.GetSBOMInfo(this.handler.selectedQualityReport).metrics;
-  }
 
   get processors() {
     return this.qr?.processors || [];
@@ -45,11 +38,18 @@ export class MetricsBodyComponent implements OnChanges {
   }
 
   getResults(identifier: string, message: string) {
-    return this.qr?.mergedResults[identifier][message] || null;
-  }
-
-  getFirstResult(identifier: string, message: string) {
-    return this.qr?.mergedResults[identifier][message][0] || null;
+    let uniqueVals: any[] = [];
+    if (this.qr?.mergedResults[identifier][message]) {
+      return this.qr?.mergedResults[identifier][message].filter((result) => {
+        const res = JSON.stringify(result);
+        if (uniqueVals.indexOf(res) === -1) {
+          uniqueVals.push(res);
+          return true;
+        }
+        return false;
+      });
+    }
+    return [];
   }
 
   get identifiers() {
@@ -57,7 +57,7 @@ export class MetricsBodyComponent implements OnChanges {
   }
 
   getTestMessage(result: any) {
-    return `${result.fieldName}: ${result.message.toLowerCase()}`;
+    return ` ${result.stringValue || result.fieldName}`;
   }
 
   getColor(result: any) {
@@ -83,9 +83,5 @@ export class MetricsBodyComponent implements OnChanges {
 
   getKeys(obj: Object) {
     return Object.keys(obj);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-   this.handler.RunAllMetrics();
   }
 }
