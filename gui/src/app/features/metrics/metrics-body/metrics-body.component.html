@@ -1,18 +1,16 @@
 <div class="metrics-body flex col center">
   <div class="flex buttons">
-    <div class="flex" *ngIf="processors.length > 1">
-      <app-button (click)="showPassed = !showPassed"
-        >Show {{ showPassed ? "Failed Only" : "Passed" }}</app-button
-      >
-    </div>
-    <div
-      class="label hover"
-      [ngStyle]="{ 'background-color': getLabelColor(processor) }"
+    <app-button (click)="showPassed = !showPassed" *ngIf="result">
+      Show {{ showPassed ? "Failed Only" : "Passed" }}
+    </app-button>
+    <app-button
+      class="hover"
+      [backgroundColor]="getLabelColor(processor)"
       *ngFor="let processor of processors"
       (click)="processorFilter = processorFilter === processor ? '' : processor"
     >
       {{ processor }}
-    </div>
+    </app-button>
   </div>
   <div class="results" *ngIf="result">
     <div *ngIf="qr">
@@ -41,7 +39,10 @@
               [color]="getResultColor(qr.mergedResults[identifier][message][0])"
             >
               <div title>{{ identifier }}: {{ message }}</div>
-              <div body *ngFor="let result of getMergedResult(identifier, message)">
+              <div
+                body
+                *ngFor="let result of getMergedResult(identifier, message)"
+              >
                 {{ getTestMessage(result) }}
               </div>
             </app-accordion>
@@ -52,10 +53,7 @@
       <div class="text flex center" *ngIf="!result">
         Please select an SBOM to see test results
       </div>
-      <div
-        class="text flex center"
-        *ngIf="result && result.length === 0"
-      >
+      <div class="text flex center" *ngIf="result && result.length === 0">
         There aren't any test results with the selected SBOM
       </div>
     </div>
