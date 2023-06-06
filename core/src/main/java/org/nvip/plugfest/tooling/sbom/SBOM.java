@@ -161,7 +161,7 @@ public class SBOM {
      * @return UUID of added component (null if failed)
      */
     public UUID addComponent(UUID parent, Component toAdd) {
-        if (parent == null) this.getMetadata().setComponent(toAdd);
+//        if (parent == null) this.getMetadata().setComponent(toAdd); TODO
         return dependencyTree.addComponent(parent, toAdd);
     }
 
