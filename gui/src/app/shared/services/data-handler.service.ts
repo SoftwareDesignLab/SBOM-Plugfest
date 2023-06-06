@@ -17,7 +17,7 @@ export class DataHandlerService {
   public metrics: { [id: string]: QualityReport | null } = {};
   private files: { [path: string]: SBOMInfo } = {};
 
-  public comparison!: Comparison;
+  public comparison!: Comparison | null;
 
   private loadingComparison: boolean = false;
   private loadingMetrics: boolean = false;
@@ -152,6 +152,7 @@ export class DataHandlerService {
           },
           (error: any) => {
             //TODO: Add error message here
+            this.comparison = null;
             this.loadingComparison = false;
           })
         }
