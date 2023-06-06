@@ -5,6 +5,7 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * file: HasSPDXIDTest.java
@@ -25,13 +26,27 @@ public class HasSPDXIDTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
+        // TODO UID's (SPDXID) not present
+        //Check that the metadata contains a valid SPDXID
+    //    results.add(HasSPDXIDMetadata(sbom));
+
         //for every component, check for SPDXID in HasSPDXID
         for(Component c : sbom.getAllComponents()){
-            results.add(HasSPDXID(c));
+            results.add(HasSPDXIDComponent(c));
         }
         return results;
     }
+/*   TODO SPDXID not obtainable for metadata at the moment
+    /**
+     * Check an SBOM's metadata for a valid SPDXID that matches the format
+     * "SPDXRef-..."
+     * @param sbom the sbom to test
+     * @return
 
+    private Result HasSPDXIDMetadata(SBOM sbom){
+        return null;
+    }
+*/
 
     /**
      * Check a single component for an SPDXID and test that it matches the
@@ -39,7 +54,7 @@ public class HasSPDXIDTest extends MetricTest{
      * @param c the component to test
      * @return a result of if a component has an SPDXID and if it is valid
      */
-    public Result HasSPDXID(Component c){
+    public Result HasSPDXIDComponent(Component c){
         // check that the component has an SPDXID
         String spdxID = c.getUniqueID();
         Result r;
