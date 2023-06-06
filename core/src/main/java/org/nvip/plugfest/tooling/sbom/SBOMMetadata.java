@@ -8,6 +8,7 @@ import org.nvip.plugfest.tooling.qa.tests.Result;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * File: SBOMMetadata.java
@@ -59,11 +60,9 @@ public class SBOMMetadata {
      * Default, no arguments constructor. Initializes everything to null or an empty collection.
      */
     public SBOMMetadata() {
-        this.timestamp = null;
         this.tools = new HashMap<>();
         this.suppliers = new HashSet<>();
         this.metrics = new HashMap<>();
-        dataLicense = null;
     }
 
     /**
@@ -84,7 +83,7 @@ public class SBOMMetadata {
      */
     public SBOMMetadata(String timestamp, Set<String> suppliers) {
         this(timestamp);
-        this.suppliers = suppliers;
+        this.suppliers = suppliers.stream().filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
     /**
@@ -173,11 +172,11 @@ public class SBOMMetadata {
     public void addSupplier(String supplier) {
         if (this.suppliers == null)
             this.suppliers = new HashSet<>();
-        this.suppliers.add(supplier);
+        if (supplier != null) this.suppliers.add(supplier);
     }
 
     public void setSuppliers(Set<String> suppliers) {
-        this.suppliers = suppliers;
+        this.suppliers = suppliers.stream().filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
     public void setDataLicense(String dataLicense) {
