@@ -22,4 +22,4 @@ jobs:
         uses: gradle/gradle-build-action@v2
         
       - name: Build SVIP
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build
