@@ -27,8 +27,6 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
         TODO
            hasBomVersion -> in CDX Metrics Processor
            hasDocumentName
-           hasDocumentNamespace
-           hasDownloadLocation
            hasFilesAnalyzed
            hasVerificationCode
            hasExtractedLicenses
