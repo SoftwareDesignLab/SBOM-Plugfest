@@ -4,9 +4,12 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
-## [3.9.2] - 2023-06-04
-
+## [3.9.2] - 2023-06-06
+> CDX Metrics processor is not complete, see issue [#183](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/183)
 ### Added
+- New CDX Metrics Processor. New tests include:
+  - `HasBomRefTest` - checks to see if a component has a unique bom-ref to reference inside the BOM
+  - `HasBomVersionTest` - check if the SBOM has a version number declared
 
 ### Changed
 
