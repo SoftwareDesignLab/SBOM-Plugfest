@@ -5,6 +5,7 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * file: HasSPDXIDTest.java
