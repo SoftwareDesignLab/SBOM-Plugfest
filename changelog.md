@@ -4,25 +4,18 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-
---
-## [3.9.4] - 2023-06-07
-
-### Added
-- 
-### Changed
-
-### Fixed
- - Fixed SBOMS from JSON files not having hashes
- - Fixed SBOMS from SPDX files not having hashes
-
 ---
 ## [3.9.4] - 2023-06-07
+### Added
+### Changed
 - `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
 - `TranslatorCDXJSON` tests to make sure if a JSON SBOM is CycloneDX.
   - If not, a more descriptive error message is thrown to prevent SPDX JSON SBOMs from causing errors.
   - Note: `TranslatorCDXXML` already handles this for SPDX XML SBOMs.
 
+### Fixed
+- Fixed SBOMS from JSON files not having hashes
+- Fixed SBOMS from SPDX files not having hashes
 ---
 ## [3.9.3] - 2023-06-07
 
@@ -43,13 +36,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added additional exceptions thrown in `TranslatorCDXXML` to increase verbosity of error messages.
 
 ### Changed
-
+- `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
 ### Fixed
 - Fixed broken SBOM file transfers by adding back the `@RequestBody` decorators to all `SBOMFile` API request parameters.
 - Fixed issue with CDXJSON translator regarding translating null license objects to components without licenses
 - Fixed errors caused by `TranslatorPlugFest.getTranslator()` method incorrectly determining filetype.
   - We now check for file extension only, since SPDX JSON and XML are not supported translators.
-
+- Properly remove `SBOM` object from QA pipeline
 ---
 ## [3.9.2] - 2023-06-06
 > CDX Metrics processor is not complete, see issue [#183](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/183)
