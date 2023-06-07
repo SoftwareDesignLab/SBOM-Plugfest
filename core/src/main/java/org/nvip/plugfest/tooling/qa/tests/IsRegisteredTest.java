@@ -272,20 +272,27 @@ public class IsRegisteredTest extends MetricTest{
     }
     /**
      * Extract data from Golang based packages
-     * Source: <a href="https://proxy.golang.org/">...</a>
+     * Source: <a href="https://pkg.go.dev/">...</a>
      * @param p purl to use to query for info
      * @return an int response code when opening up a connection with PURL info
      * @throws IOException issue with http connection
      */
     private int extractFromGo(PURL p) throws IOException{
+        // build namespace for request
+        StringBuilder namespaceUrl = new StringBuilder();
+        for(int i = 0; i < p.getNamespace().size(); i++)
+            namespaceUrl.append(p.getNamespace().get(i).toLowerCase()).append("/");
         // Query go page
         // package name and version are required
-        URL url = new URL ("https://proxy.golang.org/" +
-                p.getName().toLowerCase() + "@v/" +
-                p.getVersion() + ".info");
+        URL url = new URL ("https://pkg.go.dev/" +
+                namespaceUrl +
+                p.getName().toLowerCase() + "@" +
+                p.getVersion());
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
         // get the response code from this url
-        return huc.getResponseCode();
+        return responseCode;
     }
 
     /**
