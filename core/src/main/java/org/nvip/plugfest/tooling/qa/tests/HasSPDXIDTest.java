@@ -25,9 +25,9 @@ public class HasSPDXIDTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
-        // TODO UID's (SPDXID) not present
-        //Check that the metadata contains a valid SPDXID
-    //    results.add(HasSPDXIDMetadata(sbom));
+        //TODO UID's (SPDXID) not present
+        // Check that the metadata contains a valid SPDXID
+
 
         //for every component, check for SPDXID in HasSPDXID
         for(Component c : sbom.getAllComponents()){
