@@ -32,9 +32,28 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
     public static final String TEST_SMALL_SYFT_CDX_JSON_HASHES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/bom.json";
 
     public static final String TEST_CDX_JSON = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdxgen-8.4.6-source.json";
+    public static final String TEST_CDX_JSON_Licenses = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdxgen-8.4.6-source.json";
 
     protected TranslatorCDXJSONTest() {
         super(new TranslatorCDXJSON());
+    }
+
+    @Test
+    public void licenseFixTest() throws TranslatorException {
+        SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_JSON_Licenses);
+        assertNotNull(sbom);
+        for (Component c: sbom.getAllComponents()
+             ) {
+
+            for (Object o: c.getLicenses()
+                 ) {
+
+                assertNotNull(o);
+
+            }
+
+        }
+
     }
 
     @ParameterizedTest
