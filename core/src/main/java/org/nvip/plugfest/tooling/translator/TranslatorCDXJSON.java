@@ -1,9 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
-import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.*;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.AppTool;
@@ -14,14 +12,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+
 /**
  * file: TranslatorCDXJSON.java
  * Coverts SPDX SBOMs into internal SBOM objects.
  * Compatible with CDX 1.4 JSON SBOMs
  *
  * @author Tyler Drake
+ * @author Ethan Numan
  */
 public class TranslatorCDXJSON extends TranslatorCore {
+
+    public static final String PLUGFEST_UID = "org.nvip.plugfest.tooling.sbom.uids";
     public TranslatorCDXJSON() {
         super("json");
     }
@@ -71,7 +74,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             bom_data.put("timestamp" , format.format(timestamp));
-            authorAndTimestamp[1] = "[" + timestamp + "]";;
+            authorAndTimestamp[1] = "[" + timestamp + "]";
 
             // Top component analysis (check if not null as well)
             org.cyclonedx.model.Component topComponent = metadata.getComponent();
@@ -136,6 +139,17 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 String swid = String.valueOf(cdx_component.getSwid());
                 if (swid != null) new_component.setSwids(Collections.singleton(swid));
+
+                // get Hashes
+                List<org.cyclonedx.model.Hash> raw_hashes = cdx_component.getHashes();
+                if (raw_hashes != null) {
+                    Set<Hash> hashes = new HashSet<>();
+                    for (org.cyclonedx.model.Hash temp: raw_hashes){
+                        Hash newHash = new Hash(temp.getAlgorithm(),temp.getValue());
+                        hashes.add(newHash);
+                    }
+                    new_component.setHashes(hashes);
+                }
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
                 try {

@@ -206,22 +206,6 @@ public class TranslatorCDXXML extends TranslatorCore {
                                     )
                             );
                         }
-                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
-                            hashes.add(
-                                    new Hash(
-                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
-                                            component_elements.item(j).getTextContent()
-                                    )
-                            );
-                        }
-                        else if (component_elements.item(j).getNodeName().equalsIgnoreCase("hash")) {
-                            hashes.add(
-                                    new Hash(
-                                            component_elements.item(j).getAttributes().item(0).getTextContent(),
-                                            component_elements.item(j).getTextContent()
-                                    )
-                            );
-                        }
                         else {
                             component_items.put(
                                     component_elements.item(j).getNodeName(),

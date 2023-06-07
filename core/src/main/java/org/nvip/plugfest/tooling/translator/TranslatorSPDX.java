@@ -3,6 +3,7 @@ package org.nvip.plugfest.tooling.translator;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
  * @author Tyler Drake
  * @author Matt London
  * @author Ian Dunn
+ * @author Ethan Numan
  */
 public class TranslatorSPDX extends TranslatorCore {
 
@@ -423,10 +425,26 @@ public class TranslatorSPDX extends TranslatorCore {
 
         component.setLicenses(licenses);
 
+
+
+        // Packages hashing info
+        Hash packageHash;
+        if (componentMaterials.get("PackageChecksum") != null){
+            String[] packageChecksum = componentMaterials.get("PackageChecksum").split(" ");
+            packageHash = new  Hash(packageChecksum[0].substring(0,packageChecksum[0].length()-1), packageChecksum[1]);
+            component.addHash(packageHash);
+        }
+
+
+
         // Other package info TODO tests
         String packageDownloadLocation = componentMaterials.get("PackageDownloadLocation");
         String filesAnalyzed = componentMaterials.get("FilesAnalyzed"); // true or false
         String packageVerificationCode = componentMaterials.get("PackageVerificationCode");
+
+
+
+
 
         // PackageDownloadLocation
         if (packageDownloadLocation != null
@@ -444,6 +462,7 @@ public class TranslatorSPDX extends TranslatorCore {
                 && !packageVerificationCode.equals("NONE") && !packageVerificationCode.equals("NOASSERTION")) {
             component.setVerificationCode(packageVerificationCode);
         }
+
 
         return component;
     }

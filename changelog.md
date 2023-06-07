@@ -3,6 +3,19 @@ All notable changes to Plugfest will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+
+
+--
+## [3.9.4] - 2023-06-07
+
+### Added
+- 
+### Changed
+
+### Fixed
+ - Fixed SBOMS from JSON files not having hashes
+ - Fixed SBOMS from SPDX files not having hashes
+
 ---
 ## [3.9.4] - 2023-06-07
 - `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
