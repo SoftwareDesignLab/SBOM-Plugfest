@@ -127,7 +127,7 @@ public class ExtractedLicenseMinElementTest extends MetricTest{
                     "License included text description");
             r.updateInfo(Result.Context.STRING_VALUE, licenseText);
         }
-        r.updateInfo(Result.Context.FIELD_NAME, "ExtracedText");
+        r.updateInfo(Result.Context.FIELD_NAME, "ExtractedText");
         return r;
     }
 
