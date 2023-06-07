@@ -4,6 +4,18 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.9.3] - 2023-06-07
+
+### Added
+- Added additional exceptions thrown in `TranslatorCDXXML` to increase verbosity of error messages.
+
+### Changed
+
+### Fixed
+- Fixed errors caused by `TranslatorPlugFest.getTranslator()` method incorrectly determining filetype.
+  - We now check for file extension only, since SPDX JSON and XML are not supported translators.
+
+---
 ## [3.9.2] - 2023-06-04
 
 ### Added
@@ -14,7 +26,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed broken SBOM file transfers by adding back the `@RequestBody` decorators to all `SBOMFile` API request parameters.
 
 ---
-
 ## [3.9.1] - 2023-06-05
 > Uniqueness processor is not complete, see issue [#160](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/160)
 ### Added
