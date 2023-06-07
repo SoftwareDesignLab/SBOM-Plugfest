@@ -30,11 +30,6 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
         TODO
            hasBomVersion -> in CDX Metrics Processor
            hasDocumentName
-           hasFilesAnalyzed
-           hasVerificationCode
-           hasExtractedLicenses
-           hasExtractedLicensesDescriptions
-           hasExtractedLicensesRef
          */
     }
 }
