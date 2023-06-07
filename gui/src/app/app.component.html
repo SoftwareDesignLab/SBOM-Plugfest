@@ -15,8 +15,11 @@
       </ng-template>
       <app-metrics-main></app-metrics-main>
       <div class="stepper-buttons">
-        <app-button icon="navigate_before" (click)="stepper.previous()">Previous</app-button>
-        <app-button *ngIf="GetValidSBOMs().length >= 2" icon="navigate_next" (click)="stepper.next()">Next</app-button>
+        <app-button iconColor="var(--primary)" backgroundColor="red" icon="navigate_before" (click)="stepper.previous()">Previous</app-button>
+        <app-button class="add-button" backgroundColor="var(--green)" (click)="stepper.next()" *ngIf="GetValidSBOMs().length >= 2">
+          Next
+          <icon icon="navigate_next" color="var(--primary)"></icon>
+      </app-button>
       </div>
     </mat-step>
     <mat-step>
@@ -26,7 +29,7 @@
       </ng-template>
       <app-comparison-page></app-comparison-page>
       <div class="stepper-buttons">
-        <app-button icon="navigate_before" (click)="stepper.previous()">Previous</app-button>
+        <app-button iconColor="var(--primary)" backgroundColor="red" icon="navigate_before" (click)="stepper.previous()">Previous</app-button>
       </div>
     </mat-step>
   </mat-horizontal-stepper>
