@@ -1,6 +1,6 @@
 /** @Author Tina DiLorenzo, Justin Jantzi */
 
-interface Conflict {
+export interface Conflict {
   type: string;
   target: string | null;
   other: string | null;
@@ -8,12 +8,14 @@ interface Conflict {
 
 interface DiffReport {
   sbomConflicts: Conflict[];
-  componentConflicts: {
-    [id: string]: {
-      [id: string]: Conflict[]
-    }
-  };
+  componentConflicts: ComponentConflicts;
 }
+
+export interface ComponentConflicts {
+  [id: string]: {
+    [id: string]: Conflict[]
+  }
+};
 
 export interface Comparison {
   target: string;
