@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%">
+<mat-horizontal-stepper linear #stepper style="height: 100%; width: 100%" (selectionChange)="checkIndex($event.selectedIndex)">
   <mat-step [completed]="GetValidSBOMs().length >= 1">
     <ng-template matStepLabel>
       <mat-icon>drive_folder_upload</mat-icon>
@@ -15,8 +15,8 @@
       </ng-template>
       <app-metrics-main></app-metrics-main>
       <div class="stepper-buttons">
-        <app-button icon="navigate_before" backgroundColor="gray" (click)="stepper.previous()">Previous</app-button>
-        <app-button *ngIf="GetValidSBOMs().length >= 2" icon="navigate_next" backgroundColor="var(--accent)" (click)="stepper.next()">Next</app-button>
+        <app-button icon="navigate_before" (click)="stepper.previous()">Previous</app-button>
+        <app-button *ngIf="GetValidSBOMs().length >= 2" icon="navigate_next" (click)="stepper.next()">Next</app-button>
       </div>
     </mat-step>
     <mat-step>
@@ -26,7 +26,7 @@
       </ng-template>
       <app-comparison-page></app-comparison-page>
       <div class="stepper-buttons">
-        <app-button icon="navigate_before" backgroundColor="var(--accent)" (click)="stepper.previous()">Previous</app-button>
+        <app-button icon="navigate_before" (click)="stepper.previous()">Previous</app-button>
       </div>
     </mat-step>
   </mat-horizontal-stepper>

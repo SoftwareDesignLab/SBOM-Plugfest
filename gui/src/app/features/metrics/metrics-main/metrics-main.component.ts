@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataHandlerService } from '@services/data-handler.service';
 
 @Component({
   selector: 'app-metrics-main',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./metrics-main.component.css']
 })
 export class MetricsMainComponent {
+  constructor(private dataHandler: DataHandlerService) {
+
+  }
+  isLoadingMetrics() {
+    return this.dataHandler.IsLoadingMetrics()
+  }
 
 }
