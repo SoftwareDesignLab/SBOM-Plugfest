@@ -44,7 +44,8 @@ public class TranslatorCDXJSON extends TranslatorCore {
         try {
             json_sbom = parser.parse(fileContents.getBytes());
         } catch (ParseException e) {
-            throw new TranslatorException(e.getMessage());
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e);
+            throw new TranslatorException("Could not parse file.");
         }
 
         // TODO these are essential fields, throw an actual error if any of these are null
@@ -138,7 +139,8 @@ public class TranslatorCDXJSON extends TranslatorCore {
 
                 // Attempt to get licenses. If no licenses found put out error message and continue.
                 try {
-                    new_component.setLicenses(new HashSet<>(Arrays.asList(cdx_component.getLicenseChoice().getExpression())));
+                    if(cdx_component.getLicenseChoice().getExpression() != null)
+                        new_component.setLicenses(new HashSet<>(Arrays.asList(cdx_component.getLicenseChoice().getExpression())));
                 } catch (NullPointerException e) {
                     // Getting a NullPointerException on licenses is fine. It just means the component had none.
                 } catch (Exception e) {

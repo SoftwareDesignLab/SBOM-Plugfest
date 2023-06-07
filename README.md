@@ -63,6 +63,19 @@
   - Checks if [CycloneDX SBOM specific metrics](https://cyclonedx.org/docs/1.4/json/) are included.
     - Has Bom-Ref: Does a component have a unique bom-ref to reference inside the BOM?
     - Has Bom Version: Does the SBOM have a version number declared?
+- **SPDX Metrics Processor Tests**
+  - Checks if [SPDX SBOM specific metrics](https://spdx.github.io/spdx-spec/v2.3/) are included in SPDX SBOMs
+    - Has Data License SPDX: Does the SBOM's DataLicense field contain the CC0-1.0 license?
+    - Has SPDX ID: Does each component has a valid SPDXID?
+    - Has Document Namespace: Does the SBOM contain a valid document namespace?
+    - Has Download Location: Does each component have a download location?
+    - Has Creation Info: Does the SBOM contain creation information?
+    - Has Verification Code: Does each component have a package verification code (FilesAnalyzed is true)
+      or is it omitted (FilesAnalyzed if false)?
+    - Has Extracted Licenses Test: Are there any extracted licenses not on the SPDX license list in the SBOM?
+    - Extracted License Min Element: Do the extracted licenses contain the required fields LicenseName, LicenseID,
+      and LicenseCrossReference?
+
 ## Translator
 - Parse SBOMS from files and deserialize from formats:
   - CycloneDX

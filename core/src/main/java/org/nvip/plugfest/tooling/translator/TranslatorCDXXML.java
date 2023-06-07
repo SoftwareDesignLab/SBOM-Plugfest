@@ -57,19 +57,18 @@ public class TranslatorCDXXML extends TranslatorCore {
         try {
             sbom_xml_file = documentBuilder.parse(new InputSource(new StringReader(contents)));
         } catch (NullPointerException nullPointerException) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, "NullPointerException found. File contents may be null in: " + file_path);
-            return null;
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, nullPointerException);
+            throw new TranslatorException("File contents may be null." + nullPointerException.getMessage());
         } catch (SAXException saxException) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, "SAXException found. File must be a properly formatted Cyclone-DX XML file: " + file_path);
-            return null;
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, saxException);
+            throw new TranslatorException("File must be a properly formatted CycloneDX XML file: " + saxException.getMessage());
         } catch (IOException ioException) {
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, "IOException found. File information could not be found in: " + file_path);
-            return null;
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, ioException);
+            throw new TranslatorException("File information could not be found: " + ioException.getMessage());
         } catch (Exception e) {
             Debug.log(Debug.LOG_TYPE.ERROR, "Issue detected with file: " + file_path);
-            Debug.log(Debug.LOG_TYPE.EXCEPTION, e.getMessage());
-//            e.printStackTrace();
-            return null;
+            Debug.log(Debug.LOG_TYPE.EXCEPTION, e);
+            throw new TranslatorException("Issue detected with file.");
         }
 
         sbom_xml_file.getDocumentElement().normalize();

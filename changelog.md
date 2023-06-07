@@ -4,6 +4,37 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.9.4] - 2023-06-07
+- `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
+
+---
+## [3.9.3] - 2023-06-07
+
+### Added
+- New SPDX Metrics Processor. New tests include:
+  - `HasDataLicenseSPDXTest` - checks to see if the SPDX SBOM DataLicense field in metadata contains the CC0-1.0 license
+  - `HasSPDXIDTest` - checks to see if each component has a valid SPDXID ("SPDXRef:-[idstring]")
+  - `HasDocumentNamespaceTest` - checks to see if the SPDX SBOM contains a valid document namespace
+  - `HasDownloadLocationTest` - checks to see if each component contains a download location
+  - `HasCreationInfoTest` - checks to see if the SPDX SBOM contains creation info 
+     (Creator and Created fields in metadata)
+  - `HasVerificationCodeTest` - checks to see if each component has a package verification code (FilesAnalyzed is true) 
+     or is omitted (FilesAnalyzed if false)
+  - `HasExtractedLicensesTest` - check if there are any extracted licenses not on the SPDX license list
+  - `ExtractedLicenseMinElementTest` - check any extracted licenses for the required fields: LicenseName, LicenseID, 
+     LicenseCrossReference 
+- Method in Utils.java to ensure components with no licenses have no null components
+- Added additional exceptions thrown in `TranslatorCDXXML` to increase verbosity of error messages.
+
+### Changed
+
+### Fixed
+- Fixed broken SBOM file transfers by adding back the `@RequestBody` decorators to all `SBOMFile` API request parameters.
+- Fixed issue with CDXJSON translator regarding translating null license objects to components without licenses
+- Fixed errors caused by `TranslatorPlugFest.getTranslator()` method incorrectly determining filetype.
+  - We now check for file extension only, since SPDX JSON and XML are not supported translators.
+
+---
 ## [3.9.2] - 2023-06-06
 > CDX Metrics processor is not complete, see issue [#183](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/183)
 ### Added
@@ -17,7 +48,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed broken SBOM file transfers by adding back the `@RequestBody` decorators to all `SBOMFile` API request parameters.
 
 ---
-
 ## [3.9.1] - 2023-06-05
 > Uniqueness processor is not complete, see issue [#160](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/160)
 ### Added
