@@ -61,8 +61,8 @@
     - Confirms that name and version match resource and package is registered with package manager 
 - **CycloneDX Metrics Test**
   - Checks if [CycloneDX SBOM specific metrics](https://cyclonedx.org/docs/1.4/json/) are included.
-    - [x] Has Bom-Ref: Does a component have a unique bom-ref to reference inside the BOM?
-    - [x] Has Bom Version: Does the SBOM have a version number declared?
+    - Has Bom-Ref: Does a component have a unique bom-ref to reference inside the BOM?
+    - Has Bom Version: Does the SBOM have a version number declared?
 ## Translator
 - Parse SBOMS from files and deserialize from formats:
   - CycloneDX
