@@ -1,28 +1,61 @@
 <div class="metrics-body flex col center">
-    <div class="results" *ngIf="GetQualityReport() && GetQualityReport().testResults.length > 0">
-        <app-accordion title="TEST RESULTS" [extra]="[(GetQualityReport() ? GetQualityReport().testResults.length : '0') + ' COMPONENTS']" style="flex-direction: column;">
-            <div body>
-                <app-accordion *ngFor="let testResult of GetQualityReport()?.testResults" style="flex-direction: column;" [extra]="[ getPassedPercent(testResult) + '% Passed' ]">
-                    <div title class="title">
-                    <span>{{testResult.component.name}}</span>
-                    </div>
-                    <div body>
-                        <div class="tests">
-                            <div class="test" *ngFor="let test of testResult.tests">
-                                <div class="result" id="{{test.status ? 'pass' : 'fail'}}" style="color: white">
-                                    {{test.message}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </app-accordion>
-            </div>
-        </app-accordion>
-    </div>
-    <div class="text flex center" *ngIf="!GetQualityReport()">
+  <div class="flex buttons">
+    <app-button (click)="showPassed = !showPassed" *ngIf="result">
+      Show {{ showPassed ? "Failed Only" : "Passed" }}
+    </app-button>
+    <app-button
+      class="hover"
+      [backgroundColor]="getLabelColor(processor)"
+      *ngFor="let processor of processors"
+      (click)="processorFilter = processorFilter === processor ? '' : processor"
+    >
+      {{ processor }}
+    </app-button>
+  </div>
+  <div class="results" *ngIf="result">
+    <div *ngIf="qr">
+      <div *ngFor="let identifier of identifiers">
+        <div *ngFor="let message of getIdentifierMessages(identifier)">
+          <div
+            *ngIf="
+              qr.mergedResults[identifier][message][0] && processorFilter.length
+                ? qr.mergedResults[identifier][message][0].processor ===
+                  processorFilter
+                : true
+            "
+          >
+            <app-accordion
+              class="merged-result"
+              *ngIf="
+                (!showPassed &&
+                  qr.mergedResults[identifier][message][0].pass !== 1) ||
+                showPassed
+              "
+              [extra]="[
+                getGrade(
+                  qr.mergedResults[identifier][message][0].pass
+                ).toString()
+              ]"
+              [color]="getResultColor(qr.mergedResults[identifier][message][0])"
+            >
+              <div title>{{ identifier }}: {{ message }}</div>
+              <div
+                body
+                *ngFor="let result of getMergedResult(identifier, message)"
+              >
+                {{ getTestMessage(result) }}
+              </div>
+            </app-accordion>
+          </div>
+        </div>
+      </div>
+
+      <div class="text flex center" *ngIf="!result">
         Please select an SBOM to see test results
-    </div>
-    <div class="text flex center" *ngIf="GetQualityReport() && GetQualityReport().testResults.length === 0">
+      </div>
+      <div class="text flex center" *ngIf="result && result.length === 0">
         There aren't any test results with the selected SBOM
+      </div>
     </div>
+  </div>
 </div>

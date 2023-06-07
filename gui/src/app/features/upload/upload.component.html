@@ -32,8 +32,8 @@
             <app-button icon="delete" (click)="DeleteSelected()">Delete Selected</app-button>
         </div>
         <div class="buttons flex">
-            <app-button backgroundColor="var(--accent)" class="add-button" icon="add" (click)="browse()">Add SBOMs</app-button>
-            <app-button *ngIf="GetValidSBOMs().length >= 1" icon="navigate_next" backgroundColor="var(--accent)" (click)="NextStepper()">Next</app-button>
+            <app-button class="add-button" icon="add" (click)="browse()">Add SBOMs</app-button>
+            <app-button *ngIf="GetValidSBOMs().length >= 1" icon="navigate_next" (click)="NextStepper()">Next</app-button>
         </div>
     </div>
 </div>

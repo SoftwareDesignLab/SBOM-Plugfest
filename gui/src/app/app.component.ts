@@ -14,4 +14,10 @@ export class AppComponent {
   GetValidSBOMs() {
     return this.dataHandler.GetSBOMsOfType(FileStatus.VALID);
   }
+
+  checkIndex(index: number) {
+    if (index === 1) {
+      this.dataHandler.RunAllMetrics();
+    }
+  }
 }

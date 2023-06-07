@@ -1,9 +1,10 @@
 /**@author Justin Jantzi*/
 import { Injectable } from '@angular/core';
 import { ClientService } from './client.service';
-import { HttpParams } from '@angular/common/http';
 import { IpcRenderer } from 'electron';
 import { Comparison } from '@features/comparison/comparison';
+import {QualityReport, test} from '@features/metrics/test';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,13 @@ export class DataHandlerService {
   private ipc!: IpcRenderer;
   public lastSentFilePaths: string[] = [];
 
+  public metrics: { [id: string]: QualityReport | null } = {};
   private files: { [path: string]: SBOMInfo } = {};
 
   public comparison!: Comparison;
 
   private loadingComparison: boolean = false;
+  private loadingMetrics: boolean = false;
 
   public selectedQualityReport!: string;
 
@@ -54,20 +57,30 @@ export class DataHandlerService {
     return this.loadingComparison;
   }
 
+  IsLoadingMetrics() {
+    return this.loadingMetrics;
+  }
+
   ValidateFile(path: string, metrics: boolean = false) {
+    if (metrics) {
+      this.loadingMetrics = true;
+    }
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
         this.files[path].status = FileStatus.VALID;
 
         if(metrics)
-          this.files[path].metrics = result;
+          this.loadingMetrics = false;
+          this.metrics[path] = new QualityReport(result as test);
       },
       (error) => {
+        this.loadingMetrics = false;
         this.files[path].status = FileStatus.ERROR;
         this.files[path].extra = error.error;
       })
     });
   }
+
 
   DeleteFile(path: string) {
     delete this.files[path];

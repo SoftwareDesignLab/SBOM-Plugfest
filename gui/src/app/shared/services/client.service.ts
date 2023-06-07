@@ -20,7 +20,7 @@ export class ClientService {
     params: new HttpParams()
   };
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
   }
 
   get(path: string, params: HttpParams = new HttpParams()) {

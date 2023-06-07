@@ -1,10 +1,15 @@
 :root {
     --accent: #58A5FF;
-    --green: #58ff82;
-    --red: #ff5858;
     --primary: #333333;
     --secondary: #1B1E21;
     --bg: #191d20;
+    --red: #D55E00;
+    --orange: #E69F00;
+    --yellow: #000000;
+    --green: #009E73;
+    --teal: #56B4E9;
+    --blue: #0072B2;
+    --pink: #CC79A7;
     --gray: gray;
 }
 
@@ -32,3 +37,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     transition-duration: .35s;
     transform: translate(0, -3px);
 }
+
+.metrics-body * .accordion-bar:nth-child(even) {
+  background-color:  red !important;
+}
+
+.mat-expansion-panel-header-title {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto !important;
+    margin-right: 16px;
+    align-items: center;
+  }
