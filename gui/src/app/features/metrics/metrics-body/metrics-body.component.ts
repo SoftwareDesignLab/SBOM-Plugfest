@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { DataHandlerService } from "@services/data-handler.service";
-import { QualityReport, testResult } from "../test";
+import { QualityReport, grade, testResult } from "../test";
 
 @Component({
   selector: "app-metrics-body",
@@ -80,11 +80,11 @@ export class MetricsBodyComponent {
   // Gets if test passed/failed/errored
   getGrade(num: number) {
     switch (num) {
-      case -1:
+      case grade.error:
         return "Error";
-      case 0:
+      case grade.fail:
         return "Failed";
-      case 1:
+      case grade.pass:
         return "Passed";
       default:
         return "N/A";

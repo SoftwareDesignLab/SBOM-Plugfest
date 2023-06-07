@@ -1,3 +1,4 @@
+import color from "src/app/shared/enum/color";
 export interface test {
   uid: string;
   attributeResults: {
@@ -22,13 +23,13 @@ export class QualityReport {
   identifiers: string[] = [];
   componentResults: { [key: string]: testResult[] } = {};
   colors = [
-    "var(--red)",
-    "var(--blue)",
-    "var(--green)",
-    "var(--teal)",
-    "var(--orange)",
-    "var(--pink)",
-    "var(--yellow)",
+    color.red,
+    color.blue,
+    color.green,
+    color.teal,
+    color.orange,
+    color.pink,
+    color.yellow,
   ];
 
   mergedResults: { [key: string]: { [key: string]: any[] } } = {};
@@ -44,28 +45,30 @@ export class QualityReport {
           if (result.additionalInfo["IDENTIFIER"]) {
             ids.add(result.additionalInfo["IDENTIFIER"]);
           }
-          const formattedRes = {
-            result,
-            processor,
-            test,
-            message: result.message,
-            pass: result.pass,
-            type: result.additionalInfo["TYPE"] || "",
-            fieldName: result.additionalInfo["FIELD_NAME"],
-            identifier: result.additionalInfo["IDENTIFIER"] || "",
-            stringValue: result.additionalInfo['STRING_VALUE'] || '',
-          };
-          this.results.push(formattedRes);
+          if (result.pass !== grade.error ) {
+            const formattedRes = {
+              result,
+              processor,
+              test,
+              message: result.message,
+              pass: result.pass,
+              type: result.additionalInfo["TYPE"] || "",
+              fieldName: result.additionalInfo["FIELD_NAME"],
+              identifier: result.additionalInfo["IDENTIFIER"] || "",
+              stringValue: result.additionalInfo['STRING_VALUE'] || '',
+            };
+            this.results.push(formattedRes);
 
-          if (formattedRes.identifier && formattedRes.result.message) {
-            if (!this.mergedResults[formattedRes?.identifier]) {
-                this.mergedResults[formattedRes.identifier] = { [formattedRes.message]: [formattedRes]}
-            } else {
-                if (this.mergedResults[formattedRes?.identifier][formattedRes.message]) {
-                    this.mergedResults[formattedRes?.identifier][formattedRes.message].push(formattedRes);
-                } else {
-                    this.mergedResults[formattedRes?.identifier][formattedRes.message] = [formattedRes];
-                }
+            if (formattedRes.identifier && formattedRes.result.message) {
+              if (!this.mergedResults[formattedRes?.identifier]) {
+                  this.mergedResults[formattedRes.identifier] = { [formattedRes.message]: [formattedRes]}
+              } else {
+                  if (this.mergedResults[formattedRes?.identifier][formattedRes.message]) {
+                      this.mergedResults[formattedRes?.identifier][formattedRes.message].push(formattedRes);
+                  } else {
+                      this.mergedResults[formattedRes?.identifier][formattedRes.message] = [formattedRes];
+                  }
+              }
             }
           }
         });
@@ -81,4 +84,10 @@ export class QualityReport {
   getResultsByComponent(identifier: string): any[] {
     return this.results.filter((result) => result.identifier === identifier);
   }
+}
+
+export enum grade {
+  error = -1,
+  fail = 0,
+  pass = 1,
 }
