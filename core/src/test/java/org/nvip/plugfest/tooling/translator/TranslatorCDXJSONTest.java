@@ -43,12 +43,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
         SBOM sbom = this.TRANSLATOR.translate(TEST_CDX_JSON_NO_LICENSES);
         assertNotNull(sbom);
 
-        for (Component c: sbom.getAllComponents()
-             ) {
-
-            assertEquals(0, c.getLicenses().size());
-
-        }
+        assertTrue(noLicensesCheck(sbom));
 
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());

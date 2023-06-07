@@ -1,6 +1,9 @@
 package org.nvip.plugfest.tooling.translator.utils;
 
+import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * File: Utils.java
@@ -21,6 +24,17 @@ public class Utils {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Helper method to check that SBOMs that should have no licenses do not have that field with any licenses added
+     * @param sbom to check
+     */
+    public static boolean noLicensesCheck(SBOM sbom){
+        for (Component c: sbom.getAllComponents())
+            if(c.getLicenses().size() > 0)
+                return false;
+        return true;
     }
 
 }
