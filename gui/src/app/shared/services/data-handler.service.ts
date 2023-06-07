@@ -20,6 +20,7 @@ export class DataHandlerService {
   public comparison!: Comparison;
 
   private loadingComparison: boolean = false;
+  private loadingMetrics: boolean = false;
 
   public selectedQualityReport!: string;
 
@@ -56,15 +57,24 @@ export class DataHandlerService {
     return this.loadingComparison;
   }
 
+  IsLoadingMetrics() {
+    return this.loadingMetrics;
+  }
+
   ValidateFile(path: string, metrics: boolean = false) {
+    if (metrics) {
+      this.loadingMetrics = true;
+    }
     this.ipc.invoke('getFileData', path).then((data: any) => {
       this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
         this.files[path].status = FileStatus.VALID;
 
         if(metrics)
+          this.loadingMetrics = false;
           this.metrics[path] = new QualityReport(result as test);
       },
       (error) => {
+        this.loadingMetrics = false;
         this.files[path].status = FileStatus.ERROR;
         this.files[path].extra = error.message;
       })
