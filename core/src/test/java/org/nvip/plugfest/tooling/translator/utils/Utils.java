@@ -16,6 +16,7 @@ public class Utils {
     /**
      * Helper method to check that SBOM metadata does not contain app tools
      * @param sbom to check
+     * @return whether metadata contains AppTools or not
      */
     public static boolean checkForAppTools(SBOM sbom) {
         for (String m: sbom.getMetadata().values()
@@ -27,8 +28,10 @@ public class Utils {
     }
 
     /**
-     * Helper method to check that SBOMs that should have no licenses do not have that field with any licenses added
+     * Helper method to check that SBOMs that should
+     * have no licenses do not have that field with any licenses added
      * @param sbom to check
+     * @return true if SBOM contains no licenses throughout its components
      */
     public static boolean noLicensesCheck(SBOM sbom){
         for (Component c: sbom.getAllComponents())
