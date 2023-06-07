@@ -60,6 +60,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
         assertEquals(18, sbom.getAllComponents().size());
 
+
         if(pathToSBOM.equals(test_small_cdx)) {
             assertEquals(4, sbom.getMetadata().size());
             assertEquals(1, sbom.appTools.size());
@@ -124,6 +125,7 @@ public class TranslatorCDXXMLTest extends TranslatorTestCore<TranslatorCDXXML> {
         SBOM sbom = this.TRANSLATOR.translate(test_no_metadata_cdx_two);
         assertNotNull(sbom);
         assertEquals(3, sbom.getAllComponents().size());
+        assertTrue(noLicensesCheck(sbom));
     }
 
     @Test
