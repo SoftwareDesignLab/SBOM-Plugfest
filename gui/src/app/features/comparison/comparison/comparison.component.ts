@@ -1,8 +1,10 @@
 /** @Author Tina DiLorenzo, Justin Jantzi */
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { Comparison } from "../comparison";
+import { Comparison, ComponentConflicts, Conflict } from "../comparison";
 import { DataHandlerService } from "@services/data-handler.service";
 import { SBOMComponent } from "@models/sbom";
+
+const MISSING_TAG = "MISSING";
 
 @Component({
   selector: "app-comparison",
@@ -12,13 +14,11 @@ import { SBOMComponent } from "@models/sbom";
 export class ComparisonComponent implements OnChanges {
   @Input() comparison: Comparison | null = null;
   path: any[] = [];
-  icon =  'check_circle'
 
   constructor(private dataHandler: DataHandlerService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.comparison) {
-
     }
   }
 
@@ -78,9 +78,29 @@ export class ComparisonComponent implements OnChanges {
 
     return this.path[index];
   }
-}
 
-export enum ConflictTypes {
-  Metadata,
-  Components
+  /**
+   * Figures out component ID and filters out missing or duplicate ids so the 
+   * object isn't double nested (Backend should be refactored for this)
+   */
+  ComponentFilter(object: ComponentConflicts | never[]) {
+
+    if (!object || Array.isArray(object)) {
+      return {};
+    }
+
+    let correction: {[id: string]: Conflict[]} = {};
+
+    for(let potentialID in object) {
+      let value = object[potentialID];
+
+      for(let otherPotentialID in value) {
+        let info = value[otherPotentialID];
+
+        correction[potentialID === MISSING_TAG ? otherPotentialID : potentialID] = info;
+      }
+    }
+
+    return correction;
+  }
 }
