@@ -108,9 +108,15 @@ public class APIController {
         processors.add(new CompletenessProcessor());
         processors.add(new UniquenessProcessor());
         processors.add(new RegisteredProcessor());
-        processors.add(new LicensingProcessor());
-        processors.add(new CDXMetricsProcessor());
-        // add spdx metrics
+        processors.add(new LicensingProcessor());   // Add origin specific processors
+
+        // Add CDX processor if relevant
+        if(sbom.getOriginFormat() == SBOM.Type.CYCLONE_DX)
+            processors.add(new CDXMetricsProcessor());
+
+        // Add SPDX Processor if relevant
+        if(sbom.getOriginFormat() == SBOM.Type.SPDX)
+            processors.add(new SPDXMetricsProcessor());
 
         //run the QA
         QualityReport report = QAPipeline.process(sbomFile.fileName, sbom, processors);
