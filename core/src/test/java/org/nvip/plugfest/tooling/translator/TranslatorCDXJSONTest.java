@@ -32,7 +32,7 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
     public static final String TEST_SMALL_SYFT_CDX_JSON_HASHES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/bom.json";
 
     public static final String TEST_CDX_JSON = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdxgen-8.4.6-source.json";
-    public static final String TEST_CDX_JSON_NO_LICENSES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/cdxgen-8.4.6-source.json";
+    public static final String TEST_CDX_JSON_NO_LICENSES = "src/test/java/org/nvip/plugfest/tooling/sample_boms/cdx_json/CDXMavenPlugin_build_cdx.json";
 
     protected TranslatorCDXJSONTest() {
         super(new TranslatorCDXJSON());
@@ -52,8 +52,8 @@ public class TranslatorCDXJSONTest extends TranslatorTestCore<TranslatorCDXJSON>
 
         assertEquals("1", sbom.getSbomVersion());
         assertEquals("1.4", sbom.getSpecVersion());
-        assertEquals(5, sbom.getAllComponents().size());
-        assertEquals(2, sbom.getMetadata().size());
+        assertEquals(17, sbom.getAllComponents().size());
+        assertEquals(1, sbom.getMetadata().size());
         assertEquals(1, sbom.getAppTools().size());
         assertFalse(checkForAppTools(sbom));
     }
