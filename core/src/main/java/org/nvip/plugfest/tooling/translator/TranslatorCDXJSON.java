@@ -1,16 +1,18 @@
 package org.nvip.plugfest.tooling.translator;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.*;
+import org.nvip.plugfest.tooling.sbom.uids.Hash;
 import org.cyclonedx.parsers.JsonParser;
 import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.AppTool;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+
 
 /**
  * file: TranslatorCDXJSON.java
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
  * @author Ethan Numan
  */
 public class TranslatorCDXJSON extends TranslatorCore {
+
+    public static final String PLUGFEST_UID = "org.nvip.plugfest.tooling.sbom.uids";
     public TranslatorCDXJSON() {
         super("json");
     }
@@ -137,12 +141,12 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 if (swid != null) new_component.setSwids(Collections.singleton(swid));
 
                 // get Hashes
-                List<Hash> raw_hashes = cdx_component.getHashes();
+                List<org.cyclonedx.model.Hash> raw_hashes = cdx_component.getHashes();
                 if (raw_hashes != null) {
-                    Set<org.nvip.plugfest.tooling.sbom.uids.Hash> hashes = new HashSet<>();
-                    for (Hash temp: raw_hashes){
-                        org.nvip.plugfest.tooling.sbom.uids.Hash temp2 = new org.nvip.plugfest.tooling.sbom.uids.Hash(temp.getAlgorithm(),temp.getValue());
-                        hashes.add(temp2);
+                    Set<Hash> hashes = new HashSet<>();
+                    for (org.cyclonedx.model.Hash temp: raw_hashes){
+                        Hash newHash = new Hash(temp.getAlgorithm(),temp.getValue());
+                        hashes.add(newHash);
                     }
                     new_component.setHashes(hashes);
                 }
