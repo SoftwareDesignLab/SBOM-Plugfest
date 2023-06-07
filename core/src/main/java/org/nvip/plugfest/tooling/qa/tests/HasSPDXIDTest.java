@@ -35,17 +35,6 @@ public class HasSPDXIDTest extends MetricTest{
         }
         return results;
     }
-/*   TODO SPDXID not obtainable for metadata at the moment
-    /**
-     * Check an SBOM's metadata for a valid SPDXID that matches the format
-     * "SPDXRef-..."
-     * @param sbom the sbom to test
-     * @return
-
-    private Result HasSPDXIDMetadata(SBOM sbom){
-        return null;
-    }
-*/
 
     /**
      * Check a single component for an SPDXID and test that it matches the
