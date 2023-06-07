@@ -25,7 +25,7 @@ public class HasSPDXIDTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
-        //TODO UID's (SPDXID) not present
+        //TODO UID's (SPDXID) in metadata not present
         // Check that the metadata contains a valid SPDXID
 
 
