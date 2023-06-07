@@ -69,9 +69,10 @@ export class DataHandlerService {
       this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
         this.files[path].status = FileStatus.VALID;
 
-        if(metrics)
+        if(metrics) {
           this.loadingMetrics = false;
           this.metrics[path] = new QualityReport(result as test);
+        }
       },
       (error) => {
         this.loadingMetrics = false;
