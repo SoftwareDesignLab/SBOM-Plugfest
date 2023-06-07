@@ -5,6 +5,7 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * file: HasBomRefTest.java
@@ -25,8 +26,22 @@ public class HasBomRefTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
+
+        // check to make sure components are present, if not return an
+        // error result that no components are present
+        Set<Component> components = sbom.getAllComponents();
+
+        if(components.isEmpty()){
+            Result r = new Result(TEST_NAME, Result.STATUS.ERROR, "SBOM " +
+                    "does not have any components to test");
+            r.addContext(sbom, "Component bom-refs");
+            results.add(r);
+            return results;
+        }
+
+        // if components are present
         // loop through each component and test
-        for(Component c: sbom.getAllComponents()){
+        for(Component c: components){
             results.add(checkBomRef(c));
         }
         return results;
