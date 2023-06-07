@@ -20,9 +20,9 @@
             <app-accordion
               class="merged-result"
               *ngIf="
-                (!showPassed &&
+                ((!showPassed &&
                   qr.mergedResults[identifier][message][0].pass !== 1) ||
-                showPassed
+                showPassed) && !processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor)
               "
               [extra]="[
                 getGrade(
