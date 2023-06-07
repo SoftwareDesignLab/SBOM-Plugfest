@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 ## [3.9.4] - 2023-06-07
 - `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
+- `TranslatorCDXJSON` tests to make sure if a JSON SBOM is CycloneDX.
+  - If not, a more descriptive error message is thrown to prevent SPDX JSON SBOMs from causing errors.
+  - Note: `TranslatorCDXXML` already handles this for SPDX XML SBOMs.
 
 ---
 ## [3.9.3] - 2023-06-07

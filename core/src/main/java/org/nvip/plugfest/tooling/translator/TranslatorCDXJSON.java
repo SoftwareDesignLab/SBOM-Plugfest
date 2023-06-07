@@ -51,6 +51,10 @@ public class TranslatorCDXJSON extends TranslatorCore {
             throw new TranslatorException("Could not parse file.");
         }
 
+        if (json_sbom.getBomFormat() == null) { // This is NOT a CDX SBOM
+            throw new TranslatorException("Could not parse file. JSON SBOM is not CycloneDX.");
+        }
+
         // TODO these are essential fields, throw an actual error if any of these are null
         bom_data.put("format", json_sbom.getBomFormat());
         bom_data.put("specVersion", json_sbom.getSpecVersion());
