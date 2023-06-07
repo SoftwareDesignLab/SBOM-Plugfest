@@ -13,41 +13,39 @@
       {{ processor }}
     </app-button>
   </div>
-  <div class="results" *ngIf="result">
-    <div *ngIf="qr">
-      <div *ngFor="let identifier of identifiers">
-        <div *ngFor="let message of getIdentifierMessages(identifier)">
-            <app-accordion
-              class="merged-result"
-              *ngIf="
-                ((!showPassed &&
-                  qr.mergedResults[identifier][message][0].pass !== 1) ||
-                showPassed) && !processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor)
-              "
-              [extra]="[
-                getGrade(
-                  qr.mergedResults[identifier][message][0].pass
-                ).toString()
-              ]"
-              [color]="getResultColor(qr.mergedResults[identifier][message][0])"
+  <div class="results" *ngIf="result && qr">
+    <ng-container *ngFor="let identifier of identifiers">
+      <ng-container *ngFor="let message of getIdentifierMessages(identifier)">
+          <app-accordion
+            class="merged-result"
+            *ngIf="
+              ((!showPassed &&
+                qr.mergedResults[identifier][message][0].pass !== 1) ||
+              showPassed) && !processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor)
+            "
+            [extra]="[
+              getGrade(
+                qr.mergedResults[identifier][message][0].pass
+              ).toString()
+            ]"
+            [color]="getResultColor(qr.mergedResults[identifier][message][0])"
+          >
+            <div title>{{ identifier }}: {{ message }}</div>
+            <div
+              body
+              *ngFor="let result of getMergedResult(identifier, message)"
             >
-              <div title>{{ identifier }}: {{ message }}</div>
-              <div
-                body
-                *ngFor="let result of getMergedResult(identifier, message)"
-              >
-                {{ getTestMessage(result) }}
-              </div>
-            </app-accordion>
-        </div>
-      </div>
+              {{ getTestMessage(result) }}
+            </div>
+          </app-accordion>
+      </ng-container>
+    </ng-container>
 
-      <div class="text flex center" *ngIf="!result">
-        Please select an SBOM to see test results
-      </div>
-      <div class="text flex center" *ngIf="result && result.length === 0">
-        There aren't any test results with the selected SBOM
-      </div>
+    <div class="text flex center" *ngIf="!result">
+      Please select an SBOM to see test results
+    </div>
+    <div class="text flex center" *ngIf="result && result.length === 0">
+      There aren't any test results with the selected SBOM
     </div>
   </div>
 </div>
