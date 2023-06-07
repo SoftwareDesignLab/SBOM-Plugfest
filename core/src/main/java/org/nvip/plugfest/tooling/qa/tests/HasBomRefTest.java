@@ -26,7 +26,6 @@ public class HasBomRefTest extends MetricTest{
     public List<Result> test(SBOM sbom) {
         List<Result> results = new ArrayList<>();
 
-
         // check to make sure components are present, if not return an
         // error result that no components are present
         Set<Component> components = sbom.getAllComponents();
