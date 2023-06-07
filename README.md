@@ -49,7 +49,7 @@
       - [x] CPE
         - Does the CPE's data match the component's data? 
           - Confirms that the CPE's name, version, and publisher match the component's stored data
-      - [ ] PURL
+      - [x] PURL
         - Does the PURL's data match the component's data?
           - Confirms that the PURL's name and version match the component's stored data
           - Implementation of PURL's namespace is needed.
@@ -60,13 +60,9 @@
     - Uses PURLs to search for information about the package using package manager APIs
     - Confirms that name and version match resource and package is registered with package manager 
 - **CycloneDX Metrics Test**
-  - Checks if a [CycloneDX SBOM specific metrics](https://cyclonedx.org/docs/1.4/json/) are included.
+  - Checks if [CycloneDX SBOM specific metrics](https://cyclonedx.org/docs/1.4/json/) are included.
     - [x] Has Bom-Ref: Does a component have a unique bom-ref to reference inside the BOM?
     - [x] Has Bom Version: Does the SBOM have a version number declared?
-    - [ ] Has Composition Aggregate: If compositions are present, does each composition contain an aggregate?
-    - [ ] Has External Ref Specs: If external references are present, does each external reference contain a URL and type?
-    - [ ] Has Services Name: If services are present, does each service at least contain a name?
-    - [ ] Has Dependencies Ref: If dependencies are present, does each dependency at least contain a reference to a component's bom-ref?
 ## Translator
 - Parse SBOMS from files and deserialize from formats:
   - CycloneDX
