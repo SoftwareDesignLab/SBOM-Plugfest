@@ -11,6 +11,7 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.sbom.SBOM.Type;
 import org.nvip.plugfest.tooling.translator.TranslatorSPDX;
+import static org.nvip.plugfest.tooling.translator.utils.Utils.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -73,6 +74,7 @@ public class TranslatorSPDXTest extends TranslatorTestCore<TranslatorSPDX> {
         assertEquals("1", test.getSbomVersion());
         assertEquals("SPDX-2.2", test.getSpecVersion());
         assertEquals(138, test.getAllComponents().size());
+        assertTrue(noLicensesCheck(test));
     }
 
 

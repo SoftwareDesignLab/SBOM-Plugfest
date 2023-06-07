@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.9.3] - 2023-06-07
 
 ### Added
+- Method in Utils.java to ensure components with no licenses have no null components
 - Added additional exceptions thrown in `TranslatorCDXXML` to increase verbosity of error messages.
 
 ### Changed
 
 ### Fixed
+- Fixed issue with CDXJSON translator regarding translating null license objects to components without licenses
 - Fixed errors caused by `TranslatorPlugFest.getTranslator()` method incorrectly determining filetype.
   - We now check for file extension only, since SPDX JSON and XML are not supported translators.
 
