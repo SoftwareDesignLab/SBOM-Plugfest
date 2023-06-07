@@ -7,7 +7,8 @@
       class="hover"
       [backgroundColor]="getLabelColor(processor)"
       *ngFor="let processor of processors"
-      (click)="processorFilter = processorFilter === processor ? '' : processor"
+      [ngStyle]="{opacity: processorIgnoreList.includes(processor) ? '20%' : '100%'}"
+      (click)="toggleProcessorFilter(processor)"
     >
       {{ processor }}
     </app-button>
@@ -16,14 +17,6 @@
     <div *ngIf="qr">
       <div *ngFor="let identifier of identifiers">
         <div *ngFor="let message of getIdentifierMessages(identifier)">
-          <div
-            *ngIf="
-              qr.mergedResults[identifier][message][0] && processorFilter.length
-                ? qr.mergedResults[identifier][message][0].processor ===
-                  processorFilter
-                : true
-            "
-          >
             <app-accordion
               class="merged-result"
               *ngIf="
@@ -46,7 +39,6 @@
                 {{ getTestMessage(result) }}
               </div>
             </app-accordion>
-          </div>
         </div>
       </div>
 

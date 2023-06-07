@@ -14,17 +14,23 @@ export class MetricsBodyComponent {
   filteredArray: any[] = [];
   showPassed = false;
   componentView = false;
-  processorFilter = "";
+  processorIgnoreList: string[] = [];
 
   // Gets results for metrics tests
   get result() {
     this.qr = this.handler.metrics[this.handler.selectedQualityReport];
-    if (this.processorFilter.length) {
-      return this.handler.metrics[
-        this.handler.selectedQualityReport
-      ]?.results.filter((res) => res.processor === this.processorFilter);
-    }
-    return this.handler.metrics[this.handler.selectedQualityReport]?.results;
+
+    return this.handler.metrics[
+      this.handler.selectedQualityReport
+    ]?.results.filter((res) => !this.processorIgnoreList.includes(res.processor));
+
+  }
+
+  toggleProcessorFilter(name: string) {
+    if(this.processorIgnoreList.includes(name)) 
+      this.processorIgnoreList = this.processorIgnoreList.filter((x) => x !== name);
+    else
+      this.processorIgnoreList.push(name);
   }
 
   // Gets processor names
