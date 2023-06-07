@@ -6,7 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
 ## [3.9.3] - 2023-06-07
 
-> SPDX Metrics processor is not complete, see issue [#160](https://github.com/SoftwareDesignLab/plugfest-tooling/issues/160)
 ### Added
 - New SPDX Metrics Processor. New tests include:
   - `HasDataLicenseSPDXTest` - checks to see if the SPDX SBOM DataLicense field in metadata contains the CC0-1.0 license
