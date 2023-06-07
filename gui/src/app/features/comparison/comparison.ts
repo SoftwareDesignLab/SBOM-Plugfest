@@ -2,8 +2,8 @@
 
 interface Conflict {
   type: string;
-  target: string;
-  other: string;
+  target: string | null;
+  other: string | null;
 }
 
 interface DiffReport {
