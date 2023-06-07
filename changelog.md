@@ -4,6 +4,17 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
+## [3.9.3] - 2023-06-07
+
+### Added
+- Method in Utils.java to ensure components with no licenses have no null components
+
+### Changed
+
+### Fixed
+- Fixed issue with CDXJSON translator regarding translating null license objects to components without licenses
+
+---
 ## [3.9.2] - 2023-06-04
 
 ### Added
