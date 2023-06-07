@@ -10,7 +10,7 @@ import java.util.Map;
  * file: HasDataLicenseSPDXTest.java
  *
  * For an SPDX SBOM, test that the SBOM Metadata contains the
- * DataLicense fields with a license of CC0-1.0
+ * DataLicense field with a license of CC0-1.0
  * @author Matthew Morrison
  */
 public class HasDataLicenseSPDXTest extends MetricTest{

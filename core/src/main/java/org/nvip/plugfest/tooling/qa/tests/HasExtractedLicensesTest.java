@@ -6,7 +6,6 @@ import org.nvip.plugfest.tooling.sbom.SBOM;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * file: HasCreationInfoTest.java
