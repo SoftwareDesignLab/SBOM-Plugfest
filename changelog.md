@@ -4,10 +4,6 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ---
-## [3.9.4] - 2023-06-07
-- `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
-
----
 ## [3.9.3] - 2023-06-07
 
 ### Added
@@ -27,13 +23,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added additional exceptions thrown in `TranslatorCDXXML` to increase verbosity of error messages.
 
 ### Changed
-
+- `TranslatorSPDX` Now filters out duplicate CPEs, PURLs, and SWIDs
 ### Fixed
 - Fixed broken SBOM file transfers by adding back the `@RequestBody` decorators to all `SBOMFile` API request parameters.
 - Fixed issue with CDXJSON translator regarding translating null license objects to components without licenses
 - Fixed errors caused by `TranslatorPlugFest.getTranslator()` method incorrectly determining filetype.
   - We now check for file extension only, since SPDX JSON and XML are not supported translators.
-
+- Properly remove `SBOM` object from QA pipeline
 ---
 ## [3.9.2] - 2023-06-04
 
