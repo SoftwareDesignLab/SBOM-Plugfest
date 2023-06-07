@@ -358,9 +358,9 @@ public class TranslatorSPDX extends TranslatorCore {
             if (!externalRef.find()) continue;
 
             switch(externalRef.group(2).toLowerCase()) {
-                case "cpe23type" -> cpes.add(externalRef.group(3));
-                case "purl" -> purls.add(externalRef.group(3));
-                case "swid" -> swids.add(externalRef.group(3));
+                case "cpe23type" -> { if(!cpes.contains(externalRef)) cpes.add(externalRef.group(3)); }
+                case "purl" -> { if(!purls.contains(externalRef)) purls.add(externalRef.group(3)); }
+                case "swid" -> { if(!swids.contains(externalRef)) swids.add(externalRef.group(3)); }
             }
         }
 
