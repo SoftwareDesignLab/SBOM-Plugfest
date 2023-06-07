@@ -1,6 +1,5 @@
 package org.nvip.plugfest.tooling.qa.processors;
 
-
 import org.nvip.plugfest.tooling.qa.tests.*;
 
 /**
@@ -28,7 +27,7 @@ public class SPDXMetricsProcessor extends AttributeProcessor{
         this.metricTests.add(new ExtractedLicenseMinElementTest());
         /*
         TODO
-           hasBomVersion -> in CDX Metrics Processor
+           hasBomVersion
            hasDocumentName
          */
     }
