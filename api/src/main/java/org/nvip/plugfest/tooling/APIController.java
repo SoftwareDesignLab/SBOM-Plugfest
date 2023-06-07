@@ -64,7 +64,7 @@ public class APIController {
         }
         // Get and remove target from queue
         SBOM targetSBOM = compareQueue.get(targetIndex);
-        compareQueue.remove(targetIndex);
+        compareQueue.remove(targetSBOM);
 
         // Run comparison
         DiffReport dr = new DiffReport(sboms[targetIndex].fileName, targetSBOM);
