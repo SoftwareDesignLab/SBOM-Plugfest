@@ -1,4 +1,7 @@
 <div class="metrics-page">
     <app-metrics-side-panel/>
-    <app-metrics-body/>
+    <app-metrics-body *ngIf="!isLoadingMetrics()"/>
+    <div class="loading flex center" *ngIf="isLoadingMetrics()">
+    <mat-spinner/>
+  </div>
 </div>
