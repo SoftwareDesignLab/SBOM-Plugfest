@@ -50,6 +50,7 @@
 
 .text {
   height: 100%;
+  color: white;
 }
 
 app-button {

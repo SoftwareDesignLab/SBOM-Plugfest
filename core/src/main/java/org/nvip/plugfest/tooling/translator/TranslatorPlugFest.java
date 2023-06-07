@@ -53,33 +53,19 @@ public class TranslatorPlugFest {
      * @throws TranslatorException if translation failed
      */
     public static SBOM translateContents(String contents, String filePath) throws TranslatorException {
-        try {
-            TranslatorCore translator = getTranslator(contents, filePath);
+        TranslatorCore translator = getTranslator(filePath);
 
-            SBOM result = translator.translateContents(contents, filePath);
-            if (result == null) throw new TranslatorException("Unknown error while translating.");
-            return result;
-        }
-        catch (Exception e) {
-            throw new TranslatorException(e.getMessage());
-        }
+        SBOM result = translator.translateContents(contents, filePath);
+        if (result == null) throw new TranslatorException("Unknown error while translating.");
+        return result;
     }
 
-    private static TranslatorCore getTranslator(String contents, String filePath) throws TranslatorException {
+    private static TranslatorCore getTranslator(String filePath) throws TranslatorException {
         String ext = filePath.substring(filePath.lastIndexOf('.') + 1).trim().toLowerCase();
 
-        switch (ext.toLowerCase()) { // TODO possibly scan for an entire file header to ensure validity?
-            case "json" -> {
-                if (contents.contains("\"bomFormat\": \"CycloneDX\"")) return new TranslatorCDXJSON();
-//                else if (contents.contains("\"SPDXID\" : \"SPDXRef-DOCUMENT\"")) return new TranslatorSPDXJSON();
-                else throw new TranslatorException(INVALID_FILE_CONTENTS + " File: " + filePath);
-            }
-            case "xml" -> {
-                if (contents.contains("<bom xmlns=\"http://cyclonedx.org/schema/bom/")) return new TranslatorCDXXML();
-//                else if (contents.contains("<SPDXID>SPDXRef-DOCUMENT</SPDXID>")) return new TranslatorSPDXXML();
-                else throw new TranslatorException(INVALID_FILE_CONTENTS + " File: " + filePath);
-            }
-//            case "yml" -> { return new TranslatorSPDXYAML(); }
+        switch (ext.toLowerCase()) {
+            case "json" -> { return new TranslatorCDXJSON(); }
+            case "xml" -> { return new TranslatorCDXXML(); }
             case "spdx" -> { return new TranslatorSPDX(); }
             default -> { throw new TranslatorException(INVALID_FILE_TYPE.apply(ext)); }
         }
