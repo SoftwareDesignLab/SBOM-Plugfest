@@ -49,7 +49,7 @@
       - [x] CPE
         - Does the CPE's data match the component's data? 
           - Confirms that the CPE's name, version, and publisher match the component's stored data
-      - [ ] PURL
+      - [x] PURL
         - Does the PURL's data match the component's data?
           - Confirms that the PURL's name and version match the component's stored data
           - Implementation of PURL's namespace is needed.
@@ -59,6 +59,10 @@
   - IsRegisteredTest:
     - Uses PURLs to search for information about the package using package manager APIs
     - Confirms that name and version match resource and package is registered with package manager 
+- **CycloneDX Metrics Test**
+  - Checks if [CycloneDX SBOM specific metrics](https://cyclonedx.org/docs/1.4/json/) are included.
+    - Has Bom-Ref: Does a component have a unique bom-ref to reference inside the BOM?
+    - Has Bom Version: Does the SBOM have a version number declared?
 - **SPDX Metrics Processor Tests**
   - Checks if [SPDX SBOM specific metrics](https://spdx.github.io/spdx-spec/v2.3/) are included in SPDX SBOMs
     - Has Data License SPDX: Does the SBOM's DataLicense field contain the CC0-1.0 license?
@@ -71,7 +75,7 @@
     - Has Extracted Licenses Test: Are there any extracted licenses not on the SPDX license list in the SBOM?
     - Extracted License Min Element: Do the extracted licenses contain the required fields LicenseName, LicenseID,
       and LicenseCrossReference?
-  
+
 ## Translator
 - Parse SBOMS from files and deserialize from formats:
   - CycloneDX

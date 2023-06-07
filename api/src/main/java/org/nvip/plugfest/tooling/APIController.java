@@ -5,11 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.nvip.plugfest.tooling.differ.DiffReport;
 import org.nvip.plugfest.tooling.qa.QAPipeline;
 import org.nvip.plugfest.tooling.qa.QualityReport;
-import org.nvip.plugfest.tooling.qa.processors.AttributeProcessor;
-import org.nvip.plugfest.tooling.qa.processors.CompletenessProcessor;
-import org.nvip.plugfest.tooling.qa.processors.UniquenessProcessor;
-import org.nvip.plugfest.tooling.qa.processors.RegisteredProcessor;
-import org.nvip.plugfest.tooling.qa.processors.LicensingProcessor;
+import org.nvip.plugfest.tooling.qa.processors.*;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.nvip.plugfest.tooling.translator.TranslatorException;
 import org.nvip.plugfest.tooling.translator.TranslatorPlugFest;
@@ -113,7 +109,7 @@ public class APIController {
         processors.add(new UniquenessProcessor());
         processors.add(new RegisteredProcessor());
         processors.add(new LicensingProcessor());
-        // add cdx metrics
+        processors.add(new CDXMetricsProcessor());
         // add spdx metrics
 
         //run the QA
