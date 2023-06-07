@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * Compatible with CDX 1.4 JSON SBOMs
  *
  * @author Tyler Drake
+ * @author Ethan Numan
  */
 public class TranslatorCDXJSON extends TranslatorCore {
     public TranslatorCDXJSON() {
@@ -134,7 +135,7 @@ public class TranslatorCDXJSON extends TranslatorCore {
                 String swid = String.valueOf(cdx_component.getSwid());
                 if (swid != null) new_component.setSwids(Collections.singleton(swid));
 
-
+                // get Hashes
                 List<Hash> raw_hashes = cdx_component.getHashes();
                 if (raw_hashes != null) {
                     Set<org.nvip.plugfest.tooling.sbom.uids.Hash> hashes = new HashSet<>();
