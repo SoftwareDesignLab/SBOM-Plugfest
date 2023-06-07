@@ -23,12 +23,12 @@ export class QualityReport {
   componentResults: { [key: string]: testResult[] } = {};
   colors = [
     "var(--red)",
-    "var(--purple)",
-    "var(--yellow)",
     "var(--blue)",
     "var(--green)",
+    "var(--teal)",
     "var(--orange)",
     "var(--pink)",
+    "var(--yellow)",
   ];
 
   mergedResults: { [key: string]: { [key: string]: any[] } } = {};

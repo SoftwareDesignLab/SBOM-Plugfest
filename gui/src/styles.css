@@ -3,14 +3,13 @@
     --primary: #333333;
     --secondary: #1B1E21;
     --bg: #191d20;
-    --red: #ff5858;
-    --orange: #ffb158;
-    --yellow: #b89d0a;
-    --green: #58ff82;
-    --teal: #58ffe6;
-    --blue: #5863ff;
-    --purple: #e358ff;
-    --pink: hsl(308, 100%, 88%);
+    --red: #D55E00;
+    --orange: #E69F00;
+    --yellow: #000000;
+    --green: #009E73;
+    --teal: #56B4E9;
+    --blue: #0072B2;
+    --pink: #CC79A7;
     --gray: gray;
 }
 
