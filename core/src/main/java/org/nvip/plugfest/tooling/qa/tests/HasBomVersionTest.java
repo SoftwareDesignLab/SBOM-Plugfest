@@ -17,7 +17,7 @@ public class HasBomVersionTest extends MetricTest{
     /**
      * Given an SBOM, test if is it contains a version number
      * @param sbom SBOM to test
-     * @return the result of checking the sbom's version
+     * @return the result of checking the sbom's version number
      */
     @Override
     public List<Result> test(SBOM sbom) {
