@@ -5,8 +5,8 @@
       <span
         class="path"
         *ngFor="let title of path; let i = index"
-        (click)="path.splice(0, i)"
-        >{{ i === 0 ? getSBOMAlias(title.trim()) : title.trim() + "/" }}</span
+        (click)="path.splice(i + 1, path.length)"
+        >{{ (i === 0 ? getSBOMAlias(title.trim()) : title.trim()) + "/" }}</span
       >
     </div>
   </div>
@@ -35,24 +35,45 @@
       </app-accordion>
     </div>
     
-    <div *ngIf="path.length === 2 && getPathIndex(2) === 'Metadata'">
+    <div *ngIf="path.length === 2 && getPathIndex(1) === 'Metadata'">
       <app-accordion
         *ngFor="let conflict of getMetadataConflicts(getPathIndex(0))"
-        [extra]="[conflict.type]"
       >
         <div title class="title">
-          <span> {{ 'Target: ' + conflict.target }}</span>
-          <span> {{ 'This: ' + conflict.other }}</span>
+          <span> {{ conflict.type }}</span>
+        </div>
+        <div body>
+          <span>{{"Target: " + conflict.target}}</span>
+          <br/>
+          <span>{{"Other: " + conflict.other}}</span>
         </div>
       </app-accordion>
     </div>
 
-    <div *ngIf="path.length === 3 && getPathIndex(2) === 'Components'">
-
+    <div *ngIf="path.length === 2 && getPathIndex(1) === 'Components'">
+        <app-accordion
+        *ngFor="let conflict of ComponentFilter(getComponentConflicts(getPathIndex(0))) | keyvalue"
+        (click)="path.push(conflict.key)"
+      >
+        <div title class="title">
+          <span> {{ conflict.key }}</span>
+        </div>
+      </app-accordion>
     </div>
 
-    <div *ngIf="path.length === 4 && getPathIndex(3) === 'Components'">
-
-    </div>
+    <div *ngIf="path.length === 3 && getPathIndex(1) === 'Components'">
+      <app-accordion
+      *ngFor="let conflict of ComponentFilter(getComponentConflicts(getPathIndex(0)))[path[2]]"
+    >
+      <div title class="title">
+        <span> {{ conflict.type }}</span>
+      </div>
+      <div body>
+        <span>{{"Target: " + conflict.target}}</span>
+        <br/>
+        <span>{{"Other: " + conflict.other}}</span>
+      </div>
+    </app-accordion>
+  </div>
   </div>
 </div>
