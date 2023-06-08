@@ -12,4 +12,5 @@ export class AccordionComponent {
   @Input() extra: string[] = [];
   @Input() color: string = '';
   @Input() expanded: boolean = false;
+  @Input() backgroundColor: string ='';
 }
