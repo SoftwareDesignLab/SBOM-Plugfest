@@ -124,7 +124,6 @@ public class AccurateCPETest extends MetricTest{
         if(!CPE.isEqualWildcard(cpeValue, componentValue)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL,
                     "CPE does not match " + field);
-            r.updateInfo(Result.Context.STRING_VALUE, componentValue);
 
         // Else they both match, test passes
         } else {
@@ -132,7 +131,7 @@ public class AccurateCPETest extends MetricTest{
         }
 
         // Add context and return
-        r.addContext(c, "CPE:" + field);
+        r.addContext(c, "CPE: " + field);
         return r;
     }
 
