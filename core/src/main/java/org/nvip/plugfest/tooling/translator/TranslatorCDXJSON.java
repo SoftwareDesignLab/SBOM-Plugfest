@@ -67,15 +67,22 @@ public class TranslatorCDXJSON extends TranslatorCore {
         Metadata metadata = json_sbom.getMetadata();
         if(metadata != null) {
 
-            String author;
+            StringBuilder authorBuilder = new StringBuilder();
             if(json_sbom.getMetadata().getAuthors() != null) {
-                author = json_sbom.getMetadata().getAuthors().toString();
-                bom_data.put("author", author);
-                authorAndTimestamp[0] = "[" + author + "]";
+                for(OrganizationalContact publisher: json_sbom.getMetadata().getAuthors()) {
+                    if(!authorBuilder.toString().equals("")) { authorBuilder.append(", "); }
+                    authorBuilder.append("[");
+                    authorBuilder.append(publisher.getName() + ", ");
+                    authorBuilder.append(publisher.getEmail());
+                    authorBuilder.append("]");
+                }
+                String authors = authorBuilder.toString();
+                bom_data.put("author", authors);
+                authorAndTimestamp[0] = authors ;
             }
 
             Date timestamp = json_sbom.getMetadata().getTimestamp();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             bom_data.put("timestamp" , format.format(timestamp));
             authorAndTimestamp[1] = "[" + timestamp + "]";

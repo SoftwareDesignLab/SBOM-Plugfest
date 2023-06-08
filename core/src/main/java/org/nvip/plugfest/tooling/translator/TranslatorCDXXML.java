@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 
 /**
@@ -128,9 +130,15 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Get important SBOM items from meta  (timestamp, tool info)
         Map<String, String> resolvedMetadata = resolveMetadata(sbomMeta);
-
+        Pattern specVersionPattern = Pattern.compile(".*/(\\d+\\.\\d+)");
+        Matcher specVersionMathcher = specVersionPattern.matcher(header_materials.get("xmlns"));
+        if(specVersionMathcher.matches()) {
+            bom_data.put("specVersion", specVersionMathcher.group(1));
+        }
+        else{
+            Debug.log(Debug.LOG_TYPE.WARN, "Invalid specVersion format.");
+        }
         bom_data.put("format", "cyclonedx");
-        bom_data.put("specVersion", header_materials.get("xmlns"));
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
@@ -386,8 +394,17 @@ public class TranslatorCDXXML extends TranslatorCore {
                     }
                 }
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
-                if(!author.toString().equals("")) { author.append(" , "); }
-                author.append(sbomMeta.item(b).getTextContent());
+                if(!(sbomMeta.item(b).getParentNode().getNodeName().contains("authors"))) {
+                    if (!author.toString().equals("")) {
+                        author.append(", ");
+                    }
+                    if (sbomMeta.item(b).getNodeName().contains("name")){
+                        author.append("[" + sbomMeta.item(b).getTextContent());
+                    }
+                    else{
+                        author.append(sbomMeta.item(b).getTextContent() + "]");
+                    }
+                }
             } else {
                 sbom_materials.put(
                         sbomMeta.item(b).getNodeName(),
@@ -401,6 +418,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
 
         // Update data used to construct SBOM
+
         bom_data.put("author", author.toString().equals("") ? sbom_materials.get("vendor") : author.toString());
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
 
