@@ -45,7 +45,6 @@ public class ValidCPETest extends MetricTest {
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid CPE String");
                 }
 
-                r.addContext(c, "cpe");
                 results.add(r);
             }
         }
