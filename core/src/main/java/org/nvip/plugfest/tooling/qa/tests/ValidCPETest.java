@@ -19,7 +19,7 @@ public class ValidCPETest extends MetricTest {
     private static final String TEST_NAME = "ValidCPE";
 
     /**
-     * Validates the PURL
+     * Validates the CPE
      *
      * @param sbom SBOM to test
      * @return Collection of results
@@ -45,6 +45,7 @@ public class ValidCPETest extends MetricTest {
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid CPE String");
                 }
 
+                r.updateInfo(Result.Context.STRING_VALUE, cpe);
                 results.add(r);
             }
         }

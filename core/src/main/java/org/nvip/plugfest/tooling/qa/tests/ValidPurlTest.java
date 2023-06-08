@@ -44,6 +44,7 @@ public class ValidPurlTest extends MetricTest {
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid Purl String");
                 }
 
+                r.updateInfo(Result.Context.STRING_VALUE, p);
                 results.add(r);
             }
         }
