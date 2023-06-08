@@ -386,8 +386,12 @@ public class TranslatorCDXXML extends TranslatorCore {
                     }
                 }
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
-                if(!author.toString().equals("")) { author.append(" , "); }
-                author.append(sbomMeta.item(b).getTextContent());
+                if(!(sbomMeta.item(b).getParentNode().getNodeName().contains("authors"))) {
+                    if (!author.toString().equals("")) {
+                        author.append(" ");
+                    }
+                    author.append(sbomMeta.item(b).getTextContent());
+                }
             } else {
                 sbom_materials.put(
                         sbomMeta.item(b).getNodeName(),
@@ -401,6 +405,7 @@ public class TranslatorCDXXML extends TranslatorCore {
 
 
         // Update data used to construct SBOM
+
         bom_data.put("author", author.toString().equals("") ? sbom_materials.get("vendor") : author.toString());
         bom_data.put("timestamp", sbom_materials.get("timestamp"));
 
