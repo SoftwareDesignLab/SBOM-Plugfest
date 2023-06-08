@@ -5,10 +5,7 @@ enum shape {
     pentagon = 'pentagon',
     triangle = 'change_history',
     star = 'star',
-    eight_star = 'brightness_empty',
-
-
-
+    eightStar = 'brightness_empty',
 }
 
 export default shape;

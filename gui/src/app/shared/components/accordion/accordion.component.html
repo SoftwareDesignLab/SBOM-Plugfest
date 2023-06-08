@@ -13,9 +13,11 @@
     </mat-panel-description>
     <div
       *ngIf="color != ''"
-      class="color-bar"
-      style="background-color: {{ color }};"
-    ></div>
+      class="color-bar flex center"
+      [ngStyle]="{'background-color': color }"
+    >
+    <mat-icon class="accordion-icon" aria-hidden="true" fontIcon="circle"/>
+    </div>
   </mat-expansion-panel-header>
   <div class="content">
     <ng-content select="[body]" />
