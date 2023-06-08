@@ -1,68 +1,25 @@
-/** Author: Tina DiLorenzo */
-import { SBOM } from "@models/sbom";
+/** @Author Tina DiLorenzo, Justin Jantzi */
 
-/** @TODO */
-// 1. CREATE A CONSTRUCTOR TAKING IN A JSON OBJECT to create comparisons
-// 2. CONVERT JSON
-//    - readonly arrays TO SETS
-//    - convert keys/values to maps
-
-interface SBOMConflict {
-  conflictTypes?:  readonly any[];
-  conflicts?: readonly any[];
-}
-
-interface ComponentConflict {
-  componentA?: attributes | null;
-  componentB?: attributes | null;
-  conflictTypes?: readonly string[];
-  conflicts?: readonly any[];
-}
-
-export interface attributes {
-  uuid?: string | null;
-  name?: string | null;
-  publisher?: string | null;
-  unpackaged?: boolean;
-  cpes?: readonly attributes[] | readonly string[] | readonly [] | null;
-  purls?: readonly attributes[] | attributes | readonly [];
-  swids?: readonly string[] | readonly [];
-  hashes?: readonly string[] | readonly [];
-  uniqueId?: string | null;
-  uniqueIDType?: string | null;
-  children?: readonly string[] | readonly [];
-  version?: string | null;
-  vulnerabilities?: string[] | [];
-  licenses?: readonly string[] | readonly [] | null;
-  conflicts?: any[] | [];
-  componentName?: string | null;
-  appearances?: readonly Number[]
-  componentVersion?: readonly Number[] | readonly [] | string;
-  packageManager?: string | null;
+export interface Conflict {
+  type: string;
+  target: string | null;
+  other: string | null;
 }
 
 interface DiffReport {
-  sbomConflict?: SBOMConflict;
-  componentConflicts?: readonly ComponentConflict[];
+  sbomConflicts: Conflict[];
+  componentConflicts: ComponentConflicts;
 }
 
-export interface ComponentVersion {
-  componentName: string | null;
-  componentVersion: string | null;
-  cpes: {[key: string]: attributes} | {};
-  purls: {[key: string]: attributes} | {};
-  swids: {[key: string]: attributes} | {};
-  hashes: {[key: string]: attributes} | {};
-  appearances: readonly number[] | readonly []; // number meaning SBOM ID
-}
-
-interface UniqueIdOccurrence {
-  appearances?: readonly number[];
-  uniqueIdType?: string;
-}
+export interface ComponentConflicts {
+  [id: string]: {
+    [id: string]: Conflict[]
+  }
+};
 
 export interface Comparison {
-  targetSBOM?: SBOM;
-  diffReports: readonly DiffReport[];
-  comparisons: {[key: string]: readonly ComponentVersion[]};
+  target: string;
+  diffReport: {
+    [path: string]: DiffReport
+  };
 }

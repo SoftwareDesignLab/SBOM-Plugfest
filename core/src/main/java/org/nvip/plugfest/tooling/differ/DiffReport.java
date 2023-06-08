@@ -355,6 +355,10 @@ public class DiffReport {
                         targetValue = conflict.getComponentA().toString();
                         otherValue = conflict.getComponentB().toString();
                     }
+                    // ignore unhandled cases
+                    default -> {
+                        continue;
+                    }
                 }
 
                 String targetIdentifier = conflict.getComponentA() == null ? MISSING_TAG : conflict.getComponentA().getName();
