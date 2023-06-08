@@ -52,13 +52,13 @@ public class MinElementTest extends MetricTest {
 
         // Test supplier
         // "The name of the entity that creates the SBOM data for this component."
-        r = resultEmptyOrNull(sbom.getSupplier());  // todo should be author, not supplier?
+        r = resultEmptyOrNull(sbom.getSupplier(), "Author");  // todo should be author, not supplier?
         r.addContext(sbom,"author");
         results.add(r);
 
         // Test timestamp
         // "Record of the date and time of the SBOM data assembly"
-        r = resultEmptyOrNull(sbom.getTimestamp());
+        r = resultEmptyOrNull(sbom.getTimestamp(), "Timestamp");
         r.addContext(sbom,"timestamp");
         results.add(r);
 
@@ -79,39 +79,27 @@ public class MinElementTest extends MetricTest {
 
         // Test publisher/supplier
         // "The name of an entity that creates, defines, and identifies components."
-        r = resultEmptyOrNull(c.getPublisher());
+        r = resultEmptyOrNull(c.getPublisher(), "Publisher");
         r.addContext(c,"publisher");
         results.add(r);
 
         // Test name
         // "Designation assigned to a unit of software defined by the original supplier."
-        r = resultEmptyOrNull(c.getName());
+        r = resultEmptyOrNull(c.getName(), "Name");
         r.addContext(c,"name");
         results.add(r);
 
         // Test version
         // "Identifier used by the supplier to specify a change in software from a previously identified version."
-        r = resultEmptyOrNull(c.getVersion());
+        r = resultEmptyOrNull(c.getVersion(), "Version");
         r.addContext(c,"version");
         results.add(r);
 
 
         // Test UIDs
         // "Other identifiers that are used to identify a component, or serve as a look-up key for relevant databases."
-        r = resultEmptyOrNull(c.getUniqueID());
+        r = resultEmptyOrNull(c.getUniqueID(), "Unique ID");
         r.addContext(c,"uniqueID");
-        results.add(r);
-
-        r = resultEmptyOrNull(c.getCpes());
-        r.addContext(c,"cpes");
-        results.add(r);
-
-        r = resultEmptyOrNull(c.getPurls());
-        r.addContext(c,"purls");
-        results.add(r);
-
-        r = resultEmptyOrNull(c.getSwids());
-        r.addContext(c,"swids");
         results.add(r);
 
         return results;
@@ -124,24 +112,35 @@ public class MinElementTest extends MetricTest {
      * @param o Object to check
      * @return Result
      */
-    private Result resultEmptyOrNull(Object o){
+    private Result resultEmptyOrNull(Object o, String value){
+
+        String message;
+
         // Null check
-        if(o == null)
-            return new Result(TEST_NAME, Result.STATUS.FAIL, "Value is null");
+        if(o == null) {
+            message = String.format("%s is not present in the SBOM", value);
+            return new Result(TEST_NAME, Result.STATUS.FAIL, message);
+
+        }
 
         // Test for empty string
         if(o instanceof String){
             // Not an Empty String
             if(!o.equals("")) {
-                Result r = new Result(TEST_NAME, Result.STATUS.PASS, "Value is not an empty string");
+                message = String.format("%s is present in the SBOM", value);
+                Result r = new Result(TEST_NAME, Result.STATUS.PASS,
+                        message);
                 r.updateInfo(Result.Context.STRING_VALUE, o.toString());
                 return r;
             }
             // String is empty
-            return new Result(TEST_NAME, Result.STATUS.FAIL, "Value is an empty string");
+            message = String.format("%s is not present in the SBOM", value);
+            return new Result(TEST_NAME, Result.STATUS.FAIL,
+                    message);
         }
         // Not a string but isn't null
         // todo shouldn't default to true
-        return new Result(TEST_NAME, Result.STATUS.PASS, "Value is not null");
+        message = String.format("%s is present in the SBOM", value);
+        return new Result(TEST_NAME, Result.STATUS.PASS, message);
     }
 }
