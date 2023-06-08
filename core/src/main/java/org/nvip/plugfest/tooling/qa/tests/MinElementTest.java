@@ -4,7 +4,9 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * file: MinElementTest.java
@@ -102,6 +104,20 @@ public class MinElementTest extends MetricTest {
         r.addContext(c,"uniqueID");
         results.add(r);
 
+        r = resultEmptyOrNull(c.getCpes(), "CPEs");
+        r.addContext(c,"cpes");
+        results.add(r);
+
+        r = resultEmptyOrNull(c.getPurls(), "PURLs");
+        r.addContext(c,"purls");
+        results.add(r);
+
+        r = resultEmptyOrNull(c.getSwids(), "SWIDs");
+        r.addContext(c,"swids");
+        results.add(r);
+
+
+
         return results;
     }
 
@@ -118,7 +134,7 @@ public class MinElementTest extends MetricTest {
 
         // Null check
         if(o == null) {
-            message = String.format("%s is not present in the SBOM", value);
+            message = String.format("%s is not present", value);
             return new Result(TEST_NAME, Result.STATUS.FAIL, message);
 
         }
@@ -127,20 +143,34 @@ public class MinElementTest extends MetricTest {
         if(o instanceof String){
             // Not an Empty String
             if(!o.equals("")) {
-                message = String.format("%s is present in the SBOM", value);
-                Result r = new Result(TEST_NAME, Result.STATUS.PASS,
+                message = String.format("%s is present", value);
+                return new Result(TEST_NAME, Result.STATUS.PASS,
                         message);
-                r.updateInfo(Result.Context.STRING_VALUE, o.toString());
-                return r;
             }
             // String is empty
-            message = String.format("%s is not present in the SBOM", value);
+            message = String.format("%s is not present", value);
             return new Result(TEST_NAME, Result.STATUS.FAIL,
                     message);
         }
-        // Not a string but isn't null
+
+        // Test for list of elements (Purl, CPEs, etc)
+        if(o instanceof Collection<?>){
+            int size = ((Collection<?>) o).size();
+            // multiple elements are present, test passes
+            if(size >= 1) {
+                message = String.format("%s are present", value);
+                return new Result(TEST_NAME, Result.STATUS.PASS,
+                        message);
+            }
+            // elements are not present, test fails
+            message = String.format("%s are not present", value);
+            return new Result(TEST_NAME, Result.STATUS.FAIL,
+                    message);
+        }
+
+        // Neither a string or integer but isn't null
         // todo shouldn't default to true
-        message = String.format("%s is present in the SBOM", value);
+        message = String.format("%s is present", value);
         return new Result(TEST_NAME, Result.STATUS.PASS, message);
     }
 }
