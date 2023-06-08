@@ -212,8 +212,11 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
         // get the response code from this url
-        return huc.getResponseCode();
+        return responseCode;
     }
 
     /**
