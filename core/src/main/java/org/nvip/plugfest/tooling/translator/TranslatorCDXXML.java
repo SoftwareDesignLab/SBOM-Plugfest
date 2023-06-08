@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 
 /**
@@ -128,10 +130,15 @@ public class TranslatorCDXXML extends TranslatorCore {
 
         // Get important SBOM items from meta  (timestamp, tool info)
         Map<String, String> resolvedMetadata = resolveMetadata(sbomMeta);
-
+        Pattern specVersionPattern = Pattern.compile(".*/(\\d+\\.\\d+)");
+        Matcher specVersionMathcher = specVersionPattern.matcher(header_materials.get("xmlns"));
+        if(specVersionMathcher.matches()) {
+            bom_data.put("specVersion", specVersionMathcher.group(1));
+        }
+        else{
+            Debug.log(Debug.LOG_TYPE.WARN, "Invalid specVersion format.");
+        }
         bom_data.put("format", "cyclonedx");
-        String specVersion[] = header_materials.get("xmlns").split("/");
-        bom_data.put("specVersion", specVersion[specVersion.length-1]);
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
