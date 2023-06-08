@@ -62,16 +62,20 @@ public class APIController {
                 return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        // Get and remove target from queue
+        // Get target from queue
         SBOM targetSBOM = compareQueue.get(targetIndex);
-        compareQueue.remove(targetSBOM);
 
         // Run comparison
         DiffReport dr = new DiffReport(sboms[targetIndex].fileName, targetSBOM);
 
         // Compare against all sboms in the queue
-        for(int i = 0; i < compareQueue.size(); i++)
+        for(int i = 0; i < compareQueue.size(); i++){
+            // skip target
+            if(targetSBOM.equals(compareQueue.get(i)))
+                continue;
             dr.compare(sboms[i].fileName, compareQueue.get(i));
+        }
+
 
         //encode and send report
         return Utils.encodeResponse(dr);
@@ -108,9 +112,15 @@ public class APIController {
         processors.add(new CompletenessProcessor());
         processors.add(new UniquenessProcessor());
         processors.add(new RegisteredProcessor());
-        processors.add(new LicensingProcessor());
-        processors.add(new CDXMetricsProcessor());
-        // add spdx metrics
+        processors.add(new LicensingProcessor());   // Add origin specific processors
+
+        // Add CDX processor if relevant
+        if(sbom.getOriginFormat() == SBOM.Type.CYCLONE_DX)
+            processors.add(new CDXMetricsProcessor());
+
+        // Add SPDX Processor if relevant
+        if(sbom.getOriginFormat() == SBOM.Type.SPDX)
+            processors.add(new SPDXMetricsProcessor());
 
         //run the QA
         QualityReport report = QAPipeline.process(sbomFile.fileName, sbom, processors);

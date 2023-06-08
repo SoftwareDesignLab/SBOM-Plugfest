@@ -63,3 +63,6 @@ app-button {
   border-radius: 5px;
 }
 
+.results > *:nth-child(2n) > * > *:nth-child(1) {
+  background: var(--gray) !important;
+}
