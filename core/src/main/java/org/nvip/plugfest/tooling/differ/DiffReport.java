@@ -355,11 +355,19 @@ public class DiffReport {
                         targetValue = conflict.getComponentA().toString();
                         otherValue = conflict.getComponentB().toString();
                     }
+                    // ignore unhandled cases
+                    default -> {
+                        continue;
+                    }
                 }
 
-                // todo use better identifiers than name
                 String targetIdentifier = conflict.getComponentA() == null ? MISSING_TAG : conflict.getComponentA().getName();
                 String conflictIdentifier = conflict.getComponentB() == null ? MISSING_TAG : conflict.getComponentB().getName();
+
+                // Skip if keys are null
+                if(targetIdentifier == null || conflictIdentifier == null)
+                    continue;
+
                 body.addComponentConflict(
                         targetIdentifier,
                         conflictIdentifier,
