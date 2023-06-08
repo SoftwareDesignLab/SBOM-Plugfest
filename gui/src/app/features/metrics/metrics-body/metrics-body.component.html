@@ -14,7 +14,8 @@
     </app-button>
     <app-button
       class="hover"
-      *ngIf="processorIgnoreList.length > 0"
+      [ngStyle]="{opacity: processorIgnoreList.length > 0 ? '100%' : '20%'}"
+      *ngIf="result"
       (click)="processorIgnoreList = [];"
     >
     Clear Filters
