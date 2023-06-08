@@ -22,7 +22,7 @@ export class MetricsBodyComponent {
 
     return this.handler.metrics[
       this.handler.selectedQualityReport
-    ]?.results.filter((res) => !this.processorIgnoreList.includes(res.processor));
+    ]?.results.filter((res) => this.processorIgnoreList.includes(res.processor));
 
   }
 

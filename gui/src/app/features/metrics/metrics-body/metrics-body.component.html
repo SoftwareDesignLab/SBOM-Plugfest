@@ -7,7 +7,7 @@
       class="hover"
       [backgroundColor]="getLabelColor(processor)"
       *ngFor="let processor of processors"
-      [ngStyle]="{opacity: processorIgnoreList.includes(processor) ? '20%' : '100%'}"
+      [ngStyle]="{opacity: processorIgnoreList.includes(processor) ? '100%' : '20%'}"
       (click)="toggleProcessorFilter(processor)"
     >
       {{ processor }}
@@ -21,7 +21,7 @@
             *ngIf="
               ((!showPassed &&
                 qr.mergedResults[identifier][message][0].pass !== 1) ||
-              showPassed) && !processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor)
+              showPassed) && processorIgnoreList.length == 0 ? true : processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor)
             "
             [extra]="[
               getGrade(
