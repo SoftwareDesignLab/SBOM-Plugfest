@@ -10,5 +10,5 @@ export class ButtonComponent {
   @Input() icon: string = "";
   @Input() backgroundColor: string = "";
   @Input() iconColor: string = "";
-
+  @Input() secondary: boolean = false;
 }
