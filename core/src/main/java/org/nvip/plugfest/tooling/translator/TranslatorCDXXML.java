@@ -388,9 +388,14 @@ public class TranslatorCDXXML extends TranslatorCore {
             } else if (sbomMeta.item(b).getParentNode().getNodeName().contains("author")) {
                 if(!(sbomMeta.item(b).getParentNode().getNodeName().contains("authors"))) {
                     if (!author.toString().equals("")) {
-                        author.append(" ");
+                        author.append(", ");
                     }
-                    author.append(sbomMeta.item(b).getTextContent());
+                    if (sbomMeta.item(b).getNodeName().contains("name")){
+                        author.append("[" + sbomMeta.item(b).getTextContent());
+                    }
+                    else{
+                        author.append(sbomMeta.item(b).getTextContent() + "]");
+                    }
                 }
             } else {
                 sbom_materials.put(

@@ -70,9 +70,11 @@ public class TranslatorCDXJSON extends TranslatorCore {
             StringBuilder authorBuilder = new StringBuilder();
             if(json_sbom.getMetadata().getAuthors() != null) {
                 for(OrganizationalContact publisher: json_sbom.getMetadata().getAuthors()) {
-                    if(!authorBuilder.toString().equals("")) { authorBuilder.append(" "); }
-                    authorBuilder.append(publisher.getName() + " ");
+                    if(!authorBuilder.toString().equals("")) { authorBuilder.append(", "); }
+                    authorBuilder.append("[");
+                    authorBuilder.append(publisher.getName() + ", ");
                     authorBuilder.append(publisher.getEmail());
+                    authorBuilder.append("]");
                 }
                 String authors = authorBuilder.toString();
                 bom_data.put("author", authors);
