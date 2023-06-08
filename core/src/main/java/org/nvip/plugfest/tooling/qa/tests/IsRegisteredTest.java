@@ -287,7 +287,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://pkg.go.dev/" +
                 namespaceUrl +
                 p.getName().toLowerCase() + "@" +
-                p.getVersion());
+                (p.getVersion().startsWith("v") ?  p.getVersion() : "v" + p.getVersion()));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         int responseCode = huc.getResponseCode();
         huc.disconnect();
