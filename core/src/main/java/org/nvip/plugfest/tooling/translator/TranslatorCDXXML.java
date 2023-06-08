@@ -130,7 +130,7 @@ public class TranslatorCDXXML extends TranslatorCore {
         Map<String, String> resolvedMetadata = resolveMetadata(sbomMeta);
 
         bom_data.put("format", "cyclonedx");
-        bom_data.put("specVersion", header_materials.get("xmlns"));
+        bom_data.put("specVersion", header_materials.get("xmlns").substring(32));
         bom_data.put("sbomVersion", header_materials.get("version"));
         bom_data.put("serialNumber", header_materials.get("serialNumber"));
 
