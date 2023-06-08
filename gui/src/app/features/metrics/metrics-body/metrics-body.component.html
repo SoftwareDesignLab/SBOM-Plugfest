@@ -12,6 +12,13 @@
     >
       {{ processor }}
     </app-button>
+    <app-button
+      class="hover"
+      *ngIf="processorIgnoreList.length > 0"
+      (click)="processorIgnoreList = [];"
+    >
+    Clear Filters
+    </app-button>
   </div>
   <div class="results" *ngIf="result && qr">
     <ng-container *ngFor="let identifier of identifiers">
