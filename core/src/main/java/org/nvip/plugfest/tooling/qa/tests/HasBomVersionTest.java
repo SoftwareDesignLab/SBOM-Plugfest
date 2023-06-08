@@ -36,6 +36,8 @@ public class HasBomVersionTest extends MetricTest{
                     "has version number declared");
         }
         r.addContext(sbom,"SBOM Version Presence");
+        r.updateInfo(Result.Context.STRING_VALUE, sbom.getSbomVersion());
+        r.updateInfo(Result.Context.FIELD_NAME, "version");
         result.add(r);
 
         return result;
