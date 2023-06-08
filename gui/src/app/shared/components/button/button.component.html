@@ -1,4 +1,4 @@
-<div class="button flex center hover" [ngStyle]="{ 'background-color': backgroundColor }">
-    <icon *ngIf="icon != ''" icon="{{icon}}" (color)="iconColor.length ? iconColor : 'var(--accent)'"></icon>
+<div class="button flex center hover" [ngStyle]="{ 'background-color': (secondary ? 'transparent' : backgroundColor) } ">
+    <icon *ngIf="icon != ''" icon="{{icon}}" [color]="iconColor.length ? iconColor : 'var(--accent)'"></icon>
     <ng-content/>
 </div>
