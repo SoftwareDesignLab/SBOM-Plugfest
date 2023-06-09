@@ -1,4 +1,6 @@
 import color from "src/app/shared/enum/color";
+import shape from "src/app/shared/enum/shape";
+
 export interface test {
   uid: string;
   attributeResults: {
@@ -31,6 +33,16 @@ export class QualityReport {
     color.pink,
     color.yellow,
   ];
+
+  shapes = [
+    shape.square,
+    shape.circle,
+    shape.triangle,
+    shape.star,
+    shape.hexagon,
+    shape.pentagon,
+    shape.eightStar
+  ]
 
   mergedResults: { [key: string]: { [key: string]: any[] } } = {};
 

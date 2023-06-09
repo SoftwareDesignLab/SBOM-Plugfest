@@ -1,4 +1,4 @@
-<mat-expansion-panel [expanded]="expanded">
+<mat-expansion-panel [expanded]="expanded" [hideToggle]="hideToggle">
   <mat-expansion-panel-header class="accordion-bar" [ngStyle]="{'background-color': backgroundColor ? backgroundColor : 'var(--primary)'}">
     <mat-panel-title class="accordion-title">
       <ng-content select="[title]" />
@@ -13,9 +13,11 @@
     </mat-panel-description>
     <div
       *ngIf="color != ''"
-      class="color-bar"
-      style="background-color: {{ color }};"
-    ></div>
+      class="color-bar flex center"
+      [ngStyle]="{'background-color': color }"
+    >
+    <mat-icon *ngIf="shape" class="accordion-icon" aria-hidden="true" [fontIcon]="shape"/>
+    </div>
   </mat-expansion-panel-header>
   <div class="content">
     <ng-content select="[body]" />
