@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.security.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -120,11 +118,11 @@ public class IsRegisteredTest extends MetricTest{
                         case "cran" -> response = extractFromCran(p);
                         case "pub" -> response = extractFromPub(p);
                         case "conda" -> response = extractFromConda(p);
-                        // an invalid or not recognized package manager type
+                        // a package manager that is not currently supported
                         default -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                                    "Package Manager is not valid or " +
-                                            "not recognized: " +
+                                    "Package Manager is currently not " +
+                                            "supported: " +
                                             packageManager);
                             r.addContext(c, "PURL Package Validation");
                             r.updateInfo(Result.Context.FIELD_NAME,
