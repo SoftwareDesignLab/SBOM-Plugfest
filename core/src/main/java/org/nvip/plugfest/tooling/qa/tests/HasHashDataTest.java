@@ -57,7 +57,6 @@ public class HasHashDataTest extends MetricTest{
                     hashList.size());
             r = new Result(TEST_NAME, Result.STATUS.PASS, message);
         }
-        r.addContext(c, "Contains Hashes");
         return r;
 
     }
