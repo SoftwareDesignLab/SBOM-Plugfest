@@ -14,6 +14,6 @@ export class AccordionComponent {
   @Input() color: string = '';
   @Input() shape: shape | null = null;
   @Input() expanded: boolean = false;
-  @Input() toggle: boolean = false;
+  @Input() hideToggle: boolean = true;
   @Input() backgroundColor: string ='';
 }

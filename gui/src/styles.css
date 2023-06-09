@@ -47,6 +47,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     align-items: center;
   }
 
+  .mat-expansion-indicator, .mat-expansion-panel-header-description, .mat-expansion-indicator:after {
+    color: white;
+  }
+
 .results > *:nth-child(2n) > * > *:nth-child(1) {
     background: var(--dark-gray) !important;
   }
