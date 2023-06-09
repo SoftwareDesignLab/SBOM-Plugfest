@@ -48,27 +48,6 @@ export class MetricsBodyComponent  {
     return this.qr?.identifiers || [];
   }
 
-
-  getSortedMessages() {
-
-    let masterList: any[] = [];
-
-    for(let identifier of this.identifiers) {
-      for(let message of this.getIdentifierMessages(identifier)) {
-        masterList.push({
-          'identifier': identifier,
-          'message': message
-        });
-      }
-
-      masterList = masterList.sort((a, b) => a.identifier - b.identifier);
-    }
-
-    
-    return masterList;
-  }
-
-
   // Gets formatted metrics results
   // HOTFIX!!!!!!! REMOVE AFTER BACKEND IS UPDATED
   getMergedResult(identifier: string, message: string) {
@@ -85,8 +64,6 @@ export class MetricsBodyComponent  {
     }
     return [];
   }
-
-
 
   // Prints result message for drop down
   getTestMessage(result: any) {
