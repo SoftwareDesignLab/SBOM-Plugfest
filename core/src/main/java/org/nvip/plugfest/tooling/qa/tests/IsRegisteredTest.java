@@ -174,7 +174,7 @@ public class IsRegisteredTest extends MetricTest{
 
     /**
      * Extract data for maven based packages.
-     * Source: <a href="https://central.sonatype.com/artifact/">...</a> -> returns 403
+     * Source: <a href="https://mvnrepository.com/">...</a> -> returns 403
      * New Source: <a href="https://central.sonatype.com/artifact/">...</a>
      * @param p purl to use to query for info
      * @return an int response code when opening up a connection with the PURL
