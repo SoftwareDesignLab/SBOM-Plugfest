@@ -131,6 +131,7 @@ public class MinElementTest extends MetricTest {
     private Result resultEmptyOrNull(Object o, String value){
 
         String message;
+        Result r;
 
         // Null check
         if(o == null) {
@@ -144,15 +145,18 @@ public class MinElementTest extends MetricTest {
             // Not an Empty String
             if(!o.equals("")) {
                 message = String.format("%s is present", value);
-                Result r = new Result(TEST_NAME, Result.STATUS.PASS,
+                r = new Result(TEST_NAME, Result.STATUS.PASS,
                         message);
                 r.updateInfo(Result.Context.STRING_VALUE, o.toString());
                 return r;
             }
             // String is empty
             message = String.format("%s is not present", value);
-            return new Result(TEST_NAME, Result.STATUS.FAIL,
+            r = new Result(TEST_NAME, Result.STATUS.FAIL,
                     message);
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    String.format("%s not found", value));
+            return r;
         }
 
         // Test for list of elements (Purl, CPEs, etc)
@@ -161,15 +165,18 @@ public class MinElementTest extends MetricTest {
             // multiple elements are present, test passes
             if(size >= 1) {
                 message = String.format("%s are present", value);
-                Result r = new Result(TEST_NAME, Result.STATUS.PASS,
+                r = new Result(TEST_NAME, Result.STATUS.PASS,
                         message);
                 r.updateInfo(Result.Context.STRING_VALUE, o.toString());
                 return r;
             }
             // elements are not present, test fails
             message = String.format("%s are not present", value);
-            return new Result(TEST_NAME, Result.STATUS.FAIL,
+            r = new Result(TEST_NAME, Result.STATUS.FAIL,
                     message);
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    String.format("%s not found", value));
+            return r;
         }
 
         // Neither a string or integer but isn't null
