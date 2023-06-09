@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -62,7 +63,7 @@ public class IsRegisteredTest extends MetricTest{
                     "Component has no PURLs to test");
             r.addContext(c, "PURL Validation");
             r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-            r.updateInfo(Result.Context.STRING_VALUE, c.getName());
+            r.updateInfo(Result.Context.STRING_VALUE, "Component has no PURLs");
             purlResults.add(r);
         }
         else{
@@ -71,9 +72,10 @@ public class IsRegisteredTest extends MetricTest{
                 // purl is null, test cannot run, add result as an error
                 if(isEmptyOrNull(purlString)){
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL is null, test cannot run");
+                            "PURL is an Empty Value, Test Cannot Run");
                     r.addContext(c, "PURL Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, "PURL is an Empty Value");
                     purlResults.add(r);
                     continue;
                 }
@@ -83,10 +85,13 @@ public class IsRegisteredTest extends MetricTest{
                 try {
                     p = new PURL(purlString);
                 } catch (Exception e) {
-                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL is invalid, test cannot run");
+                    Debug.log(Debug.LOG_TYPE.WARN,
+                            "Failed to parse PURL \"" + purlString +"\" | "
+                                    + e.getMessage());    // log incase regex fails
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid Purl String");
                     r.addContext(c, "PURL Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, purlString);
                     purlResults.add(r);
                     continue;
                 }
