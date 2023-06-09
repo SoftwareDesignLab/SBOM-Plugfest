@@ -41,7 +41,7 @@
         *ngFor="let conflict of getMetadataConflicts(getPathIndex(0))"
       >
         <div title class="title">
-          <span> {{ conflict.type }}</span>
+          <span style="text-transform: capitalize;"> {{ conflict.type.replaceAll("_", " ").toLowerCase() }}</span>
         </div>
         <div body>
           <span>{{"Target: " + conflict.target}}</span>
@@ -68,7 +68,7 @@
       *ngFor="let conflict of ComponentFilter(getComponentConflicts(getPathIndex(0)))[path[2]]"
     >
       <div title class="title">
-        <span> {{ conflict.type }}</span>
+        <span style="text-transform: capitalize;"> {{ conflict.type.replaceAll("_", " ").toLowerCase() }}</span>
       </div>
       <div body>
         <span>{{"Target: " + conflict.target}}</span>
