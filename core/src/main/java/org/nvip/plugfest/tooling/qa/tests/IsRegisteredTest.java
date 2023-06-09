@@ -5,6 +5,7 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
@@ -117,15 +118,35 @@ public class IsRegisteredTest extends MetricTest{
                         case "cran" -> response = extractFromCran(p);
                         case "pub" -> response = extractFromPub(p);
                         case "conda" -> response = extractFromConda(p);
-                        // an invalid or not recognized package manager type
-                        default -> {
-                            r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                                    "Package Manager is not valid or " +
-                                            "not recognized: " +
+
+                        // package managers that are not supported yet
+                        case "alpm", "apk", "bitbucket", "deb",
+                                "docker", "generic", "github", "mlflow",
+                                "qpkg", "oci", "rpm", "swid", "swift"
+                                -> {
+                            r = new Result(TEST_NAME, Result.STATUS.ERROR,
+                                    "Package Manager is a valid type but " +
+                                            "is currently not supported: " +
                                             packageManager);
                             r.addContext(c, "PURL Package Validation");
                             r.updateInfo(Result.Context.FIELD_NAME,
-                                    "PURL");
+                                    "PURL Package Manager");
+                            r.updateInfo(Result.Context.STRING_VALUE,
+                                    packageManager);
+                            purlResults.add(r);
+                            // error number to skip other results
+                            response = -1;
+                        }
+
+
+                        // a package manager that is not currently supported
+                        default -> {
+                            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                                    "Package Manager is an invalid type: " +
+                                            packageManager);
+                            r.addContext(c, "PURL Package Validation");
+                            r.updateInfo(Result.Context.FIELD_NAME,
+                                    "PURL Package Manager");
                             r.updateInfo(Result.Context.STRING_VALUE,
                                     p.toString());
                             purlResults.add(r);
@@ -149,21 +170,7 @@ public class IsRegisteredTest extends MetricTest{
                 // no errors occurred in checking the PURL through the URL
                 // so some response code was returned
                 if (response != 0 && response != -1) {
-                    // if the response code is 200 (HTTP_OK), then
-                    // package is registered with package manager
-                    if (response == HttpURLConnection.HTTP_OK) {
-                        r = new Result(TEST_NAME, Result.STATUS.PASS,
-                                "Package is registered with package " +
-                                        "manager: " + packageManager);
-                    }
-                    // any other response codes result in a test fail
-                    else {
-                        r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                                "Package is not registered with " +
-                                        "package manager: " +
-                                        packageManager);
-
-                    }
+                    r =checkResponseCode(response, packageManager);
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE,
@@ -187,7 +194,7 @@ public class IsRegisteredTest extends MetricTest{
 
     /**
      * Extract data for maven based packages.
-     * Source: <a href="https://central.sonatype.com/artifact/">...</a> -> returns 403
+     * Source: <a href="https://mvnrepository.com/">...</a> -> returns 403
      * New Source: <a href="https://central.sonatype.com/artifact/">...</a>
      * @param p purl to use to query for info
      * @return an int response code when opening up a connection with the PURL
@@ -211,9 +218,11 @@ public class IsRegisteredTest extends MetricTest{
                 namespaceUrl +
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -228,9 +237,12 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://pypi.org/project/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -247,9 +259,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://www.nuget.org/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -266,9 +280,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://crates.io/crates/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
     /**
      * Extract data from Golang based packages
@@ -288,10 +304,10 @@ public class IsRegisteredTest extends MetricTest{
                 namespaceUrl +
                 p.getName().toLowerCase() + "@" +
                 p.getVersion());
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
-        // get the response code from this url
         return responseCode;
     }
 
@@ -309,9 +325,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://registry.npmjs.org/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -333,9 +351,11 @@ public class IsRegisteredTest extends MetricTest{
                 namespace + "/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "#v" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -352,9 +372,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://rubygems.org/gems/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "versions/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -371,9 +393,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://hackage.haskell.org/package/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "-" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -390,9 +414,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://hex.pm/packages/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -411,9 +437,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://conan.io/center/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -435,9 +463,11 @@ public class IsRegisteredTest extends MetricTest{
                 (!isEmptyOrNull(namespace) ? namespace : "") + "/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -477,9 +507,11 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName() + "/" +
                 p.getVersion() + "/" +
                 p.getName() + ".podspec.json") ;
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
 
     }
 
@@ -499,9 +531,11 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : "") +
                 "/index.html");
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -518,9 +552,11 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL("https://cran.r-project.org/web/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -548,8 +584,31 @@ public class IsRegisteredTest extends MetricTest{
                 channel + "/" + subdir + "/" +
                 p.getName().toLowerCase() + "-" + p.getVersion() + "-" +
                 build + "." + type);
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
-}
+
+
+    private Result checkResponseCode(int response, String packageManager){
+        Result r;
+
+        // if the response code is 200 (HTTP_OK), then
+        // package is registered with package manager
+        if (response == HttpURLConnection.HTTP_OK) {
+            r = new Result(TEST_NAME, Result.STATUS.PASS,
+                    "Package is registered with package " +
+                            "manager: " + packageManager);
+        }
+        // any other response codes result in a test fail
+        else {
+            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                    "Package is not registered with " +
+                            "package manager: " +
+                            packageManager);
+        }
+        return r;
+        }
+    }
