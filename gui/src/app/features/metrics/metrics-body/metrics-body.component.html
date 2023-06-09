@@ -48,11 +48,11 @@
       </ng-container>
     </ng-container>
 
-    <div class="text flex center" *ngIf="!result">
+    <div class="text flex center" *ngIf="result === null">
       Please select an SBOM to see test results
     </div>
-    <div class="text flex center" *ngIf="result && result.length === 0">
-      There aren't any test results with the selected SBOM
-    </div>
+    <div class="text flex center" *ngIf="result && result.length === 0 && identifiers.length === 0">
+      There are no test results with the selected SBOM
+    </div>    
   </div>
 </div>
