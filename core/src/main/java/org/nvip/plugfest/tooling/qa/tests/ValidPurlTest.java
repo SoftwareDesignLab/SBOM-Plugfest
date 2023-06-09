@@ -43,7 +43,8 @@ public class ValidPurlTest extends MetricTest {
                     Debug.log(Debug.LOG_TYPE.WARN, "Failed to parse PURL \"" + p +"\" | " + e.getMessage());    // log incase regex fails
                     r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid Purl String");
                 }
-
+                r.addContext(c, "Valid PURL String");
+                r.updateInfo(Result.Context.FIELD_NAME, "purl");
                 r.updateInfo(Result.Context.STRING_VALUE, p);
                 results.add(r);
             }
