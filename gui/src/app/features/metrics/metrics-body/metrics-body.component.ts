@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { DataHandlerService } from "@services/data-handler.service";
 import { QualityReport, grade, testResult } from "../test";
 
@@ -7,10 +7,10 @@ import { QualityReport, grade, testResult } from "../test";
   templateUrl: "./metrics-body.component.html",
   styleUrls: ["./metrics-body.component.css"],
 })
-export class MetricsBodyComponent {
+export class MetricsBodyComponent  {
   constructor(private handler: DataHandlerService) {}
   testResult: testResult | null = null;
-  qr: QualityReport | null = null;
+  qr?: QualityReport | null = null;
   filteredArray: any[] = [];
   showPassed = false;
   componentView = false;
@@ -18,12 +18,9 @@ export class MetricsBodyComponent {
 
   // Gets results for metrics tests
   get result() {
-    this.qr = this.handler.metrics[this.handler.selectedQualityReport];
+    this.qr = this.handler.GetMetrics(this.handler.selectedQualityReport);
 
-    return this.handler.metrics[
-      this.handler.selectedQualityReport
-    ]?.results.filter((res) => !this.processorIgnoreList.includes(res.processor));
-
+    return this.qr?.results.filter((res) => !this.processorIgnoreList.includes(res.processor));
   }
 
   toggleProcessorFilter(name: string) {
@@ -46,12 +43,38 @@ export class MetricsBodyComponent {
     return Object.keys(this.qr?.mergedResults[identifier]);
   }
 
+    // gets list of identifiers
+  get identifiers() {
+    return this.qr?.identifiers || [];
+  }
+
+
+  getSortedMessages() {
+
+    let masterList: any[] = [];
+
+    for(let identifier of this.identifiers) {
+      for(let message of this.getIdentifierMessages(identifier)) {
+        masterList.push({
+          'identifier': identifier,
+          'message': message
+        });
+      }
+
+      masterList = masterList.sort((a, b) => a.identifier - b.identifier);
+    }
+
+    
+    return masterList;
+  }
+
+
   // Gets formatted metrics results
   // HOTFIX!!!!!!! REMOVE AFTER BACKEND IS UPDATED
   getMergedResult(identifier: string, message: string) {
     let uniqueVals: any[] = [];
     if (this.qr?.mergedResults[identifier][message]) {
-      return this.qr?.mergedResults[identifier][message].filter((result) => {
+      return this.qr?.mergedResults[identifier][message].sort((a, b) => a.identifier - b.identifier).filter((result) => {
         const res = JSON.stringify(result);
         if (uniqueVals.indexOf(res) === -1) {
           uniqueVals.push(res);
@@ -63,10 +86,7 @@ export class MetricsBodyComponent {
     return [];
   }
 
-  // gets list of identifiers
-  get identifiers() {
-    return this.qr?.identifiers || [];
-  }
+
 
   // Prints result message for drop down
   getTestMessage(result: any) {
