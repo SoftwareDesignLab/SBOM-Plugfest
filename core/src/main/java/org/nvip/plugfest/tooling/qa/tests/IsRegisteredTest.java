@@ -118,15 +118,35 @@ public class IsRegisteredTest extends MetricTest{
                         case "cran" -> response = extractFromCran(p);
                         case "pub" -> response = extractFromPub(p);
                         case "conda" -> response = extractFromConda(p);
-                        // a package manager that is not currently supported
-                        default -> {
+
+                        // package managers that are not supported yet
+                        case "alpm", "apk", "bitbucket", "deb",
+                                "docker", "generic", "github", "mlflow",
+                                "qpkg", "oci", "rpm", "swid", "swift"
+                                -> {
                             r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                                    "Package Manager is currently not " +
-                                            "supported: " +
+                                    "Package Manager is a valid type but " +
+                                            "is currently not supported: " +
                                             packageManager);
                             r.addContext(c, "PURL Package Validation");
                             r.updateInfo(Result.Context.FIELD_NAME,
-                                    "PURL");
+                                    "PURL Package Manager");
+                            r.updateInfo(Result.Context.STRING_VALUE,
+                                    packageManager);
+                            purlResults.add(r);
+                            // error number to skip other results
+                            response = -1;
+                        }
+
+
+                        // a package manager that is not currently supported
+                        default -> {
+                            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                                    "Package Manager is an invalid type: " +
+                                            packageManager);
+                            r.addContext(c, "PURL Package Validation");
+                            r.updateInfo(Result.Context.FIELD_NAME,
+                                    "PURL Package Manager");
                             r.updateInfo(Result.Context.STRING_VALUE,
                                     p.toString());
                             purlResults.add(r);
