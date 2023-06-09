@@ -57,6 +57,8 @@ public class HasHashDataTest extends MetricTest{
                     hashList.size());
             r = new Result(TEST_NAME, Result.STATUS.PASS, message);
         }
+        r.updateInfo(Result.Context.TYPE, "Component");
+        r.updateInfo(Result.Context.IDENTIFIER, c.getName());
         return r;
 
     }
