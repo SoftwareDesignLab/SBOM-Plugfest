@@ -108,6 +108,9 @@ public class AccuratePURLTest extends MetricTest{
         // Check if purl value is different
         if(!purlValue.equals(componentValue)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "PURL does not match " + field);
+            String errorMessage = String.format("Expected: %s. " +
+                    "Actual: %s", componentValue, purlValue);
+            r.updateInfo(Result.Context.STRING_VALUE, errorMessage);
 
             // Else they both match
         } else {
@@ -116,6 +119,7 @@ public class AccuratePURLTest extends MetricTest{
 
         // Add context and return
         r.addContext(c, "PURL: " + field);
+        r.updateInfo(Result.Context.FIELD_NAME, field);
         return r;
     }
 
