@@ -14,7 +14,6 @@ export class DataHandlerService {
   private ipc!: IpcRenderer;
   public lastSentFilePaths: string[] = [];
 
-  public metrics: { [id: string]: QualityReport | null } = {};
   private files: { [path: string]: SBOMInfo } = {};
 
   public comparison!: Comparison | null;
@@ -71,7 +70,7 @@ export class DataHandlerService {
 
         if(metrics) {
           this.loadingMetrics = false;
-          this.metrics[path] = new QualityReport(result as test);
+          this.files[path].metrics = new QualityReport(result as test);
         }
       },
       (error) => {
@@ -93,6 +92,10 @@ export class DataHandlerService {
 
   GetSBOMInfo(path: string) {
     return this.files[path];
+  }
+
+  GetMetrics(path: string) {
+    return this.GetSBOMInfo(path).metrics;
   }
 
 
@@ -137,7 +140,7 @@ export interface File {
 
 export interface SBOMInfo {
   status: FileStatus;
-  metrics?: Object;
+  metrics?: QualityReport;
   extra?: string;
 }
 
