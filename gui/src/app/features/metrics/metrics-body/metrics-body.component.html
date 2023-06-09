@@ -22,14 +22,20 @@
     </app-button>
   </div>
   <div class="results" *ngIf="result && qr">
-    <ng-container *ngFor="let identifier of identifiers">
-      <ng-container *ngFor="let message of getIdentifierMessages(identifier)">
+    <app-accordion *ngFor="let identifier of identifiers">
+
+      <div title>
+        {{identifier}}
+      </div>
+
+      <div body>
+        <ng-container *ngFor="let message of getIdentifierMessages(identifier)">
           <app-accordion
             class="merged-result"
             *ngIf="((!showPassed && 
-                    qr.mergedResults[identifier][message][0].pass !== 1) || 
-                    (showPassed && qr.mergedResults[identifier][message][0].pass === 1)) && 
-                    (processorIgnoreList.length === 0 || processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor))"
+              qr.mergedResults[identifier][message][0].pass !== 1) || 
+              (showPassed && qr.mergedResults[identifier][message][0].pass === 1)) && 
+              (processorIgnoreList.length === 0 || processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor))"
             [extra]="[
               getGrade(
                 qr.mergedResults[identifier][message][0].pass
@@ -45,8 +51,9 @@
               {{ getTestMessage(result) }}
             </div>
           </app-accordion>
-      </ng-container>
-    </ng-container>
+        </ng-container>
+      </div>
+    </app-accordion>
 
     <div class="text flex center" *ngIf="result === null">
       Please select an SBOM to see test results
