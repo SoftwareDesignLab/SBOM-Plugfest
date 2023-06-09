@@ -51,7 +51,7 @@ public class HasSPDXIDTest extends MetricTest{
         if(isEmptyOrNull(spdxID)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component does " +
                     "not contain a SPDXID");
-            r.updateInfo(Result.Context.STRING_VALUE, "SPDXID is missing");
+            r.updateInfo(Result.Context.STRING_VALUE, "SPDXID is Missing");
         }
         // SPDXID is present, continue test
         else{
