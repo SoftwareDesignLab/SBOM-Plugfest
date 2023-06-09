@@ -5,10 +5,13 @@ import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.security.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -119,7 +122,7 @@ public class IsRegisteredTest extends MetricTest{
                         case "conda" -> response = extractFromConda(p);
                         // an invalid or not recognized package manager type
                         default -> {
-                            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                            r = new Result(TEST_NAME, Result.STATUS.ERROR,
                                     "Package Manager is not valid or " +
                                             "not recognized: " +
                                             packageManager);
@@ -211,9 +214,11 @@ public class IsRegisteredTest extends MetricTest{
                 namespaceUrl +
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -229,8 +234,11 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -249,7 +257,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -268,7 +278,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
     /**
      * Extract data from Golang based packages
@@ -289,9 +301,9 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "@" +
                 p.getVersion());
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
-        // get the response code from this url
         return responseCode;
     }
 
@@ -311,7 +323,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -335,7 +349,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "#v" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -354,7 +370,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "versions/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -373,7 +391,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "-" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -392,7 +412,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -413,7 +435,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -437,7 +461,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -479,7 +505,9 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName() + ".podspec.json") ;
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
 
     }
 
@@ -501,7 +529,9 @@ public class IsRegisteredTest extends MetricTest{
                 "/index.html");
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -520,7 +550,9 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 
     /**
@@ -550,6 +582,8 @@ public class IsRegisteredTest extends MetricTest{
                 build + "." + type);
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         // get the response code from this url
-        return huc.getResponseCode();
+        int responseCode = huc.getResponseCode();
+        huc.disconnect();
+        return responseCode;
     }
 }
