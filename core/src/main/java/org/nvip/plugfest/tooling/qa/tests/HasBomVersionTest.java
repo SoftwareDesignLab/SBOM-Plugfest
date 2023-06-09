@@ -29,16 +29,16 @@ public class HasBomVersionTest extends MetricTest{
         if(isEmptyOrNull(sbom.getSbomVersion())){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "SBOM " +
                     "does not have version number declared");
-            r.updateInfo(Result.Context.STRING_VALUE, "SBOM version number " +
-                    "is missing");
+            r.updateInfo(Result.Context.STRING_VALUE, "SBOM Version Number " +
+                    "is Missing");
         }
         // sbom version is present, test passes
         else{
             r = new Result(TEST_NAME, Result.STATUS.PASS, "SBOM " +
-                    "has version number declared");
+                    "has a version number declared");
             r.updateInfo(Result.Context.STRING_VALUE, sbom.getSbomVersion());
         }
-        r.addContext(sbom,"SBOM Version Presence");
+        r.addContext(sbom,"SBOM Version Number");
         r.updateInfo(Result.Context.FIELD_NAME, "version");
         result.add(r);
 
