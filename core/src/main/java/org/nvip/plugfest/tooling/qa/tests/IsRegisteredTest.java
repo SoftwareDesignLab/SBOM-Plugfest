@@ -150,21 +150,7 @@ public class IsRegisteredTest extends MetricTest{
                 // no errors occurred in checking the PURL through the URL
                 // so some response code was returned
                 if (response != 0 && response != -1) {
-                    // if the response code is 200 (HTTP_OK), then
-                    // package is registered with package manager
-                    if (response == HttpURLConnection.HTTP_OK) {
-                        r = new Result(TEST_NAME, Result.STATUS.PASS,
-                                "Package is registered with package " +
-                                        "manager: " + packageManager);
-                    }
-                    // any other response codes result in a test fail
-                    else {
-                        r = new Result(TEST_NAME, Result.STATUS.FAIL,
-                                "Package is not registered with " +
-                                        "package manager: " +
-                                        packageManager);
-
-                    }
+                    r =checkResponseCode(response, packageManager);
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE,
@@ -584,4 +570,25 @@ public class IsRegisteredTest extends MetricTest{
         huc.disconnect();
         return responseCode;
     }
-}
+
+
+    private Result checkResponseCode(int response, String packageManager){
+        Result r;
+
+        // if the response code is 200 (HTTP_OK), then
+        // package is registered with package manager
+        if (response == HttpURLConnection.HTTP_OK) {
+            r = new Result(TEST_NAME, Result.STATUS.PASS,
+                    "Package is registered with package " +
+                            "manager: " + packageManager);
+        }
+        // any other response codes result in a test fail
+        else {
+            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                    "Package is not registered with " +
+                            "package manager: " +
+                            packageManager);
+        }
+        return r;
+        }
+    }
