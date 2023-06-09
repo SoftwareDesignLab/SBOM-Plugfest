@@ -27,7 +27,7 @@ export class MetricsBodyComponent {
   }
 
   toggleProcessorFilter(name: string) {
-    if(this.processorIgnoreList.includes(name)) 
+    if(this.processorIgnoreList.includes(name))
       this.processorIgnoreList = this.processorIgnoreList.filter((x) => x !== name);
     else
       this.processorIgnoreList.push(name);
@@ -70,7 +70,11 @@ export class MetricsBodyComponent {
 
   // Prints result message for drop down
   getTestMessage(result: any) {
-    return ` ${result.stringValue || result.fieldName}`;
+    let message = '';
+    message += result.stringValue ? result.stringValue : '';
+    message += (result.fieldName && result.stringValue) ? ':' : '';
+    message += result.fieldName ? result.fieldName : '';
+    return message;
   }
 
   // Gets color associated with test result
