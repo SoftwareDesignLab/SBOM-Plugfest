@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.qa.tests;
 
 
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.uids.PURL;
 import org.nvip.plugfest.tooling.sbom.SBOM;
@@ -62,7 +63,7 @@ public class IsRegisteredTest extends MetricTest{
                     "Component has no PURLs to test");
             r.addContext(c, "PURL Validation");
             r.updateInfo(Result.Context.FIELD_NAME, "PURL");
-            r.updateInfo(Result.Context.STRING_VALUE, c.getName());
+            r.updateInfo(Result.Context.STRING_VALUE, "Component has no PURLs");
             purlResults.add(r);
         }
         else{
@@ -71,9 +72,10 @@ public class IsRegisteredTest extends MetricTest{
                 // purl is null, test cannot run, add result as an error
                 if(isEmptyOrNull(purlString)){
                     r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL is null, test cannot run");
+                            "PURL is an Empty Value, Test Cannot Run");
                     r.addContext(c, "PURL Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, "PURL is an Empty Value");
                     purlResults.add(r);
                     continue;
                 }
@@ -83,10 +85,13 @@ public class IsRegisteredTest extends MetricTest{
                 try {
                     p = new PURL(purlString);
                 } catch (Exception e) {
-                    r = new Result(TEST_NAME, Result.STATUS.ERROR,
-                            "PURL is invalid, test cannot run");
+                    Debug.log(Debug.LOG_TYPE.WARN,
+                            "Failed to parse PURL \"" + purlString +"\" | "
+                                    + e.getMessage());    // log incase regex fails
+                    r = new Result(TEST_NAME, Result.STATUS.FAIL, "Invalid Purl String");
                     r.addContext(c, "PURL Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
+                    r.updateInfo(Result.Context.STRING_VALUE, purlString);
                     purlResults.add(r);
                     continue;
                 }
@@ -132,7 +137,7 @@ public class IsRegisteredTest extends MetricTest{
                             r.updateInfo(Result.Context.FIELD_NAME,
                                     "PURL Package Manager");
                             r.updateInfo(Result.Context.STRING_VALUE,
-                                    packageManager);
+                                    packageManager + " is Currently Not Supported");
                             purlResults.add(r);
                             // error number to skip other results
                             response = -1;
@@ -148,7 +153,8 @@ public class IsRegisteredTest extends MetricTest{
                             r.updateInfo(Result.Context.FIELD_NAME,
                                     "PURL Package Manager");
                             r.updateInfo(Result.Context.STRING_VALUE,
-                                    p.toString());
+                                    packageManager +
+                                            " is an Invalid Package Manager");
                             purlResults.add(r);
                             // error number to skip other results
                             response = -1;
@@ -170,11 +176,12 @@ public class IsRegisteredTest extends MetricTest{
                 // no errors occurred in checking the PURL through the URL
                 // so some response code was returned
                 if (response != 0 && response != -1) {
-                    r =checkResponseCode(response, packageManager);
+                    r = checkResponseCode(response, packageManager);
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE,
-                            p.toString());
+                            "Package Manager: " + packageManager +
+                                    " | PURL: " + p);
                     purlResults.add(r);
                 }
                 // some tests will throw a 0 if a different error occurs
@@ -184,7 +191,8 @@ public class IsRegisteredTest extends MetricTest{
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE,
-                            p.toString());
+                            "Package Manager: " + packageManager +
+                                    " | PURL: " + p);
                     purlResults.add(r);
                 }
             }

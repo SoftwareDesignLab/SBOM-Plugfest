@@ -71,6 +71,7 @@ public class HasVerificationCodeTest extends MetricTest{
         if(isEmptyOrNull(verificationCode)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component's " +
                     "files were analyzed but does not contain verification code");
+            r.updateInfo(Result.Context.STRING_VALUE, "Verification Code is Missing");
         }
         // if the verification code is not null and is present, test passes
         else{
@@ -95,6 +96,7 @@ public class HasVerificationCodeTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.PASS, "Component's " +
                     "files were not analyzed and verification code " +
                     "was omitted");
+            r.updateInfo(Result.Context.STRING_VALUE, "Verification Code Was Omitted");
         }
         // if the verification code is not null and is present, test fails
         else{

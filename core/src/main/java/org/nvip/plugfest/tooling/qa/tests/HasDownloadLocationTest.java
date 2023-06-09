@@ -49,7 +49,9 @@ public class HasDownloadLocationTest extends MetricTest{
         if(isEmptyOrNull(c.getDownloadLocation())){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component did " +
                     "not include download location");
-                    }
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "Download Location is Missing");
+        }
         // downloadLocation has a value, test passes
         else{
             r = new Result(TEST_NAME, Result.STATUS.PASS, "Component " +
