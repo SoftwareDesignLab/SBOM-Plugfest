@@ -47,6 +47,8 @@ public class ExtractedLicenseMinElementTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.PASS, "No Extracted " +
                     "Licenses found in SBOM");
             r.addContext(sbom, "Extracted Licenses Minimum Elements");
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "No Extracted Licenses to Test");
             results.add(r);
         }
 
@@ -98,6 +100,8 @@ public class ExtractedLicenseMinElementTest extends MetricTest{
         if(isEmptyOrNull(licenseName)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Extracted " +
                     "License did not include license name");
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "License Name is Missing");
         }
         // license name is present, test passes
         else{
@@ -120,6 +124,8 @@ public class ExtractedLicenseMinElementTest extends MetricTest{
         if(isEmptyOrNull(licenseText)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Extracted " +
                     "License did not include text description");
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "License Description is Missing");
         }
         // text description is present, test passes
         else{
@@ -143,6 +149,8 @@ public class ExtractedLicenseMinElementTest extends MetricTest{
         if(isEmptyOrNull(crossRef)){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Extracted " +
                     "License did not include cross reference link");
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "License Reference Link is Missing");
         }
         // text description is present, check if valid link
         else{
