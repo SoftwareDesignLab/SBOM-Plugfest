@@ -80,8 +80,9 @@ public class HasDataLicenseSPDXTest extends MetricTest{
         // data license is not in the metadata, test fails
         else{
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Metadata does " +
-                    "not contain DataLicense");
+                    "not contain a DataLicense");
             r.updateInfo(Result.Context.FIELD_NAME, "DataLicense");
+            r.updateInfo(Result.Context.STRING_VALUE, "DataLicense is Missing");
         }
         return r;
     }
