@@ -231,7 +231,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://pypi.org/project/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
 
         // get the response code from this url
         int responseCode = huc.getResponseCode();
@@ -253,7 +253,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://www.nuget.org/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -274,7 +274,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://crates.io/crates/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -298,7 +298,7 @@ public class IsRegisteredTest extends MetricTest{
                 namespaceUrl +
                 p.getName().toLowerCase() + "@" +
                 p.getVersion());
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -319,7 +319,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://registry.npmjs.org/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -345,7 +345,7 @@ public class IsRegisteredTest extends MetricTest{
                 namespace + "/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "#v" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -366,7 +366,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://rubygems.org/gems/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "versions/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -387,7 +387,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://hackage.haskell.org/package/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "-" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -408,7 +408,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://hex.pm/packages/" +
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -431,7 +431,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL ("https://conan.io/center/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -457,7 +457,7 @@ public class IsRegisteredTest extends MetricTest{
                 (!isEmptyOrNull(namespace) ? namespace : "") + "/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -501,7 +501,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName() + "/" +
                 p.getVersion() + "/" +
                 p.getName() + ".podspec.json") ;
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -525,7 +525,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : "") +
                 "/index.html");
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -546,7 +546,7 @@ public class IsRegisteredTest extends MetricTest{
         URL url = new URL("https://cran.r-project.org/web/packages/" +
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -578,7 +578,7 @@ public class IsRegisteredTest extends MetricTest{
                 channel + "/" + subdir + "/" +
                 p.getName().toLowerCase() + "-" + p.getVersion() + "-" +
                 build + "." + type);
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
