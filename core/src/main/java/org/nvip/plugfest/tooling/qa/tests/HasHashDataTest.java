@@ -59,6 +59,7 @@ public class HasHashDataTest extends MetricTest{
         }
         r.updateInfo(Result.Context.TYPE, "Component");
         r.updateInfo(Result.Context.IDENTIFIER, c.getName());
+        r.updateInfo(Result.Context.FIELD_NAME, "hashes");
         return r;
 
     }
