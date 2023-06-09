@@ -68,7 +68,8 @@ public class HasSPDXIDTest extends MetricTest{
                 r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component has " +
                         "an invalid SPDXID format");
                 r.updateInfo(Result.Context.STRING_VALUE,
-                        "SPDXID does not start with \"SPDXRef-\"");
+                        "SPDXID does not start with \"SPDXRef-\". " +
+                                "SPDXID Found: " + spdxID);
             }
             // add context when a SPDXID is present
             r.updateInfo(Result.Context.FIELD_NAME, "SPDXID");
