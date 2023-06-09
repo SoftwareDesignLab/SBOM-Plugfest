@@ -100,7 +100,6 @@ export class MetricsBodyComponent {
   getShape(processor: string) {
       if (this.qr) {
       const index = this.qr?.processors.indexOf(processor);
-      console.log(this.qr?.shapes[index])
       return this.qr?.shapes[index];
     }
     return null;
