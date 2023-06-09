@@ -53,9 +53,14 @@ public class HasHashDataTest extends MetricTest{
         // hashes are present for the component, count how many hashes
         // the component has
         else{
+            ArrayList<String> hashAlgos = new ArrayList<>();
+            for(Hash h : hashList){
+                hashAlgos.add(h.getAlgorithm().toString());
+            }
             String message = String.format("Component contains %d hashes",
                     hashList.size());
             r = new Result(TEST_NAME, Result.STATUS.PASS, message);
+            r.updateInfo(Result.Context.STRING_VALUE, String.join(", ", hashAlgos));
         }
         r.updateInfo(Result.Context.TYPE, "Component");
         r.updateInfo(Result.Context.IDENTIFIER, c.getName());
