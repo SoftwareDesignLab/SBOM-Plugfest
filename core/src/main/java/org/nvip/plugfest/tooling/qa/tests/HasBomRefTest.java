@@ -34,6 +34,7 @@ public class HasBomRefTest extends MetricTest{
             Result r = new Result(TEST_NAME, Result.STATUS.ERROR, "SBOM " +
                     "does not have any components to test");
             r.addContext(sbom, "Component bom-refs");
+            r.updateInfo(Result.Context.STRING_VALUE, "No components present");
             results.add(r);
             return results;
         }
@@ -58,6 +59,7 @@ public class HasBomRefTest extends MetricTest{
         if(isEmptyOrNull(c.getUniqueID())){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component " +
                     "does not have bom-ref identifier");
+            r.updateInfo(Result.Context.STRING_VALUE, "bom-ref is missing");
         }
         // a bom-ref is present
         else{
