@@ -192,7 +192,7 @@ public class TranslatorPlugFestTest {
     public void driver_translates_xml_spec_version() throws TranslatorException {
         SBOM sbom = TranslatorPlugFest.translate(TEST_XML);
         assertNotNull(sbom);
-        assertEquals("http://cyclonedx.org/schema/bom/1.4", sbom.getSpecVersion());
+        assertEquals("1.4", sbom.getSpecVersion());
     }
 
     @Test

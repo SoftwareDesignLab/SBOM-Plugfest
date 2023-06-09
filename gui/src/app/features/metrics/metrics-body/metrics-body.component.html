@@ -7,10 +7,18 @@
       class="hover"
       [backgroundColor]="getLabelColor(processor)"
       *ngFor="let processor of processors"
-      [ngStyle]="{opacity: processorIgnoreList.includes(processor) ? '20%' : '100%'}"
+      [ngStyle]="{opacity: processorIgnoreList.includes(processor) ? '100%' : '20%'}"
       (click)="toggleProcessorFilter(processor)"
     >
       {{ processor }}
+    </app-button>
+    <app-button
+      class="hover"
+      [ngStyle]="{opacity: processorIgnoreList.length > 0 ? '100%' : '20%'}"
+      *ngIf="result"
+      (click)="processorIgnoreList = [];"
+    >
+    Clear Filters
     </app-button>
   </div>
   <div class="results" *ngIf="result && qr">
@@ -18,11 +26,10 @@
       <ng-container *ngFor="let message of getIdentifierMessages(identifier)">
           <app-accordion
             class="merged-result"
-            *ngIf="
-              ((!showPassed &&
-                qr.mergedResults[identifier][message][0].pass !== 1) ||
-              showPassed) && !processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor)
-            "
+            *ngIf="((!showPassed && 
+                    qr.mergedResults[identifier][message][0].pass !== 1) || 
+                    (showPassed && qr.mergedResults[identifier][message][0].pass === 1)) && 
+                    (processorIgnoreList.length === 0 || processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor))"
             [extra]="[
               getGrade(
                 qr.mergedResults[identifier][message][0].pass
