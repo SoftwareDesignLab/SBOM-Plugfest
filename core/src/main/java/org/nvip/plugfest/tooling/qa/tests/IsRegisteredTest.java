@@ -137,7 +137,7 @@ public class IsRegisteredTest extends MetricTest{
                             r.updateInfo(Result.Context.FIELD_NAME,
                                     "PURL Package Manager");
                             r.updateInfo(Result.Context.STRING_VALUE,
-                                    packageManager);
+                                    packageManager + " is Currently Not Supported");
                             purlResults.add(r);
                             // error number to skip other results
                             response = -1;
@@ -153,7 +153,8 @@ public class IsRegisteredTest extends MetricTest{
                             r.updateInfo(Result.Context.FIELD_NAME,
                                     "PURL Package Manager");
                             r.updateInfo(Result.Context.STRING_VALUE,
-                                    p.toString());
+                                    packageManager +
+                                            " is an Invalid Package Manager");
                             purlResults.add(r);
                             // error number to skip other results
                             response = -1;
@@ -175,11 +176,12 @@ public class IsRegisteredTest extends MetricTest{
                 // no errors occurred in checking the PURL through the URL
                 // so some response code was returned
                 if (response != 0 && response != -1) {
-                    r =checkResponseCode(response, packageManager);
+                    r = checkResponseCode(response, packageManager);
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE,
-                            p.toString());
+                            "Package Manager: " + packageManager +
+                                    " | PURL: " + p);
                     purlResults.add(r);
                 }
                 // some tests will throw a 0 if a different error occurs
@@ -189,7 +191,8 @@ public class IsRegisteredTest extends MetricTest{
                     r.addContext(c, "PURL Package Validation");
                     r.updateInfo(Result.Context.FIELD_NAME, "PURL");
                     r.updateInfo(Result.Context.STRING_VALUE,
-                            p.toString());
+                            "Package Manager: " + packageManager +
+                                    " | PURL: " + p);
                     purlResults.add(r);
                 }
             }
