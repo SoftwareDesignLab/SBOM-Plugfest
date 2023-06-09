@@ -144,8 +144,10 @@ public class MinElementTest extends MetricTest {
             // Not an Empty String
             if(!o.equals("")) {
                 message = String.format("%s is present", value);
-                return new Result(TEST_NAME, Result.STATUS.PASS,
+                Result r = new Result(TEST_NAME, Result.STATUS.PASS,
                         message);
+                r.updateInfo(Result.Context.STRING_VALUE, o.toString());
+                return r;
             }
             // String is empty
             message = String.format("%s is not present", value);
@@ -159,8 +161,10 @@ public class MinElementTest extends MetricTest {
             // multiple elements are present, test passes
             if(size >= 1) {
                 message = String.format("%s are present", value);
-                return new Result(TEST_NAME, Result.STATUS.PASS,
+                Result r = new Result(TEST_NAME, Result.STATUS.PASS,
                         message);
+                r.updateInfo(Result.Context.STRING_VALUE, o.toString());
+                return r;
             }
             // elements are not present, test fails
             message = String.format("%s are not present", value);
