@@ -46,7 +46,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     margin-right: 16px;
     align-items: center;
   }
+  
+.results>*:nth-child(2n)>*>*:nth-child(1) {
+    background: var(--dark-gray) !important
+}
 
-.results > *:nth-child(2n) > * > *:nth-child(1) {
+.results > * > * > *:nth-child(2) *:nth-child(2n)>*>*:nth-child(1) {
     background: var(--dark-gray) !important;
-  }
+}
+
+.results > * > * > *:nth-child(2) *:nth-child(2n)>*>*:nth-child(1) > div {
+    background: white;
+}
