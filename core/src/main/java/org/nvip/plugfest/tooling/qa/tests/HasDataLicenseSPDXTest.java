@@ -41,8 +41,10 @@ public class HasDataLicenseSPDXTest extends MetricTest{
         // metadata is not present in the SBOM, test automatically fails
         else{
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "SBOM does not " +
-                    "contain metadata");
+                    "contain metadata, so no DataLicense included in SBOM");
             r.addContext(sbom, "Metadata DataLicense");
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "No DataLicense is in SBOM");
             result.add(r);
         }
         return result;
