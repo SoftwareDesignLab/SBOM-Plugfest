@@ -79,16 +79,18 @@ public class ValidHashDataTest extends MetricTest{
                 message = String.format("Component has %d invalid hashes " +
                         "and %d valid hashes", failedHashes, validHashes);
                 r = new Result(TEST_NAME, Result.STATUS.FAIL, message);
+                string_value = "Invalid: " + String.join(", ", failHashList)
+                        + "| Valid: " + String.join(", ", validHashList);
+                r.updateInfo(Result.Context.STRING_VALUE, string_value);
             }
             else{
                 message = String.format("Component's %d hashes are valid",
                         validHashes);
                 r = new Result(TEST_NAME, Result.STATUS.PASS, message);
+                string_value = "Valid: " + String.join(", ", validHashList);
+                r.updateInfo(Result.Context.STRING_VALUE, string_value);
 
             }
-            string_value = "Invalid: " + String.join(", ", failHashList)
-                    + ", Valid: " + String.join(", ", validHashList);
-            r.updateInfo(Result.Context.STRING_VALUE, string_value);
             r.addContext(c, "Hash");
             results.add(r);
         }

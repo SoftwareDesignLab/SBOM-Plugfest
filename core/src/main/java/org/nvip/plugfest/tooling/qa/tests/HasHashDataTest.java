@@ -49,6 +49,7 @@ public class HasHashDataTest extends MetricTest{
         if(hashList.isEmpty()){
             r = new Result(TEST_NAME, Result.STATUS.FAIL, "Component does " +
                     "not contain hashes");
+            r.updateInfo(Result.Context.STRING_VALUE, "No Hashes Present");
         }
         // hashes are present for the component, count how many hashes
         // the component has
@@ -60,7 +61,8 @@ public class HasHashDataTest extends MetricTest{
             String message = String.format("Component contains %d hashes",
                     hashList.size());
             r = new Result(TEST_NAME, Result.STATUS.PASS, message);
-            r.updateInfo(Result.Context.STRING_VALUE, String.join(", ", hashAlgos));
+            r.updateInfo(Result.Context.STRING_VALUE, "Hashes Present: " +
+                    String.join(", ", hashAlgos));
         }
         r.updateInfo(Result.Context.TYPE, "Component");
         r.updateInfo(Result.Context.IDENTIFIER, c.getName());
