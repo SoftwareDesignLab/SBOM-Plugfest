@@ -34,13 +34,19 @@ public class HasExtractedLicensesTest extends MetricTest{
             Map<String, Map<String, String>>  extractedLicenses = c.getExtractedLicenses();
             // skip if no extracted licenses are found for the component
             if(!extractedLicenses.isEmpty()){
-                for(String licenseRef : extractedLicenses.keySet()){
-                    String message = "Extracted license found for component "
-                            + c.getName() + ": " + licenseRef;
-                    r = new Result(TEST_NAME, Result.STATUS.PASS, message);
+                ArrayList<String> licenseStrings = new ArrayList<>();
+                for(String licenseRef : extractedLicenses.keySet()){{
+                    licenseStrings.add(licenseRef);
+                }}
+                    String message = "Extracted Licenses Found:  "
+                            + String.join(", ", licenseStrings);
+                    r = new Result(TEST_NAME, Result.STATUS.PASS, "Extracted licenses found for component "
+                            + c.getName());
                     r.addContext(c, "Extracted Licenses");
+                    r.updateInfo(Result.Context.FIELD_NAME, "ExtractedLicenses");
+                    r.updateInfo(Result.Context.STRING_VALUE, message);
                     results.add(r);
-                }
+
             }
         }
 
@@ -48,6 +54,9 @@ public class HasExtractedLicensesTest extends MetricTest{
             r = new Result(TEST_NAME, Result.STATUS.PASS, "No Extracted " +
                     "Licenses found in SBOM");
             r.addContext(sbom, "Extracted Licenses");
+            r.updateInfo(Result.Context.FIELD_NAME, "ExtractedLicenses");
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    "No Extracted Licenses Found in SBOM");
             results.add(r);
         }
 
