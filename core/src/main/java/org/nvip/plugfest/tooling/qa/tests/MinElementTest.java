@@ -130,13 +130,19 @@ public class MinElementTest extends MetricTest {
      */
     private Result resultEmptyOrNull(Object o, String value){
 
+        // Hold the pass/fail message for the result
         String message;
+        // the result that will be created after the checks
         Result r;
 
         // Null check
         if(o == null) {
             message = String.format("%s is not present", value);
-            return new Result(TEST_NAME, Result.STATUS.FAIL, message);
+            r = new Result(TEST_NAME, Result.STATUS.FAIL,
+                    message);
+            r.updateInfo(Result.Context.STRING_VALUE,
+                    String.format("%s not found", value));
+            return r;
 
         }
 
