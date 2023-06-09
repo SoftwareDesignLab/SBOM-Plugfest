@@ -27,7 +27,7 @@ export class MetricsBodyComponent {
   }
 
   toggleProcessorFilter(name: string) {
-    if(this.processorIgnoreList.includes(name)) 
+    if(this.processorIgnoreList.includes(name))
       this.processorIgnoreList = this.processorIgnoreList.filter((x) => x !== name);
     else
       this.processorIgnoreList.push(name);
@@ -95,5 +95,14 @@ export class MetricsBodyComponent {
       default:
         return "N/A";
     }
+  }
+
+  getShape(processor: string) {
+      if (this.qr) {
+      const index = this.qr?.processors.indexOf(processor);
+      console.log(this.qr?.shapes[index])
+      return this.qr?.shapes[index];
+    }
+    return null;
   }
 }

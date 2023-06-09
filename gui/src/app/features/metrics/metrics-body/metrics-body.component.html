@@ -4,13 +4,14 @@
       Show {{ showPassed ? "Failed Only" : "Passed" }}
     </app-button>
     <app-button
-      class="hover"
+      class="hover flex ceter"
       [backgroundColor]="getLabelColor(processor)"
       *ngFor="let processor of processors"
       [ngStyle]="{opacity: processorIgnoreList.includes(processor) ? '100%' : '20%'}"
       (click)="toggleProcessorFilter(processor)"
     >
       {{ processor }}
+    <mat-icon [fontIcon]="getShape(processor) || ''"/>
     </app-button>
     <app-button
       class="hover"
@@ -26,9 +27,9 @@
       <ng-container *ngFor="let message of getIdentifierMessages(identifier)">
           <app-accordion
             class="merged-result"
-            *ngIf="((!showPassed && 
-                    qr.mergedResults[identifier][message][0].pass !== 1) || 
-                    (showPassed && qr.mergedResults[identifier][message][0].pass === 1)) && 
+            *ngIf="((!showPassed &&
+                    qr.mergedResults[identifier][message][0].pass !== 1) ||
+                    (showPassed && qr.mergedResults[identifier][message][0].pass === 1)) &&
                     (processorIgnoreList.length === 0 || processorIgnoreList.includes(qr.mergedResults[identifier][message][0].processor))"
             [extra]="[
               getGrade(
@@ -36,6 +37,7 @@
               ).toString()
             ]"
             [color]="getResultColor(qr.mergedResults[identifier][message][0])"
+            [shape]="getShape(qr.mergedResults[identifier][message][0].processor)"
           >
             <div title>{{ identifier }}: {{ message }}</div>
             <div

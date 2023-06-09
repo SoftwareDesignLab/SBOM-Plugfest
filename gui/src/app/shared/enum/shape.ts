@@ -3,7 +3,7 @@ enum shape {
     circle = 'circle',
     hexagon = 'hexagon',
     pentagon = 'pentagon',
-    triangle = 'change_history',
+    triangle = 'navigation',
     star = 'star',
     eightStar = 'brightness_empty',
 }
