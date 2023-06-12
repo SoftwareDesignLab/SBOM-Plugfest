@@ -219,6 +219,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -238,7 +240,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
-
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -260,6 +263,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -281,6 +286,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -305,6 +312,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "@" +
                 p.getVersion());
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -326,6 +335,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -352,6 +363,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "#v" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -373,6 +386,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "versions/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -394,6 +409,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "-" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -415,6 +432,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -438,6 +457,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -464,6 +485,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -508,6 +531,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getVersion() + "/" +
                 p.getName() + ".podspec.json") ;
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -532,6 +557,8 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "?version=" + p.getVersion() : "") +
                 "/index.html");
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -553,6 +580,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -585,6 +614,8 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "-" + p.getVersion() + "-" +
                 build + "." + type);
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.setRequestMethod("HEAD");
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -592,6 +623,14 @@ public class IsRegisteredTest extends MetricTest{
     }
 
 
+    /**
+     * Check a given response code and if it is a successful code (200)
+     * @param response the response code to check
+     * @param packageManager the pacakge manager associated with the
+     * response code
+     * @return a result of if the result is 200 (the connection was
+     * successful) or not
+     */
     private Result checkResponseCode(int response, String packageManager){
         Result r;
 
