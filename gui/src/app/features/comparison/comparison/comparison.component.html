@@ -34,13 +34,14 @@
         </div>
       </app-accordion>
     </div>
-    
+
     <div *ngIf="path.length === 2 && getPathIndex(1) === 'Metadata'">
       <app-accordion
+        [hideToggle]="false"
         *ngFor="let conflict of getMetadataConflicts(getPathIndex(0))"
       >
         <div title class="title">
-          <span> {{ conflict.type }}</span>
+          <span style="text-transform: capitalize;"> {{ conflict.type.replaceAll("_", " ").toLowerCase() }}</span>
         </div>
         <div body>
           <span>{{"Target: " + conflict.target}}</span>
@@ -63,10 +64,11 @@
 
     <div *ngIf="path.length === 3 && getPathIndex(1) === 'Components'">
       <app-accordion
+      [hideToggle]="false"
       *ngFor="let conflict of ComponentFilter(getComponentConflicts(getPathIndex(0)))[path[2]]"
     >
       <div title class="title">
-        <span> {{ conflict.type }}</span>
+        <span style="text-transform: capitalize;"> {{ conflict.type.replaceAll("_", " ").toLowerCase() }}</span>
       </div>
       <div body>
         <span>{{"Target: " + conflict.target}}</span>

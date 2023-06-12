@@ -47,6 +47,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     align-items: center;
   }
 
-.results > *:nth-child(2n) > * > *:nth-child(1) {
-    background: var(--dark-gray) !important;
+  .mat-expansion-indicator, .mat-expansion-panel-header-description, .mat-expansion-indicator:after {
+    color: white;
   }
+
+.results>*:nth-child(2n)>*>*:nth-child(1) {
+    background: var(--dark-gray) !important
+}
+
+.results > * > * > *:nth-child(2) *:nth-child(2n)>*>*:nth-child(1) {
+    background: var(--dark-gray) !important;
+}
+
+.results > * > * > *:nth-child(2) *:nth-child(2n)>*>*:nth-child(1) > div {
+    background: white;
+  }
+
+
+.comparison > div:nth-child(2) > div > *:nth-child(2n) > * > * {
+    background:  var(--dark-gray) !important
+}
+
+.comparison > div:nth-child(2) > div > *:nth-child(2n) > * > * > div {
+    background:  white !important
+}

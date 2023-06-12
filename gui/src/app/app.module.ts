@@ -49,7 +49,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MetricsSidePanelComponent,
     MetricsBodyComponent,
     MetricsMainComponent,
-    ModalComponent
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
