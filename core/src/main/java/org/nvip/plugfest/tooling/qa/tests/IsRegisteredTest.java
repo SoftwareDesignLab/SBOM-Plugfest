@@ -46,7 +46,7 @@ public class IsRegisteredTest extends MetricTest{
 
     /**
      * Given a component, get all purls and test if the package is
-     * registered thorugh its specified type/package manager
+     * registered through its specified type/package manager
      * @param c the component to test
      * @return a collection of results for each PURL associated with
      * the component
@@ -227,6 +227,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 "/" + p.getVersion());
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -246,7 +247,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
-
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -268,6 +269,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -289,6 +291,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -313,6 +316,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "@" +
                 p.getVersion());
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -334,6 +338,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -360,6 +365,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "#v" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -381,6 +387,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "versions/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -402,6 +409,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "-" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -423,6 +431,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "/" +
                 (p.getVersion() != null ? "/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -446,6 +455,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -472,6 +482,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "?version=" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -497,9 +508,9 @@ public class IsRegisteredTest extends MetricTest{
             byte[] digest = md.digest(componentName.getBytes());
             BigInteger bigInt = new BigInteger(1,digest);
             // convert the bytes to a string (hexadecimal form)
-            String hashtext = bigInt.toString(16);
+            String hashText = bigInt.toString(16);
             // split up the characters and concat the first three
-            String[] hashTextSplit = hashtext.split("");
+            String[] hashTextSplit = hashText.split("");
             firstThreeString = hashTextSplit[0] + "/" + hashTextSplit[1] +
                     "/" + hashTextSplit[2] + "/";
         }catch(NoSuchAlgorithmException e){
@@ -516,6 +527,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getVersion() + "/" +
                 p.getName() + ".podspec.json") ;
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -540,6 +552,7 @@ public class IsRegisteredTest extends MetricTest{
                 (p.getVersion() != null ? "?version=" + p.getVersion() : "") +
                 "/index.html");
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -561,6 +574,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() +
                 (p.getVersion() != null ? "/versions/" + p.getVersion() : ""));
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -593,6 +607,7 @@ public class IsRegisteredTest extends MetricTest{
                 p.getName().toLowerCase() + "-" + p.getVersion() + "-" +
                 build + "." + type);
         HttpsURLConnection huc = (HttpsURLConnection) url.openConnection();
+        huc.connect();
         // get the response code from this url
         int responseCode = huc.getResponseCode();
         huc.disconnect();
@@ -600,6 +615,14 @@ public class IsRegisteredTest extends MetricTest{
     }
 
 
+    /**
+     * Check a given response code and if it is a successful code (200)
+     * @param response the response code to check
+     * @param packageManager the package manager associated with the
+     * response code
+     * @return a result of if the result is 200 (the connection was
+     * successful) or not
+     */
     private Result checkResponseCode(int response, String packageManager){
         Result r;
 
