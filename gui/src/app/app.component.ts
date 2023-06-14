@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataHandlerService } from '@services/data-handler.service';
+import { DataHandlerService, FileStatus } from '@services/data-handler.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +12,12 @@ export class AppComponent {
   constructor(private dataHandler: DataHandlerService) {}
 
   GetValidSBOMs() {
-    return this.dataHandler.GetValidSBOMs();
+    return this.dataHandler.GetSBOMsOfType(FileStatus.VALID);
+  }
+
+  checkIndex(index: number) {
+    if (index === 1) {
+      this.dataHandler.RunAllMetrics();
+    }
   }
 }

@@ -28,10 +28,14 @@ icon.ng-star-inserted {
 
 .color-bar {
     height: 100%;
-    width: 5px;
+    width: 30px;
     position: absolute;
     right: 0;
     top: 0;
+}
+
+.accordion-icon {
+    color: white;
 }
 
 .dropdown {
@@ -68,6 +72,7 @@ WIP overriding style
     background-color: var(--primary);
     color: white;
 }
+
 
 .accordion-bar:hover {
     background-color: grey !important;

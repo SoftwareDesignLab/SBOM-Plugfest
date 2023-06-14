@@ -20,7 +20,7 @@ export class ClientService {
     params: new HttpParams()
   };
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
   }
 
   get(path: string, params: HttpParams = new HttpParams()) {
@@ -28,8 +28,8 @@ export class ClientService {
     return this.http.get(this.SERVER_URL + path, this.httpOptions);
   }
 
-  post(path: string, params: HttpParams = new HttpParams()) {
+  post(path: string, body: any,  params: HttpParams = new HttpParams()) {
     this.httpOptions.params = params;
-    return this.http.post(this.SERVER_URL + path, this.httpOptions.params);
+    return this.http.post(this.SERVER_URL + path, body, this.httpOptions);
   }
 }

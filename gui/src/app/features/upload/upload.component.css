@@ -41,6 +41,7 @@
   padding: 20px;
   max-height: 30vh;
   overflow-y: scroll;
+  gap: 8px;
 }
 .uploaded-files {
   gap: 8px;
@@ -48,4 +49,10 @@
 
 h1 {
   text-align: center;
+}
+
+.buttons {
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
 }

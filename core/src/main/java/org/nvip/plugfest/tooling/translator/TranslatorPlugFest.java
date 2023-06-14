@@ -1,6 +1,7 @@
 package org.nvip.plugfest.tooling.translator;
 
 import org.json.JSONObject;
+import org.nvip.plugfest.tooling.Debug;
 import org.nvip.plugfest.tooling.sbom.SBOM;
 
 import java.io.File;
@@ -9,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 
 /**
@@ -19,19 +22,23 @@ import java.util.Arrays;
  * @author Matt London
  */
 public class TranslatorPlugFest {
+    private final static String INVALID_FILE_CONTENTS = "Invalid SBOM file contents (could not assume schema).";
+    private final static Function<String, String> INVALID_FILE_TYPE = (ext) -> "File type " + ext + " not supported.";
+
     /**
      * Parse an SBOM using the appropriate translator and return the object
      *
      * @param path Path to the SBOM to translate
-     * @return SBOM object, null if failed
+     * @return SBOM object
+     * @throws TranslatorException if translation failed
      */
-    public static SBOM translate(String path) {
+    public static SBOM translate(String path) throws TranslatorException {
         // Read the contents at path into a string
         String contents = null;
         try {
             contents = new String(Files.readAllBytes(Paths.get(path)));
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            throw new TranslatorException(e.getMessage());
         }
 
         return translateContents(contents, path);
@@ -42,41 +49,25 @@ public class TranslatorPlugFest {
      *
      * @param contents contents of the bom
      * @param filePath path to the bom
-     * @return SBOM object, null if failed
+     * @return SBOM object
+     * @throws TranslatorException if translation failed
      */
-    public static SBOM translateContents(String contents, String filePath) {
+    public static SBOM translateContents(String contents, String filePath) throws TranslatorException {
+        TranslatorCore translator = getTranslator(filePath);
 
-        SBOM sbom = null;
+        SBOM result = translator.translateContents(contents, filePath);
+        if (result == null) throw new TranslatorException("Unknown error while translating.");
+        return result;
+    }
 
-        // TODO check the contents of the file rather than trusting the file extension
-        // TODO address the parser exception rather than ignoring it
+    private static TranslatorCore getTranslator(String filePath) throws TranslatorException {
+        String ext = filePath.substring(filePath.lastIndexOf('.') + 1).trim().toLowerCase();
 
-        final String extension = filePath.substring(filePath.toLowerCase().lastIndexOf('.'));
-
-        try {
-
-            //call the appropriate translator based on the file extension
-            switch (extension) {
-
-                case ".xml"  -> sbom = TranslatorCDXXML.translatorCDXXMLContents(contents, filePath);
-
-                case ".json" -> {
-                    if (new JSONObject(contents).toMap().get("bomFormat").equals("CycloneDX")) {
-                        sbom = TranslatorCDXJSON.translatorCDXJSONContents(contents, filePath);
-                    }
-                }
-
-                case ".spdx" -> sbom = TranslatorSPDX.translatorSPDXContents(contents, filePath);
-
-                default      -> System.err.println("\nInvalid SBOM format found at: " + filePath);
-
-            }
-
+        switch (ext.toLowerCase()) {
+            case "json" -> { return new TranslatorCDXJSON(); }
+            case "xml" -> { return new TranslatorCDXXML(); }
+            case "spdx" -> { return new TranslatorSPDX(); }
+            default -> { throw new TranslatorException(INVALID_FILE_TYPE.apply(ext)); }
         }
-        catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-
-        return sbom;
     }
 }

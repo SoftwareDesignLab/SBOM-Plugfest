@@ -53,3 +53,6 @@ gradle-app.setting
 /node_modules/
 core/bin
 *.spdx
+
+# Excluded test driver class used for testing
+TestMain.java

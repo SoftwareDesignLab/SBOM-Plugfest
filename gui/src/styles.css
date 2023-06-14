@@ -1,10 +1,16 @@
 :root {
     --accent: #58A5FF;
-    --green: #58ff82;
-    --red: #ff5858;
     --primary: #333333;
     --secondary: #1B1E21;
     --bg: #191d20;
+    --red: #D55E00;
+    --orange: #E69F00;
+    --yellow: #000000;
+    --green: #009E73;
+    --teal: #56B4E9;
+    --blue: #0072B2;
+    --pink: #CC79A7;
+    --dark-gray: rgb(71, 71, 71);
     --gray: gray;
 }
 
@@ -31,4 +37,37 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .hover:hover {
     transition-duration: .35s;
     transform: translate(0, -3px);
+}
+
+.mat-expansion-panel-header-title {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto !important;
+    margin-right: 16px;
+    align-items: center;
+  }
+
+  .mat-expansion-indicator, .mat-expansion-panel-header-description, .mat-expansion-indicator:after {
+    color: white;
+  }
+
+.results>*:nth-child(2n)>*>*:nth-child(1) {
+    background: var(--dark-gray) !important
+}
+
+.results > * > * > *:nth-child(2) *:nth-child(2n)>*>*:nth-child(1) {
+    background: var(--dark-gray) !important;
+}
+
+.results > * > * > *:nth-child(2) *:nth-child(2n)>*>*:nth-child(1) > div {
+    background: white;
+  }
+
+
+.comparison > div:nth-child(2) > div > *:nth-child(2n) > * > * {
+    background:  var(--dark-gray) !important
+}
+
+.comparison > div:nth-child(2) > div > *:nth-child(2n) > * > * > div {
+    background:  white !important
 }

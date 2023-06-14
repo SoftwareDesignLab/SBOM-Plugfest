@@ -1,8 +1,6 @@
 package org.nvip.plugfest.tooling.sbom;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * File: SBOM.java
@@ -12,6 +10,14 @@ import java.util.UUID;
  * @author Kevin LaPorte
  */
 public class SBOM {
+
+    // Common SBOM Schemas
+    public enum Type {
+        CYCLONE_DX,
+        SPDX,
+        Other
+    }
+
     /**
      * Dependency tree of the components
      */
@@ -20,7 +26,7 @@ public class SBOM {
     /**
      * Type of SBOM which this object came from (whatever the bom.xml, bom.json was formatted in)
      */
-    private SBOMType originFormat;
+    private Type originFormat;
 
     /**
      * Specification version of the origin format
@@ -54,12 +60,25 @@ public class SBOM {
     private Set<Signature> signature;
 
     /**
+     * Metadata of SBOM
+     */
+    private Map<String, String> metadata;
+
+
+    /**
+     *  Application tools
+     */
+    public Set<AppTool> appTools;
+
+
+    /**
      * Default constructor
      */
     public SBOM () {
         this.dependencyTree = new DependencyTree();
         this.signature = new HashSet<>();
         this.serialNumber = "urn:uuid:" + UUID.randomUUID().toString();
+        this.metadata = new HashMap<>();
     }
 
     /**
@@ -98,6 +117,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
+        this.metadata = new HashMap<>();
     }
 
     /**
@@ -110,7 +130,7 @@ public class SBOM {
      * @param timestamp:    Timestamp of when this SBOM was created
      * @param signature:    signature to verify the SBOM
      */
-    public SBOM(SBOMType originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber,
+    public SBOM(Type originFormat, String specVersion, String sbomVersion, String supplier, String serialNumber,
                 String timestamp, Set<Signature> signature, DependencyTree dependencyTree) {
         this.originFormat = originFormat;
         this.specVersion = specVersion;
@@ -120,6 +140,7 @@ public class SBOM {
         this.serialNumber = serialNumber;
         this.timestamp = timestamp;
         this.signature = signature;
+        this.metadata = new HashMap<>();
     }
 
     /**
@@ -130,6 +151,15 @@ public class SBOM {
     public SBOM(SBOM from) {
         // This sets the dependencytree to null so it does not allow copying of dependencies
         this(from.getOriginFormat(), from.getSpecVersion(), from.getSbomVersion(), from.getSupplier(), from.getSerialNumber(), from.getTimestamp(), from.getSignature(), null);
+    }
+
+    /**
+     * Get the name of the head component of the SBOM, aka the bom/document name.
+     *
+     * @return The name of the SBOM.
+     */
+    public String getName() {
+        return getComponent(getHeadUUID()).getName();
     }
 
     /**
@@ -200,15 +230,15 @@ public class SBOM {
      * @param format SBOM Format string to convert to Format Enum
      * @return SBOM Type
      */
-    public SBOMType assignOriginFormat(String format) {
+    public Type assignOriginFormat(String format) {
         if (format != null) {
             if (format.toLowerCase().contains("cyclonedx")) {
-                return SBOMType.CYCLONE_DX;
+                return Type.CYCLONE_DX;
             } else if (format.toLowerCase().contains("spdx")) {
-                return SBOMType.SPDX;
+                return Type.SPDX;
             }
         }
-        return SBOMType.Other;
+        return Type.Other;
     }
 
     /**
@@ -239,11 +269,11 @@ public class SBOM {
     /// Getters and Setters
     ///
 
-    public SBOMType getOriginFormat() {
+    public Type getOriginFormat() {
         return originFormat;
     }
 
-    public void setOriginFormat(SBOMType originFormat) {
+    public void setOriginFormat(Type originFormat) {
         this.originFormat = originFormat;
     }
 
@@ -291,6 +321,41 @@ public class SBOM {
         this.signature = signature;
     }
 
+    public void addMetadata(String k, String v){
+        if(metadata == null)
+            metadata = new HashMap<>();
+        AppTool potentialTool = checkForTool(v);
+        if(!getAppTools().contains(potentialTool))
+            if(potentialTool != null)
+                addAppTool(potentialTool);
+            else metadata.put(k,v);
+    }
+    public void setMetadata(Map<String,String> md){
+        for (String m: md.keySet()
+             ) {
+            addMetadata(m, md.get(m));
+        }
+    }
+    public Map<String,String> getMetadata(){
+        return metadata;
+    }
+
+    public Set<AppTool> getAppTools() {
+        if(appTools == null)
+            appTools = new HashSet<>();
+        return appTools;
+    }
+
+    public void setAppTools(Set<AppTool> appTools) {
+        this.appTools = appTools;
+    }
+
+    public void addAppTool(AppTool a){
+        if(appTools == null)
+            appTools = new HashSet<>();
+        appTools.add(a);
+    }
+
     ///
     /// Overrides
     ///
@@ -333,6 +398,14 @@ public class SBOM {
 
         // Now we can return
         return retVal;
+    }
+
+    public AppTool checkForTool(String m){
+        if(m.toLowerCase().startsWith("[tool")){
+            String[] split = m.split("\\s+");
+            return new AppTool(split[2], split[3], split[4]);
+        }
+        return null;
     }
 
     /**

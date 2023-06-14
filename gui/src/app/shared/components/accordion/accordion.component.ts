@@ -1,6 +1,7 @@
 /** @Author Justin Jantzi */
 
 import { Component, Input } from '@angular/core';
+import shape from '../../enum/shape';
 
 @Component({
   selector: 'app-accordion',
@@ -11,5 +12,8 @@ export class AccordionComponent {
   @Input() title: string = '';
   @Input() extra: string[] = [];
   @Input() color: string = '';
+  @Input() shape: shape | null = null;
   @Input() expanded: boolean = false;
+  @Input() hideToggle: boolean = true;
+  @Input() backgroundColor: string ='';
 }

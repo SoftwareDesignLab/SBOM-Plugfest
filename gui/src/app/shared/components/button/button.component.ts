@@ -9,4 +9,6 @@ import { Component, Input } from '@angular/core';
 export class ButtonComponent {
   @Input() icon: string = "";
   @Input() backgroundColor: string = "";
+  @Input() iconColor: string = "";
+  @Input() secondary: boolean = false;
 }

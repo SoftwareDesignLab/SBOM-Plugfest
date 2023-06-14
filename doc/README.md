@@ -1,5 +1,8 @@
-#Insomnia Instructions
+# System Requirements
+- Java 17
+- Angular CLI
+- npm
+- Gradle
 
-To open the insomnia file download insomnia from https://insomnia.rest/download/
-
-When the program opens go to Application -> preferences -> data -> import and drag the JSON file in.
+# API Documentation
+See [API File](APICalls.txt) or see the following document: ![api_documentation](Plugfest-in-a-box%20API%20Documentation.jpg)

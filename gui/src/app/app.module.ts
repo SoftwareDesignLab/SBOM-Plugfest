@@ -23,7 +23,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComparisonComponent } from './features/comparison/comparison/comparison.component';
 import {
   ComparisonPageComponent,
-  ComparisonDialogComponent,
 } from './features/comparison/comparison-page/comparison-page.component';
 import { DialogComponent } from '@components/dialog/dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -31,6 +30,7 @@ import { MetricsSidePanelComponent } from './features/metrics/metrics-side-panel
 import { MetricsBodyComponent } from './features/metrics/metrics-body/metrics-body.component';
 import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-main.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -46,11 +46,10 @@ import { MatStepperModule } from '@angular/material/stepper';
     UploadComponent,
     ComparisonComponent,
     DialogComponent,
-    ComparisonDialogComponent,
     MetricsSidePanelComponent,
     MetricsBodyComponent,
     MetricsMainComponent,
-    ModalComponent
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,7 +68,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatSelectModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent],

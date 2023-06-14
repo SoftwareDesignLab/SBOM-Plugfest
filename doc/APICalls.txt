@@ -3,29 +3,32 @@ Description: Takes a list of SBOMs and generates a comparison between them
 Request Type: POST
 Params: [
     {
-        Name: contents
-        Type: String
-        Required: True
-    },
-    {
-        Name: fileNames
-        Type: String
+        Name: targetIndex
+        Type: Integer
         Required: True
     }
 ]
-Request Body: {}
+Request Body:
+    {
+        Name: sboms
+        Type: SBOMFile[]
+        Required: True
+    }
 
 Responses: [
     Response Code: 200
     Response Body: [
         {
-            targetSBOM: SBOM
-            sbomStream: List<SBOM>
-            diffReportList: List<DiffReport>
-            comparisons: Map<String, HashSet<ComponentVersion>>
+            diffReport: DiffReport
         }
     ],
     Response Code: 400
+    Response Body: [
+        {
+            message: String
+        }
+    ],
+    Response Code: 500
     Response Body: [
         {
             message: String
@@ -36,30 +39,55 @@ Responses: [
 URI: /plugfest/qa
 Description: Takes in an SBOM and returns a quality report on the SBOM
 Request Type: POST
-Params: [
+Params: []
+Request Body:
     {
-        Name: contents
-        Type: JSON array of String
-        Required: True
-    },
-    {
-        Name: fileName
-        Type: Json array of String
+        Name: sbomFile
+        Type: SBOMFile
         Required: True
     }
-]
-Request Body: {}
 
 Responses: [
     Response Code: 200
     Response Body: [
         {
-            testResults: ArrayList<TestResults>
-            serialNumber: String
+            qualityReport: QualityReport
+        }
+    ],
+    Response Code: 500
+    Response Body: [
+        {
+            message: String
+        }
+    ]
+]
+
+URI: /plugfest/parse
+Description: Convert the file contents to an SBOM object, returns null if failed to parse
+Request Type: POST
+Params: []
+Request Body:
+    {
+        Name: sbomFile
+        Type: SBOMFile
+        Required: True
+    }
+
+Responses: [
+    Response Code: 200
+    Response Body: [
+        {
+            sbom: SBOM
         }
     ],
     Response Code: 200
     Response Body: [
         {}
+    ],
+    Response Code: 400
+    Response Body: [
+        {
+            message: String
+        }
     ]
 ]
