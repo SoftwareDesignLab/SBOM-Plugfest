@@ -2,6 +2,7 @@ package org.nvip.plugfest.tooling.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.nvip.plugfest.tooling.Debug;
+import org.nvip.plugfest.tooling.sbom.SBOM;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,10 @@ public class Utils {
         @JsonProperty
         public String contents;
         public boolean hasNullProperties;
+
+        public SBOMFile() {
+            this(null, null);
+        }
 
         /**
          * Default constructor for SBOMFile. Used for test purposes.
