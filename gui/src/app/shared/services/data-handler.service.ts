@@ -65,34 +65,45 @@ export class DataHandlerService {
     return this.loadingMetrics;
   }
 
-  ValidateFile(path: string, metrics: boolean = false) {
+  private async getFileData(path: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        const data = reader.result as string;
+        resolve(data);
+      };
+  
+      reader.onerror = (error) => {
+        reject(error);
+      };
+  
+      const file = this.files[path].file;
+      reader.readAsText(file);
+    });
+  }
+
+
+  async ValidateFile(path: string, metrics: boolean = false) {
     if (metrics) {
       this.loadingMetrics = true;
     }
 
-    const file = this.files[path].file;
+    const data = await this.getFileData(path);
 
-    const reader = new FileReader();
+    this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
+      this.files[path].status = FileStatus.VALID;
 
-    reader.onload = () => {
-      const data = reader.result as string;
-  
-      this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
-        this.files[path].status = FileStatus.VALID;
-
-        if(metrics) {
-          this.loadingMetrics = false;
-          this.files[path].metrics = new QualityReport(result as test);
-        }
-      },
-      (error) => {
+      if(metrics) {
         this.loadingMetrics = false;
-        this.files[path].status = FileStatus.ERROR;
-        this.files[path].extra = error.error;
-      })
-    };
-
-    reader.readAsText(file);
+        this.files[path].metrics = new QualityReport(result as test);
+      }
+    },
+    (error) => {
+      this.loadingMetrics = false;
+      this.files[path].status = FileStatus.ERROR;
+      this.files[path].extra = error.error;
+    })
   }
 
 
@@ -120,30 +131,30 @@ export class DataHandlerService {
 
   async Compare(main: string, others: string[]): Promise<any> {
     this.loadingComparison = true;
-    let paths = [main, ...others];
-    let files: File[] = [];
-
-    for(let i = 0; i < paths.length; i++) {
-      let path = paths[i];
-      let data = await this.ipc.invoke('getFileData', path);
-
-      // files.push({
-      //   'fileName': path,
-      //   'contents': data
-      // })
+    const paths = [main, ...others];
+    const files: { fileName: string, contents: string }[] = [];
+  
+    for (const path of paths) {
+      const data = await this.getFileData(path);
+      files.push({
+        fileName: path,
+        contents: data
+      });
     }
     
     this.lastSentFilePaths = paths;
-
-    this.client.post("compare", files, new HttpParams().set('targetIndex', 0)).subscribe((result: any) => {
-      this.comparison = result;
-      this.loadingComparison = false;
-    },
-    (error: any) => {
-      //TODO: Add error message here
-      this.comparison = null;
-      this.loadingComparison = false;
-    })
+  
+    this.client.post("compare", files, new HttpParams().set('targetIndex', '0')).subscribe(
+      (result: any) => {
+        this.comparison = result;
+        this.loadingComparison = false;
+      },
+      (error: any) => {
+        // TODO: Add error message here
+        this.comparison = null;
+        this.loadingComparison = false;
+      }
+    );
   }
 }
 
