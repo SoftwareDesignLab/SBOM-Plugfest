@@ -33,6 +33,7 @@
         </div>
         <div class="buttons flex">
             <app-button class="add-button" icon="add" (click)="browse()">Add SBOMs</app-button>
+            <input type="file" #fileInput hidden (change)="onFileSelect(fileInput.files)">
             <app-button class="add-button" backgroundColor="var(--accent)" (click)="NextStepper()" *ngIf="GetValidSBOMs().length >= 1">
                 Next
                 <icon icon="navigate_next" color="var(--primary)"></icon>
