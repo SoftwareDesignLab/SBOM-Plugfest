@@ -21,6 +21,8 @@ export class UploadComponent {
       this.scrollToEnd();
       return;
     }
+
+    this.dataHandler.AddFiles(files);
   }
 
   browse() {
