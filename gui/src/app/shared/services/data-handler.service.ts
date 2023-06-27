@@ -35,15 +35,20 @@ export class DataHandlerService {
     }
   }
 
-  AddFiles(paths: string[]) {
-    paths.forEach((path) => {
+  AddFiles(files: FileList) {
 
-      this.files[path] = {
+    console.log(files);
+
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+
+      this.files[file.name] = {
         status: FileStatus.LOADING,
-      }
+        file: file
+      } 
 
-      this.ValidateFile(path);
-    })
+      this.ValidateFile(file.name);
+    }
   }
 
   RunAllMetrics() {
@@ -64,7 +69,14 @@ export class DataHandlerService {
     if (metrics) {
       this.loadingMetrics = true;
     }
-    this.ipc.invoke('getFileData', path).then((data: any) => {
+
+    const file = this.files[path].file;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const data = reader.result as string;
+  
       this.client.post(metrics ? "qa" : "parse", {'fileName': path, 'contents': data}).subscribe((result) => {
         this.files[path].status = FileStatus.VALID;
 
@@ -78,7 +90,9 @@ export class DataHandlerService {
         this.files[path].status = FileStatus.ERROR;
         this.files[path].extra = error.error;
       })
-    });
+    };
+
+    reader.readAsText(file);
   }
 
 
@@ -95,7 +109,7 @@ export class DataHandlerService {
   }
 
   GetMetrics(path: string) {
-    return this.GetSBOMInfo(path).metrics;
+    return this.GetSBOMInfo(path)?.metrics;
   }
 
 
@@ -113,10 +127,10 @@ export class DataHandlerService {
       let path = paths[i];
       let data = await this.ipc.invoke('getFileData', path);
 
-      files.push({
-        'fileName': path,
-        'contents': data
-      })
+      // files.push({
+      //   'fileName': path,
+      //   'contents': data
+      // })
     }
     
     this.lastSentFilePaths = paths;
@@ -133,15 +147,11 @@ export class DataHandlerService {
   }
 }
 
-export interface File {
-  fileName: string;
-  contents: string;
-}
-
 export interface SBOMInfo {
   status: FileStatus;
   metrics?: QualityReport;
   extra?: string;
+  file: File;
 }
 
 export enum FileStatus {
