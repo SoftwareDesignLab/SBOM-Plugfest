@@ -27,7 +27,6 @@ public class Utils {
         public String fileName;
         @JsonProperty
         public String contents;
-        public boolean hasNullProperties;
 
         public SBOMFile() {
             this(null, null);
@@ -42,8 +41,10 @@ public class Utils {
         public SBOMFile(String fileName, String contents) {
             this.fileName = fileName;
             this.contents = contents;
-            this.hasNullProperties = fileName == null || contents == null
-                    || fileName.length() == 0 || contents.length() == 0;
+        }
+
+        public boolean hasNullProperties() {
+            return fileName == null || contents == null;
         }
     }
 
@@ -55,12 +56,10 @@ public class Utils {
      * properties.
      */
     public static int sbomFileArrNullCheck(SBOMFile[] arr){
-        int i = 0;
-        for (SBOMFile a: arr
-             ) {
-            if(a == null || a.hasNullProperties)
+        for (int i = 0; i < arr.length; i++) {
+            SBOMFile file = arr[i];
+            if(file == null || file.hasNullProperties())
                 return i;
-            i++;
         }
         return -1;
     }
