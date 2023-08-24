@@ -5,13 +5,11 @@
   "scripts": {
     "ng": "ng",
     "web-start": "ng serve",
+    "web-build": "ng build",
     "electron-start": "ng build --base-href ./ && electron .",
-    "build-complete-windows": "npm run build-backend && npm run build-electron-windows",
-    "build-backend": "cd ../ && gradlew build bootJar -x test",
-    "build-electron-windows": "electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite && npm run copy-jar",
-    "copy-jar": "node copy.js",
-    "build": "ng build",
-    "test": "ng test"
+    "windows-build": "ng build --base-href ./ && npm run backend-build && electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite && npm run copy-jar",
+    "backend-build": "cd ../ && gradlew build bootJar -x test",
+    "copy-jar": "node copy.js"
   },
   "private": true,
   "dependencies": {
