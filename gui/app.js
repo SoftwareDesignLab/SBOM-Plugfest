@@ -36,10 +36,15 @@ function createWindow () {
 
 app.on('ready', async function() {
 
+    let execCmd = `cd .. && gradlew run `; // Command to compile and run backend jar
+
+    if(process.argv[0].endsWith("plugfest.exe"))
+        execCmd = "java -jar backend.jar";
+
     // Launch backend
     console.log("Building Backend Jar");
 
-    let execCmd = `cd .. && gradlew run `; // Command to compile and run backend jar
+
     console.log('> ' + execCmd);
     const jarProcess = spawn(execCmd, { // Spawn a shell child process to run this command
         shell: true
