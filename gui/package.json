@@ -4,9 +4,12 @@
   "main": "app.js",
   "scripts": {
     "ng": "ng",
-    "webStart": "ng serve",
-    "electronStart": "ng build --base-href ./ && electron .",
-    "winBuildExe": "electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite",
+    "web-start": "ng serve",
+    "electron-start": "ng build --base-href ./ && electron .",
+    "build-complete-windows": "npm run build-backend && npm run build-electron-windows",
+    "build-backend": "cd ../ && gradlew build bootJar -x test",
+    "build-electron-windows": "electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite && npm run copy-jar",
+    "copy-jar": "node copy.js",
     "build": "ng build",
     "test": "ng test"
   },
