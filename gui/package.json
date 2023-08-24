@@ -4,7 +4,9 @@
   "main": "app.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "webStart": "ng serve",
+    "electronStart": "ng build --base-href ./ && electron .",
+    "winBuildExe": "electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite",
     "build": "ng build",
     "test": "ng test"
   },
