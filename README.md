@@ -15,7 +15,11 @@
 > See [System Requirements](doc/README.md) for more details
 1. `cd gui`
 2. `npm -ci`
-3. `npm run start`
+3. `npm run ...`
+    - web-start: Runs an angular instance of the application for development purposes
+    - web-build: Generates an index.html and build folder for the angular application for web deployment
+    - electron-start: Launches an electron instance of the application
+    - windows-build: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
 
 
 ## Comparison
