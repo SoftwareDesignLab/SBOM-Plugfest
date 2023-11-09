@@ -17,6 +17,8 @@
 2. `npm -ci`
 3. `npm run start`
 
+Note: Upon launch, please wait at least 40 seconds before importing SBOMs so that the system is able to load properly. 
+
 
 ## Comparison
 > Allows comparison across schemas and file formats
