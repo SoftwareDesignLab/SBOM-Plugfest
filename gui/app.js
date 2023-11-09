@@ -36,7 +36,7 @@ function createWindow () {
 
 app.on('ready', async function() {
 
-    let execCmd = `cd .. && gradlew run `; // Command to compile and run backend jar
+    let execCmd = `cd .. && ./gradlew run `; // Command to compile and run backend jar
 
     if(process.argv[0].endsWith("plugfest.exe"))
         execCmd = "java -jar backend.jar";
