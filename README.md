@@ -14,7 +14,7 @@
 ## Quick Start
 > See [System Requirements](doc/README.md) for more details
 1. `cd gui`
-2. `npm -ci`
+2. `npm ci`
 3. `npm run ...`
 > Select the option for your use case
 - `npm run web-start`: Runs an angular instance of the application for development purposes
