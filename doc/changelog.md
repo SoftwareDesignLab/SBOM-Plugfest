@@ -4,12 +4,9 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+Beta
 ---
-
-Alpha
----
-
-## [3.9.5] - 2023-11-08
+## [1.1.0] - 2023-11-08
 ### Added
 - Plugfest can now be launched as either a web app or a standalone application
 
@@ -20,7 +17,11 @@ Alpha
   - `electron-start`: Launches an electron instance of the application
   - `windows-build`: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
   - `backend-build`: Builds the backend with no tests, used for windows build script
-  - `copy-jar`: Copys the latest backend jar built from the backend to the build directory, used for windows build script
+  - `copy-jar`: Copies the latest backend jar built from the backend to the build directory, used for windows build script
+
+
+Alpha
+---
 
 ## [3.9.4] - 2023-06-07
 ### Added
