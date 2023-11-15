@@ -8,7 +8,7 @@
     "web-build": "ng build",
     "electron-start": "ng build --base-href ./ && electron .",
     "windows-build": "ng build --base-href ./ && npm run backend-build && electron-packager ./ plugfest --platform=win32 --arch=x64 --out=./builds/ --overwrite && npm run copy-jar",
-    "backend-build": "cd ../ && gradlew build bootJar -x test",
+    "backend-build": "node buildBackend.js",
     "copy-jar": "node copy.js"
   },
   "private": true,
