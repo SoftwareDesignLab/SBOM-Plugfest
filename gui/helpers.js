@@ -1,20 +1,19 @@
-function determineOS ()
-{
-    let os = navigator.userAgent;
+function determineOS() {
+    if (typeof process !== 'undefined' && process.platform) {
+        switch (process.platform) {
+            case 'win32':
+                return 'Windows';
+            case 'darwin':
+                return 'Mac';
+            case 'linux':
+                return 'Linux';
+            default:
+                return 'Unknown';
+        }
+    }
 
-    if (os.search('Windows')!==-1)
-        return "Windows";
-
-    else if (os.search('Mac')!==-1)
-        return "Mac";
-    
-    else if (os.search('X11')!==-1 && !(os.search('Linux')!==-1))
-        return "UNIX";
-    
-    else if (os.search('Linux')!==-1 && os.search('X11')!==-1)
-        return "Linux";
-
-    return "Unknown";
+    // If not in a Node.js environment, return "Unknown"
+    return 'Unknown';
 }
 
 module.exports = { determineOS };
