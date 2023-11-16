@@ -36,7 +36,6 @@ function createWindow () {
 }
 
 app.on('ready', async function() {
-    console.log(determineOS())
     let gradle = determineOS() === "Mac" ? "./gradlew" : "gradlew";
     let execCmd = `cd .. && ` + gradle + ` run `; // Command to compile and run backend jar
 
