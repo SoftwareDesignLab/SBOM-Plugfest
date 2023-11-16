@@ -3,7 +3,7 @@ const url = require("url");
 const path = require("path");
 const fs = require("fs");
 const spawn = require('child_process').spawn;   // for backend
-const determineOS = require('./helpers');;
+const { determineOS } = require('./helpers');
 
 let mainWindow = undefined;
 let process_id; // string to store process id from spring stdout
@@ -36,8 +36,7 @@ function createWindow () {
 }
 
 app.on('ready', async function() {
-
-    let gradle = determineOS === "Mac" ? "./gradlew" : "gradlew";
+    let gradle = determineOS() === "Mac" ? "./gradlew" : "gradlew";
     let execCmd = `cd .. && ` + gradle + ` run `; // Command to compile and run backend jar
 
     if(process.argv[0].endsWith("plugfest.exe"))
