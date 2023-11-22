@@ -1,6 +1,7 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { DataHandlerService } from "@services/data-handler.service";
 import { QualityReport, grade, testResult } from "../test";
+import { DownloaderService } from "@services/downloader.service";
 
 @Component({
   selector: "app-metrics-body",
@@ -8,7 +9,7 @@ import { QualityReport, grade, testResult } from "../test";
   styleUrls: ["./metrics-body.component.css"],
 })
 export class MetricsBodyComponent  {
-  constructor(private handler: DataHandlerService) {}
+  constructor(private handler: DataHandlerService, private downloadSerivce: DownloaderService) {}
   testResult: testResult | null = null;
   qr?: QualityReport | null = null;
   filteredArray: any[] = [];
@@ -127,13 +128,7 @@ export class MetricsBodyComponent  {
     return passed.toString() + "/" + total.toString() + " Passed";
   }
 
-  download(){
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.qr));
-    var downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href",dataStr);
-    downloadAnchorNode.setAttribute("download", "metrics.json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+  download() {
+    this.downloadSerivce.download(this.qr, "metrics.json");
   }
 }
