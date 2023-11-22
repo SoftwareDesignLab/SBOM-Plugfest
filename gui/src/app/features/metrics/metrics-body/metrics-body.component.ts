@@ -105,4 +105,35 @@ export class MetricsBodyComponent  {
     }
     return null;
   }
+
+  getPassedAmount() {
+    let passed = 0;
+    let total = 0;
+
+    if(!this.qr || this.handler.selectedQualityReport === undefined)
+      return "";
+
+    for(let identifier of this.identifiers) {
+      for(let message of this.getIdentifierMessages(identifier)) {
+        for(let result of this.getMergedResult(identifier, message)) {
+          total++;
+          
+          if(result.pass === 1)
+            passed++;
+        }
+      }
+    } 
+
+    return passed.toString() + "/" + total.toString() + " Passed";
+  }
+
+  download(){
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.qr));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",dataStr);
+    downloadAnchorNode.setAttribute("download", "metrics.json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
 }
