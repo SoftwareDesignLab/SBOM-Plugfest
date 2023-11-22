@@ -49,6 +49,8 @@ public class DiffReport {
         private final List<ConflictData> sbomConflicts = new ArrayList<>();
         @JsonProperty
         private final HashMap<String, HashMap<String, List<ConflictData>>> componentConflicts = new HashMap<>();
+        @JsonProperty
+        private int similarity = 0;
 
         /**
          * Add new conflict data for the SBOMs
@@ -57,6 +59,33 @@ public class DiffReport {
          */
         public void addSBOMConflict(ConflictData data){
             this.sbomConflicts.add(data);
+        }
+
+        /**
+         * Sets the similiarty amount of the SBOMs
+         * @param similarity similarity amount
+         */
+        public void setSimilarity(int similarity) {
+            this.similarity = similarity;
+        }
+
+        /**
+         * Get the number of differences between the SBOMs
+         * 
+         * @return number of differences
+         */
+        public int getDifferences(){
+            int differences = 0;
+
+            differences += sbomConflicts.size();
+
+            for(String targetCUID : componentConflicts.keySet()){
+                for(String otherCUID : componentConflicts.get(targetCUID).keySet()){
+                    differences += componentConflicts.get(targetCUID).get(otherCUID).size();
+                }
+            }
+
+            return differences;
         }
 
 
@@ -79,6 +108,7 @@ public class DiffReport {
         }
     }
 
+    private static final int TOTAL_METADATA_FIELDS = 6;
     private static final String MISSING_TAG = "MISSING";
     @JsonProperty("target")
     private String targetUID;
@@ -105,11 +135,21 @@ public class DiffReport {
      * @param otherSBOM other SBOM to compare against
      */
     public void compare(String otherUID, SBOM otherSBOM) {
+
+        int similarity = 0;
+
         ConflictBody body = new ConflictBody();
         // Compare SBOM level differences
         compareSBOMs(otherSBOM, body);
         // Compare Component level Differences
-        compareComponents(otherSBOM.getAllComponents(), body);
+        similarity += compareComponents(otherSBOM.getAllComponents(), body);
+
+        // Add similarity to report
+        similarity += TOTAL_METADATA_FIELDS - body.sbomConflicts.size();
+
+        // Set similarity
+        body.setSimilarity(similarity);
+
         // Update diff report
         this.diffReport.put(otherUID, body);
     }
@@ -171,8 +211,13 @@ public class DiffReport {
      *
      * @param otherComponents Other SBOM components to compare to
      * @param body Conflict body object to update with data
+     * 
+     * @return number of similar components
      */
-    private void compareComponents(Set<Component> otherComponents, ConflictBody body){
+    private int compareComponents(Set<Component> otherComponents, ConflictBody body){
+
+        int similarComponents = 0;
+
         Set<ComponentConflict> componentConflicts = new HashSet<>();
 
         Set<Component> targetComponents = this.targetSBOM.getAllComponents();
@@ -213,6 +258,8 @@ public class DiffReport {
                 // add new conflict to existing conflict
                 if (conflict.getConflictTypes().size() > 0)
                     componentConflicts.add(conflict);
+                else
+                    similarComponents++;
 
             }
         }
@@ -224,6 +271,9 @@ public class DiffReport {
                 ComponentConflict conflict = new ComponentConflict(targetComponentMap.get(targetComponent), null);
                 componentConflicts.add(conflict);
             }
+
+            else
+                similarComponents++;
         }
         
         // get data
@@ -374,5 +424,7 @@ public class DiffReport {
                         new ConflictData(ct.name(), targetValue, otherValue));
             }
         }
+
+         return similarComponents;
     }
 }
