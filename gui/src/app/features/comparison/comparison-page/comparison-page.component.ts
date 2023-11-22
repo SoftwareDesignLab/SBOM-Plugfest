@@ -5,6 +5,7 @@ import { Comparison } from "../comparison";
 import { SBOM } from "@models/sbom";
 
 import { DataHandlerService, FileStatus } from "@services/data-handler.service";
+import { DownloaderService } from "@services/downloader.service";
 
 @Component({
   selector: "app-comparison-page",
@@ -19,7 +20,7 @@ export class ComparisonPageComponent {
   sboms: string[] = ["a", "b"];
   targetSbom!: string;
 
-  constructor(private dataHandler: DataHandlerService) {}
+  constructor(private dataHandler: DataHandlerService, private downloadService: DownloaderService) {}
 
   /** @TODO create an api call where you would send the target sbom and compare */
   // it against all sboms rather than doing singular api calls for each one  */
@@ -100,5 +101,9 @@ export class ComparisonPageComponent {
   toggleCheckbox(index: number) {
     const checkbox = document.getElementsByName('comparison')[index] as HTMLInputElement;
     checkbox.checked = !checkbox.checked;
+  }
+
+  download() {
+    this.downloadService.download(this.dataHandler.comparison, "comparison.json");
   }
 }

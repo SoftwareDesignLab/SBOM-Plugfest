@@ -32,12 +32,22 @@
           </div>          
         </div>
       </div>
-      <app-button
-        icon="compare_arrows"
-        (click)="compare()"
-        class="addSBOMScenter"
-        >COMPARE</app-button
-      >
+      <div class="flex" style="gap: 10px;">
+          <app-button
+          icon="compare_arrows"
+          (click)="compare()"
+          class="addSBOMScenter"
+          >COMPARE</app-button
+        >
+        <app-button
+          icon="download"
+          (click)="download()"
+          class="addSBOMcenter"
+          *ngIf="GetComparison() != undefined && !IsLoadingComparison()"
+          >DOWNLOAD</app-button
+        >
+      </div>
+      
     </form>
   </app-side-panel>
   <div class="loading flex center" *ngIf="IsLoadingComparison()">
