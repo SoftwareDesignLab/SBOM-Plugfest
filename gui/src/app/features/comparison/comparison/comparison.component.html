@@ -15,7 +15,7 @@
       <app-accordion
         *ngFor="let compared of getFilteredCompared()"
         (click)="path.push(compared)"
-        [extra]="[getMetadataConflicts(compared).length + getComponentConflictAmount(compared) + ' Conflicts']"
+        [extra]="[getMetadataConflicts(compared).length + getComponentConflictAmount(compared) + ' Conflicts (' + getSimilarityScore(compared) + '% Similar)']"
       >
         <div title class="title">
           <span> {{ getSBOMAlias(compared) }}</span>

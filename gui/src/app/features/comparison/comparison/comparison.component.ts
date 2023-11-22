@@ -71,6 +71,16 @@ export class ComparisonComponent implements OnChanges {
     return i;
   }
 
+  getSimilarityScore(name: string) {
+    if(!this.comparison)
+      return "";
+
+    let similarity = this.comparison.diffReport[name].similarity;
+    let differences = this.comparison.diffReport[name].differences;
+
+    return ((similarity / (differences + similarity)) * 100).toFixed(2);
+  }
+
   getPathIndex(index: number) {
     if(this.path.length < index) {
       return '';
