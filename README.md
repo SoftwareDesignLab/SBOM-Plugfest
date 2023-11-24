@@ -22,7 +22,7 @@
 > Launching Platform to use (backend and frontend)
 - `npm run electron-start`: Launches an electron instance of the application
 
-> Developer
+> Developer usages:
 - `npm run windows-build`: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
 - `npm run web-start`: Runs an angular instance of the application for development purposes
 - `npm run web-build`: Generates an index.html and build folder for the angular application for web deployment
