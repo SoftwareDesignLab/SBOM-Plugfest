@@ -31,7 +31,7 @@ Note: Upon launch, please wait at least 40 seconds before importing SBOMs so tha
 
 
 ## Comparison
-> Allows comparison across schemas and file formats
+> Allows comparison across schemas and file formats, cosidering metadata and components. 
 
 ### SBOM Conflicts
 - **Supplier**: Supplier of the code are not the same (publisher)
