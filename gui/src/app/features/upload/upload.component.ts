@@ -1,7 +1,6 @@
 import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { ClientService } from '@services/client.service';
 import { DataHandlerService, FileStatus } from '@services/data-handler.service';
-import { IpcRenderer } from 'electron';
 
 @Component({
   selector: 'app-upload',
@@ -9,34 +8,25 @@ import { IpcRenderer } from 'electron';
   styleUrls: ['./upload.component.css']
 })
 export class UploadComponent {
-  private ipc!: IpcRenderer;
   isLoading = false;
   @ViewChild('container') container!: ElementRef;
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   @Input() stepper: any;
   errorResponse: any;
 
-  constructor(private dataHandler: DataHandlerService) {
-    if (window.require) {
-      try {
-        this.ipc = window.require('electron').ipcRenderer;
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.warn('App not running inside Electron!');
+  constructor(private dataHandler: DataHandlerService) {}
+
+  onFileSelect(files: FileList | null) {
+    if (!files || files.length === 0) {
+      this.scrollToEnd();
+      return;
     }
+
+    this.dataHandler.AddFiles(files);
   }
 
   browse() {
-    this.ipc.invoke('selectFiles').then((files: string[]) => {
-      if(files === undefined || files === null || files.length === 0) {
-        this.scrollToEnd();
-        return;
-
-      }
-
-      this.dataHandler.AddFiles(files);
-    });
+    this.fileInputRef.nativeElement.click();
   }
 
   getSBOMAlias(path: string) {

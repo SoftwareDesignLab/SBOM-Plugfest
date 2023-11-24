@@ -1,5 +1,5 @@
 # PlugFest-in-a-Box Tool
-### v1.0.0-beta
+### v1.1.0-beta
 [changelog](doc/changelog.md)
 > PlugFest-in-a-Box is a powerful tool to reveal key areas of difference between several Software Bills of Materials 
 > (SBOMs) and applying thorough metrics to identify any and all quality issues.
@@ -14,8 +14,13 @@
 ## Quick Start
 > See [System Requirements](doc/README.md) for more details
 1. `cd gui`
-2. `npm -ci`
-3. `npm run start`
+2. `npm ci`
+3. `npm run ...`
+> Select the option for your use case
+- `npm run web-start`: Runs an angular instance of the application for development purposes
+- `npm run web-build`: Generates an index.html and build folder for the angular application for web deployment
+- `npm run electron-start`: Launches an electron instance of the application
+- `npm run windows-build`: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
 
 Note: Upon launch, please wait at least 40 seconds before importing SBOMs so that the system is able to load properly. 
 

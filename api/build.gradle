@@ -22,7 +22,7 @@ dependencies {
     implementation project(':core')
 
     implementation('org.springframework.boot:spring-boot-starter-web:3.0.6')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.15.1')
 
     implementation project(path: ':core')
 

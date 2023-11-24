@@ -6,6 +6,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
  * This class contains the main function which runs the API as a spring boot application
@@ -29,5 +32,20 @@ public class APIApplication {
                 connector.setMaxPostSize(Integer.MAX_VALUE); //About 2GB
             });
         };
+    }
+
+     /**
+     * CORS configuration
+     */
+    @Configuration
+    public static class CorsConfig extends WebMvcConfigurationSupport {
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/**")
+                    .allowedOrigins("http://localhost:4200") //TODO: Update accordingly to deployent, make config file
+                    .allowedMethods("GET", "POST", "PUT", "DELETE")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
+        }
     }
 }
