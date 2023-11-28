@@ -50,7 +50,10 @@ public class DiffReport {
         @JsonProperty
         private final HashMap<String, HashMap<String, List<ConflictData>>> componentConflicts = new HashMap<>();
         @JsonProperty
-        private int similarity = 0;
+        private int metadataSimilarity = 0;
+        @JsonProperty
+        private int componentSimilarity = 0;
+
 
         /**
          * Add new conflict data for the SBOMs
@@ -62,11 +65,19 @@ public class DiffReport {
         }
 
         /**
-         * Sets the similiarty amount of the SBOMs
+         * Sets the similiarty amount of the SBOMs for metadata
          * @param similarity similarity amount
          */
-        public void setSimilarity(int similarity) {
-            this.similarity = similarity;
+        public void setMetadataSimilarity(int similarity) {
+            this.metadataSimilarity = similarity;
+        }
+
+         /**
+         * Sets the similiarty amount of the SBOMs for components
+         * @param similarity similarity amount
+         */
+        public void setComponentSimilarity(int similarity) {
+            this.metadataSimilarity = similarity;
         }
 
         /**
@@ -74,10 +85,8 @@ public class DiffReport {
          * 
          * @return number of differences
          */
-        public int getDifferences(){
+        public int getComponentDifferences(){
             int differences = 0;
-
-            differences += sbomConflicts.size();
 
             for(String targetCUID : componentConflicts.keySet()){
                 for(String otherCUID : componentConflicts.get(targetCUID).keySet()){
@@ -87,7 +96,15 @@ public class DiffReport {
 
             return differences;
         }
-
+        
+        /**
+         * Get the number of differences between the SBOMs
+         * 
+         * @return number of differences
+         */
+        public int getMetadataDifferences(){
+            return sbomConflicts.size();
+        }
 
         /**
          * Add new conflict data for the components
@@ -142,13 +159,11 @@ public class DiffReport {
         // Compare SBOM level differences
         compareSBOMs(otherSBOM, body);
         // Compare Component level Differences
-        similarity += compareComponents(otherSBOM.getAllComponents(), body);
+        
+        body.setComponentSimilarity(compareComponents(otherSBOM.getAllComponents(), body));
 
         // Add similarity to report
-        similarity += TOTAL_METADATA_FIELDS - body.sbomConflicts.size();
-
-        // Set similarity
-        body.setSimilarity(similarity);
+        body.setMetadataSimilarity(TOTAL_METADATA_FIELDS - body.sbomConflicts.size());
 
         // Update diff report
         this.diffReport.put(otherUID, body);

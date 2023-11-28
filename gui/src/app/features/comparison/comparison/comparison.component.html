@@ -15,7 +15,7 @@
       <app-accordion
         *ngFor="let compared of getFilteredCompared()"
         (click)="path.push(compared)"
-        [extra]="[getMetadataConflicts(compared).length + getComponentConflictAmount(compared) + ' Conflicts (' + getSimilarityScore(compared) + '% Similar)']"
+        [extra]="[getMetadataConflicts(compared).length + getComponentConflictAmount(compared) + ' Conflicts (' + getTotalSimilarity(compared) + '% Similar)']"
       >
         <div title class="title">
           <span> {{ getSBOMAlias(compared) }}</span>
@@ -27,7 +27,11 @@
       <app-accordion
         *ngFor="let conflicts of ['Metadata', 'Components']"
         (click)="path.push(conflicts)"
-        [extra]="[(conflicts == 'Metadata' ? getMetadataConflicts(getPathIndex(0)).length : getComponentConflictAmount(getPathIndex(0))) + ' Conflicts']"
+        [extra]="[(
+          conflicts == 'Metadata' ? 
+          (getMetadataConflicts(getPathIndex(0)).length + ' Conflicts (' + getMetadataSimilarity(getPathIndex(0)) + '% Similar)')
+            : (getComponentConflictAmount(getPathIndex(0))) + ' Conflicts (' + getComponentSimilarity(getPathIndex(0)) + '% Similar)')
+        ]"
       >
         <div title class="title">
           <span> {{ conflicts }}</span>
