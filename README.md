@@ -16,15 +16,22 @@
 1. `cd gui`
 2. `npm ci`
 3. `npm run ...`
-> Select the option for your use case
+
+> Please select the command based on your use case: 
+
+> Launching Platform to use (backend and frontend)
+- `npm run electron-start`: Launches an electron instance of the application
+
+> Developer usages:
+- `npm run windows-build`: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
 - `npm run web-start`: Runs an angular instance of the application for development purposes
 - `npm run web-build`: Generates an index.html and build folder for the angular application for web deployment
-- `npm run electron-start`: Launches an electron instance of the application
-- `npm run windows-build`: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
+
+Note: Upon launch, please wait at least 40 seconds before importing SBOMs so that the system is able to load properly. 
 
 
 ## Comparison
-> Allows comparison across schemas and file formats
+> Allows comparison across schemas and file formats, considering metadata and components. 
 
 ### SBOM Conflicts
 - **Supplier**: Supplier of the code are not the same (publisher)
@@ -49,7 +56,7 @@
 > A series of metrics to access the quality of the SBOM.
 
 ### Completeness
-> Accesses how complete the content of the SBOM is.
+>  Assesses how complete the content of the SBOM is.
 - **Minimum Elements Test**: Checks for the [Minimum Elements for an SBOM](https://www.ntia.doc.gov/files/ntia/publications/sbom_minimum_elements_report.pdf) 
 are present as recommend by the NTIA.
   - _Supplier Name_: The name of an entity that creates, defines, and identifies components. 
@@ -64,23 +71,23 @@ are present as recommend by the NTIA.
 - **Valid CPE Test**: Test to see if the CPE is correctly formatted
 
 ### Uniqueness
-> Accesses the quality of the unique identifiers and ensure they match the stored SBOM data.
+> Assesses the quality of the unique identifiers and ensure they match the stored SBOM data.
 - **Has Hash Data Test**: Test to see if hashes are stored
 - **Valid Hash Data Test**: Test to see the stored hashes match the reported hash algorithm
 - **Accurate PURL Test**: Test to see if the data stored in the PURL matches what is reported in the SBOM
 - **Accurate CPE Test**: Test to see if the data stored in the CPE matches what is reported in the SBOM
 
 ### Registered
-> Accesses if the component is stored in a default repository
+>  Assesses if the component is stored in a default repository
 - **Is Registered Test**: Uses PURLs to verify if the component exists in the [default PURL repository](https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst)
   
 ### Licensing
-> Accesses if the SBOM has valid license data
+>  Assesses if the SBOM has valid license data
 - **Has License Data Test**: Test to see if Licenses are stored
 - **Valid SPDX License Test**: Test to see if the License is stored in the [SPDX License List](https://spdx.org/licenses/) and if they are depreciated
 
 ### SPDX
-> Accesses for features that are required specifically for [SPDX SBOMs](https://spdx.github.io/spdx-spec/v2.3/).
+>  Assesses for features that are required specifically for [SPDX SBOMs](https://spdx.github.io/spdx-spec/v2.3/).
 - **Has Data License SPDX Test**: Test to see if the SBOM's DataLicense field contain the CC0-1.0 license
 - **Has SPDX ID Test**: Test to see if each component has a valid SPDXID
 - **Has Document Namespace Test**: Test to see if the SBOM contains a valid document namespace
@@ -91,7 +98,7 @@ are present as recommend by the NTIA.
 - **Extracted License Minimum Element Test**: Test to see if the extracted licenses contain the required fields LicenseName, LicenseID, and LicenseCrossReference
 
 ### CycloneDX
-> Accesses for features that are required specifically for [CycloneDX SBOMs](https://cyclonedx.org/specification/overview/).
+>  Assesses for features that are required specifically for [CycloneDX SBOMs](https://cyclonedx.org/specification/overview/).
 - **Has Bom-Ref Test**: Test to see if a component has a unique bom-ref to reference inside the SBOM
 - **Has Bom Version Test**: Test to see if the SBOM has a version number declared
 
