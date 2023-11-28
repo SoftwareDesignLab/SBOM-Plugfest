@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Beta
 ---
+## [1.2.0] - 2013-11-28
+### Added
+- `DiffReport` now tracks similarity and difference count for metadata and components
+- Download button added to compare and metrics
+- Header on metrics to display passed/total tests as well as which tests are currently displayed
+
+### Changed
+- `package.json` updated app name to plugfest
+
 ## [1.1.0] - 2023-11-08
 ### Added
 - Plugfest can now be launched as either a web app or a standalone application
