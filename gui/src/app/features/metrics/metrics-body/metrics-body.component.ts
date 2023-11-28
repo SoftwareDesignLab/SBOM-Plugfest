@@ -9,7 +9,7 @@ import { DownloaderService } from "@services/downloader.service";
   styleUrls: ["./metrics-body.component.css"],
 })
 export class MetricsBodyComponent  {
-  constructor(private handler: DataHandlerService, private downloadSerivce: DownloaderService) {}
+  constructor(public handler: DataHandlerService, private downloadSerivce: DownloaderService) {}
   testResult: testResult | null = null;
   qr?: QualityReport | null = null;
   filteredArray: any[] = [];

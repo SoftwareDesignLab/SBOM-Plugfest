@@ -1,4 +1,7 @@
 <div class="metrics-body flex col center">
+  <div class="header" *ngIf="this.qr && this.handler.selectedQualityReport !== undefined">
+    {{"Showing " + (showPassed ? "Passing" : "Failing") + " Tests"}}
+  </div>
   <div class="passed-amount">
     {{getPassedAmount()}}
   </div>
