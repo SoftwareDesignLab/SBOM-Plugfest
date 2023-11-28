@@ -9,6 +9,10 @@ export interface Conflict {
 interface DiffReport {
   sbomConflicts: Conflict[];
   componentConflicts: ComponentConflicts;
+  componentSimilarity: number;
+  componentDifferences: number;
+  metadataSimilarity: number;
+  metadataDifferences: number;
 }
 
 export interface ComponentConflicts {
