@@ -39,12 +39,12 @@ export class ComparisonPageComponent {
 
     // Get all the checkboxes in the DOM
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
+    
     // Loop through each checkbox and check if it's selected and not disabled
     const selectedCheckboxes = [];
     for (let i = 0; i < checkboxes.length; i++) {
       const checkbox = checkboxes[i] as HTMLInputElement;
-      if (checkbox.checked && !checkbox.disabled) {
+      if (checkbox.checked && !checkbox.disabled && checkbox.name === 'comparison') {
         selectedCheckboxes.push(checkbox.value);
       }
     }
