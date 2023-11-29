@@ -1,5 +1,5 @@
 # PlugFest-in-a-Box Tool
-### v1.1.0-beta
+### v1.2.0-beta
 [changelog](doc/changelog.md)
 > PlugFest-in-a-Box is a powerful tool to reveal key areas of difference between several Software Bills of Materials 
 > (SBOMs) and applying thorough metrics to identify any and all quality issues.
