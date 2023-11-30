@@ -35,7 +35,7 @@ dependencies {
     implementation 'org.json:json:20210307'
     implementation 'org.glassfish.hk2:hk2-locator:3.0.3'
     implementation 'org.glassfish.hk2:hk2-utils:3.0.3'
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.15.1')
 
 }
 

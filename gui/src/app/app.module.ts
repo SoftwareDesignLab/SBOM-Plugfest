@@ -32,7 +32,6 @@ import { MetricsMainComponent } from './features/metrics/metrics-main/metrics-ma
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
 @NgModule({
   declarations: [
     AppComponent,

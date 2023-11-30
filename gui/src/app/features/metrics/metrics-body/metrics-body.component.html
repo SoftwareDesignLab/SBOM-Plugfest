@@ -1,4 +1,10 @@
 <div class="metrics-body flex col center">
+  <div class="header" *ngIf="this.qr && this.handler.selectedQualityReport !== undefined">
+    {{"Showing " + (showPassed ? "Passing" : "Failing") + " Tests"}}
+  </div>
+  <div class="passed-amount">
+    {{getPassedAmount()}}
+  </div>
   <div class="flex buttons">
     <app-button (click)="showPassed = !showPassed" *ngIf="result">
       Show {{ showPassed ? "Failed Only" : "Passed" }}
@@ -63,5 +69,11 @@
     <div class="text flex center" *ngIf="result && result.length === 0 && identifiers.length === 0">
       There are no test results with the selected SBOM
     </div>
+  </div>
+
+  <div class="download-button" *ngIf="result">
+    <app-button (click)="download()">
+      Download Results
+    </app-button>
   </div>
 </div>

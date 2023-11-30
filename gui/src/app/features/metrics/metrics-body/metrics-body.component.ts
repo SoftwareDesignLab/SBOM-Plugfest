@@ -1,6 +1,7 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { DataHandlerService } from "@services/data-handler.service";
 import { QualityReport, grade, testResult } from "../test";
+import { DownloaderService } from "@services/downloader.service";
 
 @Component({
   selector: "app-metrics-body",
@@ -8,7 +9,7 @@ import { QualityReport, grade, testResult } from "../test";
   styleUrls: ["./metrics-body.component.css"],
 })
 export class MetricsBodyComponent  {
-  constructor(private handler: DataHandlerService) {}
+  constructor(public handler: DataHandlerService, private downloadSerivce: DownloaderService) {}
   testResult: testResult | null = null;
   qr?: QualityReport | null = null;
   filteredArray: any[] = [];
@@ -104,5 +105,30 @@ export class MetricsBodyComponent  {
       return this.qr?.shapes[index];
     }
     return null;
+  }
+
+  getPassedAmount() {
+    let passed = 0;
+    let total = 0;
+
+    if(!this.qr || this.handler.selectedQualityReport === undefined)
+      return "";
+
+    for(let identifier of this.identifiers) {
+      for(let message of this.getIdentifierMessages(identifier)) {
+        for(let result of this.getMergedResult(identifier, message)) {
+          total++;
+          
+          if(result.pass === 1)
+            passed++;
+        }
+      }
+    } 
+
+    return passed.toString() + "/" + total.toString() + " Passed";
+  }
+
+  download() {
+    this.downloadSerivce.download(this.qr, "metrics.json");
   }
 }

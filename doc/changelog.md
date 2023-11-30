@@ -4,7 +4,34 @@ All notable changes to Plugfest will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+Beta
 ---
+## [1.2.1] - 2013-11-29
+### Fixed
+  - If select all was pressed first on compare than it would always compare all sboms even if one was unchecked
+
+## [1.2.0] - 2013-11-28
+### Added
+- `DiffReport` now tracks similarity and difference count for metadata and components
+- Download button added to compare and metrics
+- Header on metrics to display passed/total tests as well as which tests are currently displayed
+
+### Changed
+- `package.json` updated app name to plugfest
+
+## [1.1.0] - 2023-11-08
+### Added
+- Plugfest can now be launched as either a web app or a standalone application
+
+### Changed
+- Added the following startup commands for frontend:
+  - `web-start`: Runs an angular instance of the application for development purposes
+  - `web-build`: Generates an index.html and build folder for the angular application for web deployment
+  - `electron-start`: Launches an electron instance of the application
+  - `windows-build`: Generates a standalone application (.exe) file and directory for deployment with the backend built and included with
+  - `backend-build`: Builds the backend with no tests, used for windows build script
+  - `copy-jar`: Copies the latest backend jar built from the backend to the build directory, used for windows build script
+
 
 Alpha
 ---
