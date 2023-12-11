@@ -112,9 +112,9 @@ are present as recommend by the NTIA.
 
 **Developer Team**
 - Tina DiLorenzo
-- [Tyler Drake
-- [Matt London
-- [Dylan Mulligan
+- Tyler Drake
+- Matt London
+- Dylan Mulligan
 - Michael Alfonzetti
 - Ian Dunn
 - Asa Horn
