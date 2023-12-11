@@ -1,7 +1,7 @@
-# PlugFest-in-a-Box Tool
+# SBOM PlugFest Tool
 ### v1.2.1-beta
 [changelog](doc/changelog.md)
-> PlugFest-in-a-Box is a powerful tool to reveal key areas of difference between several Software Bills of Materials 
+> SBOM PlugFest is a powerful tool to reveal key areas of difference between several Software Bills of Materials 
 > (SBOMs) and applying thorough metrics to identify any and all quality issues.
 
 
@@ -104,26 +104,23 @@ are present as recommend by the NTIA.
 
 
 ## Contributors
-**Principal Investigator:** [Mehdi Mirakhorli](mailto:mxmvse@rit.edu)
+**Principal Investigator, Project Lead:** Mehdi Mirakhorli
 
-**Senior Project Manager:** [Chris Enoch](mailto:ctevse@rit.edu)
+**Project Manager:** Chris Enoch
 
-**Senior Developer Team Lead:** [Derek Garcia](mailto:dlg1206@rit.edu)
-
-**Developer Team Leads**
-- [Tina DiLorenzo](mailto:tnd3015@rit.edu)
-- [Tyler Drake](mailto:txd3634@rit.edu)
-- [Matt London](mailto:mrl2534@rit.edu)
-- [Dylan Mulligan](mailto:dtm5568@rit.edu)
+**Developer Team Lead:** Derek Garcia
 
 **Developer Team**
-- [Michael Alfonzetti](mailto:michael.alfonzetti93@gmail.com)
-- [Ian Dunn](mailto:itd3516@rit.edu)
-- [Asa Horn](mailto:aoh9470@rit.edu)
-- [Justin Jantzi](mailto:jwj7297@rit.edu)
-- [Ping Liu](mailto:pxlvse@rit.edu)
-- [Matthew Morrison](mailto:msm8275@rit.edu)
-- [Ethan Numan](mailto:ehn4602@rit.edu)
-- [Henry Orsagh](mailto:hco4630@rit.edu)
-- [Juan Francisco Patino](mailto:jfp6815@rit.edu)
-- [Max Stein](mailto:mhs8558@rit.edu)
+- Tina DiLorenzo
+- [Tyler Drake
+- [Matt London
+- [Dylan Mulligan
+- Michael Alfonzetti
+- Ian Dunn
+- Asa Horn
+- Justin Jantzi
+- Matthew Morrison
+- Ethan Numan
+- Henry Orsagh
+- Juan Francisco Patino
+- Max Stein
