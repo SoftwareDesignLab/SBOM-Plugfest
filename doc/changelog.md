@@ -6,11 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Beta
 ---
-## [1.2.1] - 2013-11-29
+## [1.2.2] - 2023-12-20
+### Fixed
+- Fixed similarity counts for components in `DiffReport`
+
+## [1.2.1] - 2023-11-29
 ### Fixed
   - If select all was pressed first on compare than it would always compare all sboms even if one was unchecked
 
-## [1.2.0] - 2013-11-28
+## [1.2.0] - 2023-11-28
 ### Added
 - `DiffReport` now tracks similarity and difference count for metadata and components
 - Download button added to compare and metrics
