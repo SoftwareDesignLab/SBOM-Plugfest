@@ -32,7 +32,6 @@ import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflict;
 import org.nvip.plugfest.tooling.differ.conflicts.SBOMConflictType;
 import org.nvip.plugfest.tooling.sbom.Component;
 import org.nvip.plugfest.tooling.sbom.SBOM;
-import org.nvip.plugfest.tooling.sbom.uids.PURL;
 
 import java.util.*;
 
@@ -101,7 +100,7 @@ public class DiffReport {
          * @param similarity similarity amount
          */
         public void setComponentSimilarity(int similarity) {
-            this.metadataSimilarity = similarity;
+            this.componentSimilarity = similarity;
         }
 
         /**
@@ -177,13 +176,10 @@ public class DiffReport {
      */
     public void compare(String otherUID, SBOM otherSBOM) {
 
-        int similarity = 0;
-
         ConflictBody body = new ConflictBody();
         // Compare SBOM level differences
         compareSBOMs(otherSBOM, body);
         // Compare Component level Differences
-        
         body.setComponentSimilarity(compareComponents(otherSBOM.getAllComponents(), body));
 
         // Add similarity to report
@@ -272,8 +268,8 @@ public class DiffReport {
                 continue;
 
             // add to target map
-            targetComponentMap.put(targetComponent.getName(), targetComponent);
-            targetComponentNames.add(targetComponent.getName());
+            targetComponentMap.put(targetComponent.toString(), targetComponent);
+            targetComponentNames.add(targetComponent.toString());
         }
 
         // Check to see if all other components are in target
@@ -283,16 +279,16 @@ public class DiffReport {
                 continue;
 
             // add to other map
-            otherComponentNames.add(otherComponent.getName());
+            otherComponentNames.add(otherComponent.toString());
 
             // Check to see if target SBOM contains the other component
-            if (!targetComponentMap.containsKey(otherComponent.getName())) {
+            if (!targetComponentNames.contains(otherComponent.toString())) {
                 // target doesn't contain other component
                 ComponentConflict conflict = new ComponentConflict(null, otherComponent);
                 componentConflicts.add(conflict);
             } else {
                 // Compare the two
-                ComponentConflict conflict = new ComponentConflict(targetComponentMap.get(otherComponent.getName()), otherComponent);
+                ComponentConflict conflict = new ComponentConflict(targetComponentMap.get(otherComponent.toString()), otherComponent);
 
                 // add new conflict to existing conflict
                 if (conflict.getConflictTypes().size() > 0)
@@ -304,10 +300,10 @@ public class DiffReport {
         }
 
         // Check to see if target SBOM contains the other component
-        for (String targetComponent : targetComponentNames) {
-            if (!otherComponentNames.contains(targetComponent)) {
+        for (String targetComponentName : targetComponentNames) {
+            if (!otherComponentNames.contains(targetComponentName)) {
                 // other doesn't contain target component
-                ComponentConflict conflict = new ComponentConflict(targetComponentMap.get(targetComponent), null);
+                ComponentConflict conflict = new ComponentConflict(targetComponentMap.get(targetComponentName), null);
                 componentConflicts.add(conflict);
             }
 
@@ -323,8 +319,8 @@ public class DiffReport {
                 switch (ct) {
                     // todo need better way to handle this
                     case COMPONENT_NOT_FOUND -> {
-                        targetValue = conflict.getComponentA() == null ? null : conflict.getComponentA().getName();
-                        otherValue = conflict.getComponentB() == null ? null : conflict.getComponentB().getName();
+                        targetValue = conflict.getComponentA() == null ? null : conflict.getComponentA().toString();
+                        otherValue = conflict.getComponentB() == null ? null : conflict.getComponentB().toString();
                     }
                     case COMPONENT_VERSION_MISMATCH -> {
                         targetValue = conflict.getComponentA().getVersion();
@@ -342,15 +338,15 @@ public class DiffReport {
                         licenseB.removeAll(conflict.getComponentA().getLicenses());
                         for (String license : licenseA) {
                             body.addComponentConflict(
-                                    conflict.getComponentA().getName(),
-                                    conflict.getComponentB().getName(),
+                                    conflict.getComponentA().toString(),
+                                    conflict.getComponentB().toString(),
                                     new ConflictData(COMPONENT_LICENSE_MISMATCH.name(), license, null)
                             );
                         }
                         for (String license : licenseB) {
                             body.addComponentConflict(
-                                    conflict.getComponentB().getName(),
-                                    conflict.getComponentA().getName(),
+                                    conflict.getComponentB().toString(),
+                                    conflict.getComponentA().toString(),
                                     new ConflictData(COMPONENT_LICENSE_MISMATCH.name(), null, license)
                             );
                         }
@@ -374,15 +370,15 @@ public class DiffReport {
                         cpeB.removeAll(conflict.getComponentA().getCpes());
                         for (String cpe : cpeA) {
                             body.addComponentConflict(
-                                    conflict.getComponentA().getName(),
-                                    conflict.getComponentB().getName(),
+                                    conflict.getComponentA().toString(),
+                                    conflict.getComponentB().toString(),
                                     new ConflictData(COMPONENT_CPE_MISMATCH.name(), cpe, null)
                             );
                         }
                         for (String cpe : cpeB) {
                             body.addComponentConflict(
-                                    conflict.getComponentB().getName(),
-                                    conflict.getComponentA().getName(),
+                                    conflict.getComponentB().toString(),
+                                    conflict.getComponentA().toString(),
                                     new ConflictData(COMPONENT_CPE_MISMATCH.name(), null, cpe)
                             );
                         }
@@ -398,15 +394,15 @@ public class DiffReport {
                         purlB.removeAll(conflict.getComponentA().getPurls());
                         for (String purl : purlA) {
                             body.addComponentConflict(
-                                    conflict.getComponentA().getName(),
-                                    conflict.getComponentB().getName(),
+                                    conflict.getComponentA().toString(),
+                                    conflict.getComponentB().toString(),
                                     new ConflictData(COMPONENT_PURL_MISMATCH.name(), purl, null)
                             );
                         }
                         for (String purl : purlB) {
                             body.addComponentConflict(
-                                    conflict.getComponentB().getName(),
-                                    conflict.getComponentA().getName(),
+                                    conflict.getComponentB().toString(),
+                                    conflict.getComponentA().toString(),
                                     new ConflictData(COMPONENT_PURL_MISMATCH.name(), null, purl)
                             );
                         }
@@ -422,15 +418,15 @@ public class DiffReport {
                         swidB.removeAll(conflict.getComponentA().getSwids());
                         for (String swid : swidA) {
                             body.addComponentConflict(
-                                    conflict.getComponentA().getName(),
-                                    conflict.getComponentB().getName(),
+                                    conflict.getComponentA().toString(),
+                                    conflict.getComponentB().toString(),
                                     new ConflictData(COMPONENT_SWID_MISMATCH.name(), swid, null)
                             );
                         }
                         for (String swid : swidB) {
                             body.addComponentConflict(
-                                    conflict.getComponentB().getName(),
-                                    conflict.getComponentA().getName(),
+                                    conflict.getComponentB().toString(),
+                                    conflict.getComponentA().toString(),
                                     new ConflictData(COMPONENT_SWID_MISMATCH.name(), null, swid)
                             );
                         }
@@ -450,8 +446,8 @@ public class DiffReport {
                     }
                 }
 
-                String targetIdentifier = conflict.getComponentA() == null ? MISSING_TAG : conflict.getComponentA().getName();
-                String conflictIdentifier = conflict.getComponentB() == null ? MISSING_TAG : conflict.getComponentB().getName();
+                String targetIdentifier = conflict.getComponentA() == null ? MISSING_TAG : conflict.getComponentA().getUniqueID();
+                String conflictIdentifier = conflict.getComponentB() == null ? MISSING_TAG : conflict.getComponentB().getUniqueID();
 
                 // Skip if keys are null
                 if(targetIdentifier == null || conflictIdentifier == null)
